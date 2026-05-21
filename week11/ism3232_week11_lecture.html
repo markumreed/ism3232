@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W11</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style></head><body><div class="wrapper"><div class="page-header"><p class="eyebrow">ISM3232 &middot; Week 11 Lecture Material</p><h1>Week 11 &mdash; Module 6 &mdash; OOP II: Composition, Inheritance, and Business Modeling</h1><p class="subtitle">Students build a manager class that composes entity objects, explore light inheritance for business hierarchies, and map OOP designs to SQL tables.</p><div class="meta-pills"><span class="meta-pill">Week 11 of 17</span><span class="meta-pill">Unit 3: OOP System Design</span><span class="meta-pill">Module 6 (Wk 2 of 3)</span><span class="meta-pill">~80 min</span><span class="meta-pill">OOP III applied practice next week</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;20 min</div><div class="t-label">Composition: RequestManager class</div></div><div class="timing-block green"><div class="t-time">20&ndash;40 min</div><div class="t-label">Manager + entity working together</div></div><div class="timing-block amber"><div class="t-time">40&ndash;55 min</div><div class="t-label">Light inheritance</div></div><div class="timing-block purple"><div class="t-time">55&ndash;70 min</div><div class="t-label">OOP &rarr; SQL mapping</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Composition: Classes That Contain Other Classes</div><div class="line"></div></div><div class="card"><div class="card-title">Composition: the manager class pattern</div><p>In most business systems, one object holds a collection of other objects. A <code>RequestManager</code> holds many <code>BusinessRequest</code> instances. This is <strong>composition</strong> &mdash; building complex objects from simpler ones by having one class contain instances of another.</p><p>Composition is more common than inheritance in business applications. Prefer composition when you need to manage or aggregate a collection of business entities.</p></div><div class="cb"><div class="cb-label">RequestManager &mdash; a class that manages a collection of BusinessRequest objects</div><pre><span class="kw">class</span> <span class="fn">RequestManager</span>:
+    <span class="st">&quot;&quot;&quot;Manages a collection of business requests.&quot;&quot;&quot;</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.requests = []   <span class="cm"># starts empty &mdash; instances added later</span>
+
+    <span class="kw">def</span> <span class="fn">add_request</span>(self, request):
+        <span class="st">&quot;&quot;&quot;Add a BusinessRequest instance to the manager.&quot;&quot;&quot;</span>
+        self.requests.append(request)
+
+    <span class="kw">def</span> <span class="fn">list_pending</span>(self):
+        <span class="st">&quot;&quot;&quot;Return a list of all requests with status Pending.&quot;&quot;&quot;</span>
+        <span class="kw">return</span> [r <span class="kw">for</span> r <span class="kw">in</span> self.requests <span class="kw">if</span> r.status == <span class="st">&quot;Pending&quot;</span>]
+
+    <span class="kw">def</span> <span class="fn">total_amount</span>(self):
+        <span class="st">&quot;&quot;&quot;Return the total value of all requests.&quot;&quot;&quot;</span>
+        <span class="kw">return</span> sum(r.amount <span class="kw">for</span> r <span class="kw">in</span> self.requests)
+
+    <span class="kw">def</span> <span class="fn">get_by_status</span>(self, status):
+        <span class="st">&quot;&quot;&quot;Return all requests matching the given status.&quot;&quot;&quot;</span>
+        <span class="kw">return</span> [r <span class="kw">for</span> r <span class="kw">in</span> self.requests <span class="kw">if</span> r.status == status]
+
+    <span class="kw">def</span> <span class="fn">summary_report</span>(self):
+        <span class="st">&quot;&quot;&quot;Print a formatted summary of all requests by status.&quot;&quot;&quot;</span>
+        pending  = self.list_pending()
+        approved = self.get_by_status(<span class="st">&quot;Approved&quot;</span>)
+        print(<span class="st">f&quot;Total: {len(self.requests)} requests | ${self.total_amount():,.2f}&quot;</span>)
+        print(<span class="st">f&quot;Pending: {len(pending)} | Approved: {len(approved)}&quot;</span>)</pre></div><div class="cb"><div class="cb-label">Using composition &mdash; manager + requests working together</div><pre><span class="kw">from</span> models <span class="kw">import</span> BusinessRequest, RequestManager
+
+manager = <span class="fn">RequestManager</span>()
+manager.add_request(<span class="fn">BusinessRequest</span>(<span class="nm">101</span>, <span class="st">&quot;Taylor&quot;</span>, <span class="st">&quot;Travel&quot;</span>, <span class="nm">1200</span>))
+manager.add_request(<span class="fn">BusinessRequest</span>(<span class="nm">102</span>, <span class="st">&quot;Jordan&quot;</span>, <span class="st">&quot;Equipment&quot;</span>, <span class="nm">450</span>))
+manager.add_request(<span class="fn">BusinessRequest</span>(<span class="nm">103</span>, <span class="st">&quot;Morgan&quot;</span>, <span class="st">&quot;Software&quot;</span>, <span class="nm">3500</span>))
+
+manager.requests[<span class="nm">0</span>].approve()   <span class="cm"># approve request 101 directly</span>
+
+manager.summary_report()
+pending = manager.list_pending()
+<span class="kw">for</span> r <span class="kw">in</span> pending:
+    print(<span class="st">f&quot;  {r.requester}: ${r.amount:,.2f} &mdash; review: {r.requires_review()}&quot;</span>)</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Inheritance: When to Use It</div><div class="line"></div></div><div class="card"><div class="card-title">Inheritance in business applications: use sparingly</div><p><strong>Inheritance</strong> lets one class inherit attributes and methods from a parent class. In business systems it is useful for modelling hierarchical relationships &mdash; a <code>TravelRequest</code> and an <code>EquipmentRequest</code> are both types of <code>BusinessRequest</code>, sharing core attributes but adding their own.</p><p>Do not use inheritance simply to avoid repeating code. Use it when there is a genuine <em>is-a</em> relationship: a TravelRequest <em>is a</em> BusinessRequest, not just something that has similar attributes.</p></div><div class="cb"><div class="cb-label">Light inheritance &mdash; specialised request types</div><pre><span class="kw">class</span> <span class="fn">TravelRequest</span>(<span class="fn">BusinessRequest</span>):  <span class="cm"># inherits from BusinessRequest</span>
+    <span class="st">&quot;&quot;&quot;A business request specifically for travel.&quot;&quot;&quot;</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, request_id, requester, amount, destination):
+        super().__init__(request_id, requester, <span class="st">&quot;Travel&quot;</span>, amount)
+        self.destination = destination   <span class="cm"># extra attribute</span>
+
+    <span class="kw">def</span> <span class="fn">requires_review</span>(self):
+        <span class="st">&quot;&quot;&quot;Travel requests over $500 require review (lower threshold).&quot;&quot;&quot;</span>
+        <span class="kw">return</span> self.amount &gt; <span class="nm">500</span>   <span class="cm"># overrides parent method</span>
+
+trip = <span class="fn">TravelRequest</span>(<span class="nm">201</span>, <span class="st">&quot;Morgan&quot;</span>, <span class="nm">850</span>, <span class="st">&quot;Atlanta&quot;</span>)
+print(trip.destination)        <span class="cm"># Atlanta</span>
+print(trip.requires_review())  <span class="cm"># True (850 &gt; 500, travel threshold)</span>
+trip.approve()                 <span class="cm"># inherited from BusinessRequest</span>
+print(trip.status)             <span class="cm"># Approved</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; OOP to SQL Mapping</div><div class="line"></div></div><div class="card"><div class="card-title">Classes, attributes, and instances map directly to SQL tables</div><p>Understanding this mapping makes SQL design intuitive. When students design their capstone database schema in Week 13, they will translate their class designs directly into SQL <code>CREATE TABLE</code> statements.</p></div><table class="concept-table"><thead><tr><th>OOP concept</th><th>SQL equivalent</th><th>Example</th></tr></thead><tbody><tr><td>class</td><td>table</td><td>BusinessRequest &rarr; requests table</td></tr><tr><td>instance (one object)</td><td>row (one record)</td><td>req_101 &rarr; one row in the requests table</td></tr><tr><td>attribute (instance variable)</td><td>column</td><td>request_id, requester, amount, status</td></tr><tr><td>manager class list</td><td>all rows in the table</td><td>manager.requests &rarr; SELECT * FROM requests</td></tr><tr><td>list_pending() method</td><td>WHERE clause</td><td>SELECT * FROM requests WHERE status = "Pending"</td></tr><tr><td>total_amount() method</td><td>aggregate query</td><td>SELECT SUM(amount) FROM requests</td></tr></tbody></table><div class="prompt-list"><div class="prompt"><div class="p-num">Design discussion &mdash; what would YOUR capstone class look like?</div><div class="p-text">Think about your capstone business domain. What is the main entity? What attributes does it need? What methods would represent real business operations on it?</div><div class="p-hint">This is preparation for the Week 13 project proposal. Students who think about their class design now will write better proposals.</div></div></div><div class="assignment"><div class="a-header">Assignment 11 &middot; Due end of Week 11 &middot; OOP II</div><h3>Composition and Manager Class</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> &mdash; updated with both the entity class and a manager class. Manager must have at least: add, list_by_status, total_amount, summary_report.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; creates a manager, adds at least 4 instances, calls manager methods, and prints a formatted summary report.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 5 tests covering both the entity class and the manager class.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File:</strong> <code>README.md</code> &mdash; includes a class diagram or written description of the OOP design.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div><div class="page-footer">ISM3232 &middot; Week 11 &middot; Module 6 &mdash; OOP II: Composition, Inheritance, and Business Modeling</div></div></body></html>

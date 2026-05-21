@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 4 — Search Tools, the Submission Ritual &amp; Git</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 1 — Developer Foundations</span>
+  <span class="nav-week">Week 4 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 04</div>
+  <h1 class="wk-title">Search Tools, the Submission Ritual &amp; Git</h1>
+  <p class="wk-deck">Find anything in your codebase instantly, commit like a professional, and push your first GitHub repository.</p>
+  <div class="wk-meta"><span class="chip blue">Unit 1</span><span class="chip ">ripgrep · Git · GitHub</span><span class="chip green">Ritual</span></div>
+</div><h2>Search tools — finding things fast</h2><div class="code-label">Three tools — run from ~/ism3232/</div><pre><code># ripgrep — search file CONTENTS (fast, respects .gitignore)
+rg &#x27;def &#x27;          # every function definition in the codebase
+rg &#x27;print&#x27;         # every print statement
+rg &#x27;TODO&#x27;          # every TODO comment
+rg -l &#x27;import&#x27;     # filenames only (not full matches)
+
+# find — search by FILE NAME
+find . -name &#x27;*.py&#x27;      # all Python files
+find . -name &#x27;*.md&#x27;      # all README files
+
+# tree — visualise structure
+tree -L 3                # 3 levels deep</code></pre><div class="concept"><div class="concept-label">Why rg instead of grep</div><p>ripgrep automatically skips .venv/, .git/, and __pycache__/ because they are listed in .gitignore. grep searches everything including those thousands of files. For any real project, use rg.</p></div><h2>The pre-submission ritual — memorise this</h2><p>Every major push follows this nine-step sequence. Your instructor can see your Git log. A single commit called 'final' pushed at midnight tells a story. A commit history showing ruff and pytest run at each step tells a different one.</p><div class="code-label">The complete ritual — run before every graded submission</div><pre><code># 1. Confirm location
+pwd
+
+# 2. Confirm structure
+tree -L 3
+
+# 3. Activate the venv (prompt must show (.venv))
+source .venv/bin/activate
+
+# 4. Auto-format
+ruff format .
+
+# 5. Check for issues (must be clean before continuing)
+ruff check .
+
+# 6. Run tests (must be green before continuing)
+pytest
+
+# 7. See what changed
+git status
+
+# 8. Stage
+git add .
+
+# 9. Commit with a descriptive message
+git commit -m &#x27;week 4: add search tools and complete ritual demo&#x27;
+
+# Push
+git push</code></pre><div class="warn"><div class="concept-label">⚠ If ruff or pytest fail — stop</div><p>Fix the errors before continuing. Never push broken code. The ritual is not complete until steps 5 and 6 both pass cleanly.</p></div><h2>Git and GitHub</h2><div class="code-label">One-time identity setup — run once per machine</div><pre><code>git config --global user.name &#x27;Your Full Name&#x27;
+git config --global user.email &#x27;you@email.com&#x27;
+git config --global --list   # verify both are set</code></pre><div class="code-label">First repository workflow — from local to GitHub</div><pre><code># Create .gitignore before anything else
+echo &#x27;.venv/&#x27; &gt; .gitignore
+echo &#x27;__pycache__/&#x27; &gt;&gt; .gitignore
+
+git init                   # initialise Git in this folder
+git status                 # see all untracked files
+git add .                  # stage everything
+git commit -m &#x27;initial commit: week 4 module&#x27;
+
+# Connect to GitHub (create the repo on github.com first)
+git remote add origin https://github.com/YOURUSERNAME/REPONAME.git
+git branch -M main
+git push -u origin main
+
+# Verify
+git log --oneline          # shows your commit
+git status                 # shows &#x27;nothing to commit&#x27;</code></pre><p><strong>Good commit messages</strong> describe what changed: <code>'add calculate_tax function to business_rules.py'</code>. <strong>Bad messages</strong>: <code>'update'</code>, <code>'fix'</code>, <code>'final'</code>. Write messages as if a colleague will read them tomorrow.</p><h2>Key terms this week</h2><div class="term"><span class="term-word">ripgrep (rg)</span><span class="term-def">Fast content search tool that respects .gitignore.</span></div><div class="term"><span class="term-word">git init</span><span class="term-def">Initialises a new Git repository in the current folder.</span></div><div class="term"><span class="term-word">git add .</span><span class="term-def">Stages all changes for the next commit.</span></div><div class="term"><span class="term-word">git commit -m</span><span class="term-def">Creates a snapshot of the staged changes with a message.</span></div><div class="term"><span class="term-word">git push</span><span class="term-def">Sends commits to the remote repository on GitHub.</span></div><div class="term"><span class="term-word">git log --oneline</span><span class="term-def">Shows a compact history of all commits.</span></div><div class="term"><span class="term-word">git status</span><span class="term-def">Shows which files have changed since the last commit.</span></div><div class="term"><span class="term-word">ruff format .</span><span class="term-def">Auto-formats all Python files in the current folder.</span></div><div class="term"><span class="term-word">ruff check .</span><span class="term-def">Reports style and logic issues without modifying files.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>All 9 ritual steps memorised — can run without notes</li><li>ruff format and ruff check both pass cleanly</li><li>pytest runs (even with zero tests — that is fine for now)</li><li>GitHub repository created and first push verified</li><li>Assignment 4 submitted to Canvas</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 4 &nbsp;·&nbsp; Search Tools, the Submission Ritual &amp; Git</div></body></html>

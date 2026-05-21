@@ -1,0 +1,263 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Assignment 15 Walkthrough</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+.awt-header{padding-bottom:20px;margin-bottom:24px;border-bottom:2px solid var(--divider);}
+.awt-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  margin-bottom:10px;color:#fff;background:var(--text-primary);}
+.awt-header h1{font-size:23px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.awt-header .awt-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:14px;}
+
+/* ── Requirement walkthrough cards ── */
+.req-wt{border-radius:10px;margin-bottom:20px;overflow:hidden;
+  border:1px solid var(--border);}
+.req-wt-head{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;
+  background:var(--accent-bg);border-bottom:1px solid var(--accent-bdr);}
+.req-wt-num{min-width:30px;height:30px;border-radius:50%;background:var(--accent);
+  color:#fff;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.req-wt-title{font-size:14px;font-weight:bold;color:var(--text-primary);line-height:1.5;}
+.req-wt-body{padding:16px 18px;background:var(--bg-card);}
+.req-wt-body p{font-size:13px;color:var(--text-body);line-height:1.7;margin-bottom:8px;}
+.req-wt-body p:last-child{margin-bottom:0;}
+.req-wt-body code{font-size:.85em;}
+
+/* ── What the grader looks for ── */
+.grader-box{background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:8px;
+  padding:13px 16px;margin-top:10px;}
+.grader-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--green);margin-bottom:8px;font-weight:bold;}
+.grader-items{display:flex;flex-direction:column;gap:5px;}
+.grader-item{display:flex;gap:8px;font-size:12px;color:var(--text-body);line-height:1.5;}
+.grader-item::before{content:"✓";color:var(--green);font-weight:bold;flex-shrink:0;}
+
+/* ── Common error box ── */
+.error-box{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:8px;
+  padding:13px 16px;margin-top:10px;}
+.error-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:8px;font-weight:bold;}
+.error-items{display:flex;flex-direction:column;gap:6px;}
+.error-item{font-size:12px;color:var(--text-body);line-height:1.5;
+  padding:7px 10px;background:rgba(0,0,0,.04);border-radius:5px;
+  border-left:3px solid var(--amber);}
+.error-item code{font-size:.85em;}
+
+/* ── Code example blocks ── */
+.awt-code{background:var(--bg-code);border-radius:7px;padding:12px 16px;margin:10px 0;
+  font-family:'Courier New',monospace;font-size:12px;color:var(--text-code);
+  line-height:1.7;white-space:pre-wrap;overflow-x:auto;}
+.awt-code-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:#6c7086;margin-bottom:6px;}
+
+/* ── Tip boxes ── */
+.awt-tip{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:8px;
+  padding:12px 16px;margin-top:10px;font-size:12px;color:var(--text-body);line-height:1.6;}
+.awt-tip-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tip-txt);margin-bottom:5px;font-weight:bold;}
+.awt-tip code{font-size:.85em;}
+
+/* ── Rubric table ── */
+.awt-rubric{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px;}
+.awt-rubric th{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);text-align:left;
+  padding:8px 12px;border-bottom:2px solid var(--border);background:var(--bg-card-alt);}
+.awt-rubric td{padding:9px 12px;border-bottom:1px solid var(--border-light);
+  color:var(--text-body);vertical-align:top;}
+.awt-rubric tr:last-child td{border-bottom:none;}
+.awt-rubric .pts-cell{font-family:'Courier New',monospace;font-weight:bold;
+  color:var(--text-primary);white-space:nowrap;}
+.awt-rubric .full-cell{color:var(--green);}
+.awt-rubric .partial-cell{color:var(--amber);}
+
+/* ── Score guide ── */
+.score-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:8px;margin-bottom:16px;}
+.score-band{border-radius:7px;padding:10px 12px;text-align:center;}
+.sb-a{background:var(--ok-bg);border:1px solid var(--ok-bdr);}
+.sb-b{background:var(--tip-bg);border:1px solid var(--tip-bdr);}
+.sb-c{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+.sb-d{background:var(--warn-bg);border:1px solid var(--warn-bdr);}
+.sb-f{background:#fdf2f8;border:1px solid #f9a8d4;}
+.sb-grade{font-family:'Courier New',monospace;font-size:18px;font-weight:bold;
+  color:var(--text-primary);}
+.sb-range{font-size:11px;color:var(--text-secondary);margin-top:2px;}
+.sb-desc{font-size:10px;color:var(--text-muted);margin-top:3px;}
+
+/* ── Grading flow ── */
+.grading-steps{counter-reset:gs;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.gs-row{display:flex;gap:12px;align-items:flex-start;}
+.gs-num{counter-increment:gs;min-width:24px;height:24px;border-radius:50%;
+  background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',monospace;
+  font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;}
+.gs-text{font-size:12px;color:var(--text-body);line-height:1.6;}
+.gs-text code{font-size:.85em;}
+.gs-text strong{color:var(--text-primary);}
+
+/* ── Passing / failing examples ── */
+.example-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+@media(max-width:600px){.example-pair{grid-template-columns:1fr;}}
+.eg-pass{background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:7px;padding:10px 12px;}
+.eg-fail{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:7px;padding:10px 12px;}
+.eg-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:6px;font-weight:bold;}
+.eg-pass .eg-label{color:var(--green);}
+.eg-fail .eg-label{color:var(--amber);}
+.eg-body{font-size:12px;color:var(--text-body);line-height:1.5;}
+.eg-body code{font-size:.85em;}
+</style></head><body><div class="wrapper"><div class="awt-header"><span class="awt-badge">&#x1F4DD; Assignment 15 Walkthrough</span><h1>ism3232_week15_assignment_walkthrough</h1><p class="awt-sub">Streamlit Business Interface &mdash; Build a five-feature Streamlit application wired to your capstone SQLite database.</p><div class="meta-pills"><span class="meta-pill">Week 15 of 16</span><span class="meta-pill">90 points</span><span class="meta-pill">Instructor version</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">How to use this walkthrough</div><div class="callout-body">This document walks through every requirement with grading guidance, passing vs failing examples, and common mistakes. Use it when grading to ensure consistency, or share with students after grades are returned as a learning resource. The rubric table at the end matches the assignment page exactly.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Score Guide &mdash; Assignment 15 (90 points)</div><div class="line"></div></div><div class="score-guide"><div class="score-band sb-a"><div class="sb-grade">A</div><div class="sb-range">81&ndash;90 pts</div><div class="sb-desc">All requirements met, all criteria passing</div></div><div class="score-band sb-b"><div class="sb-grade">B</div><div class="sb-range">72&ndash;80 pts</div><div class="sb-desc">Most requirements met, minor gaps</div></div><div class="score-band sb-c"><div class="sb-grade">C</div><div class="sb-range">62&ndash;71 pts</div><div class="sb-desc">Core requirements met, notable gaps</div></div><div class="score-band sb-d"><div class="sb-grade">D</div><div class="sb-range">54&ndash;61 pts</div><div class="sb-desc">Partial completion, significant issues</div></div><div class="score-band sb-f"><div class="sb-grade">F</div><div class="sb-range">0&ndash;53 pts</div><div class="sb-desc">Not submitted or does not meet minimum</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Requirement-by-Requirement Walkthrough</div><div class="line"></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">1</div><div class="req-wt-title">Feature 1 — Add a record with validation</div></div><div class="req-wt-body"><p>Check the Submit tab screenshot and the source code. Both validation and success/error message are required.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">Form fields present for all schema-required inputs</div><div class="grader-item">At least one validation check (if requester: or if amount > 0:)</div><div class="grader-item">add_record() from database.py called on valid submission</div><div class="grader-item">st.success() shown on success</div><div class="grader-item">st.error() shown on validation failure</div><div class="grader-item">Screenshot shows the success message after a submission</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">No validation — form submits empty records to the database</div><div class="error-item">add_record() called with hardcoded values instead of widget values</div><div class="error-item">st.write() used instead of st.success() — partial credit (12/20)</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">2</div><div class="req-wt-title">Feature 2 — View all records</div></div><div class="req-wt-body"><p>Verify st.dataframe() is used and the empty-state is handled.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">get_all_records() called to retrieve data</div><div class="grader-item">st.dataframe(records, use_container_width=True) used</div><div class="grader-item">Empty state: if records: ... else: st.info('No records yet.')</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">st.table() used instead of st.dataframe() — partial credit (6/10)</div><div class="error-item">No empty state handling — acceptable but note it</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">3</div><div class="req-wt-title">Feature 3 — Filter with count label</div></div><div class="req-wt-body"><p>Test this by checking the screenshot: filter selectbox visible, count label below the table.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">At least one filter control (selectbox, text_input, or radio)</div><div class="grader-item">Filter applied to retrieved data in Python (not in SQL)</div><div class="grader-item">st.caption() or st.write() showing record count below the table</div><div class="grader-item">Screenshot shows filtered results (not all records when a filter is selected)</div></div></div><div class="example-pair"><div class="eg-pass"><div class="eg-label">&#x2705; Full credit filter</div><div class="eg-body">status_filter = st.selectbox('Filter', ['All', 'Pending', 'Approved'])
+records = get_all_records()
+if status_filter != 'All':
+    records = [r for r in records if r['status'] == status_filter]
+st.dataframe(records)
+st.caption(f'{len(records)} record(s) shown')</div></div><div class="eg-fail"><div class="eg-label">&#x274C; Always shows all (common bug)</div><div class="eg-body">status_filter = st.selectbox('Filter', ['Pending', 'Approved'])
+records = get_all_records()
+st.dataframe(records)  # filter applied but records not updated</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Filter selectbox present but records not re-filtered before display — the most common Feature 3 bug</div><div class="error-item">Count label missing — partial credit (15/20)</div><div class="error-item">Filter passed to SQL query instead of applied in Python — acceptable but note it</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">4</div><div class="req-wt-title">Feature 4 — Update status with live selectbox</div></div><div class="req-wt-body"><p>The selectbox for record selection must be built from get_all_records() — not hardcoded IDs.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">get_all_records() called to populate the selectbox options</div><div class="grader-item">Selectbox shows meaningful labels (ID + requester name + amount)</div><div class="grader-item">update_status() called with the correct record_id and new_status</div><div class="grader-item">st.success() shown after update</div><div class="grader-item">Screenshot shows the success message after an update</div></div></div><div class="awt-tip"><div class="awt-tip-label">&#x1F4A1; How to check the selectbox build</div>Look for: {r['id']: r['id'] for r in records} or options = {f"ID {r['id']}...": r['id'] for r in records}. If IDs are hardcoded, that is a violation.</div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Hardcoded record IDs in the selectbox — fails immediately when records are deleted or added; deduct 10 pts</div><div class="error-item">update_status() not called — only a visual change with no database write; 0 pts</div><div class="error-item">Change not reflected when View tab is opened after update — likely the update is not persisting</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">5</div><div class="req-wt-title">Feature 5 — Operational report</div></div><div class="req-wt-body"><p>Verify the report uses get_status_report() (not get_all_records()) and shows count AND total per status.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">get_status_report() called (not get_all_records with filtering)</div><div class="grader-item">Output shows both count and total amount per status</div><div class="grader-item">st.dataframe() or st.metric() used (not plain st.write() with raw tuples)</div><div class="grader-item">Screenshot shows the report with real data and at least two different statuses</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Report shows individual records instead of aggregates — wrong function used</div><div class="error-item">Only count shown, not total amount — partial credit (10/15)</div><div class="error-item">Report is always empty because get_status_report() is not wired to the same database</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">6</div><div class="req-wt-title">App configuration requirements</div></div><div class="req-wt-body"><p>Check the source code for all four configuration requirements.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">st.set_page_config(page_title='...', layout='wide') at the top of the file</div><div class="grader-item">create_table() called outside any tab or button block (at the top level)</div><div class="grader-item">All features in separate tabs using st.tabs()</div><div class="grader-item">App title customised to the student's domain (not 'Request Tracker')</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Known Common Mistakes</div><div class="line"></div></div><div class="error-box"><div class="error-label">&#x26A0; Known common mistakes (from the assignment page)</div><div class="error-items"><div class="error-item">Hardcoded record IDs in the Update tab — the selectbox must be built from get_all_records()</div><div class="error-item">Filter that always shows all records — test the filter by selecting a status that excludes some records</div><div class="error-item">Report showing individual records instead of grouped aggregates — it must use get_status_report()</div><div class="error-item">create_table() not called at the top of app.py — without it the app crashes on first run</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Rubric Reference</div><div class="line"></div></div><table class="awt-rubric"><thead><tr><th>Requirement</th><th>Points</th><th>Full credit</th><th>Partial / No credit</th></tr></thead><tbody><tr><td>Feature 1: Add a record with validation + success/error message</td><td class="pts-cell">20</td><td class="full-cell">Form works, validation present, add_record() called, message shown</td><td class="partial-cell">Missing validation, wrong function called, no message</td></tr><tr><td>Feature 2: View all records in st.dataframe, empty state handled</td><td class="pts-cell">10</td><td class="full-cell">Dataframe with all records, info message when empty</td><td class="partial-cell">No empty state, records not displaying</td></tr><tr><td>Feature 3: Filter with count label, operates on retrieved data</td><td class="pts-cell">20</td><td class="full-cell">Filter control works, count shown, data narrows correctly</td><td class="partial-cell">Filter not functional or no count</td></tr><tr><td>Feature 4: Update status via selectbox, change reflected in view</td><td class="pts-cell">20</td><td class="full-cell">Selectbox built from live data, update_status() called, success shown</td><td class="partial-cell">Hardcoded IDs, wrong function, or change not persisted</td></tr><tr><td>Feature 5: Report with count + total per status</td><td class="pts-cell">15</td><td class="full-cell">STATUS report shows count and total, updates dynamically</td><td class="partial-cell">Only counts, or static data</td></tr><tr><td>App config: page title, create_table(), tabs, custom title</td><td class="pts-cell">5</td><td class="full-cell">All 4 config requirements met</td><td class="partial-cell">Missing any configuration item</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Grading Flow</div><div class="line"></div></div><div class="grading-steps"><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Open app.py. Look for st.tabs() — all features must be organised in tabs.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Verify create_table() is called at the top (before any st.tabs() block).</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Feature 1 (Submit tab): find add_record() call, find validation, find st.success() and st.error().</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Feature 2 (View tab): find get_all_records(), st.dataframe(), empty state check.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Feature 3 (Filter tab): find the filter control, then find where records is re-filtered. Is it before st.dataframe()?</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Feature 4 (Update tab): find where the selectbox options are built — is it from get_all_records() or hardcoded?</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Feature 5 (Report tab): find get_status_report() call. Does output show count AND total?</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Check ritual screenshot and all four screenshots of the running app.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Total and return.</div></div></div><div class="callout tip"><div class="callout-icon">&#x1F4AC;</div><div><div class="callout-label">Rubric discussion</div><div class="callout-body">The filter feature (20 pts) is the most commonly buggy. The selectbox is there but the filter is not applied to the records variable before display. Test this by inspecting the code: after the filter selectbox, does a line like 'records = [r for r in records if ...]' appear? If not, the filter does not work. The Update tab (20 pts) has a critical distinction: hardcoded IDs vs live data. Even one hardcoded ID loses 10 pts.</div></div></div><div class="page-footer">ISM3232 &middot; Assignment 15 Walkthrough &middot; Streamlit Business Interface</div></div></body></html>

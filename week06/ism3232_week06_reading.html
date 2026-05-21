@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 2 — Python Foundations</span>
+  <span class="nav-week">Week 6 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 06</div>
+  <h1 class="wk-title">Conditionals, Loops &amp; Dictionaries</h1>
+  <p class="wk-deck">Implement multi-tier business rules and model collections of records using lists and dictionaries.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">if · for · dict</span><span class="chip ">Business logic</span></div>
+</div><h2>Conditionals — business rules as code</h2><div class="concept"><div class="concept-label">Business rules are conditionals</div><p>Every approval threshold, every routing rule, every eligibility check is an if/elif/else statement. The code structure mirrors the business policy.</p></div><div class="code-label">Multi-tier approval routing</div><pre><code>LIMIT_AUTO     =  500.00
+LIMIT_MANAGER  = 2000.00
+LIMIT_DIRECTOR = 5000.00
+
+def get_approver(amount: float) -&gt; str:
+    if amount &lt;= LIMIT_AUTO:
+        return &#x27;Auto-approved&#x27;
+    elif amount &lt;= LIMIT_MANAGER:
+        return &#x27;Manager&#x27;
+    elif amount &lt;= LIMIT_DIRECTOR:
+        return &#x27;Director&#x27;
+    else:
+        return &#x27;Board&#x27;
+
+# Test every boundary
+for amt in [500, 501, 2000, 2001, 5000, 5001]:
+    print(f&#x27;${amt:&gt;6,.2f}  →  {get_approver(amt)}&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ Test boundary values</div><p>Testing with 100 and 1000 is not enough. Test exactly at the threshold (500) and one unit above (501). The boundary is where bugs hide.</p></div><h2>Lists and the accumulator pattern</h2><div class="code-label">List operations and the accumulator</div><pre><code>amounts = [200.00, 1500.00, 400.00, 2200.00, 850.00]
+
+# The accumulator pattern — initialise BEFORE the loop
+total   = 0.0    # ← OUTSIDE the loop
+flagged = []     # ← OUTSIDE the loop
+
+for amount in amounts:
+    total += amount              # add to running total
+    if amount &gt; 1000:
+        flagged.append(amount)   # collect matching items
+
+print(f&#x27;Total:   ${total:,.2f}&#x27;)       # $5,150.00
+print(f&#x27;Flagged: {flagged}&#x27;)            # [1500.0, 2200.0]</code></pre><div class="warn"><div class="concept-label">⚠ Initialise outside the loop</div><p>If you write <code>total = 0</code> inside the loop body, it resets to zero on every iteration. The accumulator must be created before the loop starts.</p></div><h2>Dictionaries — one record per dict, many records per list</h2><div class="code-label">Dict operations and the list-of-dicts pattern</div><pre><code># One record = one dict
+request = {
+    &#x27;id&#x27;:        101,
+    &#x27;requester&#x27;: &#x27;Taylor&#x27;,
+    &#x27;category&#x27;:  &#x27;Equipment&#x27;,
+    &#x27;amount&#x27;:    1250.00,
+    &#x27;status&#x27;:    &#x27;Pending&#x27;,
+}
+
+print(request[&#x27;requester&#x27;])  # Taylor
+request[&#x27;status&#x27;] = &#x27;Approved&#x27;  # update a field
+
+# Many records = list of dicts (one dict = one row)
+records = [
+    {&#x27;id&#x27;: 101, &#x27;requester&#x27;: &#x27;Taylor&#x27;,  &#x27;amount&#x27;: 1250.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
+    {&#x27;id&#x27;: 102, &#x27;requester&#x27;: &#x27;Jordan&#x27;,  &#x27;amount&#x27;:  350.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
+    {&#x27;id&#x27;: 103, &#x27;requester&#x27;: &#x27;Morgan&#x27;,  &#x27;amount&#x27;: 2800.00, &#x27;status&#x27;: &#x27;Approved&#x27;},
+]
+
+# Filter: all Pending records
+pending = [r for r in records if r[&#x27;status&#x27;] == &#x27;Pending&#x27;]
+print(f&#x27;Pending: {len(pending)} records&#x27;)
+
+# Total pending amount
+total = sum(r[&#x27;amount&#x27;] for r in pending)
+print(f&#x27;Total pending: ${total:,.2f}&#x27;)</code></pre><div class="concept"><div class="concept-label">The list-of-dicts table</div><p>One dict = one row. A list of dicts = the table. The dict keys are the column names. In Week 14 we replace this list with a real SQLite database — the structure and the operations are identical.</p></div><h2>Key terms this week</h2><div class="term"><span class="term-word">if / elif / else</span><span class="term-def">Branching statement — runs different code depending on which condition is True.</span></div><div class="term"><span class="term-word">for loop</span><span class="term-def">Iterates over every item in a sequence, executing the loop body once per item.</span></div><div class="term"><span class="term-word">accumulator pattern</span><span class="term-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list.</span></div><div class="term"><span class="term-word">append()</span><span class="term-def">Adds one item to the end of a list.</span></div><div class="term"><span class="term-word">dict key access</span><span class="term-def">record[&#x27;key&#x27;] — retrieves the value for that key.</span></div><div class="term"><span class="term-word">list-of-dicts</span><span class="term-def">One dict per record; the list holds all records. One dict = one row, list = the table.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Conditionals, Loops &amp; Dictionaries</div></body></html>

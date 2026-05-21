@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Assignment 4 Walkthrough</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+.awt-header{padding-bottom:20px;margin-bottom:24px;border-bottom:2px solid var(--divider);}
+.awt-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  margin-bottom:10px;color:#fff;background:var(--text-primary);}
+.awt-header h1{font-size:23px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.awt-header .awt-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:14px;}
+
+/* ── Requirement walkthrough cards ── */
+.req-wt{border-radius:10px;margin-bottom:20px;overflow:hidden;
+  border:1px solid var(--border);}
+.req-wt-head{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;
+  background:var(--accent-bg);border-bottom:1px solid var(--accent-bdr);}
+.req-wt-num{min-width:30px;height:30px;border-radius:50%;background:var(--accent);
+  color:#fff;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.req-wt-title{font-size:14px;font-weight:bold;color:var(--text-primary);line-height:1.5;}
+.req-wt-body{padding:16px 18px;background:var(--bg-card);}
+.req-wt-body p{font-size:13px;color:var(--text-body);line-height:1.7;margin-bottom:8px;}
+.req-wt-body p:last-child{margin-bottom:0;}
+.req-wt-body code{font-size:.85em;}
+
+/* ── What the grader looks for ── */
+.grader-box{background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:8px;
+  padding:13px 16px;margin-top:10px;}
+.grader-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--green);margin-bottom:8px;font-weight:bold;}
+.grader-items{display:flex;flex-direction:column;gap:5px;}
+.grader-item{display:flex;gap:8px;font-size:12px;color:var(--text-body);line-height:1.5;}
+.grader-item::before{content:"✓";color:var(--green);font-weight:bold;flex-shrink:0;}
+
+/* ── Common error box ── */
+.error-box{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:8px;
+  padding:13px 16px;margin-top:10px;}
+.error-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:8px;font-weight:bold;}
+.error-items{display:flex;flex-direction:column;gap:6px;}
+.error-item{font-size:12px;color:var(--text-body);line-height:1.5;
+  padding:7px 10px;background:rgba(0,0,0,.04);border-radius:5px;
+  border-left:3px solid var(--amber);}
+.error-item code{font-size:.85em;}
+
+/* ── Code example blocks ── */
+.awt-code{background:var(--bg-code);border-radius:7px;padding:12px 16px;margin:10px 0;
+  font-family:'Courier New',monospace;font-size:12px;color:var(--text-code);
+  line-height:1.7;white-space:pre-wrap;overflow-x:auto;}
+.awt-code-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:#6c7086;margin-bottom:6px;}
+
+/* ── Tip boxes ── */
+.awt-tip{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:8px;
+  padding:12px 16px;margin-top:10px;font-size:12px;color:var(--text-body);line-height:1.6;}
+.awt-tip-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--tip-txt);margin-bottom:5px;font-weight:bold;}
+.awt-tip code{font-size:.85em;}
+
+/* ── Rubric table ── */
+.awt-rubric{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px;}
+.awt-rubric th{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);text-align:left;
+  padding:8px 12px;border-bottom:2px solid var(--border);background:var(--bg-card-alt);}
+.awt-rubric td{padding:9px 12px;border-bottom:1px solid var(--border-light);
+  color:var(--text-body);vertical-align:top;}
+.awt-rubric tr:last-child td{border-bottom:none;}
+.awt-rubric .pts-cell{font-family:'Courier New',monospace;font-weight:bold;
+  color:var(--text-primary);white-space:nowrap;}
+.awt-rubric .full-cell{color:var(--green);}
+.awt-rubric .partial-cell{color:var(--amber);}
+
+/* ── Score guide ── */
+.score-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:8px;margin-bottom:16px;}
+.score-band{border-radius:7px;padding:10px 12px;text-align:center;}
+.sb-a{background:var(--ok-bg);border:1px solid var(--ok-bdr);}
+.sb-b{background:var(--tip-bg);border:1px solid var(--tip-bdr);}
+.sb-c{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+.sb-d{background:var(--warn-bg);border:1px solid var(--warn-bdr);}
+.sb-f{background:#fdf2f8;border:1px solid #f9a8d4;}
+.sb-grade{font-family:'Courier New',monospace;font-size:18px;font-weight:bold;
+  color:var(--text-primary);}
+.sb-range{font-size:11px;color:var(--text-secondary);margin-top:2px;}
+.sb-desc{font-size:10px;color:var(--text-muted);margin-top:3px;}
+
+/* ── Grading flow ── */
+.grading-steps{counter-reset:gs;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.gs-row{display:flex;gap:12px;align-items:flex-start;}
+.gs-num{counter-increment:gs;min-width:24px;height:24px;border-radius:50%;
+  background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',monospace;
+  font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;}
+.gs-text{font-size:12px;color:var(--text-body);line-height:1.6;}
+.gs-text code{font-size:.85em;}
+.gs-text strong{color:var(--text-primary);}
+
+/* ── Passing / failing examples ── */
+.example-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+@media(max-width:600px){.example-pair{grid-template-columns:1fr;}}
+.eg-pass{background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:7px;padding:10px 12px;}
+.eg-fail{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:7px;padding:10px 12px;}
+.eg-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:6px;font-weight:bold;}
+.eg-pass .eg-label{color:var(--green);}
+.eg-fail .eg-label{color:var(--amber);}
+.eg-body{font-size:12px;color:var(--text-body);line-height:1.5;}
+.eg-body code{font-size:.85em;}
+</style></head><body><div class="wrapper"><div class="awt-header"><span class="awt-badge">&#x1F4DD; Assignment 4 Walkthrough</span><h1>ism3232_week04_assignment_walkthrough</h1><p class="awt-sub">Search Tools, Submission Ritual, and Git &mdash; Search your codebase with ripgrep, run the complete pre-submission ritual, and push to GitHub for the first time.</p><div class="meta-pills"><span class="meta-pill">Week 4 of 16</span><span class="meta-pill">70 points</span><span class="meta-pill">Instructor version</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">How to use this walkthrough</div><div class="callout-body">This document walks through every requirement with grading guidance, passing vs failing examples, and common mistakes. Use it when grading to ensure consistency, or share with students after grades are returned as a learning resource. The rubric table at the end matches the assignment page exactly.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Score Guide &mdash; Assignment 4 (70 points)</div><div class="line"></div></div><div class="score-guide"><div class="score-band sb-a"><div class="sb-grade">A</div><div class="sb-range">63&ndash;70 pts</div><div class="sb-desc">All requirements met, all criteria passing</div></div><div class="score-band sb-b"><div class="sb-grade">B</div><div class="sb-range">56&ndash;62 pts</div><div class="sb-desc">Most requirements met, minor gaps</div></div><div class="score-band sb-c"><div class="sb-grade">C</div><div class="sb-range">49&ndash;55 pts</div><div class="sb-desc">Core requirements met, notable gaps</div></div><div class="score-band sb-d"><div class="sb-grade">D</div><div class="sb-range">42&ndash;48 pts</div><div class="sb-desc">Partial completion, significant issues</div></div><div class="score-band sb-f"><div class="sb-grade">F</div><div class="sb-range">0&ndash;41 pts</div><div class="sb-desc">Not submitted or does not meet minimum</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Requirement-by-Requirement Walkthrough</div><div class="line"></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">1</div><div class="req-wt-title">Search tools — rg and find</div></div><div class="req-wt-body"><p>Screenshot must show at least two rg commands with output, plus the tree -L 3 output.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">At least 2 rg commands visible with matching output (not empty results)</div><div class="grader-item">find command with *.py or *.md filter visible</div><div class="grader-item">tree -L 3 output showing course folder structure</div><div class="grader-item">Search run from ~/ism3232/ (not from a subfolder — results should span all modules)</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">rg with no results — student ran it in an empty folder or used the wrong pattern</div><div class="error-item">grep instead of rg — partial credit (5/15); note the course requires ripgrep</div><div class="error-item">find without -name flag — returns everything including directories</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">2</div><div class="req-wt-title">test_week4.py with three passing tests</div></div><div class="req-wt-body"><p>Check the repository for the test file. Tests must actually assert something meaningful — not <code>assert True</code>.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">tests/test_week4.py exists in the repository</div><div class="grader-item">tests/__init__.py exists (makes the folder a Python package)</div><div class="grader-item">Three test functions present, each starting with test_</div><div class="grader-item">Each test has a meaningful assert statement (not assert True)</div></div></div><div class="example-pair"><div class="eg-pass"><div class="eg-label">&#x2705; Passing test</div><div class="eg-body">def test_string_upper():
+    assert 'ism3232'.upper() == 'ISM3232'</div></div><div class="eg-fail"><div class="eg-label">&#x274C; Trivial test (no credit)</div><div class="eg-body">def test_passes():
+    assert True</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Test functions do not start with test_ — pytest will not discover them</div><div class="error-item">No __init__.py in tests/ — pytest may have import issues</div><div class="error-item">Tests have assert statements but they assert constants (1 == 1)</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">3</div><div class="req-wt-title">Complete pre-submission ritual — all 9 steps</div></div><div class="req-wt-body"><p>This is the most important deliverable. All 9 steps must be visible in ONE screenshot of a continuous terminal session. Check each step explicitly.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">pwd — location shown</div><div class="grader-item">tree -L 3 — directory structure shown</div><div class="grader-item">source .venv/bin/activate — (.venv) prompt appears</div><div class="grader-item">ruff format . — runs without error (or shows files reformatted)</div><div class="grader-item">ruff check . — runs with no error output (clean)</div><div class="grader-item">pytest — shows test results (all passing, green)</div><div class="grader-item">git status — shows staged/unstaged state</div><div class="grader-item">git add . — runs</div><div class="grader-item">git commit -m '...' — commit message visible and descriptive</div><div class="grader-item">git push — runs and shows remote push output</div></div></div><div class="example-pair"><div class="eg-pass"><div class="eg-label">&#x2705; Full credit</div><div class="eg-body">All 10 steps visible in sequence in one terminal window. Prompt changes to (.venv) after activation. pytest shows 3 passed. git push shows branch pushed.</div></div><div class="eg-fail"><div class="eg-label">&#x274C; Partial credit</div><div class="eg-body">Only 6 steps visible. Or ruff check shows errors that were not fixed. Or pytest shows failures. Or git push is missing.</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Ritual run in wrong order (e.g. git add before pytest) — partial credit, note the order requirement</div><div class="error-item">pytest shows failures — submission should not have been pushed; deduct ritual points</div><div class="error-item">ruff check shows errors — formatting was not done or there is a linting error</div><div class="error-item">Commit message is 'final' or 'update' — note professionalism requirement; not a deduction but worth mentioning</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">4</div><div class="req-wt-title">GitHub repository page visible</div></div><div class="req-wt-body"><p>Screenshot must show the GitHub repository with files committed. Not just the local terminal — the actual github.com page.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">github.com URL visible in the screenshot (not localhost)</div><div class="grader-item">Repository shows module02_zsh directory structure</div><div class="grader-item">tests/ folder and test_week4.py visible in the file listing</div><div class="grader-item">.gitignore committed (should not see .venv/ in the listing)</div></div></div><div class="error-box"><div class="error-label">&#x26A0; Common mistakes at this step</div><div class="error-items"><div class="error-item">Student submitted a terminal screenshot instead of the GitHub page</div><div class="error-item">.venv/ folder visible in the GitHub listing — .gitignore was not created or not committed</div><div class="error-item">Repository is empty — push did not succeed</div></div></div></div></div><div class="req-wt"><div class="req-wt-head"><div class="req-wt-num">5</div><div class="req-wt-title">README.md with 15+ commands</div></div><div class="req-wt-body"><p>Open the README from the GitHub repository. Count the commands. Check descriptions are meaningful.</p><div class="grader-box"><div class="grader-label">&#x1F50D; What the grader checks</div><div class="grader-items"><div class="grader-item">15 or more commands from Weeks 2, 3, and 4 documented</div><div class="grader-item">Each command has a description (at least one sentence)</div><div class="grader-item">Commands are grouped logically (navigation, file ops, venv, search, git)</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Known Common Mistakes</div><div class="line"></div></div><div class="error-box"><div class="error-label">&#x26A0; Known common mistakes (from the assignment page)</div><div class="error-items"><div class="error-item">Commit message &#x27;final&#x27; or &#x27;update&#x27; — be descriptive: what did you do this week?</div><div class="error-item">Pushing with .venv/ not in .gitignore — create the gitignore before the first push</div><div class="error-item">Running pytest before ruff — the ritual order is mandatory</div><div class="error-item">Submitting a Canvas upload instead of a GitHub URL — paste the repository URL into the Canvas submission box</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Rubric Reference</div><div class="line"></div></div><table class="awt-rubric"><thead><tr><th>Requirement</th><th>Points</th><th>Full credit</th><th>Partial / No credit</th></tr></thead><tbody><tr><td>rg and find screenshots showing search results</td><td class="pts-cell">15</td><td class="full-cell">Two+ rg commands with real output</td><td class="partial-cell">No search output or wrong tool</td></tr><tr><td>test_week4.py with 3 passing tests</td><td class="pts-cell">15</td><td class="full-cell">All three tests written and pass</td><td class="partial-cell">Fewer than 3 or failing tests</td></tr><tr><td>Complete ritual screenshot (all 9 steps, all passing)</td><td class="pts-cell">20</td><td class="full-cell">All steps visible, ruff clean, pytest green, git pushed</td><td class="partial-cell">Missing steps or failures not resolved</td></tr><tr><td>GitHub repository page visible with committed files</td><td class="pts-cell">10</td><td class="full-cell">Repo accessible, files visible, commit message appropriate</td><td class="partial-cell">Not pushed or private with no access granted</td></tr><tr><td>README.md with 15+ commands and descriptions</td><td class="pts-cell">10</td><td class="full-cell">15+ commands, each described</td><td class="partial-cell">Fewer than 15 or descriptions missing</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Grading Flow</div><div class="line"></div></div><div class="grading-steps"><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Open the GitHub URL submitted. Verify the repo is accessible and has files.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Check the file structure in GitHub: module02_zsh/, tests/, README.md, .gitignore visible.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Check that .venv/ is NOT visible in the repository (it should be in .gitignore).</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Screenshot 1 (search): Verify 2+ rg commands, find, tree -L 3 from ~/ism3232/.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Screenshot 2 (ritual): Walk through all 9 steps — mark each present/absent. This is the most time-consuming check.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Screenshot 3 (GitHub): Verify github.com URL visible, files shown, tests/ folder present.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Clone or browse the repo: check test_week4.py has 3 tests with meaningful assertions.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Check README.md in repo: count commands (need 15+), check descriptions.</div></div><div class="gs-row"><div class="gs-num"></div><div class="gs-text">Total and return with specific ritual step feedback.</div></div></div><div class="callout tip"><div class="callout-icon">&#x1F4A1;</div><div><div class="callout-label">Additional grading notes</div><div class="callout-body">Assignment 4 is the first GitHub submission. Some students will have technical issues with remote setup (wrong URL, authentication failures). Award full marks for completed work if a student can demonstrate the push worked even if the URL submission had issues — but require the URL for full submission credit.</div></div></div><div class="callout tip"><div class="callout-icon">&#x1F4AC;</div><div><div class="callout-label">Rubric discussion</div><div class="callout-body">The ritual screenshot (20 pts) is the highest-weight item and the most important habit of the course. A student who completes 7-8 of 9 steps earns 14-16/20. A student who completes fewer than 5 earns 0-8/20. Do not award partial credit for 'all steps were probably done but not shown' — the screenshot is the evidence.</div></div></div><div class="page-footer">ISM3232 &middot; Assignment 4 Walkthrough &middot; Search Tools, Submission Ritual, and Git</div></div></body></html>

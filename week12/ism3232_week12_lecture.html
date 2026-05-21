@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W12</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style></head><body><div class="wrapper"><div class="page-header"><p class="eyebrow">ISM3232 &middot; Week 12 Lecture Material</p><h1>Week 12 &mdash; Module 6 &mdash; OOP III: Applied Practice and pytest Checkpoint</h1><p class="subtitle">Students design and build a standalone multi-class business simulation from scratch and write comprehensive pytest tests before beginning the capstone.</p><div class="meta-pills"><span class="meta-pill">Week 12 of 17</span><span class="meta-pill">Unit 3: OOP System Design</span><span class="meta-pill">Module 6 (Wk 3 of 3)</span><span class="meta-pill">~80 min</span><span class="meta-pill">OOP checkpoint &mdash; design before coding</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;15 min</div><div class="t-label">Design-first approach</div></div><div class="timing-block green"><div class="t-time">15&ndash;40 min</div><div class="t-label">Build own multi-class system</div></div><div class="timing-block amber"><div class="t-time">40&ndash;60 min</div><div class="t-label">Write 5+ pytest tests</div></div><div class="timing-block purple"><div class="t-time">60&ndash;70 min</div><div class="t-label">Common mistakes review</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="callout blue"><div class="callout-icon">&#x2705;</div><div><div class="callout-label">OOP Checkpoint before the capstone</div><div class="callout-body">Week 12 is the OOP applied practice week. Students build a standalone multi-class simulation &mdash; no database, no Streamlit &mdash; and write comprehensive pytest tests. This is the last chance to confirm OOP fluency before SQL and Streamlit are introduced on top of it in Unit 4.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Applied OOP Practice Means</div><div class="line"></div></div><div class="card"><div class="card-title">The goal this week: build without a net</div><p>Weeks 10 and 11 introduced the concepts with guided examples. This week students design and build their own multi-class system from a prompt &mdash; choosing their own class names, attributes, and methods &mdash; and test every piece of business logic with pytest.</p><p>The deliverable is a Python project with at least two entity classes, one manager class, and five or more pytest tests. No database. No Streamlit. Pure OOP.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Design-First Approach</div><div class="line"></div></div><div class="card"><div class="card-title">Always design before you type</div><p>Before writing any code this week, students should write down: What are my two entity classes? What attributes does each one have? What methods does each one need? What does the manager class hold and what can it do?</p><p>A class design written in comments or a README takes five minutes and saves an hour of refactoring. This is the habit that separates developers who ship from developers who spin.</p></div><div class="cb"><div class="cb-label">Design template &mdash; fill this in before writing any class code</div><pre><span class="cm"># CLASS DESIGN &mdash; Week 12 Applied Practice
+#
+# Entity class 1: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all methods with brief description]
+#
+# Entity class 2: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all methods with brief description]
+#
+# Manager class: [ClassName]
+#   Holds: list of [entity class 1]
+#   Methods: add, list_by_status, total, summary_report
+#
+# Business rules (will become methods and test cases):
+#   [rule 1]
+#   [rule 2]
+#   [rule 3]</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Reference: The Complete Pattern</div><div class="line"></div></div><div class="card"><div class="card-title">Full example: Employee + Department + DepartmentManager</div><p>Use this as a model if students are stuck on what to build. They should NOT copy it &mdash; they must design their own domain &mdash; but they can reference the structure.</p></div><div class="cb"><div class="cb-label">models.py &mdash; two entity classes + one manager</div><pre><span class="kw">class</span> <span class="fn">Employee</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, emp_id, name, department, salary):
+        self.emp_id     = emp_id
+        self.name       = name
+        self.department = department
+        self.salary     = salary
+        self.active     = <span class="nm">True</span>
+
+    <span class="kw">def</span> <span class="fn">give_raise</span>(self, percent):
+        self.salary *= (<span class="nm">1</span> + percent / <span class="nm">100</span>)
+
+    <span class="kw">def</span> <span class="fn">deactivate</span>(self):
+        self.active = <span class="nm">False</span>
+
+    <span class="kw">def</span> <span class="fn">is_senior</span>(self):
+        <span class="kw">return</span> self.salary &gt; <span class="nm">80000</span>
+
+<span class="kw">class</span> <span class="fn">Department</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, budget):
+        self.name       = name
+        self.budget     = budget
+        self.employees  = []
+
+    <span class="kw">def</span> <span class="fn">hire</span>(self, employee):
+        self.employees.append(employee)
+
+    <span class="kw">def</span> <span class="fn">headcount</span>(self):
+        <span class="kw">return</span> len([e <span class="kw">for</span> e <span class="kw">in</span> self.employees <span class="kw">if</span> e.active])
+
+    <span class="kw">def</span> <span class="fn">payroll_total</span>(self):
+        <span class="kw">return</span> sum(e.salary <span class="kw">for</span> e <span class="kw">in</span> self.employees <span class="kw">if</span> e.active)
+
+    <span class="kw">def</span> <span class="fn">over_budget</span>(self):
+        <span class="kw">return</span> self.payroll_total() &gt; self.budget</pre></div><div class="cb"><div class="cb-label">tests/test_models.py &mdash; five required test minimum</div><pre><span class="kw">from</span> models <span class="kw">import</span> Employee, Department
+
+<span class="kw">def</span> <span class="fn">test_give_raise_increases_salary</span>():
+    e = <span class="fn">Employee</span>(<span class="nm">1</span>, <span class="st">&quot;Alex&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">70000</span>)
+    e.give_raise(<span class="nm">10</span>)
+    assert e.salary == <span class="nm">77000</span>
+
+<span class="kw">def</span> <span class="fn">test_deactivate_removes_from_headcount</span>():
+    dept = <span class="fn">Department</span>(<span class="st">&quot;Eng&quot;</span>, <span class="nm">300000</span>)
+    e = <span class="fn">Employee</span>(<span class="nm">2</span>, <span class="st">&quot;Sam&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">60000</span>)
+    dept.hire(e)
+    e.deactivate()
+    assert dept.headcount() == <span class="nm">0</span>
+
+<span class="kw">def</span> <span class="fn">test_payroll_excludes_inactive</span>():
+    dept = <span class="fn">Department</span>(<span class="st">&quot;Eng&quot;</span>, <span class="nm">300000</span>)
+    e1 = <span class="fn">Employee</span>(<span class="nm">3</span>, <span class="st">&quot;Jo&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">50000</span>)
+    e2 = <span class="fn">Employee</span>(<span class="nm">4</span>, <span class="st">&quot;Pat&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">55000</span>)
+    dept.hire(e1); dept.hire(e2)
+    e2.deactivate()
+    assert dept.payroll_total() == <span class="nm">50000</span>
+
+<span class="kw">def</span> <span class="fn">test_over_budget_true</span>():
+    dept = <span class="fn">Department</span>(<span class="st">&quot;Mktg&quot;</span>, <span class="nm">100000</span>)
+    dept.hire(<span class="fn">Employee</span>(<span class="nm">5</span>, <span class="st">&quot;Lee&quot;</span>, <span class="st">&quot;Mktg&quot;</span>, <span class="nm">120000</span>))
+    assert dept.over_budget() is <span class="nm">True</span>
+
+<span class="kw">def</span> <span class="fn">test_is_senior_boundary</span>():
+    assert <span class="fn">Employee</span>(<span class="nm">6</span>, <span class="st">&quot;Kim&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">80000</span>).is_senior() is <span class="nm">False</span>
+    assert <span class="fn">Employee</span>(<span class="nm">7</span>, <span class="st">&quot;Kim&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">80001</span>).is_senior() is <span class="nm">True</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Common OOP Mistakes to Catch This Week</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Mistake</th><th>What it looks like</th><th>Fix</th></tr></thead><tbody><tr><td>Forgetting self in method signature</td><td>def approve(): instead of def approve(self):</td><td>Every method must have self as first parameter</td></tr><tr><td>Forgetting self when accessing attributes</td><td>status = "Approved" instead of self.status = "Approved"</td><td>Always use self.attribute_name inside methods</td></tr><tr><td>Putting print() in methods</td><td>methods that print instead of return</td><td>Methods should return data; main.py prints it</td></tr><tr><td>Not calling super().__init__() in subclass</td><td>Inherited attributes missing in subclass</td><td>Always call super().__init__() in the child constructor</td></tr><tr><td>Testing print output instead of return values</td><td>No return in method, tests assert nothing</td><td>Every business logic method should return a value</td></tr></tbody></table><div class="assignment"><div class="a-header">Assignment 12 &middot; Due end of Week 12 &middot; OOP Checkpoint</div><h3>Multi-Class Business Simulation</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> &mdash; at least 2 entity classes and 1 manager class, each with docstrings and meaningful business logic methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; a simulation that creates instances, calls methods, and prints a formatted report demonstrating all class capabilities.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 5 pytest tests covering business logic. Must include at least one boundary/edge-case test.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File:</strong> <code>README.md</code> &mdash; class design written out before coding: class names, attributes, methods, and business rules.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div><div class="page-footer">ISM3232 &middot; Week 12 &middot; Module 6 &mdash; OOP III: Applied Practice and pytest Checkpoint</div></div></body></html>

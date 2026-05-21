@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 16 In-Class Lab</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+.lab-header{background:var(--accent-bg);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:24px;}
+.lab-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.lab-header h1{font-size:22px;color:var(--text-primary);margin-bottom:6px;font-weight:bold;}
+.lab-header .lh-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:12px;}
+.lab-meta{display:flex;flex-wrap:wrap;gap:6px;}
+.task-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.task{display:flex;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+.task.stretch{border-left:4px solid var(--purple);background:var(--purple-bg);}
+.stretch-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.task-content .task-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.task-content .task-body{font-size:13px;color:var(--text-body);line-height:1.7;}
+.task-content .task-body code{font-size:.82em;}
+.task-content .task-body p{margin-bottom:6px;}
+.task-content .task-body p:last-child{margin-bottom:0;}
+.submit-box{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:18px 20px;margin-top:24px;}
+.submit-box .sb-header{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.submit-box h3{font-size:15px;color:var(--text-primary);margin-bottom:12px;}
+.deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+.deliverable:last-child{border-bottom:none;padding-bottom:0;}
+.d-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.d-text{font-size:12px;color:var(--text-body);}
+.d-text strong{color:var(--text-primary);}
+.hint-box{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:7px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--tip-txt);}
+.hint-box strong{color:var(--text-primary);}
+.time-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.time-block{font-family:'Courier New',monospace;font-size:11px;padding:5px 12px;border-radius:20px;background:var(--bg-card-alt);border:1px solid var(--border);color:var(--text-body);}
+.task-body .expected{background:var(--bg-code);border-radius:6px;padding:8px 12px;margin-top:6px;font-family:'Courier New',monospace;font-size:12px;color:#a6e3a1;line-height:1.6;}
+.snap-flag{display:flex;gap:10px;align-items:center;background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:7px;padding:9px 14px;margin-top:8px;}
+.snap-flag .sf-icon{font-size:16px;flex-shrink:0;}
+.snap-flag .sf-text{font-size:12px;color:var(--ok-txt);font-weight:bold;}
+</style></head><body><div class="wrapper"><div class="lab-header"><span class="lab-badge">&#x1F9EA; In-Class Lab &mdash; Week 16</span><h1>ism3232_week16_lab</h1><p class="lh-sub">Module 7E &amp; 7F &mdash; GenAI Feature + Final Demo &mdash; integrate a controlled AI feature into your Streamlit app, polish your repo, and present your capstone</p><div class="lab-meta"><span class="meta-pill">Week 16 of 16</span><span class="meta-pill">Full class period</span><span class="meta-pill">Git commit + Canvas URL</span><span class="meta-pill">Completion credit</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: AI feature (first half)</span><span class="time-block">Part 2: Wire to Streamlit</span><span class="time-block">Part 3: Repo polish + checklist</span><span class="time-block">Part 4: Final demo presentations</span></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">All six GenAI controls are required</div><div class="callout-body">Missing any one fails the feature on the capstone rubric: (1) Disclosure label in the UI &middot; (2) Human review before save &middot; (3) No PII sent to the API &middot; (4) Test with mocked API &middot; (5) Limitations in README &middot; (6) Student can explain every line.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Build ai_feature.py</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Install the SDK and write ai_feature.py</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module07_final_project
+source .venv/bin/activate
+pip install anthropic
+pip freeze > requirements.txt
+touch ai_feature.py && code ai_feature.py</pre></div><div class="code-block"><div class="cb-label">ai_feature.py &mdash; write the summarise function</div><pre>import anthropic
+
+def summarise_request(category: str, description: str) -> str:
+    """
+    Return a one-sentence AI summary of a business request.
+    Only category and description are sent -- no names, IDs, or amounts.
+    """
+    client = anthropic.Anthropic()
+    prompt = f'Summarise this {category} business request in one clear sentence:\n{description}'
+    message = client.messages.create(
+        model='claude-haiku-4-5-20251001',
+        max_tokens=150,
+        messages=[{'role': 'user', 'content': prompt}]
+    )
+    return message.content[0].text</pre></div><p>Test it manually first:</p><div class="code-block"><pre>python3
+>>> from ai_feature import summarise_request
+>>> result = summarise_request('Travel', 'Flight and hotel for Q4 sales conference')
+>>> print(result)
+>>> exit()</pre></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of the Python shell showing the AI-generated summary.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Wire the Feature into app.py</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Add the AI feature to Tab 1 (Submit) with disclosure and human review</div><div class="task-body"><p>Add the following to the Submit tab in <code>app.py</code>, after the existing form fields:</p><div class="code-block"><div class="cb-label">Add to Tab 1 in app.py</div><pre># AI summary feature
+description = st.text_area('Request description (for AI summary)')
+
+if description:
+    if st.button('Generate AI Summary'):
+        with st.spinner('Generating summary...'):
+            from ai_feature import summarise_request
+            ai_summary = summarise_request(category, description)
+        # Required: disclosure label
+        st.info(f'AI-generated summary (review before saving):\n\n{ai_summary}')
+        st.caption('AI output generated by Claude. Review before saving.')
+
+        # Required: human review gate
+        if st.button('Looks good -- save with this summary'):
+            add_record(requester, category, amount, notes=ai_summary)
+            st.success('Record saved with AI summary.')</pre></div><p>Run: <code>streamlit run app.py</code></p><p>Test the full flow: enter a description &rarr; click Generate &rarr; review the label &rarr; click Save.</p><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of Tab 1 showing the AI-generated summary with the disclosure label and review button visible.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Write the Test and Update README</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write a mocked pytest test for the AI feature</div><div class="task-body"><div class="code-block"><div class="cb-label">tests/test_ai_feature.py &mdash; mock the API call</div><pre>from unittest.mock import MagicMock, patch
+from ai_feature import summarise_request
+
+def test_summarise_returns_string():
+    with patch('ai_feature.anthropic.Anthropic') as mock_client:
+        mock_message = MagicMock()
+        mock_message.content = [MagicMock(text='AI summary.')]
+        mock_client.return_value.messages.create.return_value = mock_message
+        result = summarise_request('Travel', 'Flight to Atlanta for client meeting')
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+def test_prompt_does_not_include_name():
+    with patch('ai_feature.anthropic.Anthropic') as mock_client:
+        mock_message = MagicMock()
+        mock_message.content = [MagicMock(text='Short summary.')]
+        mock_client.return_value.messages.create.return_value = mock_message
+        call_args = mock_client.return_value.messages.create.call_args
+        result = summarise_request('Software', 'License renewal for design tools')
+        assert 'Taylor' not in str(result)
+        assert 'Jordan' not in str(result)</pre></div><p>Run: <code>pytest -v</code> &mdash; both tests must pass without calling the real API.</p><p>Add the required AI feature section to <code>README.md</code>:</p><div class="code-block"><div class="cb-label">README.md &mdash; required AI feature section</div><pre>## AI Feature
+
+**What it does:** [one sentence]
+
+**Controls implemented:**
+- AI-generated content is labelled clearly in the UI
+- Human review required before any AI output is saved
+- No personally identifiable information is sent to the API
+
+**Limitations:**
+- [limitation 1]
+- [limitation 2]
+
+**AI use during development:**
+[Describe honestly what AI tools you used and how]</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Final Submission Checklist and Presentations</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Run the final checklist before presenting</div><div class="task-body"><p>Work through every item. Do not skip any:</p><div class="card"><div class="card-title">Final checklist &mdash; all must be checked</div><p>&#x2610; All 5 database functions pass tests.</p><p>&#x2610; All 5 Streamlit features work end-to-end.</p><p>&#x2610; GenAI feature shows disclosure label and human review button.</p><p>&#x2610; README complete with AI feature section and limitations.</p><p>&#x2610; requirements.txt current from pip freeze.</p><p>&#x2610; .gitignore includes .venv/, __pycache__/, *.db, .env.</p><p>&#x2610; ruff format and ruff check pass.</p><p>&#x2610; All tests pass.</p><p>&#x2610; Repository accessible to instructor.</p><p>&#x2610; Screenshots/ folder has at least 2 images of the running app.</p><p>&#x2610; You can explain every file and every function without reading notes.</p></div><div class="code-block"><div class="cb-label">Final push</div><pre>ruff format . && ruff check . && pytest -v
+git add . && git commit -m 'lab 16: GenAI feature + final submission' && git push</pre></div></div></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Final demo presentation &mdash; 8 required topics</div><div class="task-body"><p>Present your application covering all eight topics. Your instructor will stop you if you skip one:</p><table class="concept-table"><thead><tr><th>#</th><th>Topic</th><th>What to show</th></tr></thead><tbody><tr><td>1</td><td>Business problem + user workflow</td><td>Describe the problem and walk through a user session</td></tr><tr><td>2</td><td>Developer workflow</td><td>Terminal: venv active, ruff passing, pytest green, git log</td></tr><tr><td>3</td><td>OOP design</td><td>Walk through models.py: classes, attributes, methods</td></tr><tr><td>4</td><td>SQL schema + key queries</td><td>CREATE TABLE, a filter query, the GROUP BY report</td></tr><tr><td>5</td><td>Streamlit demo</td><td>Live: submit, view, filter, update status, show report</td></tr><tr><td>6</td><td>GenAI feature</td><td>Show disclosure label, review step, explain the prompt</td></tr><tr><td>7</td><td>Testing + limitations</td><td>pytest passing, name one limitation</td></tr><tr><td>8</td><td>AI use statement</td><td>Honest account of what AI tools you used and how</td></tr></tbody></table></div></div></div><div class="submit-box"><div class="sb-header">Lab 16 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>GenAI Feature + Final Capstone</h3><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 1:</strong> AI feature in Tab 1 &mdash; summary visible with disclosure label and review button.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 2:</strong> pytest -v showing all tests passing (including mocked AI test).</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> README.md with completed AI feature section.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> ai_feature.py</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> tests/test_ai_feature.py</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 16</code>.</div></div></div><div class="page-footer">ISM3232 &middot; Week 16 In-Class Lab &middot; Module 7E &amp; 7F &mdash; GenAI Feature + Final Demo</div></div></body></html>

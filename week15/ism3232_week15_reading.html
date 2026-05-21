@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 15 — Streamlit Business Interface</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 4 — Capstone Build</span>
+  <span class="nav-week">Week 15 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 15</div>
+  <h1 class="wk-title">Streamlit Business Interface</h1>
+  <p class="wk-deck">Build all five required Streamlit features wired to your SQLite database, and understand the execution model.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 4</span><span class="chip ">Streamlit</span><span class="chip ">5 required features</span></div>
+</div><h2>The Streamlit execution model — the single most important concept</h2><div class="concept"><div class="concept-label">Every interaction reruns the entire script</div><p>When a user clicks a button, Streamlit runs your entire app.py from line 1 to the last line. Not just the button handler. The whole file. Every line. Every time. This explains why create_table() goes at the top outside any tab — it must run on every rerun before any widget reads the database.</p></div><div class="code-label">Correct app.py structure</div><pre><code>import streamlit as st
+from database import create_table, add_record, get_all_records, \
+                     update_status, get_status_report
+
+# MUST be at the top — runs before any widget, every rerun
+create_table()
+
+st.set_page_config(page_title=&#x27;Purchase Requests&#x27;, layout=&#x27;wide&#x27;)
+st.title(&#x27;Purchase Request Tracker&#x27;)
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    [&#x27;Submit&#x27;, &#x27;View All&#x27;, &#x27;Filter&#x27;, &#x27;Update Status&#x27;, &#x27;Report&#x27;])</code></pre><div class="code-label">Run the app</div><pre><code>streamlit run app.py</code></pre><h2>The five required features</h2><div class="code-label">Tab 1 — Submit with validation</div><pre><code>with tab1:
+    st.subheader(&#x27;New Purchase Request&#x27;)
+    requester = st.text_input(&#x27;Your name&#x27;)
+    category  = st.selectbox(&#x27;Category&#x27;, [&#x27;Equipment&#x27;,&#x27;Travel&#x27;,&#x27;Software&#x27;,&#x27;Other&#x27;])
+    amount    = st.number_input(&#x27;Amount ($)&#x27;, min_value=0.01, format=&#x27;%.2f&#x27;)
+    if st.button(&#x27;Submit Request&#x27;):
+        if requester and amount &gt; 0:
+            add_record(requester, category, amount)
+            st.success(f&#x27;Request submitted: ${amount:,.2f}&#x27;)
+        else:
+            st.error(&#x27;Name and amount are required.&#x27;)</code></pre><div class="code-label">Tab 3 — Filter (applied in Python, not SQL)</div><pre><code>with tab3:
+    status_filter = st.selectbox(&#x27;Filter by status&#x27;,
+                                 [&#x27;All&#x27;,&#x27;Pending&#x27;,&#x27;Approved&#x27;,&#x27;Rejected&#x27;])
+    records = get_all_records()
+    if status_filter != &#x27;All&#x27;:
+        records = [r for r in records if r[&#x27;status&#x27;] == status_filter]
+    if records:
+        st.dataframe(records, use_container_width=True)
+    else:
+        st.info(f&#x27;No {status_filter} requests.&#x27;)
+    st.caption(f&#x27;{len(records)} record(s) shown&#x27;)</code></pre><div class="code-label">Tab 4 — Update Status (selectbox from live database)</div><pre><code>with tab4:
+    records = get_all_records()   # live — not hardcoded IDs
+    if records:
+        options = {
+            f&quot;ID {r[&#x27;id&#x27;]}: {r[&#x27;requester&#x27;]} — ${r[&#x27;amount&#x27;]:,.2f}&quot;: r[&#x27;id&#x27;]
+            for r in records
+        }
+        sel = st.selectbox(&#x27;Select request&#x27;, list(options.keys()))
+        new_status = st.radio(&#x27;New status&#x27;,
+                              [&#x27;Pending&#x27;,&#x27;Approved&#x27;,&#x27;Rejected&#x27;], horizontal=True)
+        if st.button(&#x27;Update&#x27;):
+            update_status(options[sel], new_status)
+            st.success(f&#x27;Updated to {new_status}&#x27;)
+            st.rerun()</code></pre><div class="warn"><div class="concept-label">⚠ Build the selectbox from get_all_records()</div><p>Never hardcode IDs in the Update Status tab. If a record is deleted, hardcoded IDs point to the wrong rows. Always build the options dict from live database data.</p></div><h2>Before you leave this week</h2><ul class="checklist"><li>create_table() called at the top of app.py — outside all tabs</li><li>All five features implemented and working</li><li>Filter applied in Python before st.dataframe() — not hardcoded</li><li>Update Status selectbox built from get_all_records()</li><li>st.rerun() called after status update so the view refreshes</li><li>Assignment 15 submitted via GitHub URL</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Streamlit Business Interface</div></body></html>

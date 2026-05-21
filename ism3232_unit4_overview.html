@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Unit 4 — Business Application Development Project</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}</style>
+</head>
+<body style="font-family:Georgia,'Times New Roman',serif;background:#f5f4f0;color:#1a1a1a;padding:40px 20px 60px;line-height:1.5;">
+<div style="max-width:920px;margin:0 auto;">
+
+  <div style="border-bottom:2px solid #1a1a1a;padding-bottom:20px;margin-bottom:36px;">
+    <p style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#888888;margin-bottom:8px;">ISM3232 · Business Application Development · Unit 4 of 4</p>
+    <h1 style="font-size:28px;font-weight:normal;letter-spacing:-.4px;margin-bottom:6px;">Unit 4 — Business Application Development Project</h1>
+    <p style="font-size:13px;color:#555555;font-style:italic;">Weeks 13–17 &nbsp;·&nbsp; SQL · Streamlit · GenAI Feature · Final Demo &amp; Portfolio · Capstone 30%</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:40px;">
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W1–4 Unit 1: Developer Foundations</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W5–8 Unit 2: Python</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W9 Midterm</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W10–12 Unit 3: OOP ✦ 3 wks</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#f0f0ee;font-weight:bold;">W13–17 Unit 4: Capstone Build</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:36px;align-items:center;">
+    <span style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-right:4px;">Stack:</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">zsh</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">VS Code</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Python 3</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">venv + pip</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">Ruff ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">pytest ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">ripgrep ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">fzf + zoxide ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Git / GitHub</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">SQLite</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Streamlit</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">FastAPI (lecture only)</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">GenAI</span>
+  </div>
+
+  <!-- Unit 4 divider -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:0;">
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+    <div style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888888;white-space:nowrap;">Unit 4 · Weeks 13–17 · Business Application Development Project</div>
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+  </div>
+
+  <div style="background:#f0f9ff;border:1px solid #1e40af;border-left-width:4px;border-radius:7px;padding:12px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+    <div style="font-size:18px;flex-shrink:0;margin-top:1px;">🏗</div>
+    <div>
+      <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:4px;">Final build phase</div>
+      <div style="font-size:12px;color:#444444;">Students build a working business information system prototype using everything from Units 1–3. The professional workflow (Ruff, pytest, Git) is required on every submission. Automation is now an optional +5% bonus — not a required deliverable.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:18px;">
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Requirements + design</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">SQL database</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Python + SQL</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Streamlit UI</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">GenAI feature</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Demo + portfolio</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:24px;">
+
+    <!-- W13 blue -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dbeafe;border-bottom:1px solid #bfdbfe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#1e40af;">W13</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#1e3a8a;">Module 7A &amp; 7B — Requirements, Design, and SQL Database</div>
+          <div style="font-size:11px;font-style:italic;color:#1e40af;">What am I building, who is it for, and how will the data be structured?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Project proposal fields</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Business problem</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Primary user</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Records stored</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Business rules</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">OOP classes</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">SQL tables</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Streamlit features</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">GenAI feature</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Out of scope</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required SQL operations</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">CREATE TABLE</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">INSERT</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">SELECT</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">WHERE</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">UPDATE</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">ORDER BY</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">GROUP BY</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">COUNT / SUM / AVG</span></span>
+        </div>
+        <div style="background:#f0f9ff;border-left:3px solid #1e40af;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#1e40af;">Student output</div>
+          <div style="font-size:12px;color:#1e3a8a;">Approved project proposal + working SQLite schema with at least one table and sample data</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI may explain SQL syntax — student designs the schema</span>
+      </div>
+    </div>
+
+    <!-- W14 green -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dcfce7;border-bottom:1px solid #bbf7d0;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#166534;">W14</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#14532d;">Module 7C — Python + SQL Integration and Operational Reports</div>
+          <div style="font-size:11px;font-style:italic;color:#166534;">How does Python read and write records in the database?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Python <span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">sqlite3</span></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Parameterized queries</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">CRUD functions</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Filters &amp; aggregates</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Operational reports</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required functions in database.py</div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;">
+          <p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">create_table() &nbsp;·&nbsp; add_record()<br>get_all_records() &nbsp;·&nbsp; update_status()<br>get_status_report()</p>
+        </div>
+        <div style="background:#f0fdf4;border-left:3px solid #166534;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#166534;">Student output</div>
+          <div style="font-size:12px;color:#14532d;">Working <span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">database.py</span> with all five functions, parameterized queries, and at least one report query using <span style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">GROUP BY</span></div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI may suggest test data and edge cases</span>
+      </div>
+    </div>
+
+    <!-- W15 amber -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#fef9c3;border-bottom:1px solid #fde68a;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#92400e;">W15</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#78350f;">Module 7D — Streamlit Business Interface + FastAPI Concept Lecture</div>
+          <div style="font-size:11px;font-style:italic;color:#92400e;">How do we turn scripts into a usable business tool?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required Streamlit features</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Add a record</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">View records</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Filter or search records</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Update status</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Display one operational report</span>
+        </div>
+        <div style="background:#fffbeb;border-left:3px solid #92400e;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#92400e;">Student output</div>
+          <div style="font-size:12px;color:#78350f;">Working Streamlit app connected to the SQLite database — all five required features present and functional</div>
+        </div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;">
+          <p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">FastAPI — 60–90 min lecture only. No graded deliverable.<br>Students run one demo route and understand the concepts<br>of routes, requests, responses, and JSON.</p>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI may improve user-facing text and generate test scenarios</span>
+      </div>
+    </div>
+
+    <!-- W16 purple -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#ede9fe;border-bottom:1px solid #ddd6fe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#4c1d95;">W16</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#3b0764;">Module 7E — GenAI-Supported Business Feature</div>
+          <div style="font-size:11px;font-style:italic;color:#4c1d95;">How can GenAI responsibly support a business workflow?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Approved GenAI features</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Summarization</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Classification</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Drafting responses</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Checklist generation</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Missing field detection</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Report explanation</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required AI controls</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Disclosure visible in Streamlit UI</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Human review before saving AI output</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">No sensitive data to AI API</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Test cases covering AI feature</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Limitations in README</span>
+        </div>
+        <div style="background:#faf5ff;border-left:3px solid #4c1d95;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#4c1d95;">Student output</div>
+          <div style="font-size:12px;color:#3b0764;">Working GenAI feature integrated into Streamlit app with all required controls. Student can explain design decisions.</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #fde047;background:#fef9c3;color:#854d0e;">★ GenAI is a required controlled application feature — not just a development tool</span>
+      </div>
+    </div>
+
+    <!-- W17 pink -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#fce7f3;border-bottom:1px solid #fbcfe8;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#831843;">W17</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#500724;">Module 7F — Final Demos, Code Walkthroughs, and Portfolio Submission</div>
+          <div style="font-size:11px;font-style:italic;color:#831843;">Can I present, explain, and defend every component of what I built?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required presentation topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Business problem + user workflow</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Developer workflow used</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">OOP class diagram or walkthrough</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">SQL schema + key queries</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Streamlit demo</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">GenAI feature + controls + limitations</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Testing approach</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">AI use statement</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required final repo structure</div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;">
+          <p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">final-project/<br>&nbsp;&nbsp;README.md &nbsp;app.py &nbsp;models.py<br>&nbsp;&nbsp;database.py &nbsp;ai_feature.py<br>&nbsp;&nbsp;requirements.txt &nbsp;.gitignore &nbsp;Makefile<br>&nbsp;&nbsp;data/ &nbsp;output/ &nbsp;screenshots/<br>&nbsp;&nbsp;tests/test_models.py &nbsp;tests/test_database.py</p>
+        </div>
+        <div style="background:#fdf2f8;border-left:3px solid #831843;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#831843;">16-week term note</div>
+          <div style="font-size:12px;color:#500724;">Collapse W17 into W16: require portfolio submission and final demo on the same day</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #22c55e;background:#f0fdf4;color:#14532d;">✦ Bonus +5%: automation feature — CSV export/import, Excel report, or scheduled report</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:32px;">
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:#888888;margin-bottom:3px;">Duration</div>
+      <div style="font-size:13px;font-weight:bold;color:#1a1a1a;">5 weeks (W13–17)</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:#888888;margin-bottom:3px;">Grade weight</div>
+      <div style="font-size:13px;font-weight:bold;color:#1a1a1a;">30% capstone ✦ revised</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:#888888;margin-bottom:3px;">Automation</div>
+      <div style="font-size:13px;font-weight:bold;color:#1a1a1a;">Optional +5% bonus</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:#888888;margin-bottom:3px;">FastAPI</div>
+      <div style="font-size:13px;font-weight:bold;color:#1a1a1a;">Lecture only — no deliverable</div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;">
+      <div style="font-size:10px;color:#888888;margin-bottom:3px;">Final deliverable</div>
+      <div style="font-size:13px;font-weight:bold;color:#1a1a1a;">GitHub BIS prototype + demo</div>
+    </div>
+  </div>
+
+  <!-- Assessment weights divider -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:44px;">
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+    <div style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888888;white-space:nowrap;">Assessment Weights</div>
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:12px;">
+    <thead>
+      <tr>
+        <th style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;text-align:left;padding:6px 10px;border-bottom:1px solid #e0e0de;">Component</th>
+        <th style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;text-align:left;padding:6px 10px;border-bottom:1px solid #e0e0de;">Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">zsh and Professional Python Developer Workflow <span style="color:#166534;font-size:10px;margin-left:4px;">↓ revised from 20%</span></td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">15%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">Python Programming Assignments + Quizzes</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">25%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">Midterm Practical</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">20%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">Business Application Capstone <span style="color:#166534;font-size:10px;margin-left:4px;">↑ revised from 25%</span></td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">30%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">GitHub Portfolio and Documentation</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">5%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;color:#444444;">Participation / Code Reviews</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #ebebea;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">5%</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 10px;color:#444444;">Automation Feature (bonus) <span style="color:#166534;font-size:10px;margin-left:4px;">✦ now optional</span></td>
+        <td style="padding:7px 10px;font-family:'Courier New',Courier,monospace;font-weight:bold;color:#1a1a1a;">+5%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-top:1px solid #e0e0de;padding-top:14px;margin-top:48px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:#aaaaaa;letter-spacing:.08em;">ISM3232 · Unit 4 · Weeks 13–17 · Business Application Development Project</div>
+
+</div>
+</body>
+</html>

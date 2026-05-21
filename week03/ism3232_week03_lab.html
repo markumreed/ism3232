@@ -1,0 +1,231 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 3 In-Class Lab</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+.lab-header{background:var(--accent-bg);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:24px;}
+.lab-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.lab-header h1{font-size:22px;color:var(--text-primary);margin-bottom:6px;font-weight:bold;}
+.lab-header .lh-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:12px;}
+.lab-meta{display:flex;flex-wrap:wrap;gap:6px;}
+.task-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.task{display:flex;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+.task.stretch{border-left:4px solid var(--purple);background:var(--purple-bg);}
+.stretch-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.task-content .task-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.task-content .task-body{font-size:13px;color:var(--text-body);line-height:1.7;}
+.task-content .task-body code{font-size:.82em;}
+.task-content .task-body p{margin-bottom:6px;}
+.task-content .task-body p:last-child{margin-bottom:0;}
+.submit-box{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:18px 20px;margin-top:24px;}
+.submit-box .sb-header{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.submit-box h3{font-size:15px;color:var(--text-primary);margin-bottom:12px;}
+.deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+.deliverable:last-child{border-bottom:none;padding-bottom:0;}
+.d-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.d-text{font-size:12px;color:var(--text-body);}
+.d-text strong{color:var(--text-primary);}
+.hint-box{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:7px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--tip-txt);}
+.hint-box strong{color:var(--text-primary);}
+.time-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.time-block{font-family:'Courier New',monospace;font-size:11px;padding:5px 12px;border-radius:20px;background:var(--bg-card-alt);border:1px solid var(--border);color:var(--text-body);}
+.task-body .expected{background:var(--bg-code);border-radius:6px;padding:8px 12px;margin-top:6px;font-family:'Courier New',monospace;font-size:12px;color:#a6e3a1;line-height:1.6;}
+.snap-flag{display:flex;gap:10px;align-items:center;background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:7px;padding:9px 14px;margin-top:8px;}
+.snap-flag .sf-icon{font-size:16px;flex-shrink:0;}
+.snap-flag .sf-text{font-size:12px;color:var(--ok-txt);font-weight:bold;}
+</style></head><body><div class="wrapper"><div class="lab-header"><span class="lab-badge">&#x1F9EA; In-Class Lab &mdash; Week 3</span><h1>ism3232_week03_lab</h1><p class="lh-sub">Module 2C &amp; 2D &mdash; Virtual Environments and .zshrc &mdash; create and manage a venv, install packages, write aliases, and test them</p><div class="lab-meta"><span class="meta-pill">Week 3 of 16</span><span class="meta-pill">Full class period</span><span class="meta-pill">Screenshots + files uploaded to Canvas</span><span class="meta-pill">Completion credit</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: venv workflow</span><span class="time-block">Part 2: .gitignore</span><span class="time-block">Part 3: .zshrc aliases</span><span class="time-block">Part 4: Practice + deactivate</span></div><div class="callout blue"><div class="callout-icon">&#x1F4A1;</div><div><div class="callout-label">Mental model &mdash; the private room</div><div class="callout-body">A venv is a private room for each project. When you activate it you walk in &mdash; every package installs on that room&rsquo;s shelves. When you deactivate you walk out. Other projects are completely unaffected.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Virtual Environment Workflow</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Create and activate the venv</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module02_zsh
+python3 -m venv .venv
+source .venv/bin/activate
+# Prompt should now show (.venv)
+
+which python3   # should point inside .venv/
+pip list        # should show minimal packages</pre></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing the (.venv) prefix in the prompt and the which python3 output.</div></div></div></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Install packages and freeze</div><div class="task-body"><div class="code-block"><pre>pip install pytest ruff
+pip list                       # confirm both are installed
+pip freeze > requirements.txt
+cat requirements.txt           # confirm it was written</pre></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing pip install output and cat requirements.txt.</div></div></div></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Verify the environment is isolated</div><div class="task-body"><p>Open a second terminal tab (without activating the venv) and run:</p><div class="code-block"><div class="cb-label">In the non-venv terminal</div><pre>which python3     # points to system Python
+pip list          # does NOT include pytest and ruff</pre></div><p>This confirms the venv is isolated. Switch back to the venv terminal.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; .gitignore</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Create .gitignore before anything is committed</div><div class="task-body"><p>The <code>.venv/</code> folder must never be committed to Git. Create the file now:</p><div class="code-block"><pre>cd ~/ism3232/module02_zsh
+echo '.venv/' > .gitignore
+echo '__pycache__/' >> .gitignore
+echo '*.pyc' >> .gitignore
+cat .gitignore          # confirm all three lines
+ls -la                  # .gitignore and .venv should both appear</pre></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of ls -la showing both .venv/ and .gitignore.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; .zshrc Aliases and Functions</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Add required aliases to .zshrc</div><div class="task-body"><div class="code-block"><div class="cb-label">Open the file</div><pre>code ~/.zshrc</pre></div><p>Add the following lines to the file &mdash; do not delete anything that is already there:</p><div class="code-block"><div class="cb-label">Paste into ~/.zshrc</div><pre># ISM3232 required aliases
+alias ll='ls -la'
+alias c='clear'
+alias py='python3'
+alias gs='git status'
+alias ga='git add .'
+alias gcmsg='git commit -m'
+alias gp='git push'
+alias gl='git log --oneline'
+alias tree2='tree -L 2'
+
+# Required shell function
+mkcd() { mkdir -p "$1" && cd "$1" }</pre></div><p>Save the file, then apply the changes:</p><div class="code-block"><pre>source ~/.zshrc
+
+# Test each alias
+ll                   # should work as ls -la
+gs                   # should run git status
+mkcd testdir         # should create and enter testdir/
+pwd                  # confirm you are inside testdir/</pre></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing ll, gs, and mkcd all working after source ~/.zshrc.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Practice and Deactivate</div><div class="line"></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Run a quick test and deactivate cleanly</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module02_zsh
+source .venv/bin/activate
+
+# Quick test: pytest with no tests yet returns exit 0
+pytest --collect-only   # should say 'no tests found'
+
+# Deactivate
+deactivate
+which python3           # back to system Python
+# (.venv) prefix is gone from the prompt</pre></div></div></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Write a README for Week 3</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module02_zsh
+# Add a Week 3 section to the existing README
+code README.md</pre></div><p>Add a section titled <code>## Week 3: Virtual Environments and .zshrc</code> and list the commands and aliases you learned today with one-line descriptions.</p></div></div></div><div class="task stretch"><div class="task-num">&#x2605;</div><div class="task-content"><div class="task-title">Stretch &mdash; recreate the environment from requirements.txt</div><div class="task-body"><div class="stretch-label">&#x1F7E3; Stretch &mdash; if you finish early</div><div class="code-block"><pre>deactivate
+rm -r .venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip list    # pytest and ruff should both appear</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 3 Submission &middot; Upload to Canvas by end of class &middot; Completion credit</div><h3>Virtual Environments and .zshrc</h3><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 1:</strong> (.venv) prompt and <code>which python3</code> output.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 2:</strong> <code>pip install</code> and <code>cat requirements.txt</code> output.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 3:</strong> <code>ls -la</code> showing .venv/ and .gitignore.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 4:</strong> <code>ll</code>, <code>gs</code>, and <code>mkcd</code> working after <code>source ~/.zshrc</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File upload:</strong> <code>module02_zsh/requirements.txt</code></div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File upload:</strong> <code>module02_zsh/.gitignore</code></div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File upload:</strong> <code>module02_zsh/README.md</code> with Week 3 section added.</div></div></div><div class="page-footer">ISM3232 &middot; Week 3 In-Class Lab &middot; Module 2C &amp; 2D &mdash; Virtual Environments and .zshrc</div></div></body></html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 15 Quiz Walkthrough</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+/* ── Walkthrough-specific ── */
+.wt-header{padding-bottom:20px;margin-bottom:24px;border-bottom:2px solid var(--divider);}
+.wt-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  margin-bottom:10px;color:#fff;}
+.badge-midterm{background:#1e40af;}.badge-capstone{background:#166534;}.badge-final{background:#4c1d95;}
+.wt-header h1{font-size:23px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.wt-header .wt-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:14px;}
+.instructor-note-bar{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:8px;
+  padding:12px 16px;margin-bottom:24px;font-size:13px;color:var(--text-body);}
+.instructor-note-bar strong{color:var(--text-primary);}
+
+/* Question cards */
+.q-card{border-radius:10px;margin-bottom:22px;overflow:hidden;border:1px solid var(--border);}
+.q-card-head{padding:14px 18px;display:flex;gap:12px;align-items:flex-start;}
+.q-card-head.mc{background:var(--accent-bg);}
+.q-card-head.ct{background:var(--amber-bg);}
+.q-card-head.sa{background:var(--green-bg);}
+.q-num-badge{min-width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;
+  flex-shrink:0;color:#fff;}
+.mc .q-num-badge{background:var(--accent);}
+.ct .q-num-badge{background:var(--amber);}
+.sa .q-num-badge{background:var(--green);}
+.q-type-pill{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;padding:2px 8px;border-radius:12px;display:inline-block;
+  margin-bottom:6px;}
+.mc .q-type-pill{background:rgba(0,0,0,.08);color:var(--accent);}
+.ct .q-type-pill{background:rgba(0,0,0,.08);color:var(--amber);}
+.sa .q-type-pill{background:rgba(0,0,0,.08);color:var(--green);}
+.q-stem{font-size:14px;font-weight:bold;color:var(--text-primary);line-height:1.6;}
+.q-card-body{padding:16px 18px;background:var(--bg-card);}
+
+/* Code blocks inside questions */
+.q-code{background:var(--bg-code);border-radius:6px;padding:10px 14px;margin:10px 0;
+  font-family:'Courier New',monospace;font-size:12px;color:var(--text-code);
+  line-height:1.7;white-space:pre-wrap;word-break:break-all;}
+
+/* MC options */
+.options-list{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.opt-row{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border-radius:7px;
+  border:1px solid var(--border);background:var(--bg-card-alt);font-size:13px;}
+.opt-row.correct{background:var(--ok-bg);border-color:var(--ok-bdr);}
+.opt-row.wrong{background:var(--bg-card-alt);border-color:var(--border);}
+.opt-letter{font-family:'Courier New',monospace;font-size:12px;font-weight:bold;
+  min-width:18px;flex-shrink:0;}
+.opt-row.correct .opt-letter{color:var(--green);}
+.opt-row.wrong .opt-letter{color:var(--text-muted);}
+.opt-text{font-size:13px;color:var(--text-body);flex:1;}
+.opt-check{font-size:14px;flex-shrink:0;}
+.opt-row.wrong .opt-check{color:var(--text-muted);}
+
+/* Why-wrong callouts */
+.why-wrong{background:var(--bg-card-alt);border-left:3px solid var(--border);
+  padding:8px 12px;margin-top:4px;font-size:12px;color:var(--text-secondary);
+  border-radius:0 6px 6px 0;}
+.why-wrong code{font-size:.85em;}
+
+/* Discussion section */
+.discussion{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:8px;
+  padding:14px 16px;margin-top:10px;}
+.disc-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--tip-txt);margin-bottom:8px;font-weight:bold;}
+.disc-body{font-size:13px;color:var(--text-body);line-height:1.7;}
+.disc-body code{font-size:.85em;}
+.disc-body p{margin-bottom:6px;}
+.disc-body p:last-child{margin-bottom:0;}
+
+/* Model answer (CT/SA) */
+.model-answer{background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:8px;
+  padding:14px 16px;margin-top:10px;}
+.ma-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.ma-answer{font-family:'Courier New',monospace;font-size:13px;color:var(--text-primary);
+  margin-bottom:8px;font-weight:bold;white-space:pre-wrap;}
+.ma-exp{font-size:12px;color:var(--text-body);line-height:1.6;}
+
+/* Distractor analysis */
+.distractor-section{margin-top:10px;}
+.distractor-head{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+
+/* Instructor tips */
+.inst-tip{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:8px;
+  padding:12px 14px;margin-top:10px;font-size:12px;color:var(--text-body);}
+.inst-tip .it-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+
+/* SA grading rubric */
+.sa-rubric{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:10px;}
+.sa-rub-head{display:grid;grid-template-columns:1fr 2fr;background:var(--bg-card-alt);
+  padding:8px 12px;font-family:'Courier New',monospace;font-size:9px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-muted);}
+.sa-rub-row{display:grid;grid-template-columns:1fr 2fr;padding:8px 12px;
+  border-top:1px solid var(--border-light);font-size:12px;color:var(--text-body);}
+.sa-rub-row .pts{font-weight:bold;color:var(--text-primary);}
+</style></head><body><div class="wrapper"><div class="wt-header"><span class="wt-badge badge-capstone">&#x1F331; Capstone Context &mdash; Week 15</span><h1>ism3232_week15_quiz_walkthrough</h1><p class="wt-sub">Week 15 &mdash; Streamlit Business Interface and FastAPI Concepts</p><div class="meta-pills"><span class="meta-pill">Week 15 of 16</span><span class="meta-pill">15 questions</span><span class="meta-pill">8 MC (auto-graded)</span><span class="meta-pill">7 essay (manual)</span><span class="meta-pill">Instructor version</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="instructor-note-bar"><strong>&#x1F4CB; Instructor notes:</strong> Q2 (script reruns top to bottom) is the most common source of Streamlit confusion. Draw the execution model on the board: user clicks button -&gt; Python re-runs from line 1. This is why create_table() at the top is safe (idempotent) and why st.session_state is sometimes needed. Q5 (Update tab must use live data) is the second most common capstone bug — hardcoded IDs in the selectbox break immediately when records are added or deleted.</div><div class="callout blue"><div class="callout-icon">&#x1F4AC;</div><div><div class="callout-label">How to use this walkthrough</div><div class="callout-body">Week 15 introduces Streamlit — the final layer of the capstone application. This walkthrough explains every question with emphasis on the five required features and the Streamlit execution model. Q2 (entire script reruns) is the most architecturally important concept — students who do not understand it will place create_table() in the wrong location and have confusing state bugs. The FastAPI questions (Q6, Q7, Q10) are concepts-only and require no Streamlit knowledge.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Question-by-question walkthrough</div><div class="line"></div></div><div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">1</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">Why is create_table() called at the top of app.py, outside any tab or button block?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">Because it needs to run before any imports</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Imports run before create_table() regardless of where create_table() is called.</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">Because it is idempotent — CREATE TABLE IF NOT EXISTS does nothing if the table exists, but creates it on first run</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">Because Streamlit requires it</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Streamlit does not require create_table() at the top — idempotency is the reason.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">Because it is faster there</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; The performance difference is negligible — correctness and idempotency are the reasons.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>create_table() is idempotent. Calling it at startup ensures the table always exists before any widget runs.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">2</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">What happens to the Streamlit app when the user clicks a button?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">Only the button code runs</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Only the button code running is the React/JavaScript model. Streamlit is different.</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">The entire script reruns from top to bottom</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">The browser reloads the page</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; The browser does not reload — Streamlit uses WebSockets to update the UI without reloading.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">Only the changed widget updates</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Only the changed widget updating is also the React model. Streamlit reruns everything.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>Streamlit reruns the entire script from top to bottom on every user interaction. This is the Streamlit execution model — everything is recalculated each time.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">3</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">What does st.success(&quot;Request submitted!&quot;) display?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">An error message in red</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; An error message in red is st.error().</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">A green success notification banner</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">A popup dialog</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; A popup dialog would require st.dialog() (newer Streamlit API) or workarounds.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">A progress bar</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; A progress bar is st.progress().</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>st.success() displays a green notification message. The four status message functions are: success (green), error (red), warning (yellow), info (blue).</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">4</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">Which Streamlit function displays a list of dicts as an interactive table?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">st.table_view()</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; st.table_view() is not a real Streamlit function.</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">st.dataframe()</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">st.show_data()</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; st.show_data() is not a real Streamlit function.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">st.grid()</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; st.grid() is not a standard Streamlit function.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>st.dataframe() accepts a list of dicts and renders it as an interactive table. use_container_width=True makes it fill the available width.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">5</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">In the Update Status tab, why should the record selectbox be built from get_all_records() instead of hardcoded IDs?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">get_all_records is faster</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; get_all_records() is not inherently faster — the reason is data correctness.</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">Hardcoded IDs break when records are deleted or added — live data ensures the dropdown always shows current records</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">It is required by sqlite3</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; sqlite3 has no such requirement about form data.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">Because forms require live data</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Live data is not a general requirement for all forms — it is specifically needed here because the records change.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>Building the selectbox from live database data ensures it reflects the current state. Hardcoded IDs become stale when records change.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">6</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">What is FastAPI?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">A faster version of Python</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; FastAPI is not a faster Python interpreter — it is a web framework.</div><div class="opt-row correct"><span class="opt-letter">B.</span><span class="opt-text">A web framework for building REST APIs with Python</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">C.</span><span class="opt-text">A testing library</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; FastAPI is not a testing library — pytest is used for testing.</div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">A Streamlit plugin</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; FastAPI is not a Streamlit plugin — it is a separate independent web framework.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why B is correct</div><div class="disc-body"><p>FastAPI is a Python web framework for building REST APIs. It handles HTTP requests, validates input, and returns JSON responses.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">7</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">What HTTP method is conventionally used to CREATE a new resource in a REST API?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">GET</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; GET retrieves data without side effects.</div><div class="opt-row wrong"><span class="opt-letter">B.</span><span class="opt-text">PUT</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; PUT updates an existing resource with full replacement.</div><div class="opt-row correct"><span class="opt-letter">C.</span><span class="opt-text">POST</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">DELETE</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; DELETE removes an existing resource.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why C is correct</div><div class="disc-body"><p>POST is the conventional HTTP method for creating new resources. GET retrieves, POST creates, PUT updates (full replacement), DELETE removes.</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head mc"><div class="q-num-badge">8</div><div style="flex:1"><div class="q-type-pill">Multiple Choice &mdash; Auto-graded</div><div class="q-stem">A student&#x27;s filter selectbox always shows all records regardless of the selected status. What is most likely wrong?</div></div></div><div class="q-card-body"><div class="options-list"><div class="opt-row wrong"><span class="opt-letter">A.</span><span class="opt-text">The database query is wrong</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; The database query uses parameterised queries — it is correct.</div><div class="opt-row wrong"><span class="opt-letter">B.</span><span class="opt-text">The filter condition uses == instead of is</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; &#x27;is&#x27; tests object identity, not value equality. == is correct for status comparison.</div><div class="opt-row correct"><span class="opt-letter">C.</span><span class="opt-text">The filter is applied but the result is not used to replace the records variable before displaying</span><span class="opt-check">&#x2713;</span></div><div class="opt-row wrong"><span class="opt-letter">D.</span><span class="opt-text">The selectbox is missing options</span><span class="opt-check">&#x25CB;</span></div><div class="why-wrong">&#x26A0; Missing options would cause a different problem — the selectbox would be empty, not show all records.</div></div><div class="discussion"><div class="disc-label">&#x1F4AC; Discussion &mdash; why C is correct</div><div class="disc-body"><p>Common mistake: filter but display the original records list. Fix: records = [r for r in records if r[&quot;status&quot;] == status_filter]; st.dataframe(records)</p></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">9</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">What widget does this line create?</div><div class="q-code">category = st.selectbox(&quot;Category&quot;, [&quot;Travel&quot;, &quot;Equipment&quot;, &quot;Software&quot;])</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer">A dropdown menu labelled &quot;Category&quot; with three options. The selected option is stored as a string in the variable category.</div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">10</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">What is displayed when records is an empty list?</div><div class="q-code">records = get_all_records()
+if records:
+    st.dataframe(records)
+else:
+    st.info(&quot;No records yet.&quot;)</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer">A blue info message: &quot;No records yet.&quot;</div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">11</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">What does this FastAPI route do?</div><div class="q-code">@app.get(&quot;/&quot;)
+def home():
+    return {&quot;message&quot;: &quot;Business API is running&quot;}</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer">Defines a GET endpoint at the root URL (/). When a client sends GET / to the server, it returns a JSON response: {&quot;message&quot;: &quot;Business API is running&quot;}</div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">12</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">List the five required Streamlit features for the capstone application.
+
+[Sample answer: (1) Add a record, (2) View all records, (3) Filter or search records, (4) Update status, (5) Display one operational report.]</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer"></div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">13</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">Explain why create_table() is safe to call every time the Streamlit app loads.
+
+[Sample answer: Because it uses CREATE TABLE IF NOT EXISTS, which creates the table only if it does not already exist. If the table already exists, the command does nothing — no error, no data loss.]</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer"></div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">14</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">What is the key architectural difference between a Streamlit app and a FastAPI service?
+
+[Sample answer: In Streamlit, Python code generates the UI directly — Python and the interface are tightly coupled. In FastAPI, Python only handles data and returns JSON; a separate client (browser, another app) requests and displays it.]</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer"></div><div class="ma-exp"></div></div></div></div>
+<div class="q-card"><div class="q-card-head ct"><div class="q-num-badge">15</div><div style="flex:1"><div class="q-type-pill">Code Trace / Short Answer &mdash; Manual grading</div><div class="q-stem">Write the code to display a success message when a form is submitted, or an error message if the name field is empty.
+
+[Sample answer: if st.button(&quot;Submit&quot;):
+    if requester:
+        add_record(requester, category, amount)
+        st.success(f&quot;Request submitted for {requester}&quot;)
+    else:
+        st.error(&quot;Name is required.&quot;)]</div></div></div><div class="q-card-body"><div class="model-answer"><div class="ma-label">&#x2713; Model Answer</div><div class="ma-answer"></div><div class="ma-exp"></div></div></div></div><div class="page-footer">ISM3232 &middot; Week 15 Quiz Walkthrough &middot; Streamlit Business Interface and FastAPI Concepts</div></div></body></html>

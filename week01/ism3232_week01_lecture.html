@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Week 1 Lecture: Course Setup, VS Code, and Developer Environment</title>
+  <style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ── Header ── -->
+  <div class="page-header">
+    <p class="eyebrow">ISM3232 · Unit 1 · Week 1 · Lecture Material</p>
+    <h1>Module 1 — Course Setup, VS Code, and Developer Environment</h1>
+    <p class="subtitle">Students install and verify the required tools, understand what a developer workflow is, and run their first Python script from zsh inside VS Code.</p>
+    <div class="meta-pills">
+      <span class="meta-pill">Week 1 of 17</span>
+      <span class="meta-pill">Unit 1: Developer Foundations</span>
+      <span class="meta-pill">Module 1 of 7</span>
+      <span class="meta-pill">Estimated contact time: 75–90 min</span>
+      <span class="meta-pill">Assignment 1 due: end of week</span>
+    </div>
+  </div>
+
+  <!-- ── Course map ── -->
+  <div class="course-map"><span class="map-item current">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
+
+  <!-- ── Timing ── -->
+  <div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div>
+  <div class="timing-bar">
+    <div class="timing-block blue"><div class="t-time">0–15 min</div><div class="t-label">Course intro &amp; developer mindset</div></div>
+    <div class="timing-block green"><div class="t-time">15–35 min</div><div class="t-label">Files, folders, paths — concepts</div></div>
+    <div class="timing-block amber"><div class="t-time">35–55 min</div><div class="t-label">Live setup: VS Code, Python, zsh verification</div></div>
+    <div class="timing-block purple"><div class="t-time">55–70 min</div><div class="t-label">First Python script — live code-along</div></div>
+    <div class="timing-block red"><div class="t-time">70–80 min</div><div class="t-label">Assignment 1 walkthrough + Q&amp;A</div></div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠</div>
+    <div>
+      <div class="callout-label">Critical instructor note — Windows students</div>
+      <div class="callout-body"><strong>WSL installation failures are the most common Week 1 blocker.</strong> Have a lab machine fallback ready. Schedule an optional setup office hour before Week 2 begins. Windows students who cannot complete WSL setup cannot run zsh and will fall behind immediately. Do not let this slide to Week 2.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 1: Developer mindset            -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 1 — Developer Mindset and Course Identity</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">1</span>
+    <div>
+      <h2 class="section-title">What is a developer workflow, and why does it matter?</h2>
+      <p class="section-sub">15 minutes · Lecture + discussion · No setup required yet</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The core idea to land in Week 1</div>
+    <p>This course is not a typing class or a memorization course. It is a <strong>professional practice</strong> course. Every habit you build in Week 1 — how you name files, how you organize folders, how you verify your tools before touching code — is what separates a developer who ships working software from one who spends hours debugging environment problems.</p>
+    <p>The tools we install today are not obstacles between you and Python. They <em>are</em> the job. A business analyst who can navigate a codebase, run a script, manage dependencies, and push clean work to GitHub is genuinely more valuable than one who cannot — regardless of how well they know Python syntax.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">What this course is</div>
+      <p>A <strong>business application development</strong> course where students build small business information systems using Python, zsh, GitHub, OOP, SQL, Streamlit, and responsible GenAI workflows.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">What this course is not</div>
+      <p>Not just a programming course. Not just a tools course. Students who treat it as "learn some Python syntax" will struggle on the midterm and capstone, both of which test the full professional workflow.</p>
+    </div>
+  </div>
+
+  <div class="prompt-list">
+    <div class="prompt">
+      <div class="p-num">Discussion prompt 1</div>
+      <div class="p-text">"Open your computer right now and find where you saved the last file you worked on. How long did it take? Could you do it from a terminal without clicking anything?"</div>
+      <div class="p-hint">Goal: surface the fact that most students have never thought about where files live. This is the entry point for explaining paths and directory trees.</div>
+    </div>
+    <div class="prompt">
+      <div class="p-num">Discussion prompt 2</div>
+      <div class="p-text">"When a developer says a script 'runs,' what exactly is happening? Who is running it, and from where?"</div>
+      <div class="p-hint">Goal: distinguish between double-clicking an app vs. executing a script from a shell. Leads into the VS Code terminal and zsh.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 2: Files, folders, paths         -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 2 — Files, Folders, Paths, and Directory Trees</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">2</span>
+    <div>
+      <h2 class="section-title">How your computer organizes everything</h2>
+      <p class="section-sub">20 minutes · Conceptual lecture · Draw on board or annotate slides</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key mental model: the directory tree</div>
+    <p>Every file on a computer lives at a specific address called a <strong>path</strong>. A path is just a sequence of folder names that tells the computer how to find a file, starting from the root of the disk (<code>/</code> on Mac/Linux, <code>C:\</code> on Windows) or from wherever you are right now.</p>
+    <p>Draw this on the board and have students copy it — understanding the tree structure is a prerequisite for every terminal command they will run this semester.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">Directory tree concept — draw and annotate with the class</div>
+    <pre>
+/                          <span class="comment"># root of the filesystem (Mac/Linux)</span>
+└── Users/
+    └── yourname/          <span class="comment"># your home directory  ~</span>
+        ├── Desktop/
+        ├── Documents/
+        └── ism3232/       <span class="comment"># ← your course folder lives HERE</span>
+            ├── module01_setup/
+            │   ├── hello_ism3232.py
+            │   └── README.md
+            ├── module02_zsh/
+            ├── module03_git_github/
+            ├── module04_programming/
+            ├── module05_functions/
+            ├── module06_oop/
+            ├── module07_final_project/
+            ├── data/
+            └── screenshots/</pre>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Absolute path</div>
+      <p>The complete address from the root. Always works regardless of where you are. Starts with <code>/</code> on Mac/Linux.</p>
+      <p style="margin-top:8px;"><code>/Users/yourname/ism3232/module01_setup/hello_ism3232.py</code></p>
+    </div>
+    <div class="card">
+      <div class="card-title">Relative path</div>
+      <p>The address from wherever you are right now. Only works if you are in the right place. Much shorter to type.</p>
+      <p style="margin-top:8px;">If you are in <code>ism3232/</code>: <code>module01_setup/hello_ism3232.py</code></p>
+    </div>
+  </div>
+
+  <table class="concept-table">
+    <thead><tr><th>Symbol / Term</th><th>What it means</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>/</td><td>Root of the entire filesystem (Mac/Linux). The top of the tree.</td><td><code>/Users/yourname</code></td></tr>
+      <tr><td>~</td><td>Your home directory. Shortcut for <code>/Users/yourname</code>.</td><td><code>~/ism3232</code></td></tr>
+      <tr><td>.</td><td>The current directory — wherever you are right now.</td><td><code>./module01_setup</code></td></tr>
+      <tr><td>..</td><td>One directory up from where you are.</td><td><code>cd ..</code> goes up one level</td></tr>
+      <tr><td>File extension</td><td>The suffix after the dot. Tells the OS and editor what type of file it is.</td><td><code>.py</code> · <code>.md</code> · <code>.txt</code> · <code>.csv</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div>
+      <div class="callout-label">Instructor tip — make this concrete</div>
+      <div class="callout-body">Ask students to find their Downloads folder in Finder/Explorer, then ask: "What is the full path to that folder?" Most will not know. Then show it in the terminal with <code>echo ~/Downloads</code>. The gap between clicking and knowing where something lives is the core lesson of this section.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 3: VS Code setup                -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 3 — VS Code, the Integrated Terminal, and zsh</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">3</span>
+    <div>
+      <h2 class="section-title">Installing and verifying the required stack</h2>
+      <p class="section-sub">20 minutes · Live demo + student follow-along · Everyone must verify before moving on</p>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-icon">🖥</div>
+    <div>
+      <div class="callout-label">Required tools this week</div>
+      <div class="callout-body">
+        <strong>VS Code</strong> — required editor &nbsp;·&nbsp;
+        <strong>Python 3.x</strong> — required language &nbsp;·&nbsp;
+        <strong>Git</strong> — required version control &nbsp;·&nbsp;
+        <strong>zsh</strong> — required shell &nbsp;·&nbsp;
+        <strong>WSL Ubuntu</strong> — required for Windows students &nbsp;·&nbsp;
+        <strong>GitHub account</strong> — required &nbsp;·&nbsp;
+        <strong>VS Code Python extension</strong> — required &nbsp;·&nbsp;
+        <strong>VS Code integrated terminal set to zsh</strong> — required
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--text-body);margin-bottom:16px;">Walk through each step below as a live demo. Pause after each step and verify that every student has completed it before proceeding. Do not let anyone skip verification and move ahead.</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">VS Code — install and open</div>
+        <div class="step-body">Download from <code>code.visualstudio.com</code>. Install the <strong>Python extension</strong> (search "Python" in the Extensions panel, install the Microsoft one). Open VS Code and verify the Extensions panel shows Python as installed.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Windows only — WSL + Ubuntu + zsh</div>
+        <div class="step-body">Open PowerShell as Administrator and run <code>wsl --install</code>. Restart when prompted. Open the Ubuntu app, complete the UNIX user setup, then run <code>sudo apt update &amp;&amp; sudo apt install zsh -y</code> and <code>chsh -s $(which zsh)</code>. Restart the terminal. <strong>This is the most failure-prone step — watch the room carefully.</strong></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Mac/Linux — verify zsh is the default shell</div>
+        <div class="step-body">Mac Catalina and later use zsh by default. Run <code>echo $SHELL</code> — it should return <code>/bin/zsh</code>. If not, run <code>chsh -s /bin/zsh</code> and restart the terminal.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Configure VS Code's integrated terminal to use zsh</div>
+        <div class="step-body">Open VS Code → <code>⌘,</code> (Mac) or <code>Ctrl+,</code> (Windows) → search "terminal default profile" → set to <strong>zsh</strong> (Mac/Linux) or <strong>WSL</strong> (Windows). Close and reopen the terminal panel. The prompt should show a <code>%</code> or your zsh theme.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Verify the full required stack</div>
+        <div class="step-body">Run each command and confirm the expected output. Everyone in the room must see all four pass before proceeding.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">Verification commands — every student runs these and screenshots the output</div>
+    <pre>
+<span class="comment"># 1. Confirm zsh is running</span>
+<span class="kw">echo</span> $SHELL
+<span class="comment"># Expected: /bin/zsh  (or /usr/bin/zsh on some Linux)</span>
+
+<span class="comment"># 2. Confirm zsh version</span>
+<span class="kw">zsh</span> --version
+<span class="comment"># Expected: zsh 5.x or higher</span>
+
+<span class="comment"># 3. Confirm Python 3 is installed</span>
+<span class="kw">python3</span> --version
+<span class="comment"># Expected: Python 3.10 or higher (3.11+ preferred)</span>
+
+<span class="comment"># 4. Confirm Git is installed</span>
+<span class="kw">git</span> --version
+<span class="comment"># Expected: git version 2.x</span>
+
+<span class="comment"># 5. Show current location</span>
+<span class="kw">pwd</span>
+<span class="comment"># Expected: your home directory  e.g. /Users/yourname</span>
+
+<span class="comment"># 6. List files in current directory</span>
+<span class="kw">ls</span>
+<span class="comment"># Expected: Desktop  Documents  Downloads  etc.</span></pre>
+  </div>
+
+  <div class="callout ok">
+    <div class="callout-icon">✓</div>
+    <div>
+      <div class="callout-label">Checkpoint — before moving on</div>
+      <div class="callout-body">Every student should be able to see all six commands returning expected output in the VS Code integrated terminal running zsh. If anyone is still stuck on WSL, pair them with a neighbor or move them to a lab machine. Do not let setup problems prevent participation in the live coding section.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 4: Course folder structure       -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 4 — Course Folder Structure</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">4</span>
+    <div>
+      <h2 class="section-title">Building the course folder — live code-along</h2>
+      <p class="section-sub">10 minutes · Students follow along in their own terminal</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Why folder structure matters before Week 2</div>
+    <p>Students who do not have a consistent, organized course folder spend the rest of the semester hunting for files, making path errors in scripts, and failing to submit the right files. Getting this right in Week 1 takes five minutes. Fixing it in Week 8 takes much longer.</p>
+    <p>Have every student create this structure today, exactly as shown. The naming conventions (lowercase, underscores, module numbers) are deliberate — they mirror professional Python project naming conventions they will use for the rest of the course.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">Live code-along — create the course folder structure from the terminal</div>
+    <pre>
+<span class="comment"># Start from your home directory</span>
+<span class="kw">cd</span> ~
+
+<span class="comment"># Create the top-level course folder</span>
+<span class="kw">mkdir</span> ism3232
+<span class="kw">cd</span> ism3232
+
+<span class="comment"># Create all module folders at once</span>
+<span class="kw">mkdir</span> module01_setup module02_zsh module03_git_github \
+      module04_programming module05_functions \
+      module06_oop module07_final_project \
+      data screenshots
+
+<span class="comment"># Verify the structure looks right</span>
+<span class="kw">ls</span>
+
+<span class="comment"># Open the entire course folder in VS Code</span>
+<span class="kw">code</span> .
+
+<span class="comment"># Move into the Week 1 module folder</span>
+<span class="kw">cd</span> module01_setup</pre>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div>
+      <div class="callout-label">Instructor tip — explain code .</div>
+      <div class="callout-body"><code>code .</code> opens VS Code with the <em>current folder</em> as the workspace. The dot means "here." This is how developers open projects — they navigate to the project folder first, then open the editor. It is different from double-clicking a single file. Emphasize this: the workspace, not the file, is the unit of work.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 5: First Python script           -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 5 — Writing and Running the First Python Script</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">5</span>
+    <div>
+      <h2 class="section-title">hello_ism3232.py — live code-along</h2>
+      <p class="section-sub">15 minutes · Students write every line themselves — no copy-paste</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The point of this script is not the Python</div>
+    <p>Students will learn Python properly in Unit 2. The point of <code>hello_ism3232.py</code> is to complete the full workflow loop for the first time: <strong>create a file in the right place → write code → save → run from the terminal → verify the output</strong>. Every assignment for the rest of the semester follows this same loop.</p>
+  </div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Create the file from the terminal</div>
+        <div class="step-body">Make sure you are in <code>ism3232/module01_setup/</code>. Run <code>touch hello_ism3232.py</code>. The file appears in the VS Code Explorer panel. Do not create it by clicking in VS Code — use the terminal.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Open and write the script</div>
+        <div class="step-body">Run <code>code hello_ism3232.py</code> to open it in the editor. Type the script below — do not paste. Reading and typing code is a different cognitive activity from reading code someone else typed. Every character should be deliberate.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Run from the terminal</div>
+        <div class="step-body">Save the file (<code>⌘S</code> / <code>Ctrl+S</code>). In the terminal (make sure you are in the same folder as the file), run <code>python3 hello_ism3232.py</code>. Read and discuss the output together.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">hello_ism3232.py — type this together, line by line</div>
+    <pre>
+<span class="comment"># hello_ism3232.py
+# ISM3232 – Business Application Development
+# Week 1, Module 1: First Python Script
+# Author: [Your Name]</span>
+
+<span class="comment"># Print a welcome message</span>
+<span class="fn">print</span>(<span class="str">"Hello, ISM3232!"</span>)
+<span class="fn">print</span>(<span class="str">"This script is running from the zsh terminal inside VS Code."</span>)
+
+<span class="comment"># Show some basic Python: a variable and a calculation</span>
+course_name = <span class="str">"Business Application Development"</span>
+credit_hours = <span class="num">3</span>
+weekly_hours = credit_hours * <span class="num">2</span>
+
+<span class="fn">print</span>(<span class="str">f"Course: {course_name}"</span>)
+<span class="fn">print</span>(<span class="str">f"You should expect to spend about {weekly_hours} hours per week on coursework."</span>)
+
+<span class="comment"># Confirm the script completed</span>
+<span class="fn">print</span>(<span class="str">"Environment verified. Week 1 complete."</span>)</pre>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">Expected terminal output</div>
+    <pre>
+Hello, ISM3232!
+This script is running from the zsh terminal inside VS Code.
+Course: Business Application Development
+You should expect to spend about 6 hours per week on coursework.
+Environment verified. Week 1 complete.</pre>
+  </div>
+
+  <div class="prompt-list">
+    <div class="prompt">
+      <div class="p-num">Debrief discussion — after running the script</div>
+      <div class="p-text">"What just happened? Walk me through exactly what the computer did when you ran that command."</div>
+      <div class="p-hint">Look for students to articulate: the shell found the python3 interpreter → the interpreter read the .py file top to bottom → each print() call sent text to standard output → zsh displayed it in the terminal. If they cannot explain it, walk through it slowly. This understanding is the foundation for debugging later.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 6: AI use policy                 -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 6 — AI Use Policy Introduction</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">6</span>
+    <div>
+      <h2 class="section-title">How we use AI in this course — and how we do not</h2>
+      <p class="section-sub">5 minutes · Policy overview · Full details in the course outline</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title" style="color:var(--green);">✓ Permitted AI uses</div>
+      <div class="pill-row">
+        <span class="pill">Explain an error message</span>
+        <span class="pill">Explain what code does</span>
+        <span class="pill">Suggest test cases</span>
+        <span class="pill">Draft README sections</span>
+        <span class="pill">Explain SQL queries</span>
+        <span class="pill">Review class design</span>
+      </div>
+      <p style="font-size:12px;color:var(--text-body);">AI is a <strong>development assistant</strong>, not a solution provider. You use it to understand — not to avoid understanding.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--red);">✗ Prohibited AI uses</div>
+      <div class="pill-row">
+        <span class="pill">Complete the assignment</span>
+        <span class="pill">Submit code you can't explain</span>
+        <span class="pill">Skip the debugging process</span>
+        <span class="pill">Complete quizzes or exams</span>
+        <span class="pill">Hide AI use from instructor</span>
+      </div>
+      <p style="font-size:12px;color:var(--text-body);">The midterm and capstone presentations both require you to explain your code. If AI wrote it and you cannot explain it, that will be obvious.</p>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div>
+      <div class="callout-label">Week 1 AI policy — this week specifically</div>
+      <div class="callout-body">For Assignment 1, <strong>do not use AI at all</strong>. The assignment is about verifying that your environment works and that you can navigate your own computer. There is nothing to explain to an AI. If you need help, post in the course discussion board or come to office hours.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 7: README                        -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 7 — Creating the README.md</div><div class="line"></div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:20px;">
+    <span class="section-num">7</span>
+    <div>
+      <h2 class="section-title">Every project has a README</h2>
+      <p class="section-sub">5 minutes · Students create this in module01_setup/</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Why a README matters from Day 1</div>
+    <p>A README is the first thing anyone reads when they open a GitHub repository. In this course, every submission includes one. Starting the habit now — even for a Week 1 setup assignment — means it is automatic by Week 8 when the content is actually complex.</p>
+  </div>
+
+  <div class="code-block">
+    <div class="cb-label">module01_setup/README.md — create this file with touch and open with code</div>
+    <pre>
+# ISM3232 – Module 1: Course Setup
+
+**Name:** [Your Name]
+**Date:** [Today's Date]
+**Module:** 1 – Course Setup, VS Code, Developer Environment
+
+## What I Did
+
+- Installed VS Code, Python 3, Git, and configured zsh as the default shell
+- Created the course folder structure under `~/ism3232/`
+- Ran and verified the first Python script from the integrated zsh terminal
+
+## Verification Results
+
+| Tool        | Version Confirmed |
+|-------------|-------------------|
+| zsh         | ✓                 |
+| Python 3    | ✓                 |
+| Git         | ✓                 |
+| VS Code     | ✓                 |
+
+## Notes
+
+[Any issues encountered during setup and how they were resolved]
+
+## AI Use Statement
+
+I did not use AI for this assignment.</pre>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- ASSIGNMENT 1                             -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Assignment 1 — Environment Verification</div><div class="line"></div></div>
+
+  <div class="assignment">
+    <div class="a-header">Assignment 1 · Due end of Week 1 · Submitted to Canvas</div>
+    <h3>Environment Verification</h3>
+    <div class="deliverable">
+      <div class="d-icon">📸</div>
+      <div class="d-text"><strong>Screenshot 1:</strong> VS Code with the <code>ism3232</code> folder open in the Explorer panel, showing all module subfolders visible in the sidebar.</div>
+    </div>
+    <div class="deliverable">
+      <div class="d-icon">📸</div>
+      <div class="d-text"><strong>Screenshot 2:</strong> The VS Code integrated terminal showing zsh running — the prompt should be visible and clearly zsh (not bash or PowerShell).</div>
+    </div>
+    <div class="deliverable">
+      <div class="d-icon">📸</div>
+      <div class="d-text"><strong>Screenshot 3:</strong> The terminal showing all six verification commands and their output: <code>echo $SHELL</code>, <code>zsh --version</code>, <code>python3 --version</code>, <code>git --version</code>, <code>pwd</code>, <code>ls</code>.</div>
+    </div>
+    <div class="deliverable">
+      <div class="d-icon">🐍</div>
+      <div class="d-text"><strong>File:</strong> <code>module01_setup/hello_ism3232.py</code> — the script written during the live code-along, with your name in the header comment.</div>
+    </div>
+    <div class="deliverable">
+      <div class="d-icon">📄</div>
+      <div class="d-text"><strong>File:</strong> <code>module01_setup/README.md</code> — completed with your name, date, verification results table, and AI use statement.</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠</div>
+    <div>
+      <div class="callout-label">Common Week 1 submission mistakes</div>
+      <div class="callout-body">
+        <strong>Wrong shell in screenshots</strong> — students submit PowerShell or bash screenshots instead of zsh. The prompt must be zsh.<br>
+        <strong>Script in the wrong folder</strong> — <code>hello_ism3232.py</code> must be inside <code>module01_setup/</code>, not in the root <code>ism3232/</code> folder.<br>
+        <strong>Missing README</strong> — students forget the README or submit it empty.<br>
+        <strong>Screenshots taken on phone</strong> — require digital screenshots, not phone photos of a screen.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- SECTION 8: Looking ahead                 -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="section-divider"><div class="line"></div><div class="label">Section 8 — Looking Ahead</div><div class="line"></div></div>
+
+  <div class="card">
+    <div class="card-title">What Week 2 expects from you</div>
+    <p>Week 2 begins immediately in the terminal with zsh navigation. Students who have not completed their environment setup will not be able to follow the live demonstrations. If your setup is broken, fix it before Week 2 — attend office hours, post in the discussion board, or pair with a classmate.</p>
+    <p>Week 2 topics: <code>pwd</code> · <code>ls</code> · <code>ls -la</code> · <code>cd</code> · <code>cd ..</code> · <code>cd ~</code> · <code>mkdir</code> · <code>touch</code> · <code>clear</code> · <code>tree</code> · <code>cp</code> · <code>mv</code> · <code>rm</code> · <code>cat</code> · <code>less</code> · <code>head</code> · <code>tail</code> · <code>code .</code></p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">End-of-class student checklist</div>
+      <ul class="check-list">
+        <li>zsh is running in VS Code's integrated terminal</li>
+        <li>All six verification commands return expected output</li>
+        <li>ism3232/ folder exists with all module subfolders</li>
+        <li>hello_ism3232.py runs without errors</li>
+        <li>README.md created in module01_setup/</li>
+        <li>Three screenshots taken and saved</li>
+        <li>GitHub account created (needed for Week 4)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">If something is broken</div>
+      <p style="font-size:12px;color:var(--text-body);margin-bottom:8px;"><strong>WSL not installing (Windows):</strong> Try from an administrator PowerShell. If it still fails, use a lab machine for Week 1 and troubleshoot with IT.</p>
+      <p style="font-size:12px;color:var(--text-body);margin-bottom:8px;"><strong>python3 not found:</strong> Download from python.org. On Mac, <code>xcode-select --install</code> installs the dev tools including Python.</p>
+      <p style="font-size:12px;color:var(--text-body);"><strong>VS Code terminal not showing zsh:</strong> Re-check the terminal default profile setting. May need to restart VS Code completely.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    ISM3232 · Business Application Development · Unit 1 · Week 1 Lecture Material · Module 1: Course Setup
+  </div>
+
+</div>
+</body>
+</html>

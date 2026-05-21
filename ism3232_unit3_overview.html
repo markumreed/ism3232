@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Unit 3 — Object-Oriented System Design</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}</style>
+</head>
+<body style="font-family:Georgia,'Times New Roman',serif;background:#f5f4f0;color:#1a1a1a;padding:40px 20px 60px;line-height:1.5;">
+<div style="max-width:920px;margin:0 auto;">
+
+  <div style="border-bottom:2px solid #1a1a1a;padding-bottom:20px;margin-bottom:36px;">
+    <p style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#888888;margin-bottom:8px;">ISM3232 · Business Application Development · Unit 3 of 4</p>
+    <h1 style="font-size:28px;font-weight:normal;letter-spacing:-.4px;margin-bottom:6px;">Unit 3 — Object-Oriented System Design</h1>
+    <p style="font-size:13px;color:#555555;font-style:italic;">Weeks 10–12 &nbsp;·&nbsp; Classes · Composition · Inheritance · Applied Practice + pytest ✦ Now 3 weeks</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:40px;">
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W1–4 Unit 1: Developer Foundations</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W5–8 Unit 2: Python</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W9 Midterm</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#f0f0ee;font-weight:bold;">W10–12 Unit 3: OOP ✦ 3 wks</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W13–17 Unit 4: Capstone Build</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:36px;align-items:center;">
+    <span style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-right:4px;">Stack:</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">zsh</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">VS Code</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Python 3</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">venv + pip</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">Ruff ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">pytest ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">ripgrep ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">fzf + zoxide ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Git / GitHub</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">SQLite</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Streamlit</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">FastAPI (lecture only)</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">GenAI</span>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:0;">
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+    <div style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888888;white-space:nowrap;">Unit 3 · Weeks 10–12 · Object-Oriented System Design ✦ Now 3 weeks</div>
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+  </div>
+
+  <div style="background:#f0f9ff;border:1px solid #1e40af;border-left-width:4px;border-radius:7px;padding:12px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+    <div style="font-size:18px;flex-shrink:0;margin-top:1px;">🔷</div>
+    <div>
+      <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:4px;">Revision — expanded from 2 to 3 weeks</div>
+      <div style="font-size:12px;color:#444444;">Week 12 is new: a standalone applied practice week where students build a multi-class business simulation with pytest before the capstone adds SQL and Streamlit on top. This is a graded OOP checkpoint — instructors can identify struggles before the build phase begins.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:18px;">
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Classes &amp; objects</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Composition &amp; inheritance</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">OOP → SQL mapping</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Multi-class simulation + pytest</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:24px;">
+
+    <!-- W10 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dbeafe;border-bottom:1px solid #bfdbfe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#1e40af;">W10</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#1e3a8a;">OOP I — Classes, Objects, Attributes, Methods</div>
+          <div style="font-size:11px;font-style:italic;color:#1e40af;">How do we model a real business entity in code?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">What is a class?</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Instances</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">__init__</code></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Instance attributes</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Methods</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Encapsulation</span>
+        </div>
+        <div style="background:#f0f9ff;border-left:3px solid #1e40af;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#1e40af;">Student output</div>
+          <div style="font-size:12px;color:#1e3a8a;">A single business entity class (<code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">BusinessRequest</code>, <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">Ticket</code>, <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">Product</code>, or <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">Application</code>) with attributes, status, and at least two business logic methods</div>
+        </div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;"><p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">class BusinessRequest:<br>&nbsp;&nbsp;def __init__(self, request_id, requester, amount):<br>&nbsp;&nbsp;&nbsp;&nbsp;self.status = 'Pending'<br>&nbsp;&nbsp;def approve(self): self.status = 'Approved'<br>&nbsp;&nbsp;def requires_review(self): return self.amount &gt; 1000</p></div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI explains class/object relationships — no generated class submissions</span>
+      </div>
+    </div>
+
+    <!-- W11 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dcfce7;border-bottom:1px solid #bbf7d0;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#166534;">W11</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#14532d;">OOP II — Composition, Inheritance, and Business Modeling</div>
+          <div style="font-size:11px;font-style:italic;color:#166534;">How do objects work together and map to a database?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Composition vs inheritance</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Light inheritance for business hierarchies</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">OOP → SQL mapping</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">class ≈ table · attribute ≈ column · instance ≈ row</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Multi-class system design</span>
+        </div>
+        <div style="background:#f0fdf4;border-left:3px solid #166534;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#166534;">Student output</div>
+          <div style="font-size:12px;color:#14532d;">Manager class that stores and processes a list of business entity objects</div>
+        </div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;"><p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">class RequestManager:<br>&nbsp;&nbsp;def __init__(self): self.requests = []<br>&nbsp;&nbsp;def list_pending(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;return [r for r in self.requests<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if r.status == 'Pending']</p></div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI may review class design after student writes the first version</span>
+      </div>
+    </div>
+
+    <!-- W12 NEW -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#ede9fe;border-bottom:1px solid #ddd6fe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#4c1d95;">W12</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#3b0764;">OOP III — Applied Practice: Multi-Class Simulation + pytest ✦ NEW</div>
+          <div style="font-size:11px;font-style:italic;color:#4c1d95;">Can I build and test a working multi-class business system on my own?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Deliverable requirements</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">≥ 2 business entity classes</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">1 manager class</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">≥ 5 pytest tests covering business logic methods</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">No database or Streamlit layer</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Full submission workflow</span>
+        </div>
+        <div style="background:#faf5ff;border-left:3px solid #4c1d95;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#4c1d95;">Student output — OOP checkpoint</div>
+          <div style="font-size:12px;color:#3b0764;">Standalone Python project: multi-class business simulation with comprehensive pytest coverage. Instructors use this to confirm OOP fluency before the capstone.</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI may suggest additional test cases — student writes all classes and tests</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:8px;">Capstone OOP class pairings by project type</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px;margin-bottom:24px;">
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Internship Tracker</div><div style="font-size:10px;color:#888888;">InternshipApplication · ApplicationManager</div></div>
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Helpdesk System</div><div style="font-size:10px;color:#888888;">Ticket · TicketManager</div></div>
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Procurement Tracker</div><div style="font-size:10px;color:#888888;">PurchaseRequest · ApprovalWorkflow</div></div>
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Inventory Tool</div><div style="font-size:10px;color:#888888;">Product · InventoryManager</div></div>
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Compliance Checklist</div><div style="font-size:10px;color:#888888;">ComplianceItem · ComplianceTracker</div></div>
+    <div style="background:#f7f7f5;border:1px solid #ebebea;border-radius:6px;padding:7px 10px;"><div style="font-size:11px;font-weight:bold;color:#1a1a1a;margin-bottom:2px;">Research Application Tracker</div><div style="font-size:10px;color:#888888;">ResearchApplication · ReviewManager</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:32px;">
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Duration</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">3 weeks ✦ revised</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Midterm eligible</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">No (taught after W9)</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Primary text</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">Think Python Ch. 14–17</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">W12 checkpoint</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">Multi-class + pytest before capstone</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Capstone link</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">≥ 2 entity classes required</div></div>
+  </div>
+
+  <div style="border-top:1px solid #e0e0de;padding-top:14px;margin-top:48px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:#aaaaaa;letter-spacing:.08em;">ISM3232 · Unit 3 · Weeks 10–12 · Object-Oriented System Design</div>
+
+</div>
+</body>
+</html>

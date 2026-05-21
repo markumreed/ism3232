@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 W14 — Python + SQL Integration</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--blue:#89b4fa;--green:#a6e3a1;--yellow:#f9e2af;--red:#f38ba8;
+  --purple:#cba6f7;--teal:#94e2d5;--orange:#fab387;
+  --s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+  --base:#1e1e2e;--mantle:#181825;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;font-size:34px;}
+.reveal h1{font-size:1.8em;color:var(--blue);line-height:1.2;margin-bottom:.25em;}
+.reveal h2{font-size:1.2em;color:var(--blue);line-height:1.3;margin-bottom:.2em;}
+.reveal h3{font-size:.8em;color:var(--sub);font-weight:400;margin-bottom:.3em;}
+.reveal p{font-size:.78em;color:var(--text);line-height:1.7;margin:.2em 0;}
+.reveal ul{list-style:none;padding:0;margin:.25em 0;}
+.reveal ul li{font-size:.75em;color:var(--text);padding:.16em 0;line-height:1.55;}
+.reveal ul li::before{content:"▸ ";color:var(--blue);}
+.reveal pre{font-size:.48em;margin:.25em 0;border-radius:8px;}
+.reveal strong{color:var(--yellow);}
+.reveal em{color:var(--sub);}
+.reveal code{font-family:"Courier New",monospace;}
+/* backgrounds */
+.s-title{background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%);}
+.s-video{background:#12121f;}
+.s-say{background:#0d1420;}
+.s-do{background:#091209;}
+.s-code{background:#0d0d1a;}
+.s-warn{background:#1a0808;}
+.s-outline{background:var(--mantle);}
+.s-yt{background:#13091a;}
+.s-divider{background:#0e0e14;}
+/* cards */
+.card{border-radius:8px;padding:.5em .85em;margin:.25em 0;text-align:left;font-size:.76em;line-height:1.7;}
+.say{background:rgba(137,180,250,.09);border-left:4px solid var(--blue);color:var(--text);}
+.do{background:rgba(166,227,161,.09);border-left:4px solid var(--green);color:var(--text);font-family:"Courier New",monospace;}
+.warn{background:rgba(243,139,168,.1);border-left:4px solid var(--red);color:var(--text);}
+.yt-c{background:rgba(203,166,247,.09);border-left:4px solid var(--purple);color:var(--text);}
+.clbl{font-family:"Courier New",monospace;font-size:.78em;font-weight:bold;
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:.25em;}
+.say .clbl{color:var(--blue);}
+.do  .clbl{color:var(--green);}
+.warn .clbl{color:var(--red);}
+.yt-c .clbl{color:var(--purple);}
+/* outline table */
+.ot{width:100%;border-collapse:collapse;font-size:.72em;text-align:left;margin:.3em 0;}
+.ot td{padding:.32em .55em;border-bottom:1px solid var(--s1);color:var(--text);vertical-align:top;line-height:1.5;}
+.ot td:first-child{font-family:"Courier New",monospace;color:var(--blue);font-weight:bold;white-space:nowrap;min-width:62px;}
+.ot tr:last-child td{border-bottom:none;}
+/* badges */
+.badge{display:inline-block;padding:.12em .55em;border-radius:20px;font-size:.44em;
+  font-family:"Courier New",monospace;font-weight:bold;letter-spacing:.06em;
+  text-transform:uppercase;vertical-align:middle;margin:.1em .1em 0 0;}
+.b-concept{background:rgba(137,180,250,.18);color:var(--blue);border:1px solid rgba(137,180,250,.35);}
+.b-demo{background:rgba(166,227,161,.18);color:var(--green);border:1px solid rgba(166,227,161,.35);}
+.b-code{background:rgba(249,226,175,.18);color:var(--yellow);border:1px solid rgba(249,226,175,.35);}
+.b-policy{background:rgba(243,139,168,.18);color:var(--red);border:1px solid rgba(243,139,168,.35);}
+.b-grey{background:rgba(255,255,255,.07);color:var(--sub);border:1px solid var(--s1);}
+/* week title */
+.wk-eyebrow{font-size:.52em;color:var(--sub);font-family:"Courier New",monospace;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em;}
+.wk-vids{font-size:.48em;color:var(--sub);margin-top:.55em;}
+/* video divider */
+.vid-divider{border:1px solid var(--s1);border-radius:10px;padding:.55em .9em;
+  margin:.25em 0;text-align:left;}
+.vid-divider .vd-id{font-family:"Courier New",monospace;font-size:.55em;
+  color:var(--sub);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2em;}
+.vid-divider .vd-title{font-size:1.0em;font-weight:bold;color:var(--text);line-height:1.3;}
+/* section label */
+.sec-chip{font-family:"Courier New",monospace;font-size:.5em;padding:.18em .65em;
+  border-radius:20px;background:var(--s0);color:var(--sub);border:1px solid var(--s1);
+  display:inline-block;margin-bottom:.3em;}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><div class="wk-eyebrow">ISM3232 &nbsp;·&nbsp; Unit 4 — Capstone Build</div><h1>Week 14</h1><h2>Python + SQL Integration</h2><div class="wk-vids">W14-V1&nbsp; · &nbsp;W14-V2&nbsp; · &nbsp;W14-V3&nbsp; · &nbsp;W14-V4 &nbsp;·&nbsp; ~30 min</div><p style="font-size:.4em;color:var(--sub);margin-top:.7em;">Video script slides &nbsp;·&nbsp; Arrow keys &nbsp;·&nbsp; S = speaker notes &nbsp;·&nbsp; F = fullscreen</p></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W14-V1</div><div class="vd-title">The sqlite3 Connection Pattern — Context Manager and Placeholders</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 14 | sqlite3 in Python — Context Manager, ? Placeholders, and SQL Injection</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">sqlite3</span><span class="badge b-grey">python database</span><span class="badge b-grey">context manager</span><span class="badge b-grey">SQL injection</span><span class="badge b-grey">? placeholder</span><span class="badge b-grey">db_file parameter</span><span class="badge b-grey">ISM3232 Week 14</span></div><aside class="notes">YT: ISM3232 Week 14 | sqlite3 in Python — Context Manager, ? Placeholders, and SQL Injection</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W14-V1 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**The pattern:** with sqlite3.connect() as conn</td></tr><tr><td>0:45</td><td>**Why context manager:** automatic commit and close</td></tr><tr><td>1:30</td><td>**? placeholders:** the correct way to insert data</td></tr><tr><td>2:15</td><td>**SQL injection demo:** f-string in SQL — what an attacker can do</td></tr><tr><td>3:30</td><td>**db_file parameter:** why every function takes it</td></tr><tr><td>4:30</td><td>**Write the pattern from memory**</td></tr><tr><td>6:00</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 0:00 – 1:30</span><h2 style="margin-top:.35em;">The Connection Pattern</h2></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">The required connection pattern — memorise this</code></pre><aside class="notes">CODE: The required connection pattern — memorise this</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Why context manager</div><p style="font-size:.84em;line-height:1.8;">The with statement is a context manager. When the block exits — whether normally or due to an error — the connection is automatically committed and closed. Without the context manager, you must manually call conn.commit() and conn.close(). Forget either one: data is not saved, or the connection leaks. Use the context manager every time.</p></div><aside class="notes">SAY: The with statement is a context manager. When the block exits — whether normally or due to an error — the connection is automatically committed and closed. Without the context manager, you must manually call conn.commit() and conn.close(). Forget eit</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 2:15 – 3:30</span><h2 style="margin-top:.35em;">SQL Injection Demo</h2></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Show this live. Students who see injection happen never forget why placeholders are required.</p></div><aside class="notes">WARN: Show this live. Students who see injection happen never forget why placeholders are required.</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Why f-strings in SQL are dangerous — DO NOT USE IN PRODUCTION</code></pre><aside class="notes">CODE: Why f-strings in SQL are dangerous — DO NOT USE IN PRODUCTION</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 After injection demo</div><p style="font-size:.84em;line-height:1.8;">With the f-string: the malicious string became part of the SQL command. The database executed DROP TABLE. Your data is gone. With ? placeholders: sqlite3 escapes the string automatically. It cannot become SQL. This is called a parameterised query. Every SQL statement in this course uses ? placeholders. No exceptions.</p></div><aside class="notes">SAY: With the f-string: the malicious string became part of the SQL command. The database executed DROP TABLE. Your data is gone. With ? placeholders: sqlite3 escapes the string automatically. It cannot become SQL. This is called a parameterised query. Ev</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W14-V2</div><div class="vd-title">Building database.py — All Five Functions</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 11 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 14 | Build database.py — All 5 Required Functions (Full Live Coding)</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">database.py</span><span class="badge b-grey">sqlite3</span><span class="badge b-grey">python database</span><span class="badge b-grey">live coding</span><span class="badge b-grey">ISM3232 Week 14</span><span class="badge b-grey">create_table</span><span class="badge b-grey">add_record</span></div><aside class="notes">YT: ISM3232 Week 14 | Build database.py — All 5 Required Functions (Full Live Coding)</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W14-V2 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Setup:** imports, DB_FILE constant</td></tr><tr><td>0:45</td><td>**create_table():** IF NOT EXISTS, all columns</td></tr><tr><td>2:00</td><td>**add_record():** ? placeholders for every value</td></tr><tr><td>3:15</td><td>**get_all_records():** row_factory, list of dicts</td></tr><tr><td>5:00</td><td>**update_status():** WHERE id = ?</td></tr><tr><td>6:00</td><td>**get_status_report():** GROUP BY</td></tr><tr><td>7:30</td><td>**Test each function manually**</td></tr><tr><td>9:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">database.py — all five functions — type every line</code></pre><aside class="notes">CODE: database.py — all five functions — type every line</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Never use f-strings in any SQL string in this file. Check every conn.execute() call — every value must be passed via the tuple argument, not embedded in the SQL string.</p></div><aside class="notes">WARN: Never use f-strings in any SQL string in this file. Check every conn.execute() call — every value must be passed via the tuple argument, not embedded in the SQL string.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W14-V3</div><div class="vd-title">row_factory — Getting Dicts Instead of Tuples</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 5 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 14 | sqlite3.Row and row_factory — Named Access Instead of Index Access</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">sqlite3 row_factory</span><span class="badge b-grey">sqlite3.Row</span><span class="badge b-grey">dict(row)</span><span class="badge b-grey">python sqlite</span><span class="badge b-grey">named access</span><span class="badge b-grey">ISM3232 Week 14</span><span class="badge b-grey">database python</span></div><aside class="notes">YT: ISM3232 Week 14 | sqlite3.Row and row_factory — Named Access Instead of Index Access</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W14-V3 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Without row_factory:** tuples accessed by indexShow the fragility</td></tr><tr><td>1:00</td><td>**The problem:** add a column, index breaks everywhere</td></tr><tr><td>1:45</td><td>**conn.row_factory = sqlite3.Row**</td></tr><tr><td>2:15</td><td>**dict(row):** plain Python dict with named keys</td></tr><tr><td>2:45</td><td>**How it looks in get_all_records()**</td></tr><tr><td>3:30</td><td>**Why this matters for Streamlit:** st.dataframe</td></tr><tr><td>4:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">row_factory comparison — run both in Python</code></pre><aside class="notes">CODE: row_factory comparison — run both in Python</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Why it matters</div><p style="font-size:.84em;line-height:1.8;">When you pass records to st.dataframe() in Streamlit, it expects a list of dicts. If you return a list of tuples, Streamlit shows numbered columns, not named ones. dict(row) converts each Row object to a plain Python dict. row_factory must be set BEFORE the execute() call to take effect.</p></div><aside class="notes">SAY: When you pass records to st.dataframe() in Streamlit, it expects a list of dicts. If you return a list of tuples, Streamlit shows numbered columns, not named ones. dict(row) converts each Row object to a plain Python dict. row_factory must be set BEF</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W14-V4</div><div class="vd-title">Testing Database Functions with tmp_path</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 14 | Testing database.py with pytest tmp_path — Isolated Test Databases</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">pytest tmp_path</span><span class="badge b-grey">database testing</span><span class="badge b-grey">python testing</span><span class="badge b-grey">isolated database</span><span class="badge b-grey">ISM3232 Week 14</span><span class="badge b-grey">test database</span><span class="badge b-grey">pytest fixtures</span></div><aside class="notes">YT: ISM3232 Week 14 | Testing database.py with pytest tmp_path — Isolated Test Databases</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W14-V4 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Problem without tmp_path:** every test pollutes the dev database</td></tr><tr><td>0:45</td><td>**tmp_path fixture:** pytest creates a temp folder per test</td></tr><tr><td>1:15</td><td>**db = tmp_path / &#x27;test.db&#x27;**</td></tr><tr><td>1:45</td><td>**Test 1: add and retrieve**</td></tr><tr><td>2:30</td><td>**Test 2: default status**</td></tr><tr><td>3:00</td><td>**Test 3: update_status**</td></tr><tr><td>3:45</td><td>**Test 4: multiple records**</td></tr><tr><td>4:30</td><td>**Test 5: status report**</td></tr><tr><td>5:30</td><td>**Run pytest -v**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">tests/test_database.py — five required tests with tmp_path</code></pre><aside class="notes">CODE: tests/test_database.py — five required tests with tmp_path</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Every test function must accept tmp_path as a parameter. Every call to a database function must pass db_file=db. If any test uses the real DB_FILE, it contaminates your development database and creates test order dependencies.</p></div><aside class="notes">WARN: Every test function must accept tmp_path as a parameter. Every call to a database function must pass db_file=db. If any test uses the real DB_FILE, it contaminates your development database and create</aside></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+</script></body></html>

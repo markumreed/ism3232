@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 14 — Python + SQL Integration</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 4 — Capstone Build</span>
+  <span class="nav-week">Week 14 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 14</div>
+  <h1 class="wk-title">Python + SQL Integration</h1>
+  <p class="wk-deck">Connect your OOP models to SQLite using sqlite3, build all five database functions, and test with tmp_path.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 4</span><span class="chip ">sqlite3 · database.py</span><span class="chip ">pytest tmp_path</span></div>
+</div><h2>The connection pattern — memorise this</h2><div class="concept"><div class="concept-label">with sqlite3.connect() as conn</div><p>The with statement is a context manager. When the block exits — normally or due to an error — the connection is automatically committed and closed. Every database function uses this pattern.</p></div><div class="code-label">The required pattern and why ? placeholders are mandatory</div><pre><code>import sqlite3
+
+DB_FILE = &#x27;data/requests.db&#x27;
+
+def some_function(value, db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(
+            &#x27;SQL WITH ? PLACEHOLDERS&#x27;,
+            (value,)   # values as a tuple
+        )
+
+# NEVER do this:
+conn.execute(f&#x27;INSERT INTO t VALUES ({value})&#x27;)  # SQL injection risk
+
+# ALWAYS do this:
+conn.execute(&#x27;INSERT INTO t VALUES (?)&#x27;, (value,))</code></pre><div class="warn"><div class="concept-label">⚠ f-strings in SQL are dangerous</div><p>An f-string in a SQL statement allows any string — including malicious SQL commands — to become part of the query. ? placeholders escape the value automatically. Every SQL statement in this course uses ? — no exceptions.</p></div><h2>All five required functions</h2><div class="code-label">database.py — type every line</div><pre><code>import sqlite3
+import os
+
+DB_FILE = &#x27;data/requests.db&#x27;
+
+def create_table(db_file=DB_FILE):
+    os.makedirs(os.path.dirname(db_file), exist_ok=True)
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(&#x27;&#x27;&#x27;
+            CREATE TABLE IF NOT EXISTS requests (
+                id        INTEGER PRIMARY KEY AUTOINCREMENT,
+                requester TEXT    NOT NULL,
+                category  TEXT    NOT NULL,
+                amount    REAL,
+                status    TEXT    DEFAULT &#x27;Pending&#x27;
+            )
+        &#x27;&#x27;&#x27;)
+
+def add_record(requester, category, amount, db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(
+            &#x27;INSERT INTO requests (requester, category, amount) VALUES (?,?,?)&#x27;,
+            (requester, category, amount)
+        )
+
+def get_all_records(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.execute(&#x27;SELECT * FROM requests ORDER BY id DESC&#x27;)
+        return [dict(row) for row in cur.fetchall()]
+
+def update_status(record_id, new_status, db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(&#x27;UPDATE requests SET status=? WHERE id=?&#x27;,
+                     (new_status, record_id))
+
+def get_status_report(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.execute(&#x27;&#x27;&#x27;
+            SELECT status, COUNT(*) AS count, SUM(amount) AS total
+            FROM requests GROUP BY status
+        &#x27;&#x27;&#x27;)
+        return cur.fetchall()</code></pre><div class="concept"><div class="concept-label">row_factory = sqlite3.Row</div><p>Without row_factory, sqlite3 returns tuples: <code>row[2]</code> for amount. With row_factory, you get Row objects: <code>row['amount']</code>. dict(row) converts each Row to a plain Python dict — the format Streamlit expects for st.dataframe().</p></div><h2>Testing with tmp_path</h2><div class="code-label">tests/test_database.py — every test gets a fresh isolated database</div><pre><code>from database import create_table, add_record, get_all_records, update_status
+
+def test_add_and_retrieve(tmp_path):
+    db = str(tmp_path / &#x27;test.db&#x27;)   # fresh per test
+    create_table(db)
+    add_record(&#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00, db_file=db)
+    records = get_all_records(db_file=db)
+    assert len(records) == 1
+    assert records[0][&#x27;requester&#x27;] == &#x27;Taylor&#x27;
+
+def test_default_status(tmp_path):
+    db = str(tmp_path / &#x27;test.db&#x27;)
+    create_table(db)
+    add_record(&#x27;Jordan&#x27;, &#x27;Travel&#x27;, 350.00, db_file=db)
+    records = get_all_records(db_file=db)
+    assert records[0][&#x27;status&#x27;] == &#x27;Pending&#x27;
+
+def test_update_status(tmp_path):
+    db = str(tmp_path / &#x27;test.db&#x27;)
+    create_table(db)
+    add_record(&#x27;Morgan&#x27;, &#x27;Software&#x27;, 2800.00, db_file=db)
+    records = get_all_records(db_file=db)
+    update_status(records[0][&#x27;id&#x27;], &#x27;Approved&#x27;, db_file=db)
+    updated = get_all_records(db_file=db)
+    assert updated[0][&#x27;status&#x27;] == &#x27;Approved&#x27;</code></pre><div class="warn"><div class="concept-label">⚠ Every test must pass db_file=db</div><p>If any test uses the default DB_FILE, it writes to your development database, not the isolated test database. The tests then depend on each other's data — fragile and unpredictable.</p></div><h2>Before you leave this week</h2><ul class="checklist"><li>All five database functions implemented and working</li><li>Every SQL statement uses ? placeholders — no f-strings anywhere</li><li>row_factory used in get_all_records — returns list of dicts</li><li>All database tests use tmp_path — not the real database</li><li>Assignment 14 submitted via GitHub URL</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 14 &nbsp;·&nbsp; Python + SQL Integration</div></body></html>

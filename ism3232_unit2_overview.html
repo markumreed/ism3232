@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Unit 2 — Python Programming Foundations</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}</style>
+</head>
+<body style="font-family:Georgia,'Times New Roman',serif;background:#f5f4f0;color:#1a1a1a;padding:40px 20px 60px;line-height:1.5;">
+<div style="max-width:920px;margin:0 auto;">
+
+  <div style="border-bottom:2px solid #1a1a1a;padding-bottom:20px;margin-bottom:36px;">
+    <p style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#888888;margin-bottom:8px;">ISM3232 · Business Application Development · Unit 2 of 4</p>
+    <h1 style="font-size:28px;font-weight:normal;letter-spacing:-.4px;margin-bottom:6px;">Unit 2 — Python Programming Foundations</h1>
+    <p style="font-size:13px;color:#555555;font-style:italic;">Weeks 5–8 &nbsp;·&nbsp; Variables · Conditionals · Loops · Functions · Debugging · pytest</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:40px;">
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W1–4 Unit 1: Developer Foundations</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#f0f0ee;font-weight:bold;">W5–8 Unit 2: Python</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W9 Midterm</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W10–12 Unit 3: OOP ✦ 3 wks</span>
+    <span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:4px 11px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">W13–17 Unit 4: Capstone Build</span>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:36px;align-items:center;">
+    <span style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-right:4px;">Stack:</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">zsh</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">VS Code</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Python 3</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">venv + pip</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">Ruff ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">pytest ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">ripgrep ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #166534;border-radius:20px;color:#14532d;background:#f0fdf4;">fzf + zoxide ✦</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Git / GitHub</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">SQLite</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Streamlit</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">FastAPI (lecture only)</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">GenAI</span>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:0;">
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+    <div style="font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888888;white-space:nowrap;">Unit 2 · Weeks 5–8 · Python Programming Foundations</div>
+    <div style="flex:1;height:1px;background:#e0e0de;"></div>
+  </div>
+
+  <div style="background:#f0f9ff;border:1px solid #1e40af;border-left-width:4px;border-radius:7px;padding:12px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+    <div style="font-size:18px;flex-shrink:0;margin-top:1px;">🐍</div>
+    <div>
+      <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:4px;">Unit requirement</div>
+      <div style="font-size:12px;color:#444444;">All Unit 2 assignments require the full Unit 1 workflow: VS Code, zsh, <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">.venv</code>, <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">requirements.txt</code>, Ruff format and check, pytest, and GitHub submission via the pre-submission ritual.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:18px;">
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Variables &amp; types</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Conditionals &amp; loops</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Functions &amp; modules</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Debugging + pytest</span><span style="font-size:12px;color:#888888;">→</span>
+    <span style="font-size:11px;padding:3px 10px;border:1px solid #e0e0de;border-radius:20px;color:#444444;background:#ffffff;">Midterm ready</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:24px;">
+
+    <!-- W5 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dbeafe;border-bottom:1px solid #bfdbfe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#1e40af;">W5</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#1e3a8a;">Module 4 — Variables, Data Types, Input/Output, Operators</div>
+          <div style="font-size:11px;font-style:italic;color:#1e40af;">How does a program store and work with business information?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Variables</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Strings</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Numbers</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Booleans</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Operators</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">input()</code> / <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">print()</code></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">f-strings</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Code tracing</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:3px;">Business context</div>
+            <div style="font-size:11px;color:#444444;">Price, quantity, request amount, approval thresholds</div>
+          </div>
+          <div>
+            <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:3px;">Workflow required</div>
+            <div style="font-size:11px;color:#444444;">venv · Ruff · pytest · GitHub</div>
+          </div>
+        </div>
+        <div style="background:#f0f9ff;border-left:3px solid #1e40af;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#1e40af;">Student output</div>
+          <div style="font-size:12px;color:#1e3a8a;">Business data script with variables, formatted output, and at least one pytest test</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI explains syntax errors only after student attempts</span>
+      </div>
+    </div>
+
+    <!-- W6 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#dcfce7;border-bottom:1px solid #bbf7d0;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#166534;">W6</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#14532d;">Module 4 — Conditionals, Loops, Lists, Dictionaries</div>
+          <div style="font-size:11px;font-style:italic;color:#166534;">How do programs process batches of business records and apply rules?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">if</code> / <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">elif</code> / <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">else</code></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">for</code> loops</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;"><code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">while</code> loops</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Lists</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Dictionaries</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Key-value records</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:3px;">Business context</div>
+            <div style="font-size:11px;color:#444444;">Approval rules, batch transactions, business records</div>
+          </div>
+          <div>
+            <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:3px;">Workflow required</div>
+            <div style="font-size:11px;color:#444444;">venv · Ruff · pytest · GitHub</div>
+          </div>
+        </div>
+        <div style="background:#f0fdf4;border-left:3px solid #166534;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#166534;">Assignment — Business Record Processor</div>
+          <div style="font-size:12px;color:#14532d;">Script that stores a list of business records, loops through them, applies a business rule, prints a summary, saves output to a file, includes at least one pytest test, and passes Ruff</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI explains loop/dict errors after student code tracing</span>
+      </div>
+    </div>
+
+    <!-- W7 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#fef9c3;border-bottom:1px solid #fde68a;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#92400e;">W7</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#78350f;">Module 5 — Functions, Parameters, Return Values, Scope, Modules</div>
+          <div style="font-size:11px;font-style:italic;color:#92400e;">How do we organize business logic into reusable, testable units?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Function definitions</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Parameters &amp; arguments</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Return values</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Scope</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Decomposition</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Modules</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Testing with pytest</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required project structure</div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;"><p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">module05_functions/<br>&nbsp;&nbsp;README.md &nbsp;main.py &nbsp;business_rules.py<br>&nbsp;&nbsp;requirements.txt &nbsp;.gitignore<br>&nbsp;&nbsp;tests/test_business_rules.py</p></div>
+        <div style="background:#fffbeb;border-left:3px solid #92400e;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#92400e;">Student output</div>
+          <div style="font-size:12px;color:#78350f;">Modular business rules project with separate <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">business_rules.py</code> and passing pytest tests</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #86efac;background:#f0fdf4;color:#166534;">✓ AI explains function behavior — student writes and tests all functions</span>
+      </div>
+    </div>
+
+    <!-- W8 -->
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:#ede9fe;border-bottom:1px solid #ddd6fe;">
+        <div style="min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;background:#4c1d95;">W8</div>
+        <div>
+          <div style="font-size:14px;font-weight:bold;margin-bottom:2px;color:#3b0764;">Module 5 — Debugging, Testing, AI Literacy, and Midterm Review</div>
+          <div style="font-size:11px;font-style:italic;color:#4c1d95;">How do we find and fix errors, and how do we use AI responsibly while doing it?</div>
+        </div>
+      </div>
+      <div style="padding:13px 16px;">
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Tracebacks</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Debugging with <code style="font-family:'Courier New',Courier,monospace;font-size:.85em;background:#f0f0ee;color:#444444;padding:1px 5px;border-radius:3px;">print()</code></span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">pytest test writing</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">AI as debugging explainer</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ebebea;color:#555555;background:#f7f7f5;">Midterm review</span>
+        </div>
+        <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#888888;margin-bottom:5px;">Required AI debugging activity</div>
+        <div style="background:#f0f0ee;border:1px dashed #e0e0de;border-radius:5px;padding:7px 9px;margin-bottom:8px;"><p style="font-family:'Courier New',Courier,monospace;font-size:10px;color:#444444;">1. Attempt to debug independently<br>2. Write what you think is wrong<br>3. Ask AI to explain the error message only<br>4. Fix the code yourself<br>5. Test the corrected code<br>6. Submit reflection (graded on process)</p></div>
+        <div style="background:#faf5ff;border-left:3px solid #4c1d95;border-radius:4px;padding:8px 10px;margin-bottom:8px;">
+          <div style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#4c1d95;">Student output</div>
+          <div style="font-size:12px;color:#3b0764;">Fixed business script + structured debugging reflection submitted to GitHub</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid #93c5fd;background:#eff6ff;color:#1e40af;">★ Formal AI literacy activity this week — graded on process, not just result</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:32px;">
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Duration</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">4 weeks</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Midterm eligible</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">All 4 weeks</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Linter</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">Ruff (required every submit)</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Tests</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">pytest (required every submit)</div></div>
+    <div style="background:#ffffff;border:1px solid #e0e0de;border-radius:8px;padding:10px 12px;"><div style="font-size:10px;color:#888888;margin-bottom:3px;">Grade weight</div><div style="font-size:13px;font-weight:bold;color:#1a1a1a;">25% assignments</div></div>
+  </div>
+
+  <div style="border-top:1px solid #e0e0de;padding-top:14px;margin-top:48px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:#aaaaaa;letter-spacing:.08em;">ISM3232 · Unit 2 · Weeks 5–8 · Python Programming Foundations</div>
+
+</div>
+</body>
+</html>

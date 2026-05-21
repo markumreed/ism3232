@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Unit 3 Cheat Sheet &mdash; Unit 3 &mdash; Object-Oriented Programming</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+/* ── Cheat sheet layout ── */
+.cs-header{padding-bottom:18px;margin-bottom:20px;border-bottom:3px solid var(--divider);}
+.cs-unit-badge{display:inline-block;font-family:"Courier New",monospace;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;padding:4px 14px;border-radius:20px;
+  color:#fff;margin-bottom:10px;font-weight:bold;}
+.u1{background:#1d4ed8;}.u2{background:#15803d;}.u3{background:#7c3aed;}.u4{background:#b45309;}
+.cs-header h1{font-size:26px;font-weight:900;color:var(--text-primary);margin-bottom:4px;
+  letter-spacing:-.02em;}
+.cs-header .cs-sub{font-size:13px;color:var(--text-secondary);font-style:italic;}
+
+/* ── Two and three column grid ── */
+.cs-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;margin-bottom:14px;}
+@media(max-width:700px){.cs-grid-2,.cs-grid-3{grid-template-columns:1fr;}}
+
+/* ── Section panel ── */
+.cs-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;}
+.cs-panel-head{padding:10px 14px;font-family:"Courier New",monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:bold;display:flex;
+  align-items:center;gap:8px;}
+.cs-panel-head.blue{background:var(--accent-bg);color:var(--accent);border-bottom:1px solid var(--accent-bdr);}
+.cs-panel-head.green{background:var(--green-bg);color:var(--green);border-bottom:1px solid var(--green-bdr);}
+.cs-panel-head.amber{background:var(--amber-bg);color:var(--amber);border-bottom:1px solid var(--amber-bdr);}
+.cs-panel-head.purple{background:var(--purple-bg);color:var(--purple);border-bottom:1px solid var(--purple-bdr);}
+.cs-panel-head.red{background:var(--red-bg);color:var(--red);border-bottom:1px solid var(--red-bdr);}
+.cs-panel-head.dark{background:var(--bg-code);color:var(--text-code);
+  border-bottom:1px solid var(--border);}
+.cs-panel-body{padding:12px 14px;}
+
+/* ── Command rows ── */
+.cmd-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;
+  border-bottom:1px solid var(--border-light);}
+.cmd-row:last-child{border-bottom:none;padding-bottom:0;}
+.cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);
+  flex-shrink:0;min-width:160px;}
+.cmd-desc{font-size:12px;color:var(--text-body);flex:1;line-height:1.5;}
+.cmd-row.highlight .cmd{color:var(--accent);}
+.cmd-row.highlight{background:var(--accent-bg);margin:0 -14px;padding:5px 14px;}
+
+/* ── Code block ── */
+.cs-code{background:var(--bg-code);border-radius:7px;padding:10px 13px;margin:8px 0;
+  font-family:"Courier New",monospace;font-size:11.5px;color:var(--text-code);
+  line-height:1.75;white-space:pre;}
+.cs-code .cm{color:#6c7086;}.cs-code .kw{color:#cba6f7;}.cs-code .fn{color:#89b4fa;}
+.cs-code .st{color:#a6e3a1;}.cs-code .nm{color:#fab387;}.cs-code .op{color:#f38ba8;}
+
+/* ── Key-value rows ── */
+.kv-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border-light);
+  align-items:flex-start;}
+.kv-row:last-child{border-bottom:none;}
+.kv-key{font-family:"Courier New",monospace;font-size:12px;color:var(--text-primary);
+  font-weight:bold;flex-shrink:0;min-width:100px;}
+.kv-val{font-size:12px;color:var(--text-body);line-height:1.5;flex:1;}
+.kv-val code{font-size:.9em;}
+
+/* ── Badge row ── */
+.badge-row{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0;}
+.cs-badge{font-family:"Courier New",monospace;font-size:10px;padding:2px 8px;
+  border-radius:12px;font-weight:bold;}
+.cs-badge.blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bdr);}
+.cs-badge.green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr);}
+.cs-badge.amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);}
+.cs-badge.purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bdr);}
+.cs-badge.red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr);}
+.cs-badge.dark{background:var(--bg-code);color:var(--text-code);border:1px solid var(--border);}
+
+/* ── Warning / tip inline ── */
+.cs-warn{background:var(--warn-bg);border-left:3px solid var(--amber);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+.cs-warn code{font-size:.9em;}
+.cs-ok{background:var(--ok-bg);border-left:3px solid var(--green);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+
+/* ── Ritual steps ── */
+.ritual-steps{display:flex;flex-direction:column;gap:3px;}
+.ritual-step{display:flex;gap:8px;align-items:baseline;}
+.rs-num{font-family:"Courier New",monospace;font-size:10px;font-weight:bold;
+  color:var(--accent);min-width:20px;flex-shrink:0;}
+.rs-cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);flex:1;}
+
+/* ── Type table ── */
+.type-table{width:100%;border-collapse:collapse;}
+.type-table th,.type-table td{padding:6px 10px;text-align:left;font-size:12px;
+  border-bottom:1px solid var(--border-light);}
+.type-table th{font-family:"Courier New",monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);background:var(--bg-card-alt);}
+.type-table td:first-child{font-family:"Courier New",monospace;font-weight:bold;color:var(--text-primary);}
+.type-table tr:last-child td{border-bottom:none;}
+
+/* ── Separator ── */
+.cs-sep{margin:16px 0;border-top:1px solid var(--border);}
+
+/* ── Print hint ── */
+.print-hint{font-family:"Courier New",monospace;font-size:10px;color:var(--text-muted);
+  text-align:center;padding:12px;margin-top:8px;letter-spacing:.05em;}
+</style></head><body><div class="wrapper"><div class="cs-header"><span class="cs-unit-badge u3">ISM3232 &middot; Unit 3 &middot; Cheat Sheet</span><h1>Unit 3 &mdash; Object-Oriented Programming</h1><p class="cs-sub">Weeks 10&ndash;12 &nbsp;&middot;&nbsp; Classes &middot; Instances &middot; Composition &middot; Inheritance &middot; Design-First &middot; Testing</p><div class="meta-pills"><span class="meta-pill">Unit 3 of 4</span><span class="meta-pill">Quick reference</span><span class="meta-pill">Student-facing</span></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head purple"><span>&#x1F4CB;</span>CLASS ANATOMY</div><div class="cs-panel-body"><div class="cs-code">class BusinessRequest:
+    """Represents one purchase request."""
+
+    def __init__(self, req_id, requester, amount):
+        self.req_id    = req_id
+        self.requester = requester
+        self.amount    = amount
+        self.status    = "Pending"  # default value
+
+    def approve(self):               # status-changing method
+        """Mark as approved."""
+        self.status = "Approved"
+
+    def requires_review(self) -> bool:  # predicate
+        """Return True if above threshold."""
+        return self.amount > 1000
+
+    def __repr__(self):              # readable print output
+        return f"Request({self.req_id}, {self.requester}, ${self.amount})"</div><div class="cs-sep"></div><div class="kv-row"><span class="kv-key">class</span><span class="kv-val">Blueprint — defines structure and behaviour</span></div><div class="kv-row"><span class="kv-key">instance</span><span class="kv-val">One specific object created from the class</span></div><div class="kv-row"><span class="kv-key">__init__</span><span class="kv-val">Constructor — runs when instance is created</span></div><div class="kv-row"><span class="kv-key">self</span><span class="kv-val">The specific instance the method is called on</span></div><div class="kv-row"><span class="kv-key">attribute</span><span class="kv-val">Data stored on an instance: self.amount</span></div><div class="kv-row"><span class="kv-key">method</span><span class="kv-val">Function defined inside a class</span></div><div class="kv-row"><span class="kv-key">__repr__</span><span class="kv-val">Defines what print(instance) shows</span></div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; Every method must have <code>self</code> as its first parameter.</div><div class="cs-warn">&#x26A0; Use <code>self.status = …</code> not <code>status = …</code> inside methods.</div></div></div><div class="cs-panel"><div class="cs-panel-head purple"><span>&#x1F4E6;</span>INSTANCES &amp; INDEPENDENCE</div><div class="cs-panel-body"><div class="cs-code"># Creating instances
+req1 = BusinessRequest(101, "Taylor", 1200)
+req2 = BusinessRequest(102, "Jordan", 450)
+
+# Calling methods
+req1.approve()
+print(req1.status)          # → "Approved"
+print(req2.status)          # → "Pending"  ← unchanged!
+
+# Calling predicates
+print(req1.requires_review()) # → True  (1200 > 1000)
+print(req2.requires_review()) # → False ( 450 > 1000)</div><div class="cs-sep"></div><div class="cs-ok">&#x2713; Each instance has its own copy of every attribute.</div><div class="cs-ok">&#x2713; Changing req1.status does NOT change req2.status.</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">OOP → SQL MAPPING</p><div class="kv-row"><span class="kv-key">class</span><span class="kv-val">→ table</span></div><div class="kv-row"><span class="kv-key">instance (one object)</span><span class="kv-val">→ row (one record)</span></div><div class="kv-row"><span class="kv-key">attribute (self.amount)</span><span class="kv-val">→ column (amount REAL)</span></div><div class="kv-row"><span class="kv-key">list_pending()</span><span class="kv-val">→ SELECT * WHERE status='Pending'</span></div><div class="kv-row"><span class="kv-key">total()</span><span class="kv-val">→ SELECT SUM(amount)</span></div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">REQUIRED TESTS — 6 TYPES</p><div class="kv-row"><span class="kv-key">1. Default state</span><span class="kv-val"><code>assert req.status == 'Pending'</code></span></div><div class="kv-row"><span class="kv-key">2. Status change</span><span class="kv-val"><code>req.approve(); assert req.status == 'Approved'</code></span></div><div class="kv-row"><span class="kv-key">3. Bool True</span><span class="kv-val"><code>assert req.requires_review() is True</code></span></div><div class="kv-row"><span class="kv-key">4. Bool False</span><span class="kv-val"><code>assert req.requires_review() is False</code></span></div><div class="kv-row"><span class="kv-key">5. Boundary</span><span class="kv-val"><code>assert requires_review(1000) is False</code>  ← exact threshold</span></div><div class="kv-row"><span class="kv-key">6. Independence</span><span class="kv-val"><code>req1.approve(); assert req2.status == 'Pending'</code></span></div></div></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head purple"><span>&#x1F4BC;</span>COMPOSITION — MANAGER PATTERN</div><div class="cs-panel-body"><div class="cs-code">class RequestManager:
+    """Manages a collection of requests."""
+
+    def __init__(self):
+        self.requests = []  # MUST be inside __init__
+
+    def add_request(self, request):
+        """Add a BusinessRequest."""
+        self.requests.append(request)
+
+    def list_pending(self):
+        """Return all Pending requests."""
+        return [r for r in self.requests
+                if r.status == "Pending"]
+
+    def total_amount(self):
+        """Return sum of all amounts."""
+        return sum(r.amount for r in self.requests)
+
+    def summary_report(self):
+        """Print formatted summary."""
+        pending  = self.list_pending()
+        approved = [r for r in self.requests
+                    if r.status == "Approved"]
+        print(f"Total:    {len(self.requests)} | ${self.total_amount():,.2f}")
+        print(f"Pending:  {len(pending)}")
+        print(f"Approved: {len(approved)}")</div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; The <code>requests = []</code> MUST be inside <code>__init__</code> (as <code>self.requests</code>). If defined at class level, all managers share the same list — a serious bug.</div></div></div><div class="cs-panel"><div class="cs-panel-head purple"><span>&#x1F3D7;</span>DESIGN-FIRST APPROACH &amp; INHERITANCE</div><div class="cs-panel-body"><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">DESIGN DOCUMENT — BEFORE ANY CODE</p><div class="kv-row"><span class="kv-key">Entity Class 1</span><span class="kv-val">Name · All attributes with types · All methods with return types</span></div><div class="kv-row"><span class="kv-key">Entity Class 2</span><span class="kv-val">Name · Attributes · Methods</span></div><div class="kv-row"><span class="kv-key">Manager Class</span><span class="kv-val">Name · What it holds · add / list_by_status / total / report</span></div><div class="kv-row"><span class="kv-key">Business Rules</span><span class="kv-val">At least 3 — specific + testable</span></div><div class="kv-row"><span class="kv-key">Out of Scope</span><span class="kv-val">What you are explicitly NOT building</span></div><div class="cs-sep"></div><div class="cs-ok">&#x2713; Commit design.md BEFORE models.py — instructor checks git timestamps.</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">LIGHT INHERITANCE</p><div class="cs-code">class TravelRequest(BusinessRequest):
+    """Is-a BusinessRequest, lower threshold."""
+
+    def __init__(self, req_id, requester, amount, dest):
+        super().__init__(req_id, requester, amount)
+        self.destination = dest
+
+    def requires_review(self) -> bool:
+        return self.amount > 500  # override: lower</div><div class="cs-sep"></div><div class="kv-row"><span class="kv-key">is-a → inheritance</span><span class="kv-val"><code>TravelRequest IS A BusinessRequest</code></span></div><div class="kv-row"><span class="kv-key">has-a → composition</span><span class="kv-val"><code>RequestManager HAS A list of requests</code></span></div><div class="kv-row"><span class="kv-key">super().__init__()</span><span class="kv-val">Call parent constructor to set inherited attributes</span></div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">COMMON MISTAKES</p><div class="kv-row"><span class="kv-key">def approve():</span><span class="kv-val">&#x274C; Missing self — causes TypeError</span></div><div class="kv-row"><span class="kv-key">status = 'Approved'</span><span class="kv-val">&#x274C; Local variable — use self.status</span></div><div class="kv-row"><span class="kv-key">def check(self): print(…)</span><span class="kv-val">&#x274C; Print not return — untestable</span></div><div class="kv-row"><span class="kv-key">requests = [] at class level</span><span class="kv-val">&#x274C; Shared list bug</span></div></div></div></div><div class="print-hint">ISM3232 &middot; Unit 3 Cheat Sheet &middot; Unit 3 &mdash; Object-Oriented Programming &middot; Keep this open during every lab and assignment</div></div></body></html>

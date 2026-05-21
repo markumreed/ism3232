@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 7 — Functions, Modules &amp; pytest</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{max-width:780px;margin:0 auto;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 2 — Python Foundations</span>
+  <span class="nav-week">Week 7 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 07</div>
+  <h1 class="wk-title">Functions, Modules &amp; pytest</h1>
+  <p class="wk-deck">Organise business logic into named, reusable, testable functions and write proper pytest tests.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">def · return · pytest</span><span class="chip ">Testable code</span></div>
+</div><h2>Why functions?</h2><p>Functions exist for two reasons: to eliminate repeated code and to make logic testable. If you have written the same approval check three times in three different places, a function reduces that to one definition and three calls. If your logic lives in a function with a return value, you can assert against it in pytest.</p><div class="code-label">Before and after — the case for functions</div><pre><code># Before: logic repeated three times
+if amount1 &gt; 1000: print(&#x27;Manager needed&#x27;)
+if amount2 &gt; 1000: print(&#x27;Manager needed&#x27;)
+if amount3 &gt; 1000: print(&#x27;Manager needed&#x27;)
+
+# After: one function, called anywhere
+APPROVAL_LIMIT = 1000.00
+
+def requires_review(amount: float) -&gt; bool:
+    &quot;&quot;&quot;Return True if amount requires manager review.&quot;&quot;&quot;
+    return amount &gt; APPROVAL_LIMIT
+
+# Now testable:
+assert requires_review(1001) is True
+assert requires_review(1000) is False  # boundary: &gt; not &gt;=</code></pre><h2>Complete function anatomy</h2><div class="code-label">All required elements</div><pre><code>APPROVAL_LIMIT = 1000.00
+TAX_RATE       = 0.07
+
+def calculate_total(unit_price: float, quantity: int,
+                    tax_rate: float = TAX_RATE) -&gt; float:
+    &quot;&quot;&quot;Return total cost including tax.&quot;&quot;&quot;
+    subtotal = unit_price * quantity
+    return subtotal * (1 + tax_rate)
+
+def get_approver(amount: float) -&gt; str:
+    &quot;&quot;&quot;Return the required approver tier.&quot;&quot;&quot;
+    if amount &lt;= 500:
+        return &#x27;Auto&#x27;
+    elif amount &lt;= 2000:
+        return &#x27;Manager&#x27;
+    else:
+        return &#x27;Director&#x27;</code></pre><div class="warn"><div class="concept-label">⚠ return, not print</div><p>A function that only calls print() cannot be tested with assert. A function that returns a value can. All business logic functions must return their result.</p></div><h2>Scope</h2><div class="code-label">Local variables do not exist outside their function</div><pre><code>def calculate_tax(amount: float) -&gt; float:
+    tax = amount * 0.07   # &#x27;tax&#x27; is LOCAL to this function
+    return tax
+
+result = calculate_tax(1000)
+print(result)  # 70.0 — fine, we returned it
+
+print(tax)     # NameError: name &#x27;tax&#x27; is not defined
+# &#x27;tax&#x27; was destroyed when the function returned</code></pre><h2>Required project structure and imports</h2><div class="code-label">Required layout from Week 7 onwards</div><pre><code>module05_functions/
+├── business_rules.py   # functions only — no print() at module level
+├── main.py             # imports and calls the functions
+├── requirements.txt
+├── .gitignore
+└── tests/
+    ├── __init__.py     # required — makes tests/ a package
+    └── test_business_rules.py</code></pre><div class="code-label">business_rules.py — functions only</div><pre><code>APPROVAL_LIMIT = 1000.00
+
+def requires_review(amount: float) -&gt; bool:
+    &quot;&quot;&quot;Return True if amount requires manager review.&quot;&quot;&quot;
+    return amount &gt; APPROVAL_LIMIT</code></pre><div class="code-label">main.py — import and use</div><pre><code>from business_rules import requires_review
+
+total = 1250.00
+print(f&#x27;Requires review: {requires_review(total)}&#x27;)</code></pre><h2>Writing pytest tests</h2><div class="code-label">tests/test_business_rules.py — all six required types</div><pre><code>from business_rules import requires_review, get_approver
+
+# 1. True case
+def test_requires_review_true():
+    assert requires_review(1001.00) is True
+
+# 2. False case
+def test_requires_review_false():
+    assert requires_review(500.00) is False
+
+# 3. Boundary — exactly AT the limit (&gt; not &gt;=)
+def test_requires_review_at_limit():
+    assert requires_review(1000.00) is False
+
+# 4. Boundary — one cent above
+def test_requires_review_one_above():
+    assert requires_review(1000.01) is True
+
+# 5. Tier tests
+def test_get_approver_auto():
+    assert get_approver(500.00) == &#x27;Auto&#x27;
+
+def test_get_approver_manager():
+    assert get_approver(501.00) == &#x27;Manager&#x27;</code></pre><div class="code-label">Run tests</div><pre><code>pytest -v</code></pre><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a complete function with type hints and docstring</li><li>Understand why functions must return, not print</li><li>Can explain scope and reproduce the NameError</li><li>tests/__init__.py exists</li><li>pytest -v shows all tests green</li><li>Assignment 7 submitted via GitHub URL</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 7 &nbsp;·&nbsp; Functions, Modules &amp; pytest</div></body></html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 W12 — OOP III — Applied Practice & Design</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--blue:#89b4fa;--green:#a6e3a1;--yellow:#f9e2af;--red:#f38ba8;
+  --purple:#cba6f7;--teal:#94e2d5;--orange:#fab387;
+  --s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+  --base:#1e1e2e;--mantle:#181825;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;font-size:34px;}
+.reveal h1{font-size:1.8em;color:var(--blue);line-height:1.2;margin-bottom:.25em;}
+.reveal h2{font-size:1.2em;color:var(--blue);line-height:1.3;margin-bottom:.2em;}
+.reveal h3{font-size:.8em;color:var(--sub);font-weight:400;margin-bottom:.3em;}
+.reveal p{font-size:.78em;color:var(--text);line-height:1.7;margin:.2em 0;}
+.reveal ul{list-style:none;padding:0;margin:.25em 0;}
+.reveal ul li{font-size:.75em;color:var(--text);padding:.16em 0;line-height:1.55;}
+.reveal ul li::before{content:"▸ ";color:var(--blue);}
+.reveal pre{font-size:.48em;margin:.25em 0;border-radius:8px;}
+.reveal strong{color:var(--yellow);}
+.reveal em{color:var(--sub);}
+.reveal code{font-family:"Courier New",monospace;}
+/* backgrounds */
+.s-title{background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%);}
+.s-video{background:#12121f;}
+.s-say{background:#0d1420;}
+.s-do{background:#091209;}
+.s-code{background:#0d0d1a;}
+.s-warn{background:#1a0808;}
+.s-outline{background:var(--mantle);}
+.s-yt{background:#13091a;}
+.s-divider{background:#0e0e14;}
+/* cards */
+.card{border-radius:8px;padding:.5em .85em;margin:.25em 0;text-align:left;font-size:.76em;line-height:1.7;}
+.say{background:rgba(137,180,250,.09);border-left:4px solid var(--blue);color:var(--text);}
+.do{background:rgba(166,227,161,.09);border-left:4px solid var(--green);color:var(--text);font-family:"Courier New",monospace;}
+.warn{background:rgba(243,139,168,.1);border-left:4px solid var(--red);color:var(--text);}
+.yt-c{background:rgba(203,166,247,.09);border-left:4px solid var(--purple);color:var(--text);}
+.clbl{font-family:"Courier New",monospace;font-size:.78em;font-weight:bold;
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:.25em;}
+.say .clbl{color:var(--blue);}
+.do  .clbl{color:var(--green);}
+.warn .clbl{color:var(--red);}
+.yt-c .clbl{color:var(--purple);}
+/* outline table */
+.ot{width:100%;border-collapse:collapse;font-size:.72em;text-align:left;margin:.3em 0;}
+.ot td{padding:.32em .55em;border-bottom:1px solid var(--s1);color:var(--text);vertical-align:top;line-height:1.5;}
+.ot td:first-child{font-family:"Courier New",monospace;color:var(--blue);font-weight:bold;white-space:nowrap;min-width:62px;}
+.ot tr:last-child td{border-bottom:none;}
+/* badges */
+.badge{display:inline-block;padding:.12em .55em;border-radius:20px;font-size:.44em;
+  font-family:"Courier New",monospace;font-weight:bold;letter-spacing:.06em;
+  text-transform:uppercase;vertical-align:middle;margin:.1em .1em 0 0;}
+.b-concept{background:rgba(137,180,250,.18);color:var(--blue);border:1px solid rgba(137,180,250,.35);}
+.b-demo{background:rgba(166,227,161,.18);color:var(--green);border:1px solid rgba(166,227,161,.35);}
+.b-code{background:rgba(249,226,175,.18);color:var(--yellow);border:1px solid rgba(249,226,175,.35);}
+.b-policy{background:rgba(243,139,168,.18);color:var(--red);border:1px solid rgba(243,139,168,.35);}
+.b-grey{background:rgba(255,255,255,.07);color:var(--sub);border:1px solid var(--s1);}
+/* week title */
+.wk-eyebrow{font-size:.52em;color:var(--sub);font-family:"Courier New",monospace;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em;}
+.wk-vids{font-size:.48em;color:var(--sub);margin-top:.55em;}
+/* video divider */
+.vid-divider{border:1px solid var(--s1);border-radius:10px;padding:.55em .9em;
+  margin:.25em 0;text-align:left;}
+.vid-divider .vd-id{font-family:"Courier New",monospace;font-size:.55em;
+  color:var(--sub);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2em;}
+.vid-divider .vd-title{font-size:1.0em;font-weight:bold;color:var(--text);line-height:1.3;}
+/* section label */
+.sec-chip{font-family:"Courier New",monospace;font-size:.5em;padding:.18em .65em;
+  border-radius:20px;background:var(--s0);color:var(--sub);border:1px solid var(--s1);
+  display:inline-block;margin-bottom:.3em;}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><div class="wk-eyebrow">ISM3232 &nbsp;·&nbsp; Unit 3 — OOP</div><h1>Week 12</h1><h2>OOP III — Applied Practice &amp; Design</h2><div class="wk-vids">W12-V1&nbsp; · &nbsp;W12-V2 &nbsp;·&nbsp; ~12 min</div><p style="font-size:.4em;color:var(--sub);margin-top:.7em;">Video script slides &nbsp;·&nbsp; Arrow keys &nbsp;·&nbsp; S = speaker notes &nbsp;·&nbsp; F = fullscreen</p></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W12-V1</div><div class="vd-title">Design First — Writing Your Class Design Before Any Code</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 12 | Design First — Write design.md Before models.py (Git Timestamps Are Checked)</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">design first</span><span class="badge b-grey">class design</span><span class="badge b-grey">OOP</span><span class="badge b-grey">design.md</span><span class="badge b-grey">software design</span><span class="badge b-grey">ISM3232 Week 12</span><span class="badge b-grey">git timestamp</span></div><aside class="notes">YT: ISM3232 Week 12 | Design First — Write design.md Before models.py (Git Timestamps Are Checked)</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W12-V1 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Why design first:** structural mistakes are cheap on paper, expensive in code</td></tr><tr><td>0:45</td><td>**The design.md template:** walk through every field</td></tr><tr><td>2:30</td><td>**Out of Scope:** what you are NOT building</td></tr><tr><td>3:15</td><td>**Business rules:** specific and testable — not vague</td></tr><tr><td>4:00</td><td>**Commit design.md first:** git commit → then write models.py</td></tr><tr><td>4:45</td><td>**How instructors verify:** git log timestamps</td></tr><tr><td>5:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Why design first</div><p style="font-size:.84em;line-height:1.8;">The cognitive load of thinking through what attributes your class needs is different from the cognitive load of getting Python syntax right. If you try to do both at once, you end up with a class that almost does what you want but has the wrong attributes and the wrong methods. Design first. Code second. Commit them in that order.</p></div><aside class="notes">SAY: The cognitive load of thinking through what attributes your class needs is different from the cognitive load of getting Python syntax right. If you try to do both at once, you end up with a class that almost does what you want but has the wrong attri</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">design.md — fill in every field before writing any Python</code></pre><aside class="notes">CODE: design.md — fill in every field before writing any Python</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Commit design.md to Git BEFORE you create models.py. The Git timestamp is visible in your commit history. Instructors check that design.md was committed first.</p></div><aside class="notes">WARN: Commit design.md to Git BEFORE you create models.py. The Git timestamp is visible in your commit history. Instructors check that design.md was committed first.</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Commit design.md — then start models.py</code></pre><aside class="notes">CODE: Commit design.md — then start models.py</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W12-V2</div><div class="vd-title">Common OOP Mistakes — Four Patterns to Avoid</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 12 | 4 Common OOP Mistakes — Live Demo of Each Error and Fix</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">OOP mistakes</span><span class="badge b-grey">python errors</span><span class="badge b-grey">self missing</span><span class="badge b-grey">class level list</span><span class="badge b-grey">print vs return</span><span class="badge b-grey">local variable</span><span class="badge b-grey">ISM3232 Week 12</span></div><aside class="notes">YT: ISM3232 Week 12 | 4 Common OOP Mistakes — Live Demo of Each Error and Fix</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W12-V2 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Mistake 1:** def approve(): missing self — TypeError</td></tr><tr><td>1:00</td><td>**Mistake 2:** status = &#x27;Approved&#x27; — local variable, not self.status</td></tr><tr><td>2:00</td><td>**Mistake 3:** print() instead of return — untestable</td></tr><tr><td>3:00</td><td>**Mistake 4:** class-level list — all instances share it</td></tr><tr><td>4:30</td><td>**How to avoid all four:** the checklist</td></tr><tr><td>5:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">All four mistakes — cause each error, then fix it</code></pre><aside class="notes">CODE: All four mistakes — cause each error, then fix it</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 The checklist</div><p style="font-size:.84em;line-height:1.8;">Before you submit: One — every method has self as its first parameter. Two — attribute changes use self.attribute = ..., not attribute = ... Three — business logic methods return values, they do not print them. Four — self.requests = [] is inside __init__, not at class level. If you check these four things, you will catch 90% of OOP submission bugs.</p></div><aside class="notes">SAY: Before you submit: One — every method has self as its first parameter. Two — attribute changes use self.attribute = ..., not attribute = ... Three — business logic methods return values, they do not print them. Four — self.requests = [] is inside __i</aside></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+</script></body></html>

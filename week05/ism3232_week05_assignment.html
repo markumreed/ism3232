@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Assignment 5: Business Data Script &mdash; Variables, Types, Operators, and f-strings</title><style>
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{max-width:860px;margin:0 auto;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  </style><style>
+.assign-header{background:var(--bg-card);border:2px solid var(--divider);border-radius:10px;padding:22px 24px;margin-bottom:24px;}
+.assign-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--text-primary);color:var(--bg-page);padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.assign-header h1{font-size:22px;color:var(--text-primary);margin-bottom:6px;font-weight:bold;}
+.assign-header .ah-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:14px;}
+.assign-meta{display:flex;flex-wrap:wrap;gap:6px;}
+.due-bar{background:var(--accent-bg);border:1px solid var(--accent-bdr);border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.due-bar .due-icon{font-size:20px;flex-shrink:0;}
+.due-bar .due-main{font-size:14px;font-weight:bold;color:var(--accent);}
+.due-bar .due-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+.req-block{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px;}
+.req-num{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',monospace;font-size:11px;font-weight:bold;flex-shrink:0;margin-right:10px;margin-top:2px;}
+.req-row{display:flex;align-items:flex-start;gap:0;}
+.req-content .req-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+.req-content .req-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+.req-content .req-body code{font-size:.82em;}
+.req-content .req-body p{margin-bottom:4px;}
+.req-content .req-body p:last-child{margin-bottom:0;}
+.rubric-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+.rubric-table th{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:8px 12px;border-bottom:2px solid var(--border);background:var(--bg-card-alt);}
+.rubric-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;font-size:12px;}
+.rubric-table tr:last-child td{border-bottom:none;}
+.rubric-table .pts{font-family:'Courier New',monospace;font-weight:bold;color:var(--text-primary);white-space:nowrap;}
+.rubric-table .total-row td{border-top:2px solid var(--border);font-weight:bold;color:var(--text-primary);}
+.submit-block{background:var(--accent-bg);border:2px solid var(--accent-bdr);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+.submit-block .sb-header{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.submit-block h3{font-size:15px;color:var(--text-primary);margin-bottom:12px;}
+.deliv{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--accent-bdr);}
+.deliv:last-child{border-bottom:none;padding-bottom:0;}
+.d-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.d-text{font-size:12px;color:var(--text-body);}
+.d-text strong{color:var(--text-primary);}
+.starter-box{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+.starter-box .sb-lbl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+.starter-box pre{font-size:11.5px;color:var(--text-code);line-height:1.7;white-space:pre;}
+.starter-box .cm{color:#6c7086;}.starter-box .kw{color:#cba6f7;}.starter-box .fn{color:#89b4fa;}
+.starter-box .st{color:#a6e3a1;}.starter-box .nm{color:#fab387;}
+.common-box{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:8px;padding:14px 16px;margin-bottom:14px;}
+.common-box .cb-hdr{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.common-box ul{padding-left:16px;}
+.common-box ul li{font-size:12px;color:var(--text-body);margin-bottom:4px;line-height:1.6;}
+</style></head><body><div class="wrapper"><div class="assign-header"><span class="assign-badge">&#x1F4DD; Assignment 5</span><h1>ism3232_week05_assignment</h1><p class="ah-sub">Business Data Script &mdash; Variables, Types, Operators, and f-strings &mdash; Write a Python business script that uses all four data types, arithmetic and comparison operators, formatted output, and user input.</p><div class="assign-meta"><span class="meta-pill">Week 5 of 16</span><span class="meta-pill">Due: End of Week 5</span><span class="meta-pill">70 points</span><span class="meta-pill">GitHub URL required</span><span class="meta-pill">Full workflow: venv &middot; ruff &middot; pytest</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="due-bar"><div class="due-icon">&#x1F4C5;</div><div><div class="due-main">Due end of Week 5</div><div class="due-sub">GitHub URL submitted to Canvas &middot; Full submission ritual required</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Overview</div><div class="callout-body">Build a complete business data script for a domain of your choosing. The script must use all four Python data types, compute derived values with arithmetic operators, apply a comparison operator to produce a boolean result, use f-strings with currency formatting, and read at least one value from the user using <code>input()</code> with type conversion. Test your calculations with pytest.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Requirements</div><div class="line"></div></div><div class="req-block"><div class="req-row"><span class="req-num">1</span><div class="req-content"><div class="req-title">Choose a business domain and define variables across all four types</div><div class="req-body"><p>Choose any business scenario (purchase requests, employee records, inventory, invoices, etc.). Define variables using all four types:</p><p>&bull; <code>str</code> &mdash; at least two string variables (name, category, status, etc.)</p><p>&bull; <code>int</code> &mdash; at least one integer (quantity, count, ID, etc.)</p><p>&bull; <code>float</code> &mdash; at least one decimal (price, rate, discount, etc.)</p><p>&bull; <code>bool</code> &mdash; at least one boolean derived from a comparison (e.g. <code>total &gt; 1000</code>)</p></div></div></div></div><div class="req-block"><div class="req-row"><span class="req-num">2</span><div class="req-content"><div class="req-title">Compute at least three derived values using arithmetic operators</div><div class="req-body"><p>At minimum, compute: a multiplication, an addition, and a percentage (multiplication by a rate). For example: subtotal, tax, and total. Use <code>:.2f</code> formatting in all f-strings that display currency.</p></div></div></div></div><div class="req-block"><div class="req-row"><span class="req-num">3</span><div class="req-content"><div class="req-title">Display a formatted business summary using f-strings</div><div class="req-body"><p>Print a labelled, formatted summary of your business record. Every currency value must be formatted to two decimal places. The summary must include at least four lines of output.</p></div></div></div></div><div class="req-block"><div class="req-row"><span class="req-num">4</span><div class="req-content"><div class="req-title">Read one value from the user with input() and type convert it</div><div class="req-body"><p>Use <code>input()</code> to read at least one value from the user. Convert it immediately using <code>int()</code> or <code>float()</code>. Use the converted value in a calculation and print the result.</p></div></div></div></div><div class="req-block"><div class="req-row"><span class="req-num">5</span><div class="req-content"><div class="req-title">Write at least three pytest tests</div><div class="req-body"><p>In <code>module04_programming/tests/test_week5.py</code>, write at least three tests verifying your calculations. Tests must use <code>assert</code> statements and import nothing from your script (write the calculations directly in the test functions).</p></div></div></div></div><div class="req-block"><div class="req-row"><span class="req-num">6</span><div class="req-content"><div class="req-title">Run the full pre-submission ritual before pushing</div><div class="req-body"><p><code>ruff format .</code> &rarr; <code>ruff check .</code> &rarr; <code>pytest</code> &rarr; <code>git add .</code> &rarr; <code>git commit -m '...'</code> &rarr; <code>git push</code></p></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Starter structure</div><div class="line"></div></div><div class="starter-box"><div class="sb-lbl">week5_assignment.py &mdash; minimum structure required</div><pre># week5_assignment.py
+# Author: [Your Name]
+# Business domain: [describe your scenario]
+
+# --- Variables: all four types ---
+# str
+item_name   = 'YOUR ITEM'
+category    = 'YOUR CATEGORY'
+
+# int
+quantity    = YOUR_INT
+
+# float
+unit_price  = YOUR_FLOAT
+tax_rate    = 0.07
+
+# Arithmetic
+subtotal    = unit_price * quantity
+tax         = subtotal * tax_rate
+total       = subtotal + tax
+
+# bool from comparison
+needs_approval = total > YOUR_THRESHOLD
+
+# Formatted output
+print('=== [Your Business Name] Summary ===')
+print(f'Item:     {item_name}')
+print(f'Qty:      {quantity}')
+print(f'Total:    ${total:.2f}')
+print(f'Approval: {needs_approval}')
+
+# User input with conversion
+user_val = YOUR_TYPE(input('Enter a value: '))
+print(f'Result: ...')</pre></div><div class="section-divider"><div class="line"></div><div class="label">Rubric</div><div class="line"></div></div><table class="rubric-table"><thead><tr><th>Requirement</th><th>Points</th><th>Full credit</th><th>Partial / No credit</th></tr></thead><tbody><tr><td>All four data types used with appropriate business variables</td><td class="pts">15</td><td>str, int, float, bool all present and correctly typed</td><td>Missing type or bool not derived from comparison</td></tr><tr><td>Three or more arithmetic computations with correct results</td><td class="pts">15</td><td>Subtotal, tax, total (or equivalent) computed correctly</td><td>Fewer than three or incorrect math</td></tr><tr><td>Formatted summary with 4+ lines, currency to .2f</td><td class="pts">15</td><td>All currency values formatted, 4+ output lines</td><td>Missing .2f, fewer than 4 lines</td></tr><tr><td>input() used with immediate type conversion</td><td class="pts">10</td><td>input() called, wrapped in int() or float(), used in calculation</td><td>Input stored as string and used in math, or not used</td></tr><tr><td>3+ passing pytest tests in tests/test_week5.py</td><td class="pts">10</td><td>All tests pass, test calculation logic</td><td>Fewer than 3, or tests trivial (assert True)</td></tr><tr><td>Full ritual: ruff clean, pytest green, pushed to GitHub</td><td class="pts">5</td><td>All ritual steps pass, repo accessible</td><td>Missing steps or failures</td></tr><tr class="total-row"><td>Total</td><td class="pts">70</td><td colspan="2"></td></tr></tbody></table><div class="common-box"><div class="cb-hdr">&#x26A0; Common mistakes</div><ul><li>Using <code>input()</code> without converting: <code>age = input(...)</code> then <code>age + 1</code> &mdash; this crashes with a TypeError</li><li>Boolean that is always True: <code>is_approved = True</code> &mdash; it must be derived from a comparison like <code>total &gt; 1000</code></li><li>Currency displayed without <code>:.2f</code>: printing <code>$1450.6</code> instead of <code>$1,450.60</code></li><li>Tests that assert obvious constants: <code>assert 1 == 1</code> &mdash; tests must verify your actual calculations</li></ul></div><div class="submit-block"><div class="sb-header">Submission &middot; Assignment 5 &middot; GitHub URL &middot; Canvas</div><h3>What to submit</h3><div class="deliv"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>In repo:</strong> <code>module04_programming/week5_assignment.py</code></div></div><div class="deliv"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>In repo:</strong> <code>module04_programming/tests/test_week5.py</code> &mdash; 3+ tests passing</div></div><div class="deliv"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Terminal showing complete script output including the input prompt</div></div><div class="deliv"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas:</strong> GitHub repository URL</div></div></div><div class="page-footer">ISM3232 &middot; Assignment 5 &middot; Business Data Script &mdash; Variables, Types, Operators, and f-strings</div></div></body></html>
