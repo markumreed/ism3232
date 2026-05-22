@@ -154,10 +154,9 @@ body{min-height:100vh;width:100%;}
 </style>
 <style id="ism-site-css">
 /* ═══════════════════════════════════════════════════════════════════════════
-   ISM3232 site.css  –  nav · theme · font-scale · accessibility
-   data-theme is set on <html>, so all selectors must be:
-     html[data-theme="dark"]   NOT  [data-theme="dark"] html
-     html[data-theme="light"]  NOT  [data-theme="light"] html
+   ISM3232 site.css
+   Note: data-theme is set on <html>, so all theme selectors must be
+         html[data-theme="dark"]  — NOT  [data-theme="dark"] html
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Skip link ─────────────────────────────────────────────────────────── */
@@ -172,37 +171,31 @@ body{min-height:100vh;width:100%;}
 
 /* ── Nav colour tokens (light default) ─────────────────────────────────── */
 :root {
-  --sn-bg:       rgba(245,244,240,0.94);
-  --sn-border:   rgba(0,0,0,0.10);
-  --sn-text:     #1a1a1a;
-  --sn-muted:    #666;
-  --sn-hover:    rgba(0,0,0,0.06);
-  --sn-active:   #1e40af;
-  --sn-pill:     #d0d0d8;
-  --sn-knob:     #fff;
-  --sn-focus:    #1e40af;
+  --sn-bg:     rgba(245,244,240,0.96);
+  --sn-border: rgba(0,0,0,0.10);
+  --sn-text:   #1a1a1a;
+  --sn-muted:  #666;
+  --sn-hover:  rgba(0,0,0,0.06);
+  --sn-active: #1e40af;
+  --sn-pill:   #d0d0d8;
+  --sn-knob:   #fff;
+  --sn-focus:  #1e40af;
+}
+html[data-theme="dark"] {
+  --sn-bg:     rgba(14,14,20,0.96);
+  --sn-border: rgba(255,255,255,0.08);
+  --sn-text:   #e2e2ec;
+  --sn-muted:  #7a7a95;
+  --sn-hover:  rgba(255,255,255,0.07);
+  --sn-active: #818cf8;
+  --sn-pill:   #3a3a50;
+  --sn-knob:   #e2e2ec;
+  --sn-focus:  #818cf8;
 }
 
-/* ── Nav colour tokens (dark) ──────────────────────────────────────────── */
+/* ── Dark mode page vars ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
-  --sn-bg:       rgba(14,14,20,0.94);
-  --sn-border:   rgba(255,255,255,0.08);
-  --sn-text:     #e2e2ec;
-  --sn-muted:    #7a7a95;
-  --sn-hover:    rgba(255,255,255,0.07);
-  --sn-active:   #818cf8;
-  --sn-pill:     #3a3a50;
-  --sn-knob:     #e2e2ec;
-  --sn-focus:    #818cf8;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   DARK MODE — override every page type's colour vars.
-   All rules on html[data-theme="dark"] so they beat :root specificity.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* Lecture / lab / overview / cheatsheet / precourse — use --bg-page family */
-html[data-theme="dark"] {
+  background: #0f0f13 !important;
   --bg-page:      #0f0f0f !important;
   --bg-card:      #1a1a1a !important;
   --bg-card-alt:  #222222 !important;
@@ -240,110 +233,127 @@ html[data-theme="dark"] {
   --step-bg:      #1a1a1a !important;
   --step-bdr:     #2e2e2e !important;
 }
-
-/* Reading / index pages use --bg family (different naming convention) */
 html[data-theme="dark"] body {
   background: #0f0f13 !important;
   color:      #e2e2ec !important;
-  --bg:       #0f0f13 !important;
-  --bg2:      #16161d !important;
-  --bg3:      #1e1e28 !important;
-  --border:   rgba(255,255,255,.07) !important;
-  --border2:  rgba(255,255,255,.13) !important;
-  --text:     #e2e2ec !important;
-  --muted:    #7a7a95 !important;
-  --dim:      #3e3e52 !important;
-  --blue:     #7eb8ff !important;
-  --blue-dim: rgba(126,184,255,.12) !important;
-  --green-dim:rgba(110,231,183,.10) !important;
-  --amber-dim:rgba(252,211,77,.10)  !important;
-  --red-dim:  rgba(248,113,113,.10) !important;
+  --bg:        #0f0f13 !important;
+  --bg2:       #16161d !important;
+  --bg3:       #1e1e28 !important;
+  --border:    rgba(255,255,255,.07) !important;
+  --border2:   rgba(255,255,255,.13) !important;
+  --text:      #e2e2ec !important;
+  --muted:     #7a7a95 !important;
+  --dim:       #3e3e52 !important;
+  --blue:      #7eb8ff !important;
+  --blue-dim:  rgba(126,184,255,.12) !important;
+  --green:     #6ee7b7 !important;
+  --green-dim: rgba(110,231,183,.10) !important;
+  --amber:     #fcd34d !important;
+  --amber-dim: rgba(252,211,77,.10)  !important;
+  --red:       #f87171 !important;
+  --red-dim:   rgba(248,113,113,.10) !important;
+  --purple:    #c4b5fd !important;
   --purple-dim:rgba(196,181,253,.10) !important;
 }
 
-/* Also force html element background in dark */
-html[data-theme="dark"] {
-  background: #0f0f13 !important;
-}
-
-/* Lecture/lab body background in dark */
-html[data-theme="dark"] body {
-  background-color: #0f0f0f !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — override reading page hardcoded dark defaults.
-   Reading pages have :root { --bg:#0f0f13 } — we beat it with html[data-theme].
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ── Light mode overrides (for pages that default dark) ───────────────── */
 html[data-theme="light"] {
   background: #f5f4f0 !important;
   --bg-page:      #f5f4f0 !important;
   --bg-card:      #ffffff !important;
   --bg-card-alt:  #f7f7f5 !important;
-  --bg-code:      #1e1e2e !important;
   --border:       #e0e0de !important;
   --text-primary: #1a1a1a !important;
   --text-secondary:#555555 !important;
-  --text-muted:   #888888 !important;
   --text-body:    #444444 !important;
   --accent:       #1e40af !important;
   --accent-bg:    #dbeafe !important;
 }
-
 html[data-theme="light"] body {
   background: #f5f4f0 !important;
   color:      #1a1a1a !important;
-  --bg:       #f5f4f0 !important;
-  --bg2:      #ffffff !important;
-  --bg3:      #f0eef0 !important;
-  --border:   rgba(0,0,0,.09) !important;
-  --border2:  rgba(0,0,0,.15) !important;
-  --text:     #1a1a1a !important;
-  --muted:    #555555 !important;
-  --dim:      #999999 !important;
-  --blue:     #1e40af !important;
-  --blue-dim: rgba(30,64,175,.10) !important;
-  --green:    #166534 !important;
-  --green-dim:rgba(22,101,52,.10) !important;
-  --amber:    #92400e !important;
-  --amber-dim:rgba(146,64,14,.10) !important;
-  --red:      #991b1b !important;
-  --red-dim:  rgba(153,27,27,.10) !important;
-  --purple:   #4c1d95 !important;
+  --bg:        #f5f4f0 !important;
+  --bg2:       #ffffff !important;
+  --bg3:       #f0eef0 !important;
+  --border:    rgba(0,0,0,.09) !important;
+  --border2:   rgba(0,0,0,.15) !important;
+  --text:      #1a1a1a !important;
+  --muted:     #555555 !important;
+  --dim:       #999999 !important;
+  --blue:      #1e40af !important;
+  --blue-dim:  rgba(30,64,175,.10) !important;
+  --green:     #166534 !important;
+  --green-dim: rgba(22,101,52,.10) !important;
+  --amber:     #92400e !important;
+  --amber-dim: rgba(146,64,14,.10) !important;
+  --red:       #991b1b !important;
+  --red-dim:   rgba(153,27,27,.10) !important;
+  --purple:    #4c1d95 !important;
   --purple-dim:rgba(76,29,149,.10) !important;
 }
 
 /* ── Nav bar ───────────────────────────────────────────────────────────── */
 #site-nav {
-  position: sticky; top: 0; z-index: 500;
-  height: 52px; display: flex; align-items: center;
-  padding: 0 16px; gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: 52px;
+  display: flex;
+  align-items: stretch;
+  padding: 0;
   border-bottom: 1px solid var(--sn-border);
   background: var(--sn-bg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   font-family: 'DM Mono','Fira Mono','Courier New',monospace;
   box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  /* CRITICAL: overflow must be visible so dropdowns can extend below */
+  overflow: visible;
 }
 
 .sn-logo {
   font-size: 12px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: var(--sn-text);
-  text-decoration: none; padding: 6px 10px; border-radius: 6px;
-  margin-right: 4px; flex-shrink: 0; transition: background .15s;
+  text-decoration: none; padding: 0 12px;
+  display: flex; align-items: center;
+  flex-shrink: 0;
+  border-right: 1px solid var(--sn-border);
+  transition: background .15s;
 }
 .sn-logo:hover { background: var(--sn-hover); }
 
-.sn-div {
-  width: 1px; height: 20px;
-  background: var(--sn-border); margin: 0 6px; flex-shrink: 0;
+/* ── Scrollable plain-links area ───────────────────────────────────────── */
+/* IMPORTANT: this div must NOT contain dropdown groups.
+   overflow-x:auto would clip the dropdown panels.
+   Dropdown groups (.sn-week-group) are siblings to this div, not children. */
+.sn-links {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+  /* NO overflow here — dropdowns are siblings, not children */
+  overflow: visible;
 }
 
-.sn-links {
-  display: flex; align-items: center; flex: 1;
-  overflow-x: auto; scrollbar-width: none; min-width: 0;
+/* Horizontal scrolling handled by inner scroll wrapper */
+.sn-links-scroll {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  min-width: 0;
 }
-.sn-links::-webkit-scrollbar { display: none; }
+.sn-links-scroll::-webkit-scrollbar { display: none; }
+
+.sn-div {
+  width: 1px;
+  background: var(--sn-border);
+  margin: 8px 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
 
 .sn-link {
   font-size: 11px; letter-spacing: .04em;
@@ -357,7 +367,13 @@ html[data-theme="light"] body {
 .sn-link:hover  { color: var(--sn-text); background: var(--sn-hover); }
 .sn-link.active { color: var(--sn-active); border-bottom-color: var(--sn-active); font-weight: 600; }
 
-.sn-week-group { position: relative; }
+/* ── Unit dropdown groups — in nav directly, NOT in .sn-links-scroll ───── */
+.sn-week-group {
+  position: relative;  /* dropdown positioned relative to this */
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+}
 
 .sn-week-btn {
   font-size: 11px; letter-spacing: .04em;
@@ -374,31 +390,41 @@ html[data-theme="light"] body {
 .sn-week-btn svg { transition: transform .2s; flex-shrink: 0; }
 .sn-week-group.open .sn-week-btn svg { transform: rotate(180deg); }
 
+/* ── Dropdown panel ────────────────────────────────────────────────────── */
 .sn-week-dropdown {
-  display: none; position: absolute; top: 52px; left: 0;
+  display: none;
+  position: absolute;
+  top: 52px;   /* exactly below the 52px nav */
+  left: 0;
   min-width: 240px;
   background: var(--sn-bg);
-  border: 1px solid var(--sn-border); border-top: none;
+  border: 1px solid var(--sn-border);
+  border-top: none;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  padding: 6px 0; z-index: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.20);
+  padding: 6px 0;
+  z-index: 600;  /* above nav z-index:500 */
 }
 .sn-week-group.open .sn-week-dropdown { display: block; }
 
 .sn-dd-item {
-  display: grid; grid-template-columns: 80px 1fr;
-  gap: 8px; padding: 6px 16px; font-size: 11px;
-  color: var(--sn-muted); text-decoration: none;
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 6px; padding: 6px 14px;
+  font-size: 11px; color: var(--sn-muted);
+  text-decoration: none;
   transition: background .12s, color .12s;
 }
 .sn-dd-item:hover  { background: var(--sn-hover); color: var(--sn-text); }
 .sn-dd-item.active { color: var(--sn-active); font-weight: 600; }
 .sn-dd-num  { font-weight: 700; color: var(--sn-text); font-size: 10px; }
-.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 12px; }
+.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 10px; }
 
+/* ── Right controls ────────────────────────────────────────────────────── */
 .sn-right {
-  display: flex; align-items: center; gap: 6px;
-  margin-left: 8px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 10px; flex-shrink: 0;
+  border-left: 1px solid var(--sn-border);
 }
 
 .sn-theme-toggle {
@@ -427,7 +453,7 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
 
 .sn-font-btns { display: flex; align-items: center; gap: 2px; }
 .sn-font-btn {
-  width: 26px; height: 26px; border-radius: 5px;
+  width: 28px; height: 28px; border-radius: 5px;
   border: 1px solid var(--sn-border); background: none;
   color: var(--sn-muted); cursor: pointer; font-family: inherit; font-size: 12px;
   display: flex; align-items: center; justify-content: center;
@@ -441,12 +467,16 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
   outline-offset: 3px; border-radius: 3px;
 }
 
+/* ── Scroll padding so anchor links land below sticky nav ──────────────── */
+html { scroll-padding-top: 64px; }
+
 /* ── Responsive ────────────────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .sn-font-btns { display: none; }
-  #site-nav     { padding: 0 10px; }
-  .sn-link      { padding: 0 7px; font-size: 10px; }
-  .sn-week-btn  { padding: 0 7px; font-size: 10px; }
+@media (max-width: 640px) {
+  .sn-font-btns     { display: none; }
+  .sn-theme-label   { display: none; }
+  #site-nav         { padding: 0; }
+  .sn-link          { padding: 0 7px; font-size: 10px; }
+  .sn-week-btn      { padding: 0 7px; font-size: 10px; }
 }
 
 </style>
@@ -523,10 +553,7 @@ print(check_limit(<span class="nm">1500</span>))   <span class="cm"># True &mdas
   var THEME_KEY = 'ism3232-theme';
 
   function prefersDark() { return window.matchMedia('(prefers-color-scheme: dark)').matches; }
-
-  function getTheme() {
-    return localStorage.getItem(THEME_KEY) || (prefersDark() ? 'dark' : 'light');
-  }
+  function getTheme()    { return localStorage.getItem(THEME_KEY) || (prefersDark() ? 'dark' : 'light'); }
 
   function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
@@ -546,31 +573,30 @@ print(check_limit(<span class="nm">1500</span>))   <span class="cm"># True &mdas
   var FONT_KEY   = 'ism3232-fontsize';
   var FONT_SCALE = [0.85, 1, 1.15, 1.3];
   var fontIdx    = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
-  var fontStyleEl = null;
+  var fontEl     = null;
 
   function applyFont(idx) {
     fontIdx = Math.max(0, Math.min(FONT_SCALE.length - 1, idx));
     localStorage.setItem(FONT_KEY, String(fontIdx));
-    if (!fontStyleEl) {
-      fontStyleEl = document.createElement('style');
-      fontStyleEl.id = 'ism-font-scale';
-      document.head.appendChild(fontStyleEl);
+    if (!fontEl) {
+      fontEl    = document.createElement('style');
+      fontEl.id = 'ism-font-scale';
+      document.head.appendChild(fontEl);
     }
     var s = FONT_SCALE[fontIdx];
-    fontStyleEl.textContent = [
-      'body, .wrapper { font-size: ' + Math.round(16 * s) + 'px !important; }',
-      'p, li, .term-def, .cs-def, .rub-req { font-size: ' + Math.round(15 * s) + 'px !important; }',
-      'pre code { font-size: ' + Math.round(13 * s) + 'px !important; }',
-      'h1 { font-size: ' + Math.round(28 * s) + 'px !important; }',
-      'h2 { font-size: ' + Math.round(20 * s) + 'px !important; }',
-      'h3 { font-size: ' + Math.round(16 * s) + 'px !important; }',
-      '.concept p, .warn p, .ok p { font-size: ' + Math.round(14 * s) + 'px !important; }',
-    ].join('\n');
+    fontEl.textContent =
+      'body,.wrapper{font-size:' + Math.round(16*s) + 'px!important}' +
+      'p,li,.term-def,.cs-def,.rub-req{font-size:' + Math.round(15*s) + 'px!important}' +
+      'pre code{font-size:' + Math.round(13*s) + 'px!important}' +
+      'h1{font-size:' + Math.round(28*s) + 'px!important}' +
+      'h2{font-size:' + Math.round(20*s) + 'px!important}' +
+      'h3{font-size:' + Math.round(16*s) + 'px!important}' +
+      '.concept p,.warn p,.ok p{font-size:' + Math.round(14*s) + 'px!important}';
   }
 
   applyFont(fontIdx);
 
-  /* ── Nav data ──────────────────────────────────────────────────────────── */
+  /* ── Week / unit data ──────────────────────────────────────────────────── */
   var WEEKS = [
     [1,  'Developer Mindset & Setup',         1],
     [2,  'zsh Navigation & File Ops',          1],
@@ -589,260 +615,243 @@ print(check_limit(<span class="nm">1500</span>))   <span class="cm"># True &mdas
     [15, 'Streamlit Interface',                4],
     [16, 'GenAI Feature & Final Demo',         4],
   ];
-  var UNIT_COLORS = {1:'#00c9a7', 2:'#818cf8', 3:'#fb7185', 4:'#fbbf24'};
-  var UNIT_NAMES  = {1:'Foundations', 2:'Python', 3:'OOP', 4:'Capstone'};
+  var UCOL  = {1:'#00c9a7',2:'#818cf8',3:'#fb7185',4:'#fbbf24'};
+  var UNAME = {1:'Foundations',2:'Python',3:'OOP',4:'Capstone'};
 
   /* ── Path detection ────────────────────────────────────────────────────── */
-  var path        = window.location.pathname;
-  var fname       = path.split('/').pop().replace('.html', '') || 'index';
-  var inDocs      = path.indexOf('/docs/') !== -1;
-  var root        = inDocs ? '../' : './';
-  var docs        = inDocs ? './'  : './docs/';
-  var wkMatch     = fname.match(/week(\d+)/);
-  var currentWeek = wkMatch ? parseInt(wkMatch[1], 10) : 0;
+  var path   = window.location.pathname;
+  var fname  = path.split('/').pop().replace('.html','') || 'index';
+  var inDocs = path.indexOf('/docs/') !== -1;
+  var root   = inDocs ? '../' : './';
+  var docs   = inDocs ? './'  : './docs/';
+  var wkM    = fname.match(/week(\d+)/);
+  var curWk  = wkM ? parseInt(wkM[1],10) : 0;
 
   function inUnit(u) {
-    for (var i = 0; i < WEEKS.length; i++) {
-      if (WEEKS[i][2] === u && WEEKS[i][0] === currentWeek) return true;
-    }
+    for (var i=0;i<WEEKS.length;i++) { if(WEEKS[i][2]===u && WEEKS[i][0]===curWk) return true; }
     return false;
   }
 
-  /* ── Build dropdown HTML ───────────────────────────────────────────────── */
-  function ddItem(wn, suffix, label) {
-    var href   = docs + 'week' + (wn < 10 ? '0' : '') + wn + '_' + suffix + '.html';
-    var active = (currentWeek === wn && fname.indexOf(suffix) !== -1) ? ' active' : '';
-    var title  = '';
-    for (var i = 0; i < WEEKS.length; i++) {
-      if (WEEKS[i][0] === wn) { title = WEEKS[i][1]; break; }
-    }
-    return '<a class="sn-dd-item' + active + '" href="' + href + '">'
-         + '<span class="sn-dd-num">W' + wn + ' ' + label + '</span>'
-         + '<span>' + title + '</span></a>';
-  }
-
-  function buildDD(unitNum) {
-    var html  = '';
-    var color = UNIT_COLORS[unitNum];
-    for (var i = 0; i < WEEKS.length; i++) {
+  /* ── Build dropdown items ──────────────────────────────────────────────── */
+  function ddHTML(unitNum) {
+    var out = '';
+    var col = UCOL[unitNum];
+    for (var i=0;i<WEEKS.length;i++) {
       var w = WEEKS[i];
       if (w[2] !== unitNum) continue;
       var wn = w[0];
-      html += '<div style="padding:4px 16px 2px;font-size:9px;letter-spacing:.1em;'
-            + 'text-transform:uppercase;color:' + color + ';opacity:.8;">W' + wn + '</div>';
-      html += ddItem(wn, 'reading', 'Reading');
-      html += ddItem(wn, 'lecture', 'Lecture');
-      if (wn !== 9) html += ddItem(wn, 'lab', 'Lab');
-      html += ddItem(wn, 'slides',  'Slides');
-      html += '<div class="sn-dd-sep"></div>';
+      var pad = wn < 10 ? '0' : '';
+      out += '<div style="padding:4px 14px 2px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:' + col + ';opacity:.8">W' + wn + '</div>';
+      function mkItem(suffix, label) {
+        var href   = docs + 'week' + pad + wn + '_' + suffix + '.html';
+        var active = (curWk===wn && fname.indexOf(suffix)!==-1) ? ' active' : '';
+        var title  = '';
+        for (var j=0;j<WEEKS.length;j++) { if(WEEKS[j][0]===wn){title=WEEKS[j][1];break;} }
+        return '<a class="sn-dd-item' + active + '" href="' + href + '"><span class="sn-dd-num">W' + wn + ' ' + label + '</span><span>' + title + '</span></a>';
+      }
+      out += mkItem('reading','Reading');
+      out += mkItem('lecture','Lecture');
+      if (wn!==9) out += mkItem('lab','Lab');
+      out += mkItem('slides','Slides');
+      out += '<div class="sn-dd-sep"></div>';
     }
-    return html;
+    return out;
   }
 
-  /* ── Build nav HTML (NO inline onclick — uses data-dd + delegated listener) */
-  function buildNav() {
-    var nav = document.createElement('nav');
-    nav.id  = 'site-nav';
-    nav.setAttribute('aria-label', 'Site navigation');
-
-    /* Logo */
-    var logo = document.createElement('a');
-    logo.className = 'sn-logo';
-    logo.href = root + 'index.html';
-    logo.setAttribute('aria-label', 'ISM3232 Home');
-    logo.textContent = 'ISM3232';
-    nav.appendChild(logo);
-
-    /* Link area */
-    var links = document.createElement('div');
-    links.className = 'sn-links';
-    links.setAttribute('role', 'menubar');
-    nav.appendChild(links);
-
-    /* Helper: plain link */
-    function addLink(href, label, activeTest) {
-      var a = document.createElement('a');
-      a.className = 'sn-link' + (fname.indexOf(activeTest) !== -1 ? ' active' : '');
-      a.href = href;
-      a.textContent = label;
-      links.appendChild(a);
+  /* ── Build nav using createElement (no inline onclick, no template literals) */
+  function el(tag, props) {
+    var e = document.createElement(tag);
+    if (props) {
+      for (var k in props) {
+        if (k === 'text')  { e.textContent = props[k]; }
+        else if (k === 'html') { e.innerHTML = props[k]; }
+        else if (k === 'cls')  { e.className = props[k]; }
+        else { e.setAttribute(k, props[k]); }
+      }
     }
-
-    /* Helper: divider */
-    function addDiv() {
-      var d = document.createElement('div');
-      d.className = 'sn-div';
-      d.setAttribute('aria-hidden', 'true');
-      links.appendChild(d);
+    return e;
+  }
+  function ch(parent) {
+    for (var i=1;i<arguments.length;i++) {
+      if (arguments[i]) parent.appendChild(arguments[i]);
     }
-
-    /* Helper: unit dropdown — button uses data-dd, NO onclick attribute */
-    function addUnit(u) {
-      var active = inUnit(u);
-      var color  = UNIT_COLORS[u];
-
-      var group = document.createElement('div');
-      group.className = 'sn-week-group';
-      group.id = 'dd-u' + u;
-
-      var btn = document.createElement('button');
-      btn.className = 'sn-week-btn' + (active ? ' active' : '');
-      btn.setAttribute('aria-haspopup', 'true');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-controls', 'dd-u' + u + '-panel');
-      btn.setAttribute('data-dd', 'dd-u' + u);  /* ← no onclick needed */
-      if (active) btn.style.cssText = 'color:' + color + ';border-bottom-color:' + color + ';';
-
-      var uSpan = document.createElement('span');
-      uSpan.style.color = color;
-      uSpan.textContent = 'U' + u;
-      btn.appendChild(uSpan);
-
-      btn.appendChild(document.createTextNode('\u00a0' + UNIT_NAMES[u]));
-
-      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('viewBox', '0 0 10 6');
-      svg.setAttribute('fill', 'none');
-      svg.setAttribute('stroke', 'currentColor');
-      svg.setAttribute('stroke-width', '1.5');
-      svg.setAttribute('aria-hidden', 'true');
-      svg.style.cssText = 'width:10px;height:10px;margin-left:4px;';
-      var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path2.setAttribute('d', 'M1 1l4 4 4-4');
-      svg.appendChild(path2);
-      btn.appendChild(svg);
-
-      var panel = document.createElement('div');
-      panel.className = 'sn-week-dropdown';
-      panel.id = 'dd-u' + u + '-panel';
-      panel.setAttribute('role', 'menu');
-      panel.innerHTML = buildDD(u);
-
-      group.appendChild(btn);
-      group.appendChild(panel);
-      links.appendChild(group);
-    }
-
-    addLink(docs + 'course_map.html',         'Map',          'course_map');
-    addLink(docs + 'precourse.html',           'Pre-Course',   'precourse');
-    addDiv();
-    addUnit(1); addUnit(2); addUnit(3); addUnit(4);
-    addDiv();
-    addLink(docs + 'unit_1_cheatsheet.html',   'Cheat Sheets', 'cheatsheet');
-    addLink(docs + 'unit_all_overview.html',   'Overviews',    'overview');
-    addLink(docs + 'glossary.html',            'Glossary',     'glossary');
-    addLink(docs + 'troubleshooting.html',     'Help',         'troubleshooting');
-    addLink(docs + 'capstone_rubric.html',     'Rubric',       'capstone_rubric');
-    addLink(docs + 'expectations.html',        'Expectations', 'expectations');
-
-    /* Right controls */
-    var right = document.createElement('div');
-    right.className = 'sn-right';
-    right.setAttribute('aria-label', 'Display controls');
-
-    right.innerHTML = '<div class="sn-font-btns" role="group" aria-label="Font size">'
-      + '<button class="sn-font-btn" id="sn-font-down" aria-label="Decrease font size" title="Smaller text">A-</button>'
-      + '<button class="sn-font-btn" id="sn-font-up"   aria-label="Increase font size" title="Larger text">A+</button>'
-      + '</div>'
-      + '<button class="sn-theme-toggle" id="sn-theme-btn"'
-      + ' aria-label="Switch to dark mode" aria-pressed="false">'
-      + '<span class="sn-pill" aria-hidden="true"></span>'
-      + '<span class="sn-theme-label">Dark</span>'
-      + '</button>';
-    nav.appendChild(right);
-
-    return nav;
+    return parent;
+  }
+  function txt(s) { return document.createTextNode(s); }
+  function svgEl(tag, attrs) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function chevron() {
+    var s = svgEl('svg',{viewBox:'0 0 10 6',fill:'none',stroke:'currentColor','stroke-width':'1.5','aria-hidden':'true'});
+    s.style.cssText = 'width:10px;height:10px;margin-left:4px;flex-shrink:0;';
+    ch(s, svgEl('path',{d:'M1 1l4 4 4-4'}));
+    return s;
   }
 
-  /* ── Insert nav ────────────────────────────────────────────────────────── */
-  var nav = buildNav();
+  function mkLink(href, label, activeKey) {
+    var active = fname.indexOf(activeKey) !== -1 ? ' active' : '';
+    return el('a', {cls:'sn-link'+active, href:href, text:label});
+  }
+  function mkDiv() { return el('div',{cls:'sn-div','aria-hidden':'true'}); }
 
-  var skip = document.createElement('a');
-  skip.className   = 'skip-link';
-  skip.href        = '#main-content';
-  skip.textContent = 'Skip to main content';
+  /* Build one unit dropdown group — sits DIRECTLY in nav, not inside sn-links-scroll */
+  function mkUnit(u) {
+    var active = inUnit(u);
+    var col    = UCOL[u];
 
-  if (document.body.firstChild) {
-    document.body.insertBefore(nav,  document.body.firstChild);
-    document.body.insertBefore(skip, document.body.firstChild);
+    var group = el('div', {cls:'sn-week-group', id:'dd-u'+u});
+
+    var btn = el('button', {cls:'sn-week-btn'+(active?' active':''), 'aria-haspopup':'true',
+                            'aria-expanded':'false', 'aria-controls':'dd-u'+u+'-panel',
+                            'data-dd':'dd-u'+u});
+    if (active) btn.style.cssText = 'color:'+col+';border-bottom-color:'+col+';';
+
+    var uspan = el('span', {text:'U'+u});
+    uspan.style.color = col;
+    ch(btn, uspan, txt('\u00a0'+UNAME[u]), chevron());
+
+    var panel = el('div', {cls:'sn-week-dropdown', id:'dd-u'+u+'-panel', role:'menu', html:ddHTML(u)});
+
+    ch(group, btn, panel);
+    return group;
+  }
+
+  /* ── Assemble nav ──────────────────────────────────────────────────────── */
+  var nav = el('nav', {id:'site-nav', 'aria-label':'Site navigation'});
+
+  /* Logo */
+  ch(nav, el('a', {cls:'sn-logo', href:root+'index.html', 'aria-label':'ISM3232 Home', text:'ISM3232'}));
+
+  /* Plain links in a scrollable container */
+  var scroll = el('div', {cls:'sn-links-scroll'});
+  var linksWrap = el('div', {cls:'sn-links'});
+  ch(linksWrap, scroll);
+
+  ch(scroll,
+    mkLink(docs+'course_map.html',       'Map',          'course_map'),
+    mkLink(docs+'precourse.html',        'Pre-Course',   'precourse'),
+    mkDiv(),
+    mkLink(docs+'unit_1_cheatsheet.html','Cheat Sheets', 'cheatsheet'),
+    mkLink(docs+'unit_all_overview.html','Overviews',    'overview'),
+    mkLink(docs+'glossary.html',         'Glossary',     'glossary'),
+    mkLink(docs+'troubleshooting.html',  'Help',         'troubleshooting'),
+    mkLink(docs+'capstone_rubric.html',  'Rubric',       'capstone_rubric'),
+    mkLink(docs+'expectations.html',     'Expectations', 'expectations')
+  );
+
+  ch(nav, linksWrap, mkDiv());
+
+  /* Unit dropdowns sit DIRECTLY in nav — not inside the overflow:auto scroll area */
+  ch(nav, mkUnit(1), mkUnit(2), mkUnit(3), mkUnit(4));
+
+  ch(nav, mkDiv());
+
+  /* Right controls */
+  var right = el('div', {cls:'sn-right', 'aria-label':'Display controls'});
+  right.innerHTML =
+    '<div class="sn-font-btns" role="group" aria-label="Font size">' +
+      '<button class="sn-font-btn" id="sn-font-down" aria-label="Decrease font size" title="Smaller text">A-</button>' +
+      '<button class="sn-font-btn" id="sn-font-up"   aria-label="Increase font size" title="Larger text">A+</button>' +
+    '</div>' +
+    '<button class="sn-theme-toggle" id="sn-theme-btn" aria-label="Switch to dark mode" aria-pressed="false">' +
+      '<span class="sn-pill" aria-hidden="true"></span>' +
+      '<span class="sn-theme-label">Dark</span>' +
+    '</button>';
+  ch(nav, right);
+
+  /* ── Insert nav + skip link at top of body ─────────────────────────────── */
+  var skip = el('a', {cls:'skip-link', href:'#main-content', text:'Skip to main content'});
+
+  var first = document.body.firstChild;
+  if (first) {
+    document.body.insertBefore(nav,  first);
+    document.body.insertBefore(skip, nav);
   } else {
     document.body.appendChild(skip);
     document.body.appendChild(nav);
   }
 
-  /* Tag main content region for skip link */
+  /* Tag main content */
   var wrapper = document.querySelector('.wrapper, main, article');
   if (wrapper && !wrapper.id) wrapper.id = 'main-content';
 
-  /* ── Delegated click handler ───────────────────────────────────────────── */
+  /* ── Dropdown toggle ───────────────────────────────────────────────────── */
   function toggleDD(id) {
     var group = document.getElementById(id);
     if (!group) return;
     var wasOpen = group.classList.contains('open');
     /* Close all */
-    var allOpen = document.querySelectorAll('.sn-week-group.open');
-    for (var i = 0; i < allOpen.length; i++) {
-      allOpen[i].classList.remove('open');
-      var b = allOpen[i].querySelector('[data-dd]');
-      if (b) b.setAttribute('aria-expanded', 'false');
+    var all = document.querySelectorAll('.sn-week-group.open');
+    for (var i=0;i<all.length;i++) {
+      all[i].classList.remove('open');
+      var b = all[i].querySelector('[data-dd]');
+      if (b) b.setAttribute('aria-expanded','false');
     }
     if (!wasOpen) {
       group.classList.add('open');
       var btn = group.querySelector('[data-dd]');
-      if (btn) btn.setAttribute('aria-expanded', 'true');
+      if (btn) btn.setAttribute('aria-expanded','true');
     }
   }
 
-  document.addEventListener('click', function (e) {
-    var ddBtn = e.target.closest ? e.target.closest('[data-dd]') : null;
+  /* Single delegated click listener — catches data-dd buttons, font, theme */
+  document.addEventListener('click', function(e) {
+    var t = e.target;
+
+    /* Theme toggle */
+    if (t.id==='sn-theme-btn' || (t.closest && t.closest('#sn-theme-btn'))) {
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(cur==='dark' ? 'light' : 'dark');
+      return;
+    }
+
+    /* Font buttons */
+    if (t.id==='sn-font-down') { applyFont(fontIdx-1); return; }
+    if (t.id==='sn-font-up')   { applyFont(fontIdx+1); return; }
+
+    /* Dropdown buttons (have data-dd attribute) */
+    var ddBtn = t.closest ? t.closest('[data-dd]') : null;
     if (ddBtn) {
       e.stopPropagation();
       toggleDD(ddBtn.getAttribute('data-dd'));
       return;
     }
-    if (!e.target.closest || !e.target.closest('.sn-week-group')) {
-      var allOpen = document.querySelectorAll('.sn-week-group.open');
-      for (var i = 0; i < allOpen.length; i++) {
-        allOpen[i].classList.remove('open');
-        var b = allOpen[i].querySelector('[data-dd]');
-        if (b) b.setAttribute('aria-expanded', 'false');
+
+    /* Click outside — close all dropdowns */
+    if (!t.closest || !t.closest('.sn-week-group')) {
+      var open = document.querySelectorAll('.sn-week-group.open');
+      for (var i=0;i<open.length;i++) {
+        open[i].classList.remove('open');
+        var b = open[i].querySelector('[data-dd]');
+        if (b) b.setAttribute('aria-expanded','false');
       }
     }
   });
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      var allOpen = document.querySelectorAll('.sn-week-group.open');
-      for (var i = 0; i < allOpen.length; i++) {
-        allOpen[i].classList.remove('open');
-        var b = allOpen[i].querySelector('[data-dd]');
-        if (b) { b.setAttribute('aria-expanded', 'false'); b.focus(); }
+  document.addEventListener('keydown', function(e) {
+    if (e.key==='Escape') {
+      var open = document.querySelectorAll('.sn-week-group.open');
+      for (var i=0;i<open.length;i++) {
+        open[i].classList.remove('open');
+        var b = open[i].querySelector('[data-dd]');
+        if (b) { b.setAttribute('aria-expanded','false'); b.focus(); }
       }
-    }
-  });
-
-  /* ── Wire font + theme buttons (added to DOM above, wire here) ─────────── */
-  document.addEventListener('click', function (e) {
-    if (e.target.id === 'sn-font-down') { applyFont(fontIdx - 1); return; }
-    if (e.target.id === 'sn-font-up')   { applyFont(fontIdx + 1); return; }
-    if (e.target.id === 'sn-theme-btn' || e.target.closest('#sn-theme-btn')) {
-      var cur = document.documentElement.getAttribute('data-theme') || 'light';
-      applyTheme(cur === 'dark' ? 'light' : 'dark');
     }
   });
 
   /* ── Public API ────────────────────────────────────────────────────────── */
   window.ISM = {
-    toggleTheme: function () {
+    toggleTheme: function() {
       var cur = document.documentElement.getAttribute('data-theme') || 'light';
-      applyTheme(cur === 'dark' ? 'light' : 'dark');
+      applyTheme(cur==='dark' ? 'light' : 'dark');
     },
-    fontUp:   function () { applyFont(fontIdx + 1); },
-    fontDown: function () { applyFont(fontIdx - 1); },
+    fontUp:   function() { applyFont(fontIdx+1); },
+    fontDown: function() { applyFont(fontIdx-1); },
     toggleDD: toggleDD,
   };
 
-  /* Final state application */
   applyTheme(getTheme());
   applyFont(fontIdx);
 

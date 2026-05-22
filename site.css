@@ -1,8 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   ISM3232 site.css  –  nav · theme · font-scale · accessibility
-   data-theme is set on <html>, so all selectors must be:
-     html[data-theme="dark"]   NOT  [data-theme="dark"] html
-     html[data-theme="light"]  NOT  [data-theme="light"] html
+   ISM3232 site.css
+   Note: data-theme is set on <html>, so all theme selectors must be
+         html[data-theme="dark"]  — NOT  [data-theme="dark"] html
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Skip link ─────────────────────────────────────────────────────────── */
@@ -17,37 +16,31 @@
 
 /* ── Nav colour tokens (light default) ─────────────────────────────────── */
 :root {
-  --sn-bg:       rgba(245,244,240,0.94);
-  --sn-border:   rgba(0,0,0,0.10);
-  --sn-text:     #1a1a1a;
-  --sn-muted:    #666;
-  --sn-hover:    rgba(0,0,0,0.06);
-  --sn-active:   #1e40af;
-  --sn-pill:     #d0d0d8;
-  --sn-knob:     #fff;
-  --sn-focus:    #1e40af;
+  --sn-bg:     rgba(245,244,240,0.96);
+  --sn-border: rgba(0,0,0,0.10);
+  --sn-text:   #1a1a1a;
+  --sn-muted:  #666;
+  --sn-hover:  rgba(0,0,0,0.06);
+  --sn-active: #1e40af;
+  --sn-pill:   #d0d0d8;
+  --sn-knob:   #fff;
+  --sn-focus:  #1e40af;
+}
+html[data-theme="dark"] {
+  --sn-bg:     rgba(14,14,20,0.96);
+  --sn-border: rgba(255,255,255,0.08);
+  --sn-text:   #e2e2ec;
+  --sn-muted:  #7a7a95;
+  --sn-hover:  rgba(255,255,255,0.07);
+  --sn-active: #818cf8;
+  --sn-pill:   #3a3a50;
+  --sn-knob:   #e2e2ec;
+  --sn-focus:  #818cf8;
 }
 
-/* ── Nav colour tokens (dark) ──────────────────────────────────────────── */
+/* ── Dark mode page vars ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
-  --sn-bg:       rgba(14,14,20,0.94);
-  --sn-border:   rgba(255,255,255,0.08);
-  --sn-text:     #e2e2ec;
-  --sn-muted:    #7a7a95;
-  --sn-hover:    rgba(255,255,255,0.07);
-  --sn-active:   #818cf8;
-  --sn-pill:     #3a3a50;
-  --sn-knob:     #e2e2ec;
-  --sn-focus:    #818cf8;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   DARK MODE — override every page type's colour vars.
-   All rules on html[data-theme="dark"] so they beat :root specificity.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* Lecture / lab / overview / cheatsheet / precourse — use --bg-page family */
-html[data-theme="dark"] {
+  background: #0f0f13 !important;
   --bg-page:      #0f0f0f !important;
   --bg-card:      #1a1a1a !important;
   --bg-card-alt:  #222222 !important;
@@ -85,110 +78,127 @@ html[data-theme="dark"] {
   --step-bg:      #1a1a1a !important;
   --step-bdr:     #2e2e2e !important;
 }
-
-/* Reading / index pages use --bg family (different naming convention) */
 html[data-theme="dark"] body {
   background: #0f0f13 !important;
   color:      #e2e2ec !important;
-  --bg:       #0f0f13 !important;
-  --bg2:      #16161d !important;
-  --bg3:      #1e1e28 !important;
-  --border:   rgba(255,255,255,.07) !important;
-  --border2:  rgba(255,255,255,.13) !important;
-  --text:     #e2e2ec !important;
-  --muted:    #7a7a95 !important;
-  --dim:      #3e3e52 !important;
-  --blue:     #7eb8ff !important;
-  --blue-dim: rgba(126,184,255,.12) !important;
-  --green-dim:rgba(110,231,183,.10) !important;
-  --amber-dim:rgba(252,211,77,.10)  !important;
-  --red-dim:  rgba(248,113,113,.10) !important;
+  --bg:        #0f0f13 !important;
+  --bg2:       #16161d !important;
+  --bg3:       #1e1e28 !important;
+  --border:    rgba(255,255,255,.07) !important;
+  --border2:   rgba(255,255,255,.13) !important;
+  --text:      #e2e2ec !important;
+  --muted:     #7a7a95 !important;
+  --dim:       #3e3e52 !important;
+  --blue:      #7eb8ff !important;
+  --blue-dim:  rgba(126,184,255,.12) !important;
+  --green:     #6ee7b7 !important;
+  --green-dim: rgba(110,231,183,.10) !important;
+  --amber:     #fcd34d !important;
+  --amber-dim: rgba(252,211,77,.10)  !important;
+  --red:       #f87171 !important;
+  --red-dim:   rgba(248,113,113,.10) !important;
+  --purple:    #c4b5fd !important;
   --purple-dim:rgba(196,181,253,.10) !important;
 }
 
-/* Also force html element background in dark */
-html[data-theme="dark"] {
-  background: #0f0f13 !important;
-}
-
-/* Lecture/lab body background in dark */
-html[data-theme="dark"] body {
-  background-color: #0f0f0f !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   LIGHT MODE — override reading page hardcoded dark defaults.
-   Reading pages have :root { --bg:#0f0f13 } — we beat it with html[data-theme].
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ── Light mode overrides (for pages that default dark) ───────────────── */
 html[data-theme="light"] {
   background: #f5f4f0 !important;
   --bg-page:      #f5f4f0 !important;
   --bg-card:      #ffffff !important;
   --bg-card-alt:  #f7f7f5 !important;
-  --bg-code:      #1e1e2e !important;
   --border:       #e0e0de !important;
   --text-primary: #1a1a1a !important;
   --text-secondary:#555555 !important;
-  --text-muted:   #888888 !important;
   --text-body:    #444444 !important;
   --accent:       #1e40af !important;
   --accent-bg:    #dbeafe !important;
 }
-
 html[data-theme="light"] body {
   background: #f5f4f0 !important;
   color:      #1a1a1a !important;
-  --bg:       #f5f4f0 !important;
-  --bg2:      #ffffff !important;
-  --bg3:      #f0eef0 !important;
-  --border:   rgba(0,0,0,.09) !important;
-  --border2:  rgba(0,0,0,.15) !important;
-  --text:     #1a1a1a !important;
-  --muted:    #555555 !important;
-  --dim:      #999999 !important;
-  --blue:     #1e40af !important;
-  --blue-dim: rgba(30,64,175,.10) !important;
-  --green:    #166534 !important;
-  --green-dim:rgba(22,101,52,.10) !important;
-  --amber:    #92400e !important;
-  --amber-dim:rgba(146,64,14,.10) !important;
-  --red:      #991b1b !important;
-  --red-dim:  rgba(153,27,27,.10) !important;
-  --purple:   #4c1d95 !important;
+  --bg:        #f5f4f0 !important;
+  --bg2:       #ffffff !important;
+  --bg3:       #f0eef0 !important;
+  --border:    rgba(0,0,0,.09) !important;
+  --border2:   rgba(0,0,0,.15) !important;
+  --text:      #1a1a1a !important;
+  --muted:     #555555 !important;
+  --dim:       #999999 !important;
+  --blue:      #1e40af !important;
+  --blue-dim:  rgba(30,64,175,.10) !important;
+  --green:     #166534 !important;
+  --green-dim: rgba(22,101,52,.10) !important;
+  --amber:     #92400e !important;
+  --amber-dim: rgba(146,64,14,.10) !important;
+  --red:       #991b1b !important;
+  --red-dim:   rgba(153,27,27,.10) !important;
+  --purple:    #4c1d95 !important;
   --purple-dim:rgba(76,29,149,.10) !important;
 }
 
 /* ── Nav bar ───────────────────────────────────────────────────────────── */
 #site-nav {
-  position: sticky; top: 0; z-index: 500;
-  height: 52px; display: flex; align-items: center;
-  padding: 0 16px; gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: 52px;
+  display: flex;
+  align-items: stretch;
+  padding: 0;
   border-bottom: 1px solid var(--sn-border);
   background: var(--sn-bg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   font-family: 'DM Mono','Fira Mono','Courier New',monospace;
   box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  /* CRITICAL: overflow must be visible so dropdowns can extend below */
+  overflow: visible;
 }
 
 .sn-logo {
   font-size: 12px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: var(--sn-text);
-  text-decoration: none; padding: 6px 10px; border-radius: 6px;
-  margin-right: 4px; flex-shrink: 0; transition: background .15s;
+  text-decoration: none; padding: 0 12px;
+  display: flex; align-items: center;
+  flex-shrink: 0;
+  border-right: 1px solid var(--sn-border);
+  transition: background .15s;
 }
 .sn-logo:hover { background: var(--sn-hover); }
 
-.sn-div {
-  width: 1px; height: 20px;
-  background: var(--sn-border); margin: 0 6px; flex-shrink: 0;
+/* ── Scrollable plain-links area ───────────────────────────────────────── */
+/* IMPORTANT: this div must NOT contain dropdown groups.
+   overflow-x:auto would clip the dropdown panels.
+   Dropdown groups (.sn-week-group) are siblings to this div, not children. */
+.sn-links {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+  /* NO overflow here — dropdowns are siblings, not children */
+  overflow: visible;
 }
 
-.sn-links {
-  display: flex; align-items: center; flex: 1;
-  overflow-x: auto; scrollbar-width: none; min-width: 0;
+/* Horizontal scrolling handled by inner scroll wrapper */
+.sn-links-scroll {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  min-width: 0;
 }
-.sn-links::-webkit-scrollbar { display: none; }
+.sn-links-scroll::-webkit-scrollbar { display: none; }
+
+.sn-div {
+  width: 1px;
+  background: var(--sn-border);
+  margin: 8px 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
 
 .sn-link {
   font-size: 11px; letter-spacing: .04em;
@@ -202,7 +212,13 @@ html[data-theme="light"] body {
 .sn-link:hover  { color: var(--sn-text); background: var(--sn-hover); }
 .sn-link.active { color: var(--sn-active); border-bottom-color: var(--sn-active); font-weight: 600; }
 
-.sn-week-group { position: relative; }
+/* ── Unit dropdown groups — in nav directly, NOT in .sn-links-scroll ───── */
+.sn-week-group {
+  position: relative;  /* dropdown positioned relative to this */
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+}
 
 .sn-week-btn {
   font-size: 11px; letter-spacing: .04em;
@@ -219,31 +235,41 @@ html[data-theme="light"] body {
 .sn-week-btn svg { transition: transform .2s; flex-shrink: 0; }
 .sn-week-group.open .sn-week-btn svg { transform: rotate(180deg); }
 
+/* ── Dropdown panel ────────────────────────────────────────────────────── */
 .sn-week-dropdown {
-  display: none; position: absolute; top: 52px; left: 0;
+  display: none;
+  position: absolute;
+  top: 52px;   /* exactly below the 52px nav */
+  left: 0;
   min-width: 240px;
   background: var(--sn-bg);
-  border: 1px solid var(--sn-border); border-top: none;
+  border: 1px solid var(--sn-border);
+  border-top: none;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  padding: 6px 0; z-index: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.20);
+  padding: 6px 0;
+  z-index: 600;  /* above nav z-index:500 */
 }
 .sn-week-group.open .sn-week-dropdown { display: block; }
 
 .sn-dd-item {
-  display: grid; grid-template-columns: 80px 1fr;
-  gap: 8px; padding: 6px 16px; font-size: 11px;
-  color: var(--sn-muted); text-decoration: none;
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 6px; padding: 6px 14px;
+  font-size: 11px; color: var(--sn-muted);
+  text-decoration: none;
   transition: background .12s, color .12s;
 }
 .sn-dd-item:hover  { background: var(--sn-hover); color: var(--sn-text); }
 .sn-dd-item.active { color: var(--sn-active); font-weight: 600; }
 .sn-dd-num  { font-weight: 700; color: var(--sn-text); font-size: 10px; }
-.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 12px; }
+.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 10px; }
 
+/* ── Right controls ────────────────────────────────────────────────────── */
 .sn-right {
-  display: flex; align-items: center; gap: 6px;
-  margin-left: 8px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 10px; flex-shrink: 0;
+  border-left: 1px solid var(--sn-border);
 }
 
 .sn-theme-toggle {
@@ -272,7 +298,7 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
 
 .sn-font-btns { display: flex; align-items: center; gap: 2px; }
 .sn-font-btn {
-  width: 26px; height: 26px; border-radius: 5px;
+  width: 28px; height: 28px; border-radius: 5px;
   border: 1px solid var(--sn-border); background: none;
   color: var(--sn-muted); cursor: pointer; font-family: inherit; font-size: 12px;
   display: flex; align-items: center; justify-content: center;
@@ -286,10 +312,14 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
   outline-offset: 3px; border-radius: 3px;
 }
 
+/* ── Scroll padding so anchor links land below sticky nav ──────────────── */
+html { scroll-padding-top: 64px; }
+
 /* ── Responsive ────────────────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .sn-font-btns { display: none; }
-  #site-nav     { padding: 0 10px; }
-  .sn-link      { padding: 0 7px; font-size: 10px; }
-  .sn-week-btn  { padding: 0 7px; font-size: 10px; }
+@media (max-width: 640px) {
+  .sn-font-btns     { display: none; }
+  .sn-theme-label   { display: none; }
+  #site-nav         { padding: 0; }
+  .sn-link          { padding: 0 7px; font-size: 10px; }
+  .sn-week-btn      { padding: 0 7px; font-size: 10px; }
 }
