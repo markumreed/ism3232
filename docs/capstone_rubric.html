@@ -1,9 +1,15 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Detailed scoring criteria for the ISM3232 capstone project">
+<title>ISM3232 Capstone Rubric</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<title>ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries</title><style>
+<style>
+
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
@@ -127,6 +133,89 @@ li::marker{color:var(--dim);}
 .page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10px;color:var(--dim);
   letter-spacing:.08em;text-align:center;}
+
+/* Rubric-specific */
+.rub-section {
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.rub-head {
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.rub-title { font-size: 17px; font-weight: 700; color: var(--text); }
+.rub-weight {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--blue-dim);
+  color: var(--blue);
+  border: 1px solid rgba(126,184,255,.25);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.rub-body { padding: 0; }
+.rub-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rub-table th {
+  text-align: left;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.rub-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.55;
+}
+.rub-table tr:last-child td { border-bottom: none; }
+.rub-table td:first-child {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  width: 80px;
+}
+.rub-pts-full { color: var(--green); }
+.rub-pts-part { color: var(--amber); }
+.rub-pts-none { color: var(--red); }
+.rub-req { color: var(--muted); font-size: 13px; }
+.rub-req strong { color: var(--text); }
+.exemplar {
+  background: var(--green-dim);
+  border-left: 3px solid var(--green);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.exemplar strong { color: var(--green); font-family: var(--mono); font-size: 10px;
+  letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:3px; }
+.concern {
+  background: var(--amber-dim);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.concern strong { color: var(--amber); font-family: var(--mono); font-size: 10px;
+  letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:3px; }
 </style>
 <style id="ism-site-css">
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -448,162 +537,9 @@ li::marker{color:var(--dim);}
 }
 
 </style>
-<meta name="description" content="ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries — ISM3232 Business Application Development course material.">
-</head><body><div class="nav">
-  <span class="nav-course">ISM3232</span>
-  <span class="nav-title">Unit 2 — Python Foundations</span>
-  <span class="nav-week">Week 6 of 16</span>
-</div>
-<div class="wk-header">
-  <div class="wk-num">Week 06</div>
-  <h1 class="wk-title">Conditionals, Loops &amp; Dictionaries</h1>
-  <p class="wk-deck">Implement multi-tier business rules and model collections of records using lists and dictionaries.</p>
-  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">if · for · dict</span><span class="chip ">Business logic</span></div>
-</div><div style="background:var(--blue-dim);border:1px solid var(--border);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will be able to write multi-tier business rules with <code>if/elif/else</code>, implement the accumulator pattern correctly, and model a collection of business records as a list of dicts.</p>
-</div>
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
-  The <a href="week06_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>Conditionals — business rules as code</h2><div class="concept"><div class="concept-label">Business rules are conditionals</div><p>Every approval threshold, every routing rule, every eligibility check is an if/elif/else statement. The code structure mirrors the business policy.</p></div><div class="code-label">Multi-tier approval routing</div><pre><code>LIMIT_AUTO     =  500.00
-LIMIT_MANAGER  = 2000.00
-LIMIT_DIRECTOR = 5000.00
-
-def get_approver(amount: float) -&gt; str:
-    if amount &lt;= LIMIT_AUTO:
-        return &#x27;Auto-approved&#x27;
-    elif amount &lt;= LIMIT_MANAGER:
-        return &#x27;Manager&#x27;
-    elif amount &lt;= LIMIT_DIRECTOR:
-        return &#x27;Director&#x27;
-    else:
-        return &#x27;Board&#x27;
-
-# Test every boundary
-for amt in [500, 501, 2000, 2001, 5000, 5001]:
-    print(f&#x27;${amt:&gt;6,.2f}  →  {get_approver(amt)}&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ Test boundary values</div><p>Testing with 100 and 1000 is not enough. Test exactly at the threshold (500) and one unit above (501). The boundary is where bugs hide.</p></div><h2>Lists and the accumulator pattern</h2><div class="code-label">List operations and the accumulator</div><pre><code>amounts = [200.00, 1500.00, 400.00, 2200.00, 850.00]
-
-# The accumulator pattern — initialise BEFORE the loop
-total   = 0.0    # ← OUTSIDE the loop
-flagged = []     # ← OUTSIDE the loop
-
-for amount in amounts:
-    total += amount              # add to running total
-    if amount &gt; 1000:
-        flagged.append(amount)   # collect matching items
-
-print(f&#x27;Total:   ${total:,.2f}&#x27;)       # $5,150.00
-print(f&#x27;Flagged: {flagged}&#x27;)            # [1500.0, 2200.0]</code></pre><div class="warn"><div class="concept-label">⚠ Initialise outside the loop</div>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ Accumulator inside the loop — resets every iteration</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ total always equals only the LAST amount</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-for amount in amounts:
-    total = 0          # resets to 0 on every pass
-    total += amount    # = 200, then 1500, then 400
-print(total)           # 400 — wrong</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ Initialise before the loop — once</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-total = 0              # once, before the loop
-for amount in amounts:
-    total += amount    # += 200, +=1500, +=400
-print(total)           # 2100 — correct</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">The accumulator lives <em>outside</em> the loop. Inside the loop you only update it.</p>
-</div><p>If you write <code>total = 0</code> inside the loop body, it resets to zero on every iteration. The accumulator must be created before the loop starts.</p></div><h2>Dictionaries — one record per dict, many records per list</h2><div class="code-label">Dict operations and the list-of-dicts pattern</div><pre><code># One record = one dict
-request = {
-    &#x27;id&#x27;:        101,
-    &#x27;requester&#x27;: &#x27;Taylor&#x27;,
-    &#x27;category&#x27;:  &#x27;Equipment&#x27;,
-    &#x27;amount&#x27;:    1250.00,
-    &#x27;status&#x27;:    &#x27;Pending&#x27;,
-}
-
-print(request[&#x27;requester&#x27;])  # Taylor
-request[&#x27;status&#x27;] = &#x27;Approved&#x27;  # update a field
-
-# Many records = list of dicts (one dict = one row)
-records = [
-    {&#x27;id&#x27;: 101, &#x27;requester&#x27;: &#x27;Taylor&#x27;,  &#x27;amount&#x27;: 1250.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 102, &#x27;requester&#x27;: &#x27;Jordan&#x27;,  &#x27;amount&#x27;:  350.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 103, &#x27;requester&#x27;: &#x27;Morgan&#x27;,  &#x27;amount&#x27;: 2800.00, &#x27;status&#x27;: &#x27;Approved&#x27;},
-]
-
-# Filter: all Pending records
-pending = [r for r in records if r[&#x27;status&#x27;] == &#x27;Pending&#x27;]
-print(f&#x27;Pending: {len(pending)} records&#x27;)
-
-# Total pending amount
-total = sum(r[&#x27;amount&#x27;] for r in pending)
-print(f&#x27;Total pending: ${total:,.2f}&#x27;)</code></pre>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ == comparison instead of = assignment</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ Nothing changes — this is a comparison, not an update</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] == &#x27;Approved&#x27;  # evaluates True/False, then discards
-print(record[&#x27;status&#x27;])          # still &#x27;Pending&#x27;</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ = for assignment</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] = &#x27;Approved&#x27;   # updates the dict
-print(record[&#x27;status&#x27;])           # &#x27;Approved&#x27;</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">Single <code>=</code> assigns. Double <code>==</code> compares. They look similar but do completely different things.</p>
-</div><div class="concept"><div class="concept-label">The list-of-dicts table</div><p>One dict = one row. A list of dicts = the table. The dict keys are the column names. In Week 14 we replace this list with a real SQLite database — the structure and the operations are identical.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">if / elif / else</span><span class="term-def">Branching statement — runs different code depending on which condition is True.</span></div><div class="term"><span class="term-word">for loop</span><span class="term-def">Iterates over every item in a sequence, executing the loop body once per item.</span></div><div class="term"><span class="term-word">accumulator pattern</span><span class="term-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list.</span></div><div class="term"><span class="term-word">append()</span><span class="term-def">Adds one item to the end of a list.</span></div><div class="term"><span class="term-word">dict key access</span><span class="term-def">record[&#x27;key&#x27;] — retrieves the value for that key.</span></div><div class="term"><span class="term-word">list-of-dicts</span><span class="term-def">One dict per record; the list holds all records. One dict = one row, list = the table.</span></div><h2>Why conditionals are the foundation of business logic</h2>
-<p>Every rule a business follows — "orders over $500 need manager approval," 
-"employees with fewer than 90 days tenure cannot take vacation," 
-"purchases from restricted vendors require two signatures" — 
-is an <code>if</code> statement waiting to be written. 
-The person who can translate a business policy document into working, tested conditionals 
-is doing the actual job of a business application developer.</p>
-<p>Notice how the real business rule already tells you what to write:</p>
-<div class="code-label">From policy to code — direct translation</div>
-<pre><code># Policy: "Requests over $1,000 require manager approval.
-#          Requests over $5,000 require director approval."
-
-MANAGER_LIMIT  = 1_000.00
-DIRECTOR_LIMIT = 5_000.00
-
-def get_approver(amount: float) -> str:
-    if amount <= MANAGER_LIMIT:    # not over $1,000 → auto
-        return 'Auto'
-    elif amount <= DIRECTOR_LIMIT:  # over $1,000 but not over $5,000
-        return 'Manager'
-    else:                           # over $5,000
-        return 'Director'</code></pre>
-<p>The <code>elif</code> chain is ordered from least to most expensive.
-Each condition only needs to handle its range because the earlier conditions 
-already ruled out smaller amounts. 
-This ordering is intentional and important — reversing it breaks the logic silently.</p>
-<h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week05_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span></a><span></span><a href="week07_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Conditionals, Loops &amp; Dictionaries</div>
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main"><div style="margin-bottom:32px;"><p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Unit 4 · Weeks 13–16</p><h1 style="font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;">Capstone Rubric</h1><p>Detailed scoring criteria for all five graded components of the capstone project. Read this in Week 13 when you receive your proposal form. Check each component against your work before the final submission.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;"><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--blue-dim);color:var(--blue);border:1px solid rgba(126,184,255,.25);">Capstone = 30% of final grade</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);">Weeks 13–16</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);">Live demo required</span></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">1. Proposal &amp; Design Document</span><span class="rub-weight">15 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">15</td><td class="rub-req"><strong>All ten fields present and specific.</strong> Business rules name a threshold and a consequence. Out of Scope has at least two items. OOP classes list attributes with types and all required methods. SQL schema has correct column types (REAL for money, not TEXT). GenAI feature describes what is sent and what is not.<div class="exemplar"><strong>✓ Full marks looks like</strong>Business rule: &#x27;Leave requests exceeding 10 days require director approval.&#x27; Schema: amount REAL NOT NULL. GenAI: &#x27;Only category and description sent — no employee name or ID.&#x27;</div><div class="concern"><strong>⚠ Common issue</strong>Business rule: &#x27;Validate the data.&#x27; Schema: amount TEXT. GenAI: &#x27;AI summarises the request.&#x27; — these fail the specificity test.</div></td></tr><tr><td class="rub-pts-part">10</td><td class="rub-req"><strong>Most fields complete but one or two are vague or missing.</strong> One business rule is non-testable ('validate input'). Schema uses TEXT for money. Out of Scope is absent.</td></tr><tr><td class="rub-pts-part">5</td><td class="rub-req"><strong>Proposal submitted but significantly incomplete.</strong> Fewer than seven fields. Business rules absent or entirely vague.</td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>Not submitted, or submitted without instructor sign-off before Week 14 coding began.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">2. OOP Design (models.py)</span><span class="rub-weight">25 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">25</td><td class="rub-req"><strong>Two classes present: an entity class and a manager class.</strong> Entity has __init__ with default status, at least three methods returning values, and __repr__. Manager has self.requests = [] inside __init__ (not class-level). All five required manager methods implemented. All six test types present and passing. design.md committed before models.py (verifiable via git log).<div class="exemplar"><strong>✓ Full marks looks like</strong>22 tests passing. Instance independence test present. Boundary test at exact limit. Manager list is instance-level confirmed by two-manager independence test.</div><div class="concern"><strong>⚠ Common issue</strong>Class-level list (requests = [] outside __init__). Methods use print() instead of return. design.md committed after models.py. Fewer than six test types.</div></td></tr><tr><td class="rub-pts-part">18</td><td class="rub-req"><strong>Both classes present and mostly correct.</strong> Missing one required method, or fewer than six test types, or design.md timing issue.</td></tr><tr><td class="rub-pts-part">12</td><td class="rub-req"><strong>One class implemented, second class missing or non-functional.</strong> Tests present but incomplete.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>Attempt made but major structural errors.</strong> Class-level list, no tests, or missing __init__.</td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>models.py absent or contains no working class definition.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">3. Database Layer (database.py)</span><span class="rub-weight">20 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">20</td><td class="rub-req"><strong>All five required functions present and working.</strong> Every SQL statement uses ? placeholders — no f-strings in any conn.execute() call. row_factory = sqlite3.Row used in get_all_records(). All database tests use tmp_path. Tests pass without touching the development database.<div class="exemplar"><strong>✓ Full marks looks like</strong>get_all_records() returns list of dicts. Five database tests all using tmp_path and passing independently.</div><div class="concern"><strong>⚠ Common issue</strong>f-string in SQL (even one instance). Missing row_factory. Tests that write to the real DB_FILE. Missing update_status or get_status_report.</div></td></tr><tr><td class="rub-pts-part">14</td><td class="rub-req"><strong>Four of five functions working.</strong> Minor issue: one function missing, or row_factory absent, or one test not using tmp_path.</td></tr><tr><td class="rub-pts-part">8</td><td class="rub-req"><strong>Three functions working.</strong> SQL placeholder issue present, or tests absent entirely.</td></tr><tr><td class="rub-pts-part">4</td><td class="rub-req"><strong>Database file exists but functions are incomplete or non-functional.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>No database.py, or all functions raise errors.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">4. Streamlit Interface (app.py)</span><span class="rub-weight">25 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">25</td><td class="rub-req"><strong>All five features working against live data.</strong> create_table() called at top before any widget. Submit validates name and amount > 0. Filter applied in Python before st.dataframe(). Update Status selectbox built from get_all_records() — not hardcoded IDs. Report shows status count and total. App runs with streamlit run app.py from the project root.<div class="exemplar"><strong>✓ Full marks looks like</strong>Five tabs visible and functional. Submitting a record immediately visible in View All. Filter count label updates. Status update triggers st.rerun().</div><div class="concern"><strong>⚠ Common issue</strong>create_table() inside a tab. Hardcoded IDs in Update tab. Filter not applied (all records shown regardless of selectbox). App crashes on startup.</div></td></tr><tr><td class="rub-pts-part">18</td><td class="rub-req"><strong>Four features working.</strong> One tab non-functional or missing. Minor UX issue (no empty state, no count label).</td></tr><tr><td class="rub-pts-part">12</td><td class="rub-req"><strong>Three features working.</strong> Two tabs absent or broken.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>App runs but fewer than three features functional.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>App does not run, or no Streamlit code present.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">5. GenAI Feature (ai_feature.py)</span><span class="rub-weight">15 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">15</td><td class="rub-req"><strong>All six controls implemented and demonstrable.</strong> (1) Disclosure label visible in UI. (2) Second button required before saving. (3) No names, IDs, or amounts in the API prompt — only category + description. (4) All AI tests use unittest.mock.patch — pass without API key. (5) At least two specific limitations in README. (6) Student walks through every line during presentation.<div class="exemplar"><strong>✓ Full marks looks like</strong>Two buttons visible in UI. Prompt contains only category and description. pytest passes with no ANTHROPIC_API_KEY set. README limitations are specific (&#x27;may be inaccurate for technical equipment descriptions&#x27;), not generic (&#x27;AI can make mistakes&#x27;).</div><div class="concern"><strong>⚠ Common issue</strong>Auto-saving AI output without a second button (Control 2). Sending requester name in prompt (Control 3). AI tests calling the real API (Control 4). Generic limitations (&#x27;AI is not perfect&#x27;) in README (Control 5).</div></td></tr><tr><td class="rub-pts-part">10</td><td class="rub-req"><strong>Feature works but one or two controls missing.</strong> Most common: no second button (auto-save), or AI tests not mocked.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>AI function exists and calls the API but three or more controls absent.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>No AI feature, or all six controls absent, or tests call the real API.</strong></td></tr></tbody></table></div></div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px;"><div style="padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Score Summary</div><table style="width:100%;border-collapse:collapse;font-size:13px;"><tbody><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Proposal &amp; Design Document</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">15 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">OOP Design (models.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">25 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Database Layer (database.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">20 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Streamlit Interface (app.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">25 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">GenAI Feature (ai_feature.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">15 pts</td></tr><tr style="background:var(--bg3);"><td style="padding:10px 20px;font-weight:700;color:var(--text);">Total</td><td style="padding:10px 20px;font-family:var(--mono);font-weight:700;color:var(--blue);text-align:right;">100 pts</td></tr></tbody></table></div><div class="page-footer">ISM3232 · Capstone Rubric · Unit 4</div></div>
 <script id="ism-site-js">
 /* ═══════════════════════════════════════════════════════════════════════════
    ISM3232 Site-wide JS — nav, theme toggle, font size, dropdown, state
@@ -898,4 +834,5 @@ This ordering is intentional and important — reversing it breaks the logic sil
 })();
 
 </script>
-</body></html>
+</body>
+</html>

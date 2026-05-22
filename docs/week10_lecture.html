@@ -151,7 +151,337 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
-</style></head><body><div class="wrapper"><div class="page-header"><p class="eyebrow">ISM3232 &middot; Week 10 Lecture Material</p><h1>Week 10 &mdash; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</h1><p class="subtitle">Students build their first business class with __init__, instance attributes, business logic methods, and pytest tests.</p><div class="meta-pills"><span class="meta-pill">Week 10 of 17</span><span class="meta-pill">Unit 3: OOP System Design</span><span class="meta-pill">Module 6 (Wk 1 of 3)</span><span class="meta-pill">~80 min</span><span class="meta-pill">No AI-generated classes without student explanation</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;15 min</div><div class="t-label">What is a class? Mental model</div></div><div class="timing-block green"><div class="t-time">15&ndash;40 min</div><div class="t-label">Write BusinessRequest live</div></div><div class="timing-block amber"><div class="t-time">40&ndash;55 min</div><div class="t-label">Create instances + call methods</div></div><div class="timing-block purple"><div class="t-time">55&ndash;70 min</div><div class="t-label">Encapsulation concept</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F3D7;</div><div><div class="callout-label">Unit 3 begins &mdash; Object-Oriented System Design</div><div class="callout-body">OOP is the bridge between the Python fundamentals of Units 1&ndash;2 and the full-stack capstone of Unit 4. Students who understand classes and objects will be able to design their capstone data models. Students who do not will struggle with every layer on top of them.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Is a Class? What Is an Object?</div><div class="line"></div></div><div class="card"><div class="card-title">The core mental model</div><p>A <strong>class</strong> is a blueprint. An <strong>object</strong> is a specific thing built from that blueprint. A <code>BusinessRequest</code> class describes what every request has (attributes) and what every request can do (methods). Each individual request &mdash; request #101, request #102 &mdash; is a separate <em>instance</em> of that class.</p><p>Think of it this way: "BusinessRequest" is the concept. <code>req_101</code> is an actual request with actual data. The class defines the shape; objects are the data.</p></div><div class="two-col"><div class="card"><div class="card-title">Class = blueprint</div><p>Defines attributes every instance will have. Defines methods every instance can call. Written once. Used to create as many instances as needed.</p></div><div class="card"><div class="card-title">Object / Instance = a specific thing</div><p>Created by calling the class like a function. Has its own copies of every attribute. Can call any method defined in the class.</p></div></div><table class="concept-table"><thead><tr><th>Term</th><th>Meaning</th><th>Business analogy</th></tr></thead><tbody><tr><td>class</td><td>The blueprint / template</td><td>The Purchase Request form template</td></tr><tr><td>object / instance</td><td>A specific thing made from the blueprint</td><td>A filled-out request form for Laptop, $450</td></tr><tr><td>__init__</td><td>The constructor &mdash; runs when an instance is created</td><td>Filling in the blank fields when you create a new request</td></tr><tr><td>attribute (instance variable)</td><td>Data stored on a specific object</td><td>requester="Taylor", amount=1200, status="Pending"</td></tr><tr><td>method</td><td>A function defined inside a class</td><td>approve(), reject(), requires_review()</td></tr><tr><td>self</td><td>Reference to the specific instance being operated on</td><td>The form itself, not the template</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Writing the BusinessRequest Class</div><div class="line"></div></div><div class="cb"><div class="cb-label">BusinessRequest &mdash; write together line by line</div><pre><span class="kw">class</span> <span class="fn">BusinessRequest</span>:
+</style>
+<style id="ism-site-css">
+/* ═══════════════════════════════════════════════════════════════════════════
+   ISM3232 Site-wide CSS
+   Injected into every content page (not slides).
+   Provides: nav bar, dark/light toggle, skip link, accessibility, focus styles.
+   Appended after the page's own <style> block so it wins specificity.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Skip link (accessibility) ────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  background: #1e40af;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top .15s;
+}
+.skip-link:focus { top: 0; }
+
+/* ── Site nav ─────────────────────────────────────────────────────────────── */
+#site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--sn-border);
+  background: var(--sn-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: 'DM Mono', 'Fira Mono', 'Courier New', monospace;
+}
+
+/* Nav colours — defined on :root so dark/light toggle works */
+:root {
+  --sn-bg:       rgba(245,244,240,0.92);
+  --sn-border:   rgba(0,0,0,0.10);
+  --sn-text:     #222;
+  --sn-muted:    #666;
+  --sn-hover-bg: rgba(0,0,0,0.06);
+  --sn-active:   #1e40af;
+  --sn-toggle-bg:#e0e0e0;
+  --sn-toggle-knob:#fff;
+  --sn-focus:    #1e40af;
+}
+[data-theme="dark"] {
+  --sn-bg:       rgba(14,14,20,0.92);
+  --sn-border:   rgba(255,255,255,0.08);
+  --sn-text:     #e2e2ec;
+  --sn-muted:    #7a7a95;
+  --sn-hover-bg: rgba(255,255,255,0.07);
+  --sn-active:   #818cf8;
+  --sn-toggle-bg:#3a3a50;
+  --sn-toggle-knob:#e2e2ec;
+  --sn-focus:    #818cf8;
+}
+
+/* Nav logo */
+.sn-logo {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sn-text);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.sn-logo:hover { background: var(--sn-hover-bg); }
+
+/* Nav divider */
+.sn-div {
+  width: 1px;
+  height: 20px;
+  background: var(--sn-border);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+/* Nav link group — scrollable on small screens */
+.sn-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sn-links::-webkit-scrollbar { display: none; }
+
+/* Unit group label */
+.sn-unit {
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--sn-muted);
+  padding: 0 8px 0 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Nav link */
+.sn-link {
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--sn-muted);
+  text-decoration: none;
+  padding: 0 10px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  position: relative;
+}
+.sn-link:hover {
+  color: var(--sn-text);
+  background: var(--sn-hover-bg);
+}
+.sn-link.active {
+  color: var(--sn-active);
+  border-bottom-color: var(--sn-active);
+  font-weight: 600;
+}
+
+/* Week dropdown trigger */
+.sn-week-group { position: relative; }
+.sn-week-btn {
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--sn-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 10px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-bottom: 2px solid transparent;
+  font-family: inherit;
+  transition: color .15s, background .15s;
+}
+.sn-week-btn:hover { color: var(--sn-text); background: var(--sn-hover-bg); }
+.sn-week-btn.active { color: var(--sn-active); border-bottom-color: var(--sn-active); }
+.sn-week-btn svg { width: 10px; height: 10px; opacity: .5; transition: transform .2s; }
+.sn-week-group.open .sn-week-btn svg { transform: rotate(180deg); }
+
+/* Week dropdown panel */
+.sn-week-dropdown {
+  display: none;
+  position: absolute;
+  top: 52px;
+  left: 0;
+  min-width: 220px;
+  background: var(--sn-bg);
+  border: 1px solid var(--sn-border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  padding: 6px 0;
+  z-index: 600;
+}
+.sn-week-group.open .sn-week-dropdown { display: block; }
+.sn-dd-item {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-size: 11px;
+  color: var(--sn-muted);
+  text-decoration: none;
+  transition: background .12s, color .12s;
+}
+.sn-dd-item:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
+.sn-dd-item.active { color: var(--sn-active); font-weight: 600; }
+.sn-dd-num { font-weight: 700; color: var(--sn-text); font-size: 10px; }
+.sn-dd-sep {
+  height: 1px;
+  background: var(--sn-border);
+  margin: 4px 12px;
+}
+
+/* Right side of nav */
+.sn-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+/* Theme toggle */
+.sn-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--sn-muted);
+  font-size: 11px;
+  font-family: inherit;
+  letter-spacing: .04em;
+  transition: background .15s, color .15s;
+}
+.sn-theme-toggle:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
+.sn-theme-toggle:focus-visible {
+  outline: 2px solid var(--sn-focus);
+  outline-offset: 2px;
+}
+
+/* Toggle pill */
+.sn-pill {
+  width: 34px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--sn-toggle-bg);
+  position: relative;
+  transition: background .25s;
+  flex-shrink: 0;
+}
+.sn-pill::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--sn-toggle-knob);
+  transition: transform .25s, background .25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+[data-theme="dark"] .sn-pill { background: #4c4c70; }
+[data-theme="dark"] .sn-pill::after { transform: translateX(16px); }
+
+/* ── Focus styles — keyboard navigation ───────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--sn-focus);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ── Font size control ────────────────────────────────────────────────────── */
+.sn-font-btns {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.sn-font-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  border: 1px solid var(--sn-border);
+  background: none;
+  color: var(--sn-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, color .12s;
+}
+.sn-font-btn:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
+
+/* ── Dark mode overrides for reading pages (dark-only pages) ──────────────── */
+/* Reading pages have hardcoded dark colours — swap on light mode */
+[data-theme="light"] body {
+  --bg:    #f5f4f0;
+  --bg2:   #ffffff;
+  --bg3:   #f0eef0;
+  --border:rgba(0,0,0,.08);
+  --border2:rgba(0,0,0,.14);
+  --text:  #1a1a1a;
+  --muted: #555555;
+  --dim:   #999;
+  --blue:  #1e40af;
+  --blue-dim:rgba(30,64,175,.10);
+  --blue-glow:rgba(30,64,175,.20);
+  --green: #166534;
+  --green-dim:rgba(22,101,52,.10);
+  --amber: #92400e;
+  --amber-dim:rgba(146,64,14,.10);
+  --red:   #991b1b;
+  --red-dim:rgba(153,27,27,.10);
+  --purple:#4c1d95;
+  --purple-dim:rgba(76,29,149,.10);
+}
+
+/* ── Responsive nav ───────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .sn-unit { display: none; }
+  .sn-font-btns { display: none; }
+  #site-nav { padding: 0 12px; }
+}
+
+</style>
+<meta name="description" content="ISM3232 W10 — ISM3232 Business Application Development course material.">
+</head><body><div class="wrapper" role="main">
+<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
+  <span style="opacity:.6;">&#x1F4CB;</span>
+  <span><strong style="color:var(--text);">In-class page.</strong>
+  Read the <a href="week10_reading.html" style="color:var(--muted);">Week 10 reading</a>
+  first if you haven't. Follow along during the live session.</span>
+</div><div class="page-header"><p class="eyebrow">ISM3232 &middot; Week 10 Lecture Material</p><h1>Week 10 &mdash; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</h1><p class="subtitle">Students build their first business class with __init__, instance attributes, business logic methods, and pytest tests.</p><div class="meta-pills"><span class="meta-pill">Week 10 of 17</span><span class="meta-pill">Unit 3: OOP System Design</span><span class="meta-pill">Module 6 (Wk 1 of 3)</span><span class="meta-pill">~80 min</span><span class="meta-pill">No AI-generated classes without student explanation</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;15 min</div><div class="t-label">What is a class? Mental model</div></div><div class="timing-block green"><div class="t-time">15&ndash;40 min</div><div class="t-label">Write BusinessRequest live</div></div><div class="timing-block amber"><div class="t-time">40&ndash;55 min</div><div class="t-label">Create instances + call methods</div></div><div class="timing-block purple"><div class="t-time">55&ndash;70 min</div><div class="t-label">Encapsulation concept</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F3D7;</div><div><div class="callout-label">Unit 3 begins &mdash; Object-Oriented System Design</div><div class="callout-body">OOP is the bridge between the Python fundamentals of Units 1&ndash;2 and the full-stack capstone of Unit 4. Students who understand classes and objects will be able to design their capstone data models. Students who do not will struggle with every layer on top of them.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Is a Class? What Is an Object?</div><div class="line"></div></div><div class="card"><div class="card-title">The core mental model</div><p>A <strong>class</strong> is a blueprint. An <strong>object</strong> is a specific thing built from that blueprint. A <code>BusinessRequest</code> class describes what every request has (attributes) and what every request can do (methods). Each individual request &mdash; request #101, request #102 &mdash; is a separate <em>instance</em> of that class.</p><p>Think of it this way: "BusinessRequest" is the concept. <code>req_101</code> is an actual request with actual data. The class defines the shape; objects are the data.</p></div><div class="two-col"><div class="card"><div class="card-title">Class = blueprint</div><p>Defines attributes every instance will have. Defines methods every instance can call. Written once. Used to create as many instances as needed.</p></div><div class="card"><div class="card-title">Object / Instance = a specific thing</div><p>Created by calling the class like a function. Has its own copies of every attribute. Can call any method defined in the class.</p></div></div><table class="concept-table"><thead><tr><th>Term</th><th>Meaning</th><th>Business analogy</th></tr></thead><tbody><tr><td>class</td><td>The blueprint / template</td><td>The Purchase Request form template</td></tr><tr><td>object / instance</td><td>A specific thing made from the blueprint</td><td>A filled-out request form for Laptop, $450</td></tr><tr><td>__init__</td><td>The constructor &mdash; runs when an instance is created</td><td>Filling in the blank fields when you create a new request</td></tr><tr><td>attribute (instance variable)</td><td>Data stored on a specific object</td><td>requester="Taylor", amount=1200, status="Pending"</td></tr><tr><td>method</td><td>A function defined inside a class</td><td>approve(), reject(), requires_review()</td></tr><tr><td>self</td><td>Reference to the specific instance being operated on</td><td>The form itself, not the template</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Writing the BusinessRequest Class</div><div class="line"></div></div><div class="cb"><div class="cb-label">BusinessRequest &mdash; write together line by line</div><pre><span class="kw">class</span> <span class="fn">BusinessRequest</span>:
     <span class="st">&quot;&quot;&quot;Represents a single business purchase or travel request.&quot;&quot;&quot;</span>
 
     <span class="kw">def</span> <span class="fn">__init__</span>(self, request_id, requester, category, amount):
@@ -192,4 +522,301 @@ print(req_102.status)             <span class="cm"># Pending &mdash; unchanged</
 
 <span class="cm"># Instances are independent &mdash; changing one does not affect the other</span>
 print(req_101)   <span class="cm"># BusinessRequest(101, Taylor, $1200, Approved)</span>
-print(req_102)   <span class="cm"># BusinessRequest(102, Jordan, $450, Pending)</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Encapsulation</div><div class="line"></div></div><div class="card"><div class="card-title">Encapsulation: data and behaviour belong together</div><p>Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The <code>BusinessRequest</code> class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic &mdash; it just calls the method.</p><p>This is better design than checking <code>req["amount"] &gt; 1000</code> everywhere. If the threshold changes, you update it in one place inside the class.</p></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion: what goes inside a class?</div><div class="p-text">What other methods might a BusinessRequest class need? Think about what a business process actually does to requests &mdash; routing, escalation, history tracking, notifications.</div><div class="p-hint">Look for: summary(), escalate(), add_note(), get_age_in_days(). Students start thinking about design, not just syntax.</div></div></div><div class="assignment"><div class="a-header">Assignment 10 &middot; Due end of Week 10 &middot; OOP I</div><h3>BusinessRequest Class</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> containing the <code>BusinessRequest</code> class with <code>__init__</code>, at least 3 methods, and <code>__repr__</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; creates at least 3 instances, calls each method, and prints results showing the methods work correctly.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 4 pytest tests covering the class methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div><div class="page-footer">ISM3232 &middot; Week 10 &middot; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</div></div></body></html>
+print(req_102)   <span class="cm"># BusinessRequest(102, Jordan, $450, Pending)</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Encapsulation</div><div class="line"></div></div><div class="card"><div class="card-title">Encapsulation: data and behaviour belong together</div><p>Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The <code>BusinessRequest</code> class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic &mdash; it just calls the method.</p><p>This is better design than checking <code>req["amount"] &gt; 1000</code> everywhere. If the threshold changes, you update it in one place inside the class.</p></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion: what goes inside a class?</div><div class="p-text">What other methods might a BusinessRequest class need? Think about what a business process actually does to requests &mdash; routing, escalation, history tracking, notifications.</div><div class="p-hint">Look for: summary(), escalate(), add_note(), get_age_in_days(). Students start thinking about design, not just syntax.</div></div></div><div class="assignment"><div class="a-header">Assignment 10 &middot; Due end of Week 10 &middot; OOP I</div><h3>BusinessRequest Class</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> containing the <code>BusinessRequest</code> class with <code>__init__</code>, at least 3 methods, and <code>__repr__</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; creates at least 3 instances, calls each method, and prints results showing the methods work correctly.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 4 pytest tests covering the class methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &middot; Week 10 &middot; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</div></div>
+<script id="ism-site-js">
+/* ═══════════════════════════════════════════════════════════════════════════
+   ISM3232 Site-wide JS — nav, theme toggle, font size, dropdown, state
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+(function () {
+  'use strict';
+
+  /* ── 1. Theme ──────────────────────────────────────────────────────────── */
+  const THEME_KEY = 'ism3232-theme';
+  const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function getTheme() {
+    return localStorage.getItem(THEME_KEY) ||
+           (prefersDark() ? 'dark' : 'light');
+  }
+
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(THEME_KEY, t);
+    const btn = document.getElementById('sn-theme-btn');
+    if (btn) {
+      btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+      const label = btn.querySelector('.sn-theme-label');
+      if (label) label.textContent = t === 'dark' ? 'Light' : 'Dark';
+    }
+  }
+
+  /* Apply immediately (before paint) to avoid flash */
+  applyTheme(getTheme());
+
+  /* ── 2. Font size ──────────────────────────────────────────────────────── */
+  const FONT_KEY = 'ism3232-fontsize';
+  const FONT_SIZES = [14, 16, 18, 20];
+  let fontIdx = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
+
+  function applyFont(idx) {
+    fontIdx = Math.max(0, Math.min(FONT_SIZES.length - 1, idx));
+    document.documentElement.style.fontSize = FONT_SIZES[fontIdx] + 'px';
+    localStorage.setItem(FONT_KEY, fontIdx);
+  }
+
+  applyFont(fontIdx);
+
+  /* ── 3. Build nav ──────────────────────────────────────────────────────── */
+  const WEEKS = [
+    [1,  'Developer Mindset & Setup',          1],
+    [2,  'zsh Navigation & File Ops',           1],
+    [3,  'Virtual Environments & .zshrc',       1],
+    [4,  'Search Tools, Ritual & Git',          1],
+    [5,  'Variables, Data Types & Operators',   2],
+    [6,  'Conditionals, Loops & Dicts',         2],
+    [7,  'Functions, Modules & pytest',         2],
+    [8,  'Debugging, AI Literacy & Review',     2],
+    [9,  'Midterm',                             2],
+    [10, 'OOP I — Classes & Objects',           3],
+    [11, 'OOP II — Composition & Inheritance',  3],
+    [12, 'OOP III — Design & Practice',         3],
+    [13, 'Capstone Design & SQL',               4],
+    [14, 'Python + SQL Integration',            4],
+    [15, 'Streamlit Interface',                 4],
+    [16, 'GenAI Feature & Final Demo',          4],
+  ];
+
+  const UNIT_LABELS = {1:'Unit 1', 2:'Unit 2', 3:'Unit 3', 4:'Unit 4'};
+  const UNIT_COLORS = {1:'#00c9a7', 2:'#818cf8', 3:'#fb7185', 4:'#fbbf24'};
+
+  /* Detect current page */
+  const path = window.location.pathname;
+  const fname = path.split('/').pop().replace('.html','');
+
+  /* Which week is this? */
+  const wkMatch = fname.match(/week(\d+)/);
+  const currentWeek = wkMatch ? parseInt(wkMatch[1], 10) : 0;
+
+  /* Which type? */
+  const isReading  = fname.includes('reading');
+  const isLecture  = fname.includes('lecture');
+  const isLab      = fname.includes('lab');
+  const isSlides   = fname.includes('_slides') && !fname.includes('script');
+  const isOverview = fname.includes('overview');
+  const isCheat    = fname.includes('cheatsheet');
+  const isPre      = fname.includes('precourse');
+  const isMap      = fname.includes('course_map');
+  const isIndex    = fname === '' || fname === 'index';
+
+  /* Root path relative to current file */
+  const inDocs = path.includes('/docs/');
+  const root   = inDocs ? '../' : './';
+  const docs   = inDocs ? './'  : './docs/';
+
+  function wkLink(wn, suffix, label, extraClass='') {
+    const href = `${docs}week${String(wn).padStart(2,'0')}_${suffix}.html`;
+    const active = (currentWeek === wn && fname.includes(suffix)) ? ' active' : '';
+    return `<a class="sn-dd-item${active}${extraClass ? ' '+extraClass : ''}" href="${href}">
+      <span class="sn-dd-num">W${wn} ${label}</span>
+      <span>${WEEKS.find(w=>w[0]===wn)?.[1]||''}</span>
+    </a>`;
+  }
+
+  /* Build week dropdown for each unit */
+  function buildUnitDD(unitNum) {
+    const wks = WEEKS.filter(w => w[2] === unitNum);
+    let html = '';
+    wks.forEach(([wn]) => {
+      html += `<div style="padding:4px 16px 2px;font-size:9px;letter-spacing:.1em;
+        text-transform:uppercase;color:${UNIT_COLORS[unitNum]};opacity:.8;">W${wn}</div>`;
+      html += wkLink(wn, 'reading',  '· Reading');
+      html += wkLink(wn, 'lecture',  '· Lecture');
+      if (wn !== 9) html += wkLink(wn, 'lab', '· Lab');
+      html += wkLink(wn, 'slides',   '· Slides');
+      html += `<div class="sn-dd-sep"></div>`;
+    });
+    return html;
+  }
+
+  /* Active check helpers */
+  function a(cond) { return cond ? ' active' : ''; }
+  const inUnit = (u) => WEEKS.filter(w=>w[2]===u).some(w=>w[0]===currentWeek);
+
+  const nav = document.createElement('nav');
+  nav.id = 'site-nav';
+  nav.setAttribute('aria-label', 'Site navigation');
+  nav.innerHTML = `
+    <a class="sn-logo" href="${root}index.html" aria-label="ISM3232 Home">ISM3232</a>
+    <div class="sn-div" aria-hidden="true"></div>
+
+    <div class="sn-links" role="menubar">
+
+      <a class="sn-link${a(isMap||isPre)}" href="${docs}course_map.html">Map</a>
+      <a class="sn-link${a(isPre)}"        href="${docs}precourse.html">Pre-Course</a>
+
+      <div class="sn-div" aria-hidden="true"></div>
+
+      <!-- Unit 1 -->
+      <div class="sn-week-group" id="dd-u1">
+        <button class="sn-week-btn${a(inUnit(1))}"
+                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u1-panel"
+                style="${inUnit(1)?'color:'+UNIT_COLORS[1]+';border-bottom-color:'+UNIT_COLORS[1]:''}"
+                onclick="ISM.toggleDD('dd-u1')">
+          <span style="color:${UNIT_COLORS[1]}">U1</span>&nbsp;Foundations
+          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 1l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="sn-week-dropdown" id="dd-u1-panel" role="menu">${buildUnitDD(1)}</div>
+      </div>
+
+      <!-- Unit 2 -->
+      <div class="sn-week-group" id="dd-u2">
+        <button class="sn-week-btn${a(inUnit(2))}"
+                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u2-panel"
+                style="${inUnit(2)?'color:'+UNIT_COLORS[2]+';border-bottom-color:'+UNIT_COLORS[2]:''}"
+                onclick="ISM.toggleDD('dd-u2')">
+          <span style="color:${UNIT_COLORS[2]}">U2</span>&nbsp;Python
+          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 1l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="sn-week-dropdown" id="dd-u2-panel" role="menu">${buildUnitDD(2)}</div>
+      </div>
+
+      <!-- Unit 3 -->
+      <div class="sn-week-group" id="dd-u3">
+        <button class="sn-week-btn${a(inUnit(3))}"
+                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u3-panel"
+                style="${inUnit(3)?'color:'+UNIT_COLORS[3]+';border-bottom-color:'+UNIT_COLORS[3]:''}"
+                onclick="ISM.toggleDD('dd-u3')">
+          <span style="color:${UNIT_COLORS[3]}">U3</span>&nbsp;OOP
+          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 1l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="sn-week-dropdown" id="dd-u3-panel" role="menu">${buildUnitDD(3)}</div>
+      </div>
+
+      <!-- Unit 4 -->
+      <div class="sn-week-group" id="dd-u4">
+        <button class="sn-week-btn${a(inUnit(4))}"
+                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u4-panel"
+                style="${inUnit(4)?'color:'+UNIT_COLORS[4]+';border-bottom-color:'+UNIT_COLORS[4]:''}"
+                onclick="ISM.toggleDD('dd-u4')">
+          <span style="color:${UNIT_COLORS[4]}">U4</span>&nbsp;Capstone
+          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 1l4 4 4-4"/>
+          </svg>
+        </button>
+        <div class="sn-week-dropdown" id="dd-u4-panel" role="menu">${buildUnitDD(4)}</div>
+      </div>
+
+      <div class="sn-div" aria-hidden="true"></div>
+
+      <a class="sn-link${a(isCheat)}" href="${docs}unit_1_cheatsheet.html">Cheat Sheets</a>
+      <a class="sn-link${a(isOverview)}" href="${docs}unit_all_overview.html">Overviews</a>
+
+      <div class="sn-div" aria-hidden="true"></div>
+
+      <a class="sn-link" href="${docs}glossary.html" style="${fname==='glossary'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Glossary</a>
+      <a class="sn-link" href="${docs}troubleshooting.html" style="${fname==='troubleshooting'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Help</a>
+      <a class="sn-link" href="${docs}capstone_rubric.html">Rubric</a>
+      <a class="sn-link" href="${docs}expectations.html" style="${fname==='expectations'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Expectations</a>
+    </div>
+
+    <!-- Right controls -->
+    <div class="sn-right" aria-label="Display controls">
+      <!-- Font size -->
+      <div class="sn-font-btns" role="group" aria-label="Font size">
+        <button class="sn-font-btn" onclick="ISM.fontDown()" aria-label="Decrease font size" title="Smaller text">A-</button>
+        <button class="sn-font-btn" onclick="ISM.fontUp()"   aria-label="Increase font size" title="Larger text">A+</button>
+      </div>
+      <!-- Theme toggle -->
+      <button class="sn-theme-toggle" id="sn-theme-btn"
+              onclick="ISM.toggleTheme()"
+              aria-label="Switch to dark mode"
+              aria-pressed="false">
+        <span class="sn-pill" aria-hidden="true"></span>
+        <span class="sn-theme-label">Dark</span>
+      </button>
+    </div>
+  `;
+
+  /* Insert nav after body opens — before skip link if present */
+  const skipLink = document.querySelector('.skip-link');
+  if (skipLink) {
+    skipLink.after(nav);
+  } else {
+    /* Add skip link + nav */
+    const skip = document.createElement('a');
+    skip.className = 'skip-link';
+    skip.href = '#main-content';
+    skip.textContent = 'Skip to main content';
+    document.body.prepend(nav);
+    document.body.prepend(skip);
+  }
+
+  /* Tag main content for skip link */
+  const wrapper = document.querySelector('.wrapper, main, article, .main');
+  if (wrapper && !wrapper.id) wrapper.id = 'main-content';
+
+  /* ── 4. Dropdown logic ─────────────────────────────────────────────────── */
+  function toggleDD(id) {
+    const group = document.getElementById(id);
+    const wasOpen = group.classList.contains('open');
+    /* Close all */
+    document.querySelectorAll('.sn-week-group.open').forEach(g => {
+      g.classList.remove('open');
+      g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
+    });
+    if (!wasOpen) {
+      group.classList.add('open');
+      group.querySelector('.sn-week-btn').setAttribute('aria-expanded','true');
+    }
+  }
+
+  /* Close dropdowns on outside click */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.sn-week-group')) {
+      document.querySelectorAll('.sn-week-group.open').forEach(g => {
+        g.classList.remove('open');
+        g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
+      });
+    }
+  });
+
+  /* Keyboard: Escape closes dropdowns */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.sn-week-group.open').forEach(g => {
+        g.classList.remove('open');
+        g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
+        g.querySelector('.sn-week-btn').focus();
+      });
+    }
+  });
+
+  /* ── 5. Public API ─────────────────────────────────────────────────────── */
+  window.ISM = {
+    toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    },
+    fontUp()   { applyFont(fontIdx + 1); },
+    fontDown() { applyFont(fontIdx - 1); },
+    toggleDD,
+  };
+
+  /* Apply saved font on load */
+  applyFont(fontIdx);
+  applyTheme(getTheme());
+
+})();
+
+</script>
+</body></html>

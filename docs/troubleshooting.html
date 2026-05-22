@@ -1,9 +1,15 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Common errors and fixes for ISM3232 — ISM3232 Business Application Development.">
+<title>ISM3232 Troubleshooting</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<title>ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries</title><style>
+<style>
+
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
@@ -127,6 +133,7 @@ li::marker{color:var(--dim);}
 .page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10px;color:var(--dim);
   letter-spacing:.08em;text-align:center;}
+
 </style>
 <style id="ism-site-css">
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -448,162 +455,201 @@ li::marker{color:var(--dim);}
 }
 
 </style>
-<meta name="description" content="ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries — ISM3232 Business Application Development course material.">
-</head><body><div class="nav">
-  <span class="nav-course">ISM3232</span>
-  <span class="nav-title">Unit 2 — Python Foundations</span>
-  <span class="nav-week">Week 6 of 16</span>
-</div>
-<div class="wk-header">
-  <div class="wk-num">Week 06</div>
-  <h1 class="wk-title">Conditionals, Loops &amp; Dictionaries</h1>
-  <p class="wk-deck">Implement multi-tier business rules and model collections of records using lists and dictionaries.</p>
-  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">if · for · dict</span><span class="chip ">Business logic</span></div>
-</div><div style="background:var(--blue-dim);border:1px solid var(--border);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will be able to write multi-tier business rules with <code>if/elif/else</code>, implement the accumulator pattern correctly, and model a collection of business records as a list of dicts.</p>
-</div>
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
-  The <a href="week06_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>Conditionals — business rules as code</h2><div class="concept"><div class="concept-label">Business rules are conditionals</div><p>Every approval threshold, every routing rule, every eligibility check is an if/elif/else statement. The code structure mirrors the business policy.</p></div><div class="code-label">Multi-tier approval routing</div><pre><code>LIMIT_AUTO     =  500.00
-LIMIT_MANAGER  = 2000.00
-LIMIT_DIRECTOR = 5000.00
-
-def get_approver(amount: float) -&gt; str:
-    if amount &lt;= LIMIT_AUTO:
-        return &#x27;Auto-approved&#x27;
-    elif amount &lt;= LIMIT_MANAGER:
-        return &#x27;Manager&#x27;
-    elif amount &lt;= LIMIT_DIRECTOR:
-        return &#x27;Director&#x27;
-    else:
-        return &#x27;Board&#x27;
-
-# Test every boundary
-for amt in [500, 501, 2000, 2001, 5000, 5001]:
-    print(f&#x27;${amt:&gt;6,.2f}  →  {get_approver(amt)}&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ Test boundary values</div><p>Testing with 100 and 1000 is not enough. Test exactly at the threshold (500) and one unit above (501). The boundary is where bugs hide.</p></div><h2>Lists and the accumulator pattern</h2><div class="code-label">List operations and the accumulator</div><pre><code>amounts = [200.00, 1500.00, 400.00, 2200.00, 850.00]
-
-# The accumulator pattern — initialise BEFORE the loop
-total   = 0.0    # ← OUTSIDE the loop
-flagged = []     # ← OUTSIDE the loop
-
-for amount in amounts:
-    total += amount              # add to running total
-    if amount &gt; 1000:
-        flagged.append(amount)   # collect matching items
-
-print(f&#x27;Total:   ${total:,.2f}&#x27;)       # $5,150.00
-print(f&#x27;Flagged: {flagged}&#x27;)            # [1500.0, 2200.0]</code></pre><div class="warn"><div class="concept-label">⚠ Initialise outside the loop</div>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ Accumulator inside the loop — resets every iteration</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ total always equals only the LAST amount</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-for amount in amounts:
-    total = 0          # resets to 0 on every pass
-    total += amount    # = 200, then 1500, then 400
-print(total)           # 400 — wrong</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ Initialise before the loop — once</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-total = 0              # once, before the loop
-for amount in amounts:
-    total += amount    # += 200, +=1500, +=400
-print(total)           # 2100 — correct</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">The accumulator lives <em>outside</em> the loop. Inside the loop you only update it.</p>
-</div><p>If you write <code>total = 0</code> inside the loop body, it resets to zero on every iteration. The accumulator must be created before the loop starts.</p></div><h2>Dictionaries — one record per dict, many records per list</h2><div class="code-label">Dict operations and the list-of-dicts pattern</div><pre><code># One record = one dict
-request = {
-    &#x27;id&#x27;:        101,
-    &#x27;requester&#x27;: &#x27;Taylor&#x27;,
-    &#x27;category&#x27;:  &#x27;Equipment&#x27;,
-    &#x27;amount&#x27;:    1250.00,
-    &#x27;status&#x27;:    &#x27;Pending&#x27;,
-}
-
-print(request[&#x27;requester&#x27;])  # Taylor
-request[&#x27;status&#x27;] = &#x27;Approved&#x27;  # update a field
-
-# Many records = list of dicts (one dict = one row)
-records = [
-    {&#x27;id&#x27;: 101, &#x27;requester&#x27;: &#x27;Taylor&#x27;,  &#x27;amount&#x27;: 1250.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 102, &#x27;requester&#x27;: &#x27;Jordan&#x27;,  &#x27;amount&#x27;:  350.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 103, &#x27;requester&#x27;: &#x27;Morgan&#x27;,  &#x27;amount&#x27;: 2800.00, &#x27;status&#x27;: &#x27;Approved&#x27;},
-]
-
-# Filter: all Pending records
-pending = [r for r in records if r[&#x27;status&#x27;] == &#x27;Pending&#x27;]
-print(f&#x27;Pending: {len(pending)} records&#x27;)
-
-# Total pending amount
-total = sum(r[&#x27;amount&#x27;] for r in pending)
-print(f&#x27;Total pending: ${total:,.2f}&#x27;)</code></pre>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ == comparison instead of = assignment</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ Nothing changes — this is a comparison, not an update</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] == &#x27;Approved&#x27;  # evaluates True/False, then discards
-print(record[&#x27;status&#x27;])          # still &#x27;Pending&#x27;</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ = for assignment</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] = &#x27;Approved&#x27;   # updates the dict
-print(record[&#x27;status&#x27;])           # &#x27;Approved&#x27;</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">Single <code>=</code> assigns. Double <code>==</code> compares. They look similar but do completely different things.</p>
-</div><div class="concept"><div class="concept-label">The list-of-dicts table</div><p>One dict = one row. A list of dicts = the table. The dict keys are the column names. In Week 14 we replace this list with a real SQLite database — the structure and the operations are identical.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">if / elif / else</span><span class="term-def">Branching statement — runs different code depending on which condition is True.</span></div><div class="term"><span class="term-word">for loop</span><span class="term-def">Iterates over every item in a sequence, executing the loop body once per item.</span></div><div class="term"><span class="term-word">accumulator pattern</span><span class="term-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list.</span></div><div class="term"><span class="term-word">append()</span><span class="term-def">Adds one item to the end of a list.</span></div><div class="term"><span class="term-word">dict key access</span><span class="term-def">record[&#x27;key&#x27;] — retrieves the value for that key.</span></div><div class="term"><span class="term-word">list-of-dicts</span><span class="term-def">One dict per record; the list holds all records. One dict = one row, list = the table.</span></div><h2>Why conditionals are the foundation of business logic</h2>
-<p>Every rule a business follows — "orders over $500 need manager approval," 
-"employees with fewer than 90 days tenure cannot take vacation," 
-"purchases from restricted vendors require two signatures" — 
-is an <code>if</code> statement waiting to be written. 
-The person who can translate a business policy document into working, tested conditionals 
-is doing the actual job of a business application developer.</p>
-<p>Notice how the real business rule already tells you what to write:</p>
-<div class="code-label">From policy to code — direct translation</div>
-<pre><code># Policy: "Requests over $1,000 require manager approval.
-#          Requests over $5,000 require director approval."
-
-MANAGER_LIMIT  = 1_000.00
-DIRECTOR_LIMIT = 5_000.00
-
-def get_approver(amount: float) -> str:
-    if amount <= MANAGER_LIMIT:    # not over $1,000 → auto
-        return 'Auto'
-    elif amount <= DIRECTOR_LIMIT:  # over $1,000 but not over $5,000
-        return 'Manager'
-    else:                           # over $5,000
-        return 'Director'</code></pre>
-<p>The <code>elif</code> chain is ordered from least to most expensive.
-Each condition only needs to handle its range because the earlier conditions 
-already ruled out smaller amounts. 
-This ordering is intentional and important — reversing it breaks the logic silently.</p>
-<h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week05_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span></a><span></span><a href="week07_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Conditionals, Loops &amp; Dictionaries</div>
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main"><div style="margin-bottom:32px;">
+  <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--blue);margin-bottom:8px;">Reference</p>
+  <h1 style="font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--text);
+     margin-bottom:10px;">Troubleshooting Guide</h1>
+  <p>The most common errors in ISM3232, organised by type.
+     Read the traceback <strong>from the bottom up</strong> — the last line is the most specific.
+     Find your error type below, read the cause, apply the fix.</p>
+</div><div class="concept" style="margin-bottom:28px;">
+  <div class="concept-label">The one rule for reading any error</div>
+  <p>Read the traceback <strong>from the bottom up</strong>.
+     The bottom line gives you the error type and the exact message.
+     The line above gives you the file name and line number.
+     Start there. Do not read from the top.</p>
+</div><h2>Environment &amp; Setup</h2><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">ModuleNotFoundError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week01_reading.html" style="color:var(--muted);">Week 1</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">ModuleNotFoundError: No module named &#x27;anthropic&#x27;</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> You ran a script without the venv active, or a package is not installed.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Run <code>source .venv/bin/activate</code> — the prompt must show <code>(.venv)</code> — then <code>pip install -r requirements.txt</code>.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">ruff: command not found</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week04_reading.html" style="color:var(--muted);">Week 4</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">zsh: command not found: ruff</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> ruff is not installed in the active environment.</p>
+  <p style="margin:0;"><strong>Fix:</strong> <code>source .venv/bin/activate</code> then <code>pip install ruff</code>.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">pytest not found</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week07_reading.html" style="color:var(--muted);">Week 7</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">command not found: pytest  OR  No module named pytest</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> pytest is not installed in the active environment, or the venv is not activated.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Activate the venv first: <code>source .venv/bin/activate</code>. Then run <code>pip install pytest</code> if it is still missing.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">Permission denied (.venv)</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week03_reading.html" style="color:var(--muted);">Week 3</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">Permission denied: .venv/bin/activate</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> The venv activation script is not executable, or you are on a system with restricted execution policy (Windows).</p>
+  <p style="margin:0;"><strong>Fix:</strong> On Mac/Linux: <code>chmod +x .venv/bin/activate</code>. On Windows WSL: ensure you are running in WSL, not PowerShell.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">FileNotFoundError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week01_reading.html" style="color:var(--muted);">Week 1</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">FileNotFoundError: [Errno 2] No such file or directory: &#x27;data/requests.db&#x27;</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> Python could not find a file at the path you specified. Either the file does not exist, or your current working directory is wrong.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Run <code>pwd</code> to confirm your location. Run <code>ls</code> to confirm the file exists. Use absolute paths or ensure you run the script from the correct directory.</p>
+</div><h2>Python Syntax &amp; Logic</h2><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">SyntaxError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week05_reading.html" style="color:var(--muted);">Week 5</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">SyntaxError: invalid syntax</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> Python could not parse the file. Missing colon after <code>def</code> or <code>if</code>, unclosed parenthesis or bracket, mismatched quotes.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Read the line number in the traceback. Check for a missing <code>:</code>, an unclosed <code>(</code> or <code>[</code>, or a mismatched quote. The error is often on the line before the reported line.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">IndentationError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week05_reading.html" style="color:var(--muted);">Week 5</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">IndentationError: unexpected indent</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> Python uses indentation to define code blocks. A line is indented inconsistently — mixing tabs and spaces, or wrong number of spaces.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Use 4 spaces per indent level. Never mix tabs and spaces. VS Code shows these as red marks — enable "Render Whitespace" in the View menu.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">TypeError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week05_reading.html" style="color:var(--muted);">Week 5</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">TypeError: can only concatenate str (not &#x27;int&#x27;) to str</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> An operation was applied to a value of the wrong type. Most common: adding <code>input()</code> output to a number.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Wrap <code>input()</code> immediately: <code>float(input(...))</code> or <code>int(input(...))</code>.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">NameError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week07_reading.html" style="color:var(--muted);">Week 7</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">NameError: name &#x27;result&#x27; is not defined</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> A variable was used before it was defined, or it was defined inside a function (local scope) and accessed outside.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Check the variable is defined before the line that uses it. If it is inside a function, use <code>return</code> to pass the value out rather than accessing it directly.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">KeyError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week06_reading.html" style="color:var(--muted);">Week 6</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">KeyError: &#x27;amout&#x27;  ← typo, should be &#x27;amount&#x27;</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> You accessed a dictionary key that does not exist — usually a typo in the key name.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Check the spelling of the key. Use <code>print(record.keys())</code> to see available keys. Consider <code>.get('key', default)</code> for optional keys.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">AttributeError</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week10_reading.html" style="color:var(--muted);">Week 10</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;status&#x27;</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> A method or attribute was called on an object that does not have it. Common in OOP: calling a method with the wrong name, or on the wrong type.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Check the spelling of the method name. Use <code>dir(obj)</code> to see what an object has. In OOP, make sure you are calling the method on an instance, not the class.</p>
+</div><h2>Capstone-Specific</h2><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">altair TypedDict error (Python 3.14)</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week15_reading.html" style="color:var(--muted);">Week 15</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">TypeError: _TypedDictMeta.__new__() got an unexpected keyword argument &#x27;closed&#x27;</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> Streamlit 1.41 ships with altair 5.x which is incompatible with Python 3.14.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Delete <code>.venv/</code>, update <code>requirements.txt</code> to use <code>streamlit==1.57.0</code> and <code>altair>=6.0.0</code>, then recreate the venv and reinstall.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+    <code style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red);
+      background:var(--red-dim);padding:3px 8px;border-radius:4px;">API key errors (Anthropic)</code>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+      First seen: <a href="week16_reading.html" style="color:var(--muted);">Week 16</a>
+    </span>
+  </div>
+  <div style="background:var(--bg3);border-radius:6px;padding:8px 12px;margin-bottom:10px;
+    font-family:var(--mono);font-size:11px;color:var(--muted);">anthropic.AuthenticationError: Error code: 401</div>
+  <p style="margin-bottom:8px;"><strong>Cause:</strong> The <code>ANTHROPIC_API_KEY</code> environment variable is missing, empty, or not loaded from <code>.env</code>.</p>
+  <p style="margin:0;"><strong>Fix:</strong> Create a <code>.env</code> file in the project root with <code>ANTHROPIC_API_KEY=your-key-here</code>. Confirm <code>python-dotenv</code> is installed and <code>load_dotenv()</code> is called at the top of <code>ai_feature.py</code>.</p>
+</div><div style="margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
+  <h2>Still stuck?</h2>
+  <p>After trying the fix above, if the error persists:</p>
+  <ol>
+    <li>Copy the <strong>full traceback</strong> (all lines from "Traceback" to the last line)</li>
+    <li>Write one sentence describing what you were trying to do when the error appeared</li>
+    <li>Post both to the course discussion board</li>
+  </ol>
+  <p>Do not post just the last line of the error. The full traceback is what allows a diagnosis.</p>
+</div><div class="page-footer">ISM3232 · Troubleshooting Guide</div></div>
 <script id="ism-site-js">
 /* ═══════════════════════════════════════════════════════════════════════════
    ISM3232 Site-wide JS — nav, theme toggle, font size, dropdown, state
@@ -898,4 +944,5 @@ This ordering is intentional and important — reversing it breaks the logic sil
 })();
 
 </script>
-</body></html>
+</body>
+</html>

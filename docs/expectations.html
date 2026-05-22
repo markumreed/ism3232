@@ -1,9 +1,15 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Grade breakdown, workflow requirements, AI policy, and how to use this site — ISM3232 Business Application Development.">
+<title>ISM3232 Expectations &amp; Grading</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<title>ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries</title><style>
+<style>
+
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
@@ -127,6 +133,7 @@ li::marker{color:var(--dim);}
 .page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10px;color:var(--dim);
   letter-spacing:.08em;text-align:center;}
+
 </style>
 <style id="ism-site-css">
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -448,162 +455,93 @@ li::marker{color:var(--dim);}
 }
 
 </style>
-<meta name="description" content="ISM3232 Week 6 — Conditionals, Loops &amp; Dictionaries — ISM3232 Business Application Development course material.">
-</head><body><div class="nav">
-  <span class="nav-course">ISM3232</span>
-  <span class="nav-title">Unit 2 — Python Foundations</span>
-  <span class="nav-week">Week 6 of 16</span>
-</div>
-<div class="wk-header">
-  <div class="wk-num">Week 06</div>
-  <h1 class="wk-title">Conditionals, Loops &amp; Dictionaries</h1>
-  <p class="wk-deck">Implement multi-tier business rules and model collections of records using lists and dictionaries.</p>
-  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">if · for · dict</span><span class="chip ">Business logic</span></div>
-</div><div style="background:var(--blue-dim);border:1px solid var(--border);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will be able to write multi-tier business rules with <code>if/elif/else</code>, implement the accumulator pattern correctly, and model a collection of business records as a list of dicts.</p>
-</div>
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
-  The <a href="week06_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>Conditionals — business rules as code</h2><div class="concept"><div class="concept-label">Business rules are conditionals</div><p>Every approval threshold, every routing rule, every eligibility check is an if/elif/else statement. The code structure mirrors the business policy.</p></div><div class="code-label">Multi-tier approval routing</div><pre><code>LIMIT_AUTO     =  500.00
-LIMIT_MANAGER  = 2000.00
-LIMIT_DIRECTOR = 5000.00
-
-def get_approver(amount: float) -&gt; str:
-    if amount &lt;= LIMIT_AUTO:
-        return &#x27;Auto-approved&#x27;
-    elif amount &lt;= LIMIT_MANAGER:
-        return &#x27;Manager&#x27;
-    elif amount &lt;= LIMIT_DIRECTOR:
-        return &#x27;Director&#x27;
-    else:
-        return &#x27;Board&#x27;
-
-# Test every boundary
-for amt in [500, 501, 2000, 2001, 5000, 5001]:
-    print(f&#x27;${amt:&gt;6,.2f}  →  {get_approver(amt)}&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ Test boundary values</div><p>Testing with 100 and 1000 is not enough. Test exactly at the threshold (500) and one unit above (501). The boundary is where bugs hide.</p></div><h2>Lists and the accumulator pattern</h2><div class="code-label">List operations and the accumulator</div><pre><code>amounts = [200.00, 1500.00, 400.00, 2200.00, 850.00]
-
-# The accumulator pattern — initialise BEFORE the loop
-total   = 0.0    # ← OUTSIDE the loop
-flagged = []     # ← OUTSIDE the loop
-
-for amount in amounts:
-    total += amount              # add to running total
-    if amount &gt; 1000:
-        flagged.append(amount)   # collect matching items
-
-print(f&#x27;Total:   ${total:,.2f}&#x27;)       # $5,150.00
-print(f&#x27;Flagged: {flagged}&#x27;)            # [1500.0, 2200.0]</code></pre><div class="warn"><div class="concept-label">⚠ Initialise outside the loop</div>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ Accumulator inside the loop — resets every iteration</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ total always equals only the LAST amount</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-for amount in amounts:
-    total = 0          # resets to 0 on every pass
-    total += amount    # = 200, then 1500, then 400
-print(total)           # 400 — wrong</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ Initialise before the loop — once</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>amounts = [200, 1500, 400]
-total = 0              # once, before the loop
-for amount in amounts:
-    total += amount    # += 200, +=1500, +=400
-print(total)           # 2100 — correct</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">The accumulator lives <em>outside</em> the loop. Inside the loop you only update it.</p>
-</div><p>If you write <code>total = 0</code> inside the loop body, it resets to zero on every iteration. The accumulator must be created before the loop starts.</p></div><h2>Dictionaries — one record per dict, many records per list</h2><div class="code-label">Dict operations and the list-of-dicts pattern</div><pre><code># One record = one dict
-request = {
-    &#x27;id&#x27;:        101,
-    &#x27;requester&#x27;: &#x27;Taylor&#x27;,
-    &#x27;category&#x27;:  &#x27;Equipment&#x27;,
-    &#x27;amount&#x27;:    1250.00,
-    &#x27;status&#x27;:    &#x27;Pending&#x27;,
-}
-
-print(request[&#x27;requester&#x27;])  # Taylor
-request[&#x27;status&#x27;] = &#x27;Approved&#x27;  # update a field
-
-# Many records = list of dicts (one dict = one row)
-records = [
-    {&#x27;id&#x27;: 101, &#x27;requester&#x27;: &#x27;Taylor&#x27;,  &#x27;amount&#x27;: 1250.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 102, &#x27;requester&#x27;: &#x27;Jordan&#x27;,  &#x27;amount&#x27;:  350.00, &#x27;status&#x27;: &#x27;Pending&#x27;},
-    {&#x27;id&#x27;: 103, &#x27;requester&#x27;: &#x27;Morgan&#x27;,  &#x27;amount&#x27;: 2800.00, &#x27;status&#x27;: &#x27;Approved&#x27;},
-]
-
-# Filter: all Pending records
-pending = [r for r in records if r[&#x27;status&#x27;] == &#x27;Pending&#x27;]
-print(f&#x27;Pending: {len(pending)} records&#x27;)
-
-# Total pending amount
-total = sum(r[&#x27;amount&#x27;] for r in pending)
-print(f&#x27;Total pending: ${total:,.2f}&#x27;)</code></pre>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ == comparison instead of = assignment</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ Nothing changes — this is a comparison, not an update</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] == &#x27;Approved&#x27;  # evaluates True/False, then discards
-print(record[&#x27;status&#x27;])          # still &#x27;Pending&#x27;</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ = for assignment</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>record[&#x27;status&#x27;] = &#x27;Approved&#x27;   # updates the dict
-print(record[&#x27;status&#x27;])           # &#x27;Approved&#x27;</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">Single <code>=</code> assigns. Double <code>==</code> compares. They look similar but do completely different things.</p>
-</div><div class="concept"><div class="concept-label">The list-of-dicts table</div><p>One dict = one row. A list of dicts = the table. The dict keys are the column names. In Week 14 we replace this list with a real SQLite database — the structure and the operations are identical.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">if / elif / else</span><span class="term-def">Branching statement — runs different code depending on which condition is True.</span></div><div class="term"><span class="term-word">for loop</span><span class="term-def">Iterates over every item in a sequence, executing the loop body once per item.</span></div><div class="term"><span class="term-word">accumulator pattern</span><span class="term-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list.</span></div><div class="term"><span class="term-word">append()</span><span class="term-def">Adds one item to the end of a list.</span></div><div class="term"><span class="term-word">dict key access</span><span class="term-def">record[&#x27;key&#x27;] — retrieves the value for that key.</span></div><div class="term"><span class="term-word">list-of-dicts</span><span class="term-def">One dict per record; the list holds all records. One dict = one row, list = the table.</span></div><h2>Why conditionals are the foundation of business logic</h2>
-<p>Every rule a business follows — "orders over $500 need manager approval," 
-"employees with fewer than 90 days tenure cannot take vacation," 
-"purchases from restricted vendors require two signatures" — 
-is an <code>if</code> statement waiting to be written. 
-The person who can translate a business policy document into working, tested conditionals 
-is doing the actual job of a business application developer.</p>
-<p>Notice how the real business rule already tells you what to write:</p>
-<div class="code-label">From policy to code — direct translation</div>
-<pre><code># Policy: "Requests over $1,000 require manager approval.
-#          Requests over $5,000 require director approval."
-
-MANAGER_LIMIT  = 1_000.00
-DIRECTOR_LIMIT = 5_000.00
-
-def get_approver(amount: float) -> str:
-    if amount <= MANAGER_LIMIT:    # not over $1,000 → auto
-        return 'Auto'
-    elif amount <= DIRECTOR_LIMIT:  # over $1,000 but not over $5,000
-        return 'Manager'
-    else:                           # over $5,000
-        return 'Director'</code></pre>
-<p>The <code>elif</code> chain is ordered from least to most expensive.
-Each condition only needs to handle its range because the earlier conditions 
-already ruled out smaller amounts. 
-This ordering is intentional and important — reversing it breaks the logic silently.</p>
-<h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week05_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span></a><span></span><a href="week07_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Conditionals, Loops &amp; Dictionaries</div>
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main"><div style="margin-bottom:32px;">
+  <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--blue);margin-bottom:8px;">Course Information</p>
+  <h1 style="font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--text);
+     margin-bottom:10px;">Expectations & Grading</h1>
+  <p>Everything you need to know about how this course is graded, what "full workflow required" means,
+     and what to do when something goes wrong.</p>
+</div><h2>Grade breakdown</h2><div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;margin-bottom:24px;">
+<table style="width:100%;border-collapse:collapse;font-size:14px;">
+<thead>
+  <tr style="background:var(--bg3);">
+    <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:700;border-bottom:1px solid var(--border);">Component</th>
+    <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:700;border-bottom:1px solid var(--border);">Weight</th>
+    <th style="text-align:left;padding:10px 16px;color:var(--text);font-weight:700;border-bottom:1px solid var(--border);">Notes</th>
+  </tr>
+</thead>
+<tbody>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Developer Workflow</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">15%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">Ritual, ruff, pytest, Git history quality</td></tr>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Weekly Assignments & Quizzes</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">25%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">One per week, submitted via GitHub URL or Canvas</td></tr>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Midterm Practical</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">20%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">Week 9 · open notes · Weeks 1–8 content only</td></tr>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Capstone Project</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">30%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">Weeks 13–16 · proposal + build + live demo</td></tr>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Portfolio</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">5%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">GitHub profile reflecting 16 weeks of work</td></tr>
+  <tr><td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--text);">Participation</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);">5%</td>
+      <td style="padding:9px 16px;border-bottom:1px solid var(--border);color:var(--muted);">In-class engagement and discussion board contributions</td></tr>
+  <tr><td style="padding:9px 16px;color:var(--text);">Automation Bonus</td>
+      <td style="padding:9px 16px;font-family:var(--mono);color:var(--green);">+5%</td>
+      <td style="padding:9px 16px;color:var(--muted);">Optional — automate a meaningful part of your workflow</td></tr>
+</tbody>
+</table>
+</div><h2>What &#x27;full workflow required&#x27; means</h2><div class="concept">
+  <div class="concept-label">The submission ritual is graded</div>
+  <p>From Week 2 onwards, every assignment requires the complete nine-step ritual before pushing.
+     The instructor can see your Git log. A single commit called "final" pushed at midnight
+     tells a story. A commit history showing ruff and pytest run at each step tells a different one.</p>
+</div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:18px 20px;margin-bottom:20px;">
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:12px;">The nine steps — in order, every time</div>
+  <ol style="padding-left:20px;">
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>pwd</code> — confirm your location</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>tree -L 3</code> — confirm the project structure</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>source .venv/bin/activate</code> — prompt must show <code>(.venv)</code></li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>ruff format .</code> — auto-format all Python files</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>ruff check .</code> — must be clean before continuing</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>pytest</code> — must be green before continuing</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>git status</code> — see what changed</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>git add .</code> — stage everything</li>
+    <li style="padding:4px 0;font-size:14px;color:var(--text);">
+      <code>git commit -m "descriptive message"</code> then <code>git push</code></li>
+  </ol>
+</div><div class="warn"><div class="concept-label">⚠ If ruff or pytest fail — stop</div><p>Fix errors before continuing the ritual. Never push broken code. The ritual is not complete until steps 5 and 6 both pass cleanly.</p></div><h2>AI use policy</h2><p><strong>Permitted:</strong> Ask AI to explain what a traceback error message means. Ask AI to explain what a piece of code does in plain English. Ask AI to suggest test cases for a function you already wrote.</p><p><strong>Prohibited:</strong> Generating any submitted code. Fixing bugs for you (you must attempt this yourself first). Any AI use during the midterm exam.</p><div class="ok"><div class="concept-label">✓ The Debug First, Then Ask workflow</div><p>For Assignment 8, there is a required six-step AI literacy activity. Read the traceback → write your hypothesis → try print() debugging → if stuck, ask AI to explain the error only → fix it yourself → write the reflection. The reflection is 30 of 70 points and is not optional.</p></div><h2>How to use this site</h2><p>This site has three types of pages for each week:</p><ul>
+  <li><strong>Reading</strong> — read this before class. It explains the <em>why</em> behind each topic.
+      Typically 4–5 minutes.</li>
+  <li><strong>Lecture</strong> — the in-class page. Same material as the reading, formatted for
+      following along during the live session, with timing guides and annotated code blocks.</li>
+  <li><strong>Lab</strong> — the in-class practice activity. Follow along during the lab session.</li>
+  <li><strong>Slides</strong> — the Reveal.js slide deck shown during the lecture.
+      Press F for fullscreen, S for speaker notes, Escape to exit.</li>
+</ul><h2>Getting help</h2><ul>
+  <li><strong>Discussion board</strong> (Canvas) — post your full traceback and one sentence of context.
+      Not just the last line. The full traceback.</li>
+  <li><strong><a href="troubleshooting.html">Troubleshooting guide</a></strong> — the 13 most common
+      errors in this course with exact fixes.</li>
+  <li><strong>Office hours</strong> — see Canvas for schedule.</li>
+</ul><div class="page-footer">ISM3232 · Expectations & Grading</div></div>
 <script id="ism-site-js">
 /* ═══════════════════════════════════════════════════════════════════════════
    ISM3232 Site-wide JS — nav, theme toggle, font size, dropdown, state
@@ -898,4 +836,5 @@ This ordering is intentional and important — reversing it breaks the logic sil
 })();
 
 </script>
-</body></html>
+</body>
+</html>
