@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Unit 1 Cheat Sheet &mdash; Unit 1 &mdash; Developer Foundations</title><style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style><style>html{min-height:100vh;}
+
+/* ── Cheat sheet layout ── */
+.cs-header{padding-bottom:18px;margin-bottom:20px;border-bottom:3px solid var(--divider);}
+.cs-unit-badge{display:inline-block;font-family:"Courier New",monospace;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;padding:4px 14px;border-radius:20px;
+  color:#fff;margin-bottom:10px;font-weight:bold;}
+.u1{background:#1d4ed8;}.u2{background:#15803d;}.u3{background:#7c3aed;}.u4{background:#b45309;}
+.cs-header h1{font-size:26px;font-weight:900;color:var(--text-primary);margin-bottom:4px;
+  letter-spacing:-.02em;}
+.cs-header .cs-sub{font-size:13px;color:var(--text-secondary);font-style:italic;}
+
+/* ── Two and three column grid ── */
+.cs-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;margin-bottom:14px;}
+@media(max-width:700px){.cs-grid-2,.cs-grid-3{grid-template-columns:1fr;}}
+
+/* ── Section panel ── */
+.cs-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;}
+.cs-panel-head{padding:10px 14px;font-family:"Courier New",monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:bold;display:flex;
+  align-items:center;gap:8px;}
+.cs-panel-head.blue{background:var(--accent-bg);color:var(--accent);border-bottom:1px solid var(--accent-bdr);}
+.cs-panel-head.green{background:var(--green-bg);color:var(--green);border-bottom:1px solid var(--green-bdr);}
+.cs-panel-head.amber{background:var(--amber-bg);color:var(--amber);border-bottom:1px solid var(--amber-bdr);}
+.cs-panel-head.purple{background:var(--purple-bg);color:var(--purple);border-bottom:1px solid var(--purple-bdr);}
+.cs-panel-head.red{background:var(--red-bg);color:var(--red);border-bottom:1px solid var(--red-bdr);}
+.cs-panel-head.dark{background:var(--bg-code);color:var(--text-code);
+  border-bottom:1px solid var(--border);}
+.cs-panel-body{padding:12px 14px;}
+
+/* ── Command rows ── */
+.cmd-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;
+  border-bottom:1px solid var(--border-light);}
+.cmd-row:last-child{border-bottom:none;padding-bottom:0;}
+.cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);
+  flex-shrink:0;min-width:160px;}
+.cmd-desc{font-size:12px;color:var(--text-body);flex:1;line-height:1.5;}
+.cmd-row.highlight .cmd{color:var(--accent);}
+.cmd-row.highlight{background:var(--accent-bg);margin:0 -14px;padding:5px 14px;}
+
+/* ── Code block ── */
+.cs-code{background:var(--bg-code);border-radius:7px;padding:10px 13px;margin:8px 0;
+  font-family:"Courier New",monospace;font-size:11.5px;color:var(--text-code);
+  line-height:1.75;white-space:pre;}
+.cs-code .cm{color:#6c7086;}.cs-code .kw{color:#cba6f7;}.cs-code .fn{color:#89b4fa;}
+.cs-code .st{color:#a6e3a1;}.cs-code .nm{color:#fab387;}.cs-code .op{color:#f38ba8;}
+
+/* ── Key-value rows ── */
+.kv-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border-light);
+  align-items:flex-start;}
+.kv-row:last-child{border-bottom:none;}
+.kv-key{font-family:"Courier New",monospace;font-size:12px;color:var(--text-primary);
+  font-weight:bold;flex-shrink:0;min-width:100px;}
+.kv-val{font-size:12px;color:var(--text-body);line-height:1.5;flex:1;}
+.kv-val code{font-size:.9em;}
+
+/* ── Badge row ── */
+.badge-row{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0;}
+.cs-badge{font-family:"Courier New",monospace;font-size:10px;padding:2px 8px;
+  border-radius:12px;font-weight:bold;}
+.cs-badge.blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bdr);}
+.cs-badge.green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr);}
+.cs-badge.amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);}
+.cs-badge.purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bdr);}
+.cs-badge.red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr);}
+.cs-badge.dark{background:var(--bg-code);color:var(--text-code);border:1px solid var(--border);}
+
+/* ── Warning / tip inline ── */
+.cs-warn{background:var(--warn-bg);border-left:3px solid var(--amber);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+.cs-warn code{font-size:.9em;}
+.cs-ok{background:var(--ok-bg);border-left:3px solid var(--green);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+
+/* ── Ritual steps ── */
+.ritual-steps{display:flex;flex-direction:column;gap:3px;}
+.ritual-step{display:flex;gap:8px;align-items:baseline;}
+.rs-num{font-family:"Courier New",monospace;font-size:10px;font-weight:bold;
+  color:var(--accent);min-width:20px;flex-shrink:0;}
+.rs-cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);flex:1;}
+
+/* ── Type table ── */
+.type-table{width:100%;border-collapse:collapse;}
+.type-table th,.type-table td{padding:6px 10px;text-align:left;font-size:12px;
+  border-bottom:1px solid var(--border-light);}
+.type-table th{font-family:"Courier New",monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);background:var(--bg-card-alt);}
+.type-table td:first-child{font-family:"Courier New",monospace;font-weight:bold;color:var(--text-primary);}
+.type-table tr:last-child td{border-bottom:none;}
+
+/* ── Separator ── */
+.cs-sep{margin:16px 0;border-top:1px solid var(--border);}
+
+/* ── Print hint ── */
+.print-hint{font-family:"Courier New",monospace;font-size:10px;color:var(--text-muted);
+  text-align:center;padding:12px;margin-top:8px;letter-spacing:.05em;}
+
+body{min-height:100vh;width:100%;}
+</style></head><body><div class="wrapper"><div class="cs-header"><span class="cs-unit-badge u1">ISM3232 &middot; Unit 1 &middot; Cheat Sheet</span><h1>Unit 1 &mdash; Developer Foundations</h1><p class="cs-sub">Weeks 1&ndash;4 &nbsp;&middot;&nbsp; zsh &middot; Navigation &middot; File Ops &middot; venv &middot; Git &middot; Submission Ritual</p><div class="meta-pills"><span class="meta-pill">Unit 1 of 4</span><span class="meta-pill">Quick reference</span><span class="meta-pill">Student-facing</span></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head blue"><span>&#x1F5A5;</span>TERMINAL BASICS</div><div class="cs-panel-body"><div class="cmd-row"><span class="cmd">echo $SHELL</span><span class="cmd-desc">Show current shell — must return /bin/zsh</span></div><div class="cmd-row"><span class="cmd">zsh --version</span><span class="cmd-desc">Confirm zsh 5.x+</span></div><div class="cmd-row"><span class="cmd">python3 --version</span><span class="cmd-desc">Confirm Python 3.10+</span></div><div class="cmd-row"><span class="cmd">git --version</span><span class="cmd-desc">Confirm Git 2.x+</span></div><div class="cmd-row highlight"><span class="cmd">pwd</span><span class="cmd-desc">WHERE am I? (Print Working Directory)</span></div><div class="cmd-row"><span class="cmd">ls</span><span class="cmd-desc">List visible files and folders</span></div><div class="cmd-row"><span class="cmd">ls -la</span><span class="cmd-desc">List ALL files including hidden (.venv, .gitignore)</span></div><div class="cmd-row"><span class="cmd">clear  (or: c)</span><span class="cmd-desc">Clear the terminal screen</span></div><div class="cs-sep"></div><div class="kv-row"><span class="kv-key">~</span><span class="kv-val">Home directory shortcut — /Users/yourname</span></div><div class="kv-row"><span class="kv-key">..</span><span class="kv-val">Parent directory — one level up</span></div><div class="kv-row"><span class="kv-key">.</span><span class="kv-val">Current directory</span></div><div class="cs-warn">&#x26A0; Prompt must show <code>%</code> (zsh). If you see <code>$</code> you are in bash.</div></div></div><div class="cs-panel"><div class="cs-panel-head blue"><span>&#x1F4C1;</span>NAVIGATION &amp; FILE OPS</div><div class="cs-panel-body"><div class="cmd-row"><span class="cmd">cd ~</span><span class="cmd-desc">Jump to home from anywhere</span></div><div class="cmd-row"><span class="cmd">cd folder</span><span class="cmd-desc">Enter a folder (relative path)</span></div><div class="cmd-row"><span class="cmd">cd ..</span><span class="cmd-desc">Go up one level — note the space</span></div><div class="cmd-row"><span class="cmd">mkdir name</span><span class="cmd-desc">Create a new directory</span></div><div class="cmd-row"><span class="cmd">touch file.py</span><span class="cmd-desc">Create an empty file</span></div><div class="cmd-row highlight"><span class="cmd">tree -L 2</span><span class="cmd-desc">Visualise 2-level structure</span></div><div class="cmd-row"><span class="cmd">code .</span><span class="cmd-desc">Open current folder in VS Code</span></div><div class="cs-sep"></div><div class="cmd-row"><span class="cmd">cp src dst</span><span class="cmd-desc">Copy — original stays</span></div><div class="cmd-row"><span class="cmd">mv old new</span><span class="cmd-desc">Move/rename — original gone</span></div><div class="cmd-row"><span class="cmd">cat file.txt</span><span class="cmd-desc">Print file contents</span></div><div class="cmd-row"><span class="cmd">head -5 file</span><span class="cmd-desc">First 5 lines</span></div><div class="cmd-row"><span class="cmd">tail -5 file</span><span class="cmd-desc">Last 5 lines</span></div><div class="cs-sep"></div><p style="font-size:10px;font-family:'Courier New',monospace;font-weight:bold;color:var(--red);margin-bottom:4px;">&#x26A0; rm SAFETY RITUAL — in this order every time</p><div class="ritual-step"><span class="rs-num">1</span><span class="rs-cmd">pwd</span></div><div class="ritual-step"><span class="rs-num">2</span><span class="rs-cmd">ls</span></div><div class="ritual-step"><span class="rs-num">3</span><span class="rs-cmd">rm filename</span></div><div class="cs-warn">&#x26A0; <code>rm</code> is permanent. No Trash. No undo.</div></div></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head purple"><span>&#x1F40D;</span>VIRTUAL ENVIRONMENT</div><div class="cs-panel-body"><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">One venv per project. Run once at project start.</p><div class="ritual-step"><span class="rs-num">1</span><span class="rs-cmd">python3 -m venv .venv</span></div><div class="ritual-step"><span class="rs-num">2</span><span class="rs-cmd">source .venv/bin/activate</span></div><div class="ritual-step"><span class="rs-num">3</span><span class="rs-cmd">pip install pytest ruff</span></div><div class="ritual-step"><span class="rs-num">4</span><span class="rs-cmd">pip freeze > requirements.txt</span></div><div class="ritual-step"><span class="rs-num">5</span><span class="rs-cmd">deactivate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# when done</span></div><div class="cs-sep"></div><div class="cs-ok">&#x2713; (.venv) in prompt = active</div><div class="cmd-row"><span class="cmd">which python3</span><span class="cmd-desc">Must show .venv/bin/python3</span></div><div class="cmd-row"><span class="cmd">pip install -r requirements.txt</span><span class="cmd-desc">Recreate from frozen list</span></div><div class="cs-sep"></div><div class="cs-code">.gitignore — create before first git add:
+.venv/
+__pycache__/
+*.pyc</div><div class="cs-warn">&#x26A0; NEVER commit .venv/ — it is large and platform-specific.</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">&#x2728; .zshrc aliases</p><div class="cmd-row"><span class="cmd">ll / c / py</span><span class="cmd-desc">ls -la / clear / python3</span></div><div class="cmd-row"><span class="cmd">gs / ga / gp</span><span class="cmd-desc">git status / add . / push</span></div><div class="cmd-row"><span class="cmd">gcmsg 'msg'</span><span class="cmd-desc">git commit -m 'msg'</span></div><div class="cmd-row"><span class="cmd">gl</span><span class="cmd-desc">git log --oneline</span></div><div class="cmd-row"><span class="cmd">tree2</span><span class="cmd-desc">tree -L 2</span></div><div class="cmd-row"><span class="cmd">mkcd dir</span><span class="cmd-desc">mkdir dir &amp;&amp; cd dir</span></div></div></div><div class="cs-panel"><div class="cs-panel-head dark"><span>&#x1F680;</span>PRE-SUBMISSION RITUAL &mdash; ALL 9 STEPS</div><div class="cs-panel-body"><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:#89b4fa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">Run every step before every push. In this order. Every time.</p><div class="ritual-step"><span class="rs-num">1</span><span class="rs-cmd">pwd</span></div><div class="ritual-step"><span class="rs-num">2</span><span class="rs-cmd">tree -L 3</span></div><div class="ritual-step"><span class="rs-num">3</span><span class="rs-cmd">source .venv/bin/activate</span></div><div class="ritual-step"><span class="rs-num">4</span><span class="rs-cmd">ruff format .</span></div><div class="ritual-step"><span class="rs-num">5</span><span class="rs-cmd">ruff check .</span></div><div class="ritual-step"><span class="rs-num">6</span><span class="rs-cmd">pytest</span></div><div class="ritual-step"><span class="rs-num">7</span><span class="rs-cmd">git status</span></div><div class="ritual-step"><span class="rs-num">8</span><span class="rs-cmd">git add .</span></div><div class="ritual-step"><span class="rs-num">9</span><span class="rs-cmd">git commit -m 'descriptive message'</span></div><div class="ritual-step"><span class="rs-num">&#x2192;</span><span class="rs-cmd">git push</span></div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; ruff errors → fix before continuing</div><div class="cs-warn">&#x26A0; pytest failures → fix code before committing</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">GIT ESSENTIALS</p><div class="cmd-row"><span class="cmd">git init</span><span class="cmd-desc">Start a new repo</span></div><div class="cmd-row"><span class="cmd">git status</span><span class="cmd-desc">See changed / staged files</span></div><div class="cmd-row"><span class="cmd">git log --oneline</span><span class="cmd-desc">Review commit history</span></div><div class="cmd-row"><span class="cmd">git remote add origin URL</span><span class="cmd-desc">Connect to GitHub</span></div><div class="cmd-row"><span class="cmd">git push -u origin main</span><span class="cmd-desc">First push</span></div><div class="cs-sep"></div><div class="kv-row"><span class="kv-key">✓ Good commit:</span><span class="kv-val"><code>'add requires_review function'</code></span></div><div class="kv-row"><span class="kv-key">✗ Bad commit:</span><span class="kv-val"><code>'update'  'fix'  'final'</code></span></div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">SEARCH</p><div class="cmd-row"><span class="cmd">rg 'def '</span><span class="cmd-desc">Find every function</span></div><div class="cmd-row"><span class="cmd">rg 'TODO'</span><span class="cmd-desc">Find all TODOs</span></div><div class="cmd-row"><span class="cmd">find . -name '*.py'</span><span class="cmd-desc">Find all Python files</span></div></div></div></div><div class="print-hint">ISM3232 &middot; Unit 1 Cheat Sheet &middot; Unit 1 &mdash; Developer Foundations &middot; Keep this open during every lab and assignment</div></div></body></html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 12 In-Class Lab</title><style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style><style>html{min-height:100vh;}
+
+.lab-header{background:var(--accent-bg);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:24px;}
+.lab-badge{display:inline-block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.lab-header h1{font-size:22px;color:var(--text-primary);margin-bottom:6px;font-weight:bold;}
+.lab-header .lh-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:12px;}
+.lab-meta{display:flex;flex-wrap:wrap;gap:6px;}
+.task-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-family:'Courier New',monospace;font-size:13px;font-weight:bold;flex-shrink:0;margin-top:2px;}
+.task{display:flex;gap:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+.task.stretch{border-left:4px solid var(--purple);background:var(--purple-bg);}
+.stretch-label{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.task-content .task-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:6px;}
+.task-content .task-body{font-size:13px;color:var(--text-body);line-height:1.7;}
+.task-content .task-body code{font-size:.82em;}
+.task-content .task-body p{margin-bottom:6px;}
+.task-content .task-body p:last-child{margin-bottom:0;}
+.submit-box{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:18px 20px;margin-top:24px;}
+.submit-box .sb-header{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.submit-box h3{font-size:15px;color:var(--text-primary);margin-bottom:12px;}
+.deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+.deliverable:last-child{border-bottom:none;padding-bottom:0;}
+.d-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.d-text{font-size:12px;color:var(--text-body);}
+.d-text strong{color:var(--text-primary);}
+.hint-box{background:var(--tip-bg);border:1px solid var(--tip-bdr);border-radius:7px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--tip-txt);}
+.hint-box strong{color:var(--text-primary);}
+.time-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.time-block{font-family:'Courier New',monospace;font-size:11px;padding:5px 12px;border-radius:20px;background:var(--bg-card-alt);border:1px solid var(--border);color:var(--text-body);}
+.task-body .expected{background:var(--bg-code);border-radius:6px;padding:8px 12px;margin-top:6px;font-family:'Courier New',monospace;font-size:12px;color:#a6e3a1;line-height:1.6;}
+.snap-flag{display:flex;gap:10px;align-items:center;background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:7px;padding:9px 14px;margin-top:8px;}
+.snap-flag .sf-icon{font-size:16px;flex-shrink:0;}
+.snap-flag .sf-text{font-size:12px;color:var(--ok-txt);font-weight:bold;}
+
+body{min-height:100vh;width:100%;}
+</style></head><body><div class="wrapper"><div class="lab-header"><span class="lab-badge">&#x1F9EA; In-Class Lab &mdash; Week 12</span><h1>ism3232_week12_lab</h1><p class="lh-sub">Module 6 &mdash; OOP III: Applied Practice and Design &mdash; design and build your own multi-class business system from scratch</p><div class="lab-meta"><span class="meta-pill">Week 12 of 16</span><span class="meta-pill">Full class period</span><span class="meta-pill">Git commit + Canvas URL</span><span class="meta-pill">Completion credit</span></div></div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: Design document</span><span class="time-block">Part 2: Build entity class 1</span><span class="time-block">Part 3: Build entity class 2 + manager</span><span class="time-block">Part 4: 6+ pytest tests</span><span class="time-block">Part 5: Simulation + ritual</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period</div><div class="callout-body">Design and build your own multi-class system from scratch. Two entity classes, one manager class, and six or more pytest tests. <strong>You must write the design document before writing any code.</strong></div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Design before code &mdash; enforced</div><div class="callout-body">You may not open VS Code to write class code until your design document is reviewed by the instructor. Write the design in <code>design.md</code> first. Raise your hand when it is done.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Write Your Design Document First</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Complete design.md before writing any code</div><div class="task-body"><p>Create <code>design.md</code> in <code>module06_oop/</code>:</p><div class="code-block"><pre>cd ~/ism3232/module06_oop && touch design.md && code design.md</pre></div><p>Fill in every field:</p><div class="code-block"><div class="cb-label">design.md &mdash; complete all fields</div><pre># OOP Lab 12 Design
+# Author: [Your Name]
+
+## Business Domain
+[Describe the system you are building in 1-2 sentences]
+
+## Entity Class 1
+Class name: ___
+Attributes (name + type):
+  - ___: ___
+  - ___: ___
+Methods (name + what it does + return type):
+  - ___: ___ -> ___
+  - ___: ___ -> ___
+
+## Entity Class 2
+Class name: ___
+Attributes:
+  - ___: ___
+Methods:
+  - ___: ___ -> ___
+
+## Manager Class
+Class name: ___
+Holds: list of [entity class 1]
+Methods:
+  - add(item): adds to the list
+  - list_by_status(status): filters by status
+  - total(): returns sum of a numeric attribute
+  - report(): prints formatted summary
+
+## Business Rules (will become methods and test cases)
+1. ___
+2. ___
+3. ___
+
+## Out of Scope
+[What you are NOT building]</pre></div><p><strong>Raise your hand when design.md is complete. Instructor will review before you continue.</strong></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Build Entity Class 1</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Write your first entity class in models.py</div><div class="task-body"><p>Once your design is approved: open <code>models.py</code> and write Entity Class 1. Requirements:</p><p>&bull; <code>__init__</code> with at least 4 attributes (including a status field that defaults to a pending-like value)</p><p>&bull; At least 2 business logic methods that return values (not print)</p><p>&bull; <code>__repr__</code> showing key attributes</p><p>&bull; Docstrings on every method</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Build Entity Class 2 and the Manager</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write Entity Class 2 and your Manager class</div><div class="task-body"><p>Entity Class 2 should be a different type of business object that relates to Entity Class 1 in your domain.</p><p>Manager class requirements:</p><p>&bull; <code>__init__</code> with an empty list</p><p>&bull; <code>add(item)</code> method</p><p>&bull; <code>list_by_status(status)</code> that filters and returns a list</p><p>&bull; <code>total()</code> that sums a numeric attribute</p><p>&bull; <code>report()</code> that prints a formatted summary</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Write At Least Six Tests</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write tests in tests/test_models.py</div><div class="task-body"><p>Required test coverage:</p><p>&bull; Default status / initial state of a new instance</p><p>&bull; Each business logic method (at least 2 methods tested)</p><p>&bull; At least one boundary/edge case</p><p>&bull; Manager: add increases count</p><p>&bull; Manager: filter returns correct subset</p><p>&bull; Manager: two manager instances are independent</p><p>Run: <code>pytest -v</code> &mdash; all tests must pass before continuing.</p><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of pytest -v with all tests green.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Main Simulation and Ritual</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write main.py and run the full ritual</div><div class="task-body"><p>Write a <code>main.py</code> that:</p><p>&bull; Creates a manager instance</p><p>&bull; Adds at least 4 entity instances</p><p>&bull; Calls at least one status-changing method</p><p>&bull; Calls <code>report()</code> to print the summary</p><p>Run: <code>python3 main.py</code></p><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of the main.py simulation output.</div></div><div class="code-block"><div class="cb-label">Ritual</div><pre>ruff format . && ruff check . && pytest -v
+git add . && git commit -m 'lab 12: OOP III applied practice' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 12 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>OOP III &mdash; Applied Practice</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> design.md &mdash; completed before any code was written.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 1:</strong> pytest -v with all six or more tests green.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot 2:</strong> main.py simulation output showing the report.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 12</code>.</div></div></div><div class="page-footer">ISM3232 &middot; Week 12 In-Class Lab &middot; Module 6 &mdash; OOP III: Applied Practice and Design</div></div></body></html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Unit 3 — Object-Oriented System Design</title>
+  <title>ISM3232 – Course Overview</title>
+  <style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#f0f0ee;
+      --border:#e0e0de;--border-light:#ebebea;--text-primary:#1a1a1a;--text-secondary:#555555;
+      --text-muted:#888888;--text-faint:#aaaaaa;--text-body:#444444;--text-pill:#555555;
+      --text-code:#444444;--divider:#1a1a1a;
+      --blue-hbg:#dbeafe;--blue-hbd:#bfdbfe;--blue-badge:#1e40af;--blue-title:#1e3a8a;--blue-sub:#1e40af;--blue-abg:#f0f9ff;--blue-abd:#1e40af;--blue-atxt:#1e40af;--blue-abody:#1e3a8a;
+      --green-hbg:#dcfce7;--green-hbd:#bbf7d0;--green-badge:#166534;--green-title:#14532d;--green-sub:#166534;--green-abg:#f0fdf4;--green-abd:#166534;--green-atxt:#166534;--green-abody:#14532d;
+      --amber-hbg:#fef9c3;--amber-hbd:#fde68a;--amber-badge:#92400e;--amber-title:#78350f;--amber-sub:#92400e;--amber-abg:#fffbeb;--amber-abd:#92400e;--amber-atxt:#92400e;--amber-abody:#78350f;
+      --purple-hbg:#ede9fe;--purple-hbd:#ddd6fe;--purple-badge:#4c1d95;--purple-title:#3b0764;--purple-sub:#4c1d95;--purple-abg:#faf5ff;--purple-abd:#4c1d95;--purple-atxt:#4c1d95;--purple-abody:#3b0764;
+      --pink-hbg:#fce7f3;--pink-hbd:#fbcfe8;--pink-badge:#831843;--pink-title:#500724;--pink-sub:#831843;--pink-abg:#fdf2f8;--pink-abd:#831843;--pink-atxt:#831843;--pink-abody:#500724;
+      --slate-hbg:#f1f5f9;--slate-hbd:#e2e8f0;--slate-badge:#334155;--slate-title:#1e293b;--slate-sub:#475569;--slate-abg:#f8fafc;--slate-abd:#334155;--slate-atxt:#334155;--slate-abody:#1e293b;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --info-bg:#eff6ff;--info-bdr:#93c5fd;--info-txt:#1e40af;
+      --star-bg:#fef9c3;--star-bdr:#fde047;--star-txt:#854d0e;
+      --bonus-bg:#f0fdf4;--bonus-bdr:#22c55e;--bonus-txt:#14532d;
+      --notice-bg:#f0f9ff;--notice-bdr:#1e40af;
+      --midterm-bg:#fef3c7;--midterm-bdr:#f59e0b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#111111;--bg-card:#1c1c1c;--bg-card-alt:#252525;--bg-code:#2a2a2a;
+        --border:#333333;--border-light:#2e2e2e;--text-primary:#f0f0f0;--text-secondary:#aaaaaa;
+        --text-muted:#666666;--text-faint:#444444;--text-body:#cccccc;--text-pill:#aaaaaa;
+        --text-code:#a0c4a0;--divider:#444444;
+        --blue-hbg:#1e2d47;--blue-hbd:#2a3f60;--blue-badge:#3b82f6;--blue-title:#93c5fd;--blue-sub:#60a5fa;--blue-abg:#192433;--blue-abd:#3b82f6;--blue-atxt:#60a5fa;--blue-abody:#93c5fd;
+        --green-hbg:#14291e;--green-hbd:#1a3828;--green-badge:#22c55e;--green-title:#86efac;--green-sub:#4ade80;--green-abg:#0f1f15;--green-abd:#22c55e;--green-atxt:#4ade80;--green-abody:#86efac;
+        --amber-hbg:#2a1f08;--amber-hbd:#3d2e0d;--amber-badge:#d97706;--amber-title:#fcd34d;--amber-sub:#f59e0b;--amber-abg:#1f1708;--amber-abd:#d97706;--amber-atxt:#f59e0b;--amber-abody:#fcd34d;
+        --purple-hbg:#1e1433;--purple-hbd:#2d1f4a;--purple-badge:#7c3aed;--purple-title:#c4b5fd;--purple-sub:#a78bfa;--purple-abg:#170f2a;--purple-abd:#7c3aed;--purple-atxt:#a78bfa;--purple-abody:#c4b5fd;
+        --pink-hbg:#2a0f1e;--pink-hbd:#3f1530;--pink-badge:#db2777;--pink-title:#f9a8d4;--pink-sub:#ec4899;--pink-abg:#1f0a16;--pink-abd:#db2777;--pink-atxt:#ec4899;--pink-abody:#f9a8d4;
+        --slate-hbg:#1a2233;--slate-hbd:#253047;--slate-badge:#64748b;--slate-title:#cbd5e1;--slate-sub:#94a3b8;--slate-abg:#151e2e;--slate-abd:#475569;--slate-atxt:#94a3b8;--slate-abody:#cbd5e1;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --info-bg:#0d1e33;--info-bdr:#1e40af;--info-txt:#60a5fa;
+        --star-bg:#2a1f08;--star-bdr:#854d0e;--star-txt:#fcd34d;
+        --bonus-bg:#0f2018;--bonus-bdr:#166534;--bonus-txt:#4ade80;
+        --notice-bg:#192433;--notice-bdr:#3b82f6;
+        --midterm-bg:#2a1f08;--midterm-bdr:#d97706;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 60px;line-height:1.5;}
+    code{font-family:'Courier New',Courier,monospace;font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:1px 5px;border-radius:3px;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+
+    /* Page header */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:28px;font-weight:normal;letter-spacing:-.4px;margin-bottom:6px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+
+    /* Course map */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:40px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--bg-code);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* Stack pills row */
+    .stack-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:36px;align-items:center;}
+    .stack-label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-right:4px;}
+    .stack-pill{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .stack-pill.new{border-color:var(--green-badge);color:var(--green-title);background:var(--green-abg);}
+
+    /* Unit section divider */
+    .unit-divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;margin-top:44px;}
+    .unit-divider:first-of-type{margin-top:0;}
+    .unit-divider .line{flex:1;height:1px;background:var(--border);}
+    .unit-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+
+    /* Spine */
+    .spine{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:18px;}
+    .spine-pill{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .spine-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* Card grid */
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:24px;}
+    .card-grid.single{grid-template-columns:1fr;}
+    .card-grid.two-col{grid-template-columns:repeat(2,1fr);}
+
+    /* Week card */
+    .week-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+    .card-header{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;}
+    .week-badge{min-width:38px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Courier New',Courier,monospace;font-size:11px;color:#fff;flex-shrink:0;}
+    .card-header-text .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+    .card-header-text .question{font-size:11px;font-style:italic;}
+    .card-body{padding:13px 16px;}
+    .section-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;}
+    .pills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px;}
+    .pill{font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-pill);background:var(--bg-card-alt);}
+    .meta-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+    .meta-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;}
+    .meta-val{font-size:11px;color:var(--text-body);}
+    .output-box{border-left:3px solid;border-radius:4px;padding:8px 10px;margin-bottom:8px;}
+    .output-box .out-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+    .output-box .out-text{font-size:12px;}
+    .code-block{background:var(--bg-code);border:1px dashed var(--border);border-radius:5px;padding:7px 9px;margin-bottom:8px;}
+    .code-block p{font-family:'Courier New',Courier,monospace;font-size:10px;color:var(--text-code);}
+    .ai-badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid;}
+    .badge-warn{background:var(--warn-bg);border-color:var(--warn-bdr);color:var(--warn-txt);}
+    .badge-ok{background:var(--ok-bg);border-color:var(--ok-bdr);color:var(--ok-txt);}
+    .badge-info{background:var(--info-bg);border-color:var(--info-bdr);color:var(--info-txt);}
+    .badge-star{background:var(--star-bg);border-color:var(--star-bdr);color:var(--star-txt);}
+    .badge-bonus{background:var(--bonus-bg);border-color:var(--bonus-bdr);color:var(--bonus-txt);}
+
+    /* Color schemes */
+    .scheme-blue .card-header{background:var(--blue-hbg);border-bottom:1px solid var(--blue-hbd);}
+    .scheme-blue .card-header-text .title{color:var(--blue-title);}
+    .scheme-blue .card-header-text .question{color:var(--blue-sub);}
+    .scheme-blue .week-badge{background:var(--blue-badge);}
+    .scheme-blue .output-box{background:var(--blue-abg);border-color:var(--blue-abd);}
+    .scheme-blue .output-box .out-label{color:var(--blue-atxt);}
+    .scheme-blue .output-box .out-text{color:var(--blue-abody);}
+
+    .scheme-green .card-header{background:var(--green-hbg);border-bottom:1px solid var(--green-hbd);}
+    .scheme-green .card-header-text .title{color:var(--green-title);}
+    .scheme-green .card-header-text .question{color:var(--green-sub);}
+    .scheme-green .week-badge{background:var(--green-badge);}
+    .scheme-green .output-box{background:var(--green-abg);border-color:var(--green-abd);}
+    .scheme-green .output-box .out-label{color:var(--green-atxt);}
+    .scheme-green .output-box .out-text{color:var(--green-abody);}
+
+    .scheme-amber .card-header{background:var(--amber-hbg);border-bottom:1px solid var(--amber-hbd);}
+    .scheme-amber .card-header-text .title{color:var(--amber-title);}
+    .scheme-amber .card-header-text .question{color:var(--amber-sub);}
+    .scheme-amber .week-badge{background:var(--amber-badge);}
+    .scheme-amber .output-box{background:var(--amber-abg);border-color:var(--amber-abd);}
+    .scheme-amber .output-box .out-label{color:var(--amber-atxt);}
+    .scheme-amber .output-box .out-text{color:var(--amber-abody);}
+
+    .scheme-purple .card-header{background:var(--purple-hbg);border-bottom:1px solid var(--purple-hbd);}
+    .scheme-purple .card-header-text .title{color:var(--purple-title);}
+    .scheme-purple .card-header-text .question{color:var(--purple-sub);}
+    .scheme-purple .week-badge{background:var(--purple-badge);}
+    .scheme-purple .output-box{background:var(--purple-abg);border-color:var(--purple-abd);}
+    .scheme-purple .output-box .out-label{color:var(--purple-atxt);}
+    .scheme-purple .output-box .out-text{color:var(--purple-abody);}
+
+    .scheme-pink .card-header{background:var(--pink-hbg);border-bottom:1px solid var(--pink-hbd);}
+    .scheme-pink .card-header-text .title{color:var(--pink-title);}
+    .scheme-pink .card-header-text .question{color:var(--pink-sub);}
+    .scheme-pink .week-badge{background:var(--pink-badge);}
+    .scheme-pink .output-box{background:var(--pink-abg);border-color:var(--pink-abd);}
+    .scheme-pink .output-box .out-label{color:var(--pink-atxt);}
+    .scheme-pink .output-box .out-text{color:var(--pink-abody);}
+
+    .scheme-slate .card-header{background:var(--slate-hbg);border-bottom:1px solid var(--slate-hbd);}
+    .scheme-slate .card-header-text .title{color:var(--slate-title);}
+    .scheme-slate .card-header-text .question{color:var(--slate-sub);}
+    .scheme-slate .week-badge{background:var(--slate-badge);}
+    .scheme-slate .output-box{background:var(--slate-abg);border-color:var(--slate-abd);}
+    .scheme-slate .output-box .out-label{color:var(--slate-atxt);}
+    .scheme-slate .output-box .out-text{color:var(--slate-abody);}
+
+    /* At a glance */
+    .glance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:32px;}
+    .glance-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .glance-label{font-size:10px;color:var(--text-muted);margin-bottom:3px;}
+    .glance-val{font-size:13px;font-weight:bold;color:var(--text-primary);}
+
+    /* Notice / callout */
+    .notice{background:var(--notice-bg);border:1px solid var(--notice-bdr);border-left-width:4px;border-radius:7px;padding:12px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;}
+    .notice.amber{background:var(--midterm-bg);border-color:var(--midterm-bdr);}
+    .notice-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .notice-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .notice-body{font-size:12px;color:var(--text-body);}
+
+    /* Capstone grid */
+    .capstone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px;margin-bottom:10px;}
+    .capstone-item{background:var(--bg-card-alt);border:1px solid var(--border-light);border-radius:6px;padding:7px 10px;}
+    .capstone-item .ci-title{font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .capstone-item .ci-sub{font-size:10px;color:var(--text-muted);}
+
+    /* Assessment table */
+    .assess-table{width:100%;border-collapse:collapse;margin-bottom:32px;font-size:12px;}
+    .assess-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);}
+    .assess-table td{padding:7px 10px;border-bottom:1px solid var(--border-light);color:var(--text-body);}
+    .assess-table tr:last-child td{border-bottom:none;}
+    .assess-table .weight{font-family:'Courier New',Courier,monospace;font-weight:bold;color:var(--text-primary);}
+    .assess-table .changed{color:var(--green-atxt);font-size:10px;margin-left:4px;}
+
+    /* Footer */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:48px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<div class="wrapper">
+
+  <div class="page-header">
+    <p class="eyebrow">ISM3232 · Business Application Development · Unit 3 of 4</p>
+    <h1>Unit 3 — Object-Oriented System Design</h1>
+    <p class="subtitle">Weeks 10–12 &nbsp;·&nbsp; Classes · Composition · Inheritance · Applied Practice + pytest ✦ Now 3 weeks</p>
+  </div>
+
+  <div class="course-map">
+    <span class="map-item">W1–4 Unit 1: Developer Foundations</span>
+    <span class="map-arrow">→</span>
+    <span class="map-item">W5–8 Unit 2: Python</span>
+    <span class="map-arrow">→</span>
+    <span class="map-item">W9 Midterm</span>
+    <span class="map-arrow">→</span>
+    <span class="map-item current">W10–12 Unit 3: OOP ✦ 3 wks</span>
+    <span class="map-arrow">→</span>
+    <span class="map-item">W13–17 Unit 4: Capstone Build</span>
+  </div>
+
+  <div class="stack-row">
+    <span class="stack-label">Stack:</span>
+    <span class="stack-pill">zsh</span>
+    <span class="stack-pill">VS Code</span>
+    <span class="stack-pill">Python 3</span>
+    <span class="stack-pill">venv + pip</span>
+    <span class="stack-pill new">Ruff ✦</span>
+    <span class="stack-pill new">pytest ✦</span>
+    <span class="stack-pill new">ripgrep ✦</span>
+    <span class="stack-pill new">fzf + zoxide ✦</span>
+    <span class="stack-pill">Git / GitHub</span>
+    <span class="stack-pill">SQLite</span>
+    <span class="stack-pill">Streamlit</span>
+    <span class="stack-pill">FastAPI (lecture only)</span>
+    <span class="stack-pill">GenAI</span>
+  </div>
+
+  <!-- ═══ UNIT 3 ═══ -->
+  <div class="unit-divider">
+    <div class="line"></div>
+    <div class="label">Unit 3 · Weeks 10–12 · Object-Oriented System Design ✦ Now 3 weeks</div>
+    <div class="line"></div>
+  </div>
+
+  <div class="notice">
+    <div class="notice-icon">🔷</div>
+    <div>
+      <div class="notice-label">Revision — expanded from 2 to 3 weeks</div>
+      <div class="notice-body">Week 12 is new: a standalone applied practice week where students build a multi-class business simulation with pytest before the capstone adds SQL and Streamlit on top. This is a graded OOP checkpoint — instructors can identify struggles before the build phase begins.</div>
+    </div>
+  </div>
+
+  <div class="spine">
+    <span class="spine-pill">Classes &amp; objects</span><span class="spine-arrow">→</span>
+    <span class="spine-pill">Composition &amp; inheritance</span><span class="spine-arrow">→</span>
+    <span class="spine-pill">OOP → SQL mapping</span><span class="spine-arrow">→</span>
+    <span class="spine-pill">Multi-class simulation + pytest</span>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- W10 -->
+    <div class="week-card scheme-blue">
+      <div class="card-header">
+        <div class="week-badge">W10</div>
+        <div class="card-header-text">
+          <div class="title">OOP I — Classes, Objects, Attributes, Methods</div>
+          <div class="question">How do we model a real business entity in code?</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Topics</div>
+        <div class="pills">
+          <span class="pill">What is a class?</span><span class="pill">Instances</span>
+          <span class="pill"><code>__init__</code></span><span class="pill">Instance attributes</span>
+          <span class="pill">Methods</span><span class="pill">Encapsulation</span>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Student output</div>
+          <div class="out-text">A single business entity class (<code>BusinessRequest</code>, <code>Ticket</code>, <code>Product</code>, or <code>Application</code>) with attributes, status, and at least two business logic methods</div>
+        </div>
+        <div class="code-block"><p>class BusinessRequest:<br>&nbsp;&nbsp;def __init__(self, request_id, requester, amount):<br>&nbsp;&nbsp;&nbsp;&nbsp;self.status = 'Pending'<br>&nbsp;&nbsp;def approve(self): self.status = 'Approved'<br>&nbsp;&nbsp;def requires_review(self): return self.amount &gt; 1000</p></div>
+        <span class="ai-badge badge-ok">✓ AI explains class/object relationships — no generated class submissions</span>
+      </div>
+    </div>
+
+    <!-- W11 -->
+    <div class="week-card scheme-green">
+      <div class="card-header">
+        <div class="week-badge">W11</div>
+        <div class="card-header-text">
+          <div class="title">OOP II — Composition, Inheritance, and Business Modeling</div>
+          <div class="question">How do objects work together and map to a database?</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Topics</div>
+        <div class="pills">
+          <span class="pill">Composition vs inheritance</span>
+          <span class="pill">Light inheritance for business hierarchies</span>
+          <span class="pill">OOP → SQL mapping</span>
+          <span class="pill">class ≈ table · attribute ≈ column · instance ≈ row</span>
+          <span class="pill">Multi-class system design</span>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Student output</div>
+          <div class="out-text">Manager class that stores and processes a list of business entity objects</div>
+        </div>
+        <div class="code-block"><p>class RequestManager:<br>&nbsp;&nbsp;def __init__(self): self.requests = []<br>&nbsp;&nbsp;def list_pending(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;return [r for r in self.requests<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if r.status == 'Pending']</p></div>
+        <span class="ai-badge badge-ok">✓ AI may review class design after student writes the first version</span>
+      </div>
+    </div>
+
+    <!-- W12 NEW -->
+    <div class="week-card scheme-purple">
+      <div class="card-header">
+        <div class="week-badge">W12</div>
+        <div class="card-header-text">
+          <div class="title">OOP III — Applied Practice: Multi-Class Simulation + pytest ✦ NEW</div>
+          <div class="question">Can I build and test a working multi-class business system on my own?</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Deliverable requirements</div>
+        <div class="pills">
+          <span class="pill">≥ 2 business entity classes</span>
+          <span class="pill">1 manager class</span>
+          <span class="pill">≥ 5 pytest tests covering business logic methods</span>
+          <span class="pill">No database or Streamlit layer</span>
+          <span class="pill">Full submission workflow</span>
+        </div>
+        <div class="output-box">
+          <div class="out-label">Student output — OOP checkpoint</div>
+          <div class="out-text">Standalone Python project: multi-class business simulation with comprehensive pytest coverage. Instructors use this to confirm OOP fluency before the capstone.</div>
+        </div>
+        <span class="ai-badge badge-ok">✓ AI may suggest additional test cases — student writes all classes and tests</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Capstone class pairings -->
+  <div class="section-label" style="margin-bottom:8px;">Capstone OOP class pairings by project type</div>
+  <div class="capstone-grid" style="margin-bottom:24px;">
+    <div class="capstone-item"><div class="ci-title">Internship Tracker</div><div class="ci-sub">InternshipApplication · ApplicationManager</div></div>
+    <div class="capstone-item"><div class="ci-title">Helpdesk System</div><div class="ci-sub">Ticket · TicketManager</div></div>
+    <div class="capstone-item"><div class="ci-title">Procurement Tracker</div><div class="ci-sub">PurchaseRequest · ApprovalWorkflow</div></div>
+    <div class="capstone-item"><div class="ci-title">Inventory Tool</div><div class="ci-sub">Product · InventoryManager</div></div>
+    <div class="capstone-item"><div class="ci-title">Compliance Checklist</div><div class="ci-sub">ComplianceItem · ComplianceTracker</div></div>
+    <div class="capstone-item"><div class="ci-title">Research Application Tracker</div><div class="ci-sub">ResearchApplication · ReviewManager</div></div>
+  </div>
+
+  <div class="glance-grid">
+    <div class="glance-card"><div class="glance-label">Duration</div><div class="glance-val">3 weeks ✦ revised</div></div>
+    <div class="glance-card"><div class="glance-label">Midterm eligible</div><div class="glance-val">No (taught after W9)</div></div>
+    <div class="glance-card"><div class="glance-label">Primary text</div><div class="glance-val">Think Python Ch. 14–17</div></div>
+    <div class="glance-card"><div class="glance-label">W12 checkpoint</div><div class="glance-val">Multi-class + pytest before capstone</div></div>
+    <div class="glance-card"><div class="glance-label">Capstone link</div><div class="glance-val">≥ 2 entity classes required</div></div>
+  </div>
+
+
+
+  <div class="page-footer">ISM3232 · Unit 3 · Weeks 10–12 · Object-Oriented System Design</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Unit 4 Cheat Sheet &mdash; Unit 4 &mdash; Capstone Build</title><style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style><style>html{min-height:100vh;}
+
+/* ── Cheat sheet layout ── */
+.cs-header{padding-bottom:18px;margin-bottom:20px;border-bottom:3px solid var(--divider);}
+.cs-unit-badge{display:inline-block;font-family:"Courier New",monospace;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;padding:4px 14px;border-radius:20px;
+  color:#fff;margin-bottom:10px;font-weight:bold;}
+.u1{background:#1d4ed8;}.u2{background:#15803d;}.u3{background:#7c3aed;}.u4{background:#b45309;}
+.cs-header h1{font-size:26px;font-weight:900;color:var(--text-primary);margin-bottom:4px;
+  letter-spacing:-.02em;}
+.cs-header .cs-sub{font-size:13px;color:var(--text-secondary);font-style:italic;}
+
+/* ── Two and three column grid ── */
+.cs-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.cs-grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;margin-bottom:14px;}
+@media(max-width:700px){.cs-grid-2,.cs-grid-3{grid-template-columns:1fr;}}
+
+/* ── Section panel ── */
+.cs-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;}
+.cs-panel-head{padding:10px 14px;font-family:"Courier New",monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:bold;display:flex;
+  align-items:center;gap:8px;}
+.cs-panel-head.blue{background:var(--accent-bg);color:var(--accent);border-bottom:1px solid var(--accent-bdr);}
+.cs-panel-head.green{background:var(--green-bg);color:var(--green);border-bottom:1px solid var(--green-bdr);}
+.cs-panel-head.amber{background:var(--amber-bg);color:var(--amber);border-bottom:1px solid var(--amber-bdr);}
+.cs-panel-head.purple{background:var(--purple-bg);color:var(--purple);border-bottom:1px solid var(--purple-bdr);}
+.cs-panel-head.red{background:var(--red-bg);color:var(--red);border-bottom:1px solid var(--red-bdr);}
+.cs-panel-head.dark{background:var(--bg-code);color:var(--text-code);
+  border-bottom:1px solid var(--border);}
+.cs-panel-body{padding:12px 14px;}
+
+/* ── Command rows ── */
+.cmd-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;
+  border-bottom:1px solid var(--border-light);}
+.cmd-row:last-child{border-bottom:none;padding-bottom:0;}
+.cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);
+  flex-shrink:0;min-width:160px;}
+.cmd-desc{font-size:12px;color:var(--text-body);flex:1;line-height:1.5;}
+.cmd-row.highlight .cmd{color:var(--accent);}
+.cmd-row.highlight{background:var(--accent-bg);margin:0 -14px;padding:5px 14px;}
+
+/* ── Code block ── */
+.cs-code{background:var(--bg-code);border-radius:7px;padding:10px 13px;margin:8px 0;
+  font-family:"Courier New",monospace;font-size:11.5px;color:var(--text-code);
+  line-height:1.75;white-space:pre;}
+.cs-code .cm{color:#6c7086;}.cs-code .kw{color:#cba6f7;}.cs-code .fn{color:#89b4fa;}
+.cs-code .st{color:#a6e3a1;}.cs-code .nm{color:#fab387;}.cs-code .op{color:#f38ba8;}
+
+/* ── Key-value rows ── */
+.kv-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border-light);
+  align-items:flex-start;}
+.kv-row:last-child{border-bottom:none;}
+.kv-key{font-family:"Courier New",monospace;font-size:12px;color:var(--text-primary);
+  font-weight:bold;flex-shrink:0;min-width:100px;}
+.kv-val{font-size:12px;color:var(--text-body);line-height:1.5;flex:1;}
+.kv-val code{font-size:.9em;}
+
+/* ── Badge row ── */
+.badge-row{display:flex;flex-wrap:wrap;gap:6px;padding:6px 0;}
+.cs-badge{font-family:"Courier New",monospace;font-size:10px;padding:2px 8px;
+  border-radius:12px;font-weight:bold;}
+.cs-badge.blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bdr);}
+.cs-badge.green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bdr);}
+.cs-badge.amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bdr);}
+.cs-badge.purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bdr);}
+.cs-badge.red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bdr);}
+.cs-badge.dark{background:var(--bg-code);color:var(--text-code);border:1px solid var(--border);}
+
+/* ── Warning / tip inline ── */
+.cs-warn{background:var(--warn-bg);border-left:3px solid var(--amber);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+.cs-warn code{font-size:.9em;}
+.cs-ok{background:var(--ok-bg);border-left:3px solid var(--green);
+  padding:7px 11px;border-radius:0 6px 6px 0;margin:7px 0;
+  font-size:12px;color:var(--text-body);}
+
+/* ── Ritual steps ── */
+.ritual-steps{display:flex;flex-direction:column;gap:3px;}
+.ritual-step{display:flex;gap:8px;align-items:baseline;}
+.rs-num{font-family:"Courier New",monospace;font-size:10px;font-weight:bold;
+  color:var(--accent);min-width:20px;flex-shrink:0;}
+.rs-cmd{font-family:"Courier New",monospace;font-size:12px;color:var(--text-code);flex:1;}
+
+/* ── Type table ── */
+.type-table{width:100%;border-collapse:collapse;}
+.type-table th,.type-table td{padding:6px 10px;text-align:left;font-size:12px;
+  border-bottom:1px solid var(--border-light);}
+.type-table th{font-family:"Courier New",monospace;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);background:var(--bg-card-alt);}
+.type-table td:first-child{font-family:"Courier New",monospace;font-weight:bold;color:var(--text-primary);}
+.type-table tr:last-child td{border-bottom:none;}
+
+/* ── Separator ── */
+.cs-sep{margin:16px 0;border-top:1px solid var(--border);}
+
+/* ── Print hint ── */
+.print-hint{font-family:"Courier New",monospace;font-size:10px;color:var(--text-muted);
+  text-align:center;padding:12px;margin-top:8px;letter-spacing:.05em;}
+
+body{min-height:100vh;width:100%;}
+</style></head><body><div class="wrapper"><div class="cs-header"><span class="cs-unit-badge u4">ISM3232 &middot; Unit 4 &middot; Cheat Sheet</span><h1>Unit 4 &mdash; Capstone Build</h1><p class="cs-sub">Weeks 13&ndash;16 &nbsp;&middot;&nbsp; SQL &middot; Python+SQLite &middot; Streamlit &middot; GenAI Controls &middot; Final Presentation</p><div class="meta-pills"><span class="meta-pill">Unit 4 of 4</span><span class="meta-pill">Quick reference</span><span class="meta-pill">Student-facing</span></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head amber"><span>&#x1F5C4;</span>SQL FOUNDATIONS</div><div class="cs-panel-body"><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">CREATE TABLE</p><div class="cs-code">CREATE TABLE IF NOT EXISTS requests (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT 'Pending',
+    notes     TEXT
+);</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">REQUIRED OPERATIONS</p><div class="cs-code">INSERT INTO requests (requester, category, amount)
+  VALUES ('Taylor', 'Travel', 1200);
+
+SELECT * FROM requests;
+SELECT * FROM requests WHERE status = 'Pending';
+SELECT * FROM requests ORDER BY amount DESC;
+
+UPDATE requests
+  SET status = 'Approved'
+  WHERE id = 1;        -- WHERE is critical!
+
+SELECT status, COUNT(*), SUM(amount)
+  FROM requests
+  GROUP BY status;     -- operational report</div><div class="cs-sep"></div><div class="kv-row"><span class="kv-key">TEXT</span><span class="kv-val">Names, categories, status, notes</span></div><div class="kv-row"><span class="kv-key">INTEGER</span><span class="kv-val">Counts, IDs — whole numbers</span></div><div class="kv-row"><span class="kv-key">REAL</span><span class="kv-val">Money, rates — decimals</span></div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; UPDATE without WHERE changes EVERY row.</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">sqlite3 SHELL COMMANDS</p><div class="cmd-row"><span class="cmd">.tables</span><span class="cmd-desc">List all tables</span></div><div class="cmd-row"><span class="cmd">.schema tablename</span><span class="cmd-desc">Show CREATE TABLE statement</span></div><div class="cmd-row"><span class="cmd">.mode column</span><span class="cmd-desc">Formatted column output</span></div><div class="cmd-row"><span class="cmd">.headers on</span><span class="cmd-desc">Show column names in output</span></div><div class="cmd-row"><span class="cmd">.quit</span><span class="cmd-desc">Exit the shell</span></div></div></div><div class="cs-panel"><div class="cs-panel-head amber"><span>&#x1F40D;</span>database.py — 5 REQUIRED FUNCTIONS</div><div class="cs-panel-body"><div class="cs-code">import sqlite3
+
+DB_FILE = 'data/requests.db'
+
+def create_table(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute('''CREATE TABLE IF NOT EXISTS requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            requester TEXT NOT NULL, amount REAL,
+            status TEXT DEFAULT 'Pending')''' )
+
+def add_record(requester, category, amount,
+               notes='', db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(
+            'INSERT INTO requests
+             (requester,category,amount,notes)
+             VALUES (?,?,?,?)',
+            (requester, category, amount, notes)
+        )
+
+def get_all_records(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.execute(
+            'SELECT * FROM requests ORDER BY id DESC')
+        return [dict(row) for row in cur.fetchall()]
+
+def update_status(record_id, new_status,
+                  db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        conn.execute(
+            'UPDATE requests SET status=? WHERE id=?',
+            (new_status, record_id)
+        )
+
+def get_status_report(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        cur = conn.execute(
+            '''SELECT status, COUNT(*) as count,
+               SUM(amount) as total
+               FROM requests GROUP BY status''')
+        return cur.fetchall()</div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; NEVER use f-strings in SQL. Always use <code>?</code> placeholders.</div><div class="cs-ok">&#x2713; Every function takes <code>db_file=DB_FILE</code> — enables tmp_path testing.</div></div></div></div><div class="cs-grid-2"><div class="cs-panel"><div class="cs-panel-head blue"><span>&#x1F310;</span>STREAMLIT — 5 REQUIRED FEATURES</div><div class="cs-panel-body"><div class="cs-code">import streamlit as st
+from database import create_table, add_record, \
+    get_all_records, update_status, get_status_report
+
+create_table()  # idempotent — safe every run
+st.set_page_config(page_title="My App", layout="wide")
+st.title("Business Request Tracker")
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    ['Submit', 'View', 'Filter', 'Update', 'Report'])
+
+with tab1:  # Feature 1 — Add a record
+    requester = st.text_input("Your name")
+    category  = st.selectbox("Category",
+                  ["Travel", "Equipment", "Software"])
+    amount    = st.number_input("Amount", min_value=0.0)
+    if st.button("Submit"):
+        if requester and amount > 0:
+            add_record(requester, category, amount)
+            st.success(f"Submitted for {requester}")
+        else:
+            st.error("Name and amount required.")
+
+with tab2:  # Feature 2 — View all records
+    records = get_all_records()
+    if records:
+        st.dataframe(records, use_container_width=True)
+    else:
+        st.info("No records yet.")
+
+with tab3:  # Feature 3 — Filter
+    f = st.selectbox("Status", ["All","Pending","Approved"])
+    records = get_all_records()
+    if f != "All":
+        records = [r for r in records if r["status"]==f]
+    st.dataframe(records, use_container_width=True)
+    st.caption(f"{len(records)} record(s) shown")
+
+with tab4:  # Feature 4 — Update status
+    records = get_all_records()
+    if records:
+        opts = {f"ID {r['id']}: {r['requester']}":r['id']
+                for r in records}
+        sel  = st.selectbox("Record", list(opts.keys()))
+        new  = st.selectbox("New status",
+               ["Pending","Approved","Rejected"])
+        if st.button("Update"):
+            update_status(opts[sel], new)
+            st.success(f"Updated to {new}")
+
+with tab5:  # Feature 5 — Report
+    report = get_status_report()
+    for row in report:
+        st.metric(row[0], row[1])  # status, count</div><div class="cs-sep"></div><div class="cs-warn">&#x26A0; Streamlit reruns the entire script on every interaction.</div><div class="cs-warn">&#x26A0; Build the Update selectbox from <code>get_all_records()</code> — never hardcode IDs.</div></div></div><div class="cs-panel"><div class="cs-panel-head green"><span>&#x1F916;</span>GENAI FEATURE — 6 REQUIRED CONTROLS</div><div class="cs-panel-body"><div class="cs-code"># ai_feature.py
+import anthropic
+
+def summarise_request(category: str,
+                       description: str) -> str:
+    """
+    Return one-sentence AI summary.
+    Only category + description sent — no PII.
+    """
+    client = anthropic.Anthropic()
+    message = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=150,
+        messages=[{
+            "role": "user",
+            "content": (
+                f"Summarise this {category} request"
+                f" in one sentence:\n{description}"
+            )
+        }]
+    )
+    return message.content[0].text
+
+
+# In app.py — disclosure + human review gate:
+desc = st.text_area("Request description")
+if desc and st.button("Generate AI Summary"):
+    with st.spinner("Generating..."):
+        summary = summarise_request(category, desc)
+    # Control 1: Disclosure label
+    st.info(f"AI-generated (review before saving):\n\n{summary}")
+    # Control 2: Human review gate
+    if st.button("Looks good — save with summary"):
+        add_record(requester, category, amount,
+                   notes=summary)
+        st.success("Saved.")</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">ALL 6 CONTROLS — REQUIRED</p><div class="kv-row"><span class="kv-key">1. Disclosure</span><span class="kv-val">Label AI output visibly in the UI</span></div><div class="kv-row"><span class="kv-key">2. Human review</span><span class="kv-val">Second button before saving AI output</span></div><div class="kv-row"><span class="kv-key">3. No PII</span><span class="kv-val">No names / IDs / amounts in the prompt</span></div><div class="kv-row"><span class="kv-key">4. Mocked test</span><span class="kv-val">unittest.mock.patch in test_ai_feature.py</span></div><div class="kv-row"><span class="kv-key">5. Limitations</span><span class="kv-val">2+ specific limitations in README</span></div><div class="kv-row"><span class="kv-key">6. Can explain</span><span class="kv-val">Present and explain every line of ai_feature.py</span></div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">PYTEST WITH tmp_path (W14)</p><div class="cs-code">def test_add_and_retrieve(tmp_path):
+    db = tmp_path / "test.db"
+    create_table(db)
+    add_record("Taylor","Travel",1200,db_file=db)
+    records = get_all_records(db_file=db)
+    assert len(records) == 1
+    assert records[0]["requester"] == "Taylor"</div><div class="cs-sep"></div><p style="font-family:'Courier New',monospace;font-size:9px;font-weight:bold;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">FINAL REPO CHECKLIST</p><div class="kv-row"><span class="kv-key">&#x2610; Files</span><span class="kv-val">app.py, models.py, database.py, ai_feature.py, schema.sql</span></div><div class="kv-row"><span class="kv-key">&#x2610; Tests</span><span class="kv-val">test_models.py, test_database.py, test_ai_feature.py</span></div><div class="kv-row"><span class="kv-key">&#x2610; Docs</span><span class="kv-val">README.md with setup + AI feature + limitations</span></div><div class="kv-row"><span class="kv-key">&#x2610; .gitignore</span><span class="kv-val">.venv/  __pycache__/  *.db  .env</span></div><div class="kv-row"><span class="kv-key">&#x2610; Ritual</span><span class="kv-val">ruff clean · pytest green · meaningful commit history</span></div></div></div></div><div class="print-hint">ISM3232 &middot; Unit 4 Cheat Sheet &middot; Unit 4 &mdash; Capstone Build &middot; Keep this open during every lab and assignment</div></div></body></html>

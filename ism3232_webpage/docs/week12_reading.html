@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 12 — OOP III — Applied Practice &amp; Design</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 3 — Object-Oriented Design</span>
+  <span class="nav-week">Week 12 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 12</div>
+  <h1 class="wk-title">OOP III — Applied Practice &amp; Design</h1>
+  <p class="wk-deck">Design and build a standalone multi-class business simulation from scratch before touching any code.</p>
+  <div class="wk-meta"><span class="chip blue">Unit 3</span><span class="chip ">Design first</span><span class="chip green">Capstone prep</span></div>
+</div><h2>Design before you type — always</h2><div class="concept"><div class="concept-label">The rule this week</div><p>design.md must be committed to Git before models.py exists. Git timestamps are visible. Instructors check that you designed before you coded.</p></div><div class="code-label">design.md template — fill every field</div><pre><code># Class Design Document
+# Author: Your Name
+
+## Business domain
+[What system are you building? One sentence.]
+
+## Entity class: ClassName
+### Attributes
+- attr_name: type — description
+
+### Methods
+- method_name(params) -&gt; return_type: what it does
+
+## Manager class: ManagerName
+### Attributes
+- items: list — instance-level, initialised in __init__
+
+### Methods
+- add_item(item) -&gt; None
+- list_by_status(status) -&gt; list
+- total_value() -&gt; float
+- summary_report() -&gt; None
+
+## Business rules
+1. [Specific, testable rule with a threshold and consequence]
+2. [Another rule]
+
+## Out of scope
+- [Something you are NOT building]
+- [Another exclusion]</code></pre><div class="code-label">Commit order — design first</div><pre><code>git add design.md
+git commit -m &#x27;add class design document&#x27;
+
+# Only now create the code files
+touch models.py tests/test_models.py
+# ... write the code ...
+git add models.py tests/test_models.py
+git commit -m &#x27;implement classes from design&#x27;</code></pre><h2>The four OOP mistakes to catch this week</h2><div class="code-label">All four mistakes — cause each error, then fix it</div><pre><code># Mistake 1: missing self parameter
+def approve():            # ← wrong: TypeError on call
+def approve(self):        # ← correct
+
+# Mistake 2: local variable instead of self.attribute
+    status = &#x27;Approved&#x27;      # ← wrong: vanishes after method returns
+    self.status = &#x27;Approved&#x27; # ← correct
+
+# Mistake 3: print() instead of return
+    print(self.amount &gt; 1000)   # ← wrong: cannot assert a print
+    return self.amount &gt; 1000   # ← correct
+
+# Mistake 4: class-level list
+class Manager:
+    items = []             # ← wrong: shared by all instances
+    def __init__(self):
+        self.items = []    # ← correct</code></pre><h2>Minimum five tests required</h2><ul><li>Default state test — status is Pending after instantiation</li><li>Method change test — approve() sets status to Approved</li><li>Boolean True test — requires_review() returns True above the limit</li><li>Boolean False test — requires_review() returns False below the limit</li><li>Instance independence test — approving one does not affect others</li></ul><h2>Before you leave this week</h2><ul class="checklist"><li>design.md committed before models.py</li><li>At least 5 pytest tests passing</li><li>None of the four OOP mistakes are present in the code</li><li>self.items = [] is inside __init__, not at class level</li><li>Assignment 12 submitted via GitHub URL — includes design.md</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 12 &nbsp;·&nbsp; OOP III — Applied Practice &amp; Design</div></body></html>

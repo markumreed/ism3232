@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 8 — Debugging, AI Literacy &amp; Midterm Review</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 2 — Python Foundations</span>
+  <span class="nav-week">Week 8 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 08</div>
+  <h1 class="wk-title">Debugging, AI Literacy &amp; Midterm Review</h1>
+  <p class="wk-deck">Read tracebacks bottom-up, debug with print(), complete the required AI literacy activity, and review everything.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 2</span><span class="chip ">Debugging · AI literacy</span><span class="chip green">Midterm prep</span></div>
+</div><h2>Reading tracebacks — always start at the bottom</h2><div class="concept"><div class="concept-label">The rule</div><p>The bottom line of a traceback is the most specific information. The top is the least specific. Always read bottom-up: error type → line number → file → work upward only if needed.</p></div><div class="code-label">Three common tracebacks and what they mean</div><pre><code># KeyError — dict key does not exist (usually a typo)
+records = [{&#x27;id&#x27;: 1, &#x27;amount&#x27;: 1200}]
+print(records[0][&#x27;amout&#x27;])   # typo: &#x27;amout&#x27; not &#x27;amount&#x27;
+# Bottom line: KeyError: &#x27;amout&#x27;
+
+# TypeError — wrong type for the operation
+amount = input(&#x27;Enter: &#x27;)    # returns str
+result = amount + 100        # str + int → crash
+# Bottom line: TypeError: can only concatenate str (not &#x27;int&#x27;) to str
+
+# NameError — variable used before it was defined
+def calc(amount):
+    result = amount * 1.07
+    return result
+calc(500)
+print(result)    # result is LOCAL — does not exist here
+# Bottom line: NameError: name &#x27;result&#x27; is not defined</code></pre><h2>Debugging with print()</h2><div class="code-label">Strategic print() debugging</div><pre><code># The buggy script — wrong total, but why?
+records = [
+    {&#x27;id&#x27;: 101, &#x27;ammount&#x27;: 1200.00},   # typo in key!
+    {&#x27;id&#x27;: 102, &#x27;amount&#x27;:   350.00},
+]
+total = 0
+for r in records:
+    print(f&#x27;DEBUG: record = {r}&#x27;)   # ← add this
+    total += r.get(&#x27;amount&#x27;, 0)      # .get avoids crash
+print(f&#x27;Total: ${total:,.2f}&#x27;)
+
+# The DEBUG line reveals: record 101 has &#x27;ammount&#x27; not &#x27;amount&#x27;
+# Fix the typo, then REMOVE the DEBUG print before committing</code></pre><div class="warn"><div class="concept-label">⚠ Remove DEBUG prints before committing</div><p>Debug prints left in submitted code are visible to graders. They indicate an incomplete submission. Remove them before running the ritual.</p></div><h2>Required AI literacy activity — Debug First, Then Ask</h2><p>This week includes a required structured activity. You will receive a script with two bugs. You must follow the six-step workflow before submitting:</p><ol><li><strong>Read the traceback</strong> — bottom-up. Write down the error type, file, and line number.</li><li><strong>Write your hypothesis</strong> — what do you think is wrong? Write it before touching any code.</li><li><strong>Add print() statements</strong> — inspect variables at the right points. Run and read the output.</li><li><strong>If still stuck after 10 minutes</strong> — you may ask an AI to explain the error message only. Not to fix the code.</li><li><strong>Fix the code yourself</strong> — based on your own understanding.</li><li><strong>Write the reflection</strong> — what was wrong, how you found it, what you learned.</li></ol><div class="warn"><div class="concept-label">⚠ Reflection is 30 of 70 points</div><p>A student who fixes both bugs perfectly but submits no reflection earns 40/70. The reflection is graded on its own and is not optional.</p></div><h2>Midterm review — what is and is not tested</h2><div class="ok"><div class="concept-label">✓ Tested — everything in Weeks 1–8</div><p>zsh commands · file system and paths · venv workflow · the submission ritual · all four data types · operators including // and % · if/elif/else · for loops · the accumulator pattern · dicts and list-of-dicts · functions with return · scope · modules and imports · reading tracebacks · print() debugging.</p></div><div class="warn"><div class="concept-label">⚠ NOT on the midterm</div><p>OOP · SQL · Streamlit · GenAI · FastAPI. If you have been studying those topics for the midterm, stop. Focus on Weeks 1–8.</p></div><div class="concept"><div class="concept-label">Open notes policy</div><p>Open notes means your own notes, your cheat sheet, your assignment code, and the course slides. It does NOT mean the internet, AI tools, or communicating with classmates. Open notes is individual work with your own materials.</p></div><p>Four things to be able to do without notes: 1. Trace an accumulator loop and give the final value. 2. Identify what type input() returns and what error results from adding it to an integer. 3. Read a traceback and identify the error type, file, and line number. 4. Write a boundary test for a function with a numeric threshold.</p><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 8 &nbsp;·&nbsp; Debugging, AI Literacy &amp; Midterm Review</div></body></html>

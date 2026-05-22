@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 16 — GenAI Feature &amp; Final Demo</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 4 — Capstone Build</span>
+  <span class="nav-week">Week 16 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 16</div>
+  <h1 class="wk-title">GenAI Feature &amp; Final Demo</h1>
+  <p class="wk-deck">Add a controlled AI capability to your Streamlit app and present your complete business application.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 4</span><span class="chip ">GenAI · 6 controls</span><span class="chip green">Final demo</span></div>
+</div><h2>The six required GenAI controls</h2><p>Missing any single control means the GenAI requirement is not met. All six must be present and demonstrable at the final presentation.</p><ul><li><strong>1. Disclosure label</strong> — AI output is always shown inside a labelled st.info() box.</li><li><strong>2. Human review gate</strong> — a second button ('Looks good — save') is required before the AI text is written to the database.</li><li><strong>3. No PII in prompts</strong> — only category and description are sent. No names, IDs, or amounts.</li><li><strong>4. Mocked tests</strong> — all tests in test_ai_feature.py use unittest.mock.patch. The real API is never called during testing.</li><li><strong>5. Limitations in README</strong> — at least two specific limitations listed.</li><li><strong>6. Student can explain</strong> — you must walk through every line at the presentation.</li></ul><div class="code-label">ai_feature.py — the minimal correct implementation</div><pre><code>import anthropic
+
+def summarise_request(category: str, description: str) -&gt; str:
+    &quot;&quot;&quot;
+    Return a one-sentence summary of a purchase request.
+    Privacy: only category and description are sent.
+    No names, IDs, or amounts are included.
+    &quot;&quot;&quot;
+    client = anthropic.Anthropic()
+    message = client.messages.create(
+        model=&#x27;claude-haiku-4-5-20251001&#x27;,
+        max_tokens=150,
+        messages=[{
+            &#x27;role&#x27;: &#x27;user&#x27;,
+            &#x27;content&#x27;: (
+                f&#x27;Summarise this {category} purchase request &#x27;
+                f&#x27;in one sentence:\n\n{description}&#x27;
+            )
+        }]
+    )
+    return message.content[0].text.strip()</code></pre><div class="code-label">In app.py — disclosure label and human review gate</div><pre><code># Button 1: generate
+if st.button(&#x27;Generate AI Summary&#x27;):
+    if description:
+        summary = summarise_request(category, description)
+        # Control 1: disclosure
+        st.info(f&#x27;AI-generated summary (review before saving):\n\n{summary}&#x27;)
+        st.session_state[&#x27;pending_summary&#x27;] = summary
+
+# Control 2: human review gate
+if &#x27;pending_summary&#x27; in st.session_state:
+    if st.button(&#x27;Looks good — save this summary&#x27;):
+        # save to database
+        del st.session_state[&#x27;pending_summary&#x27;]
+        st.success(&#x27;Summary saved.&#x27;)
+        st.rerun()</code></pre><div class="code-label">tests/test_ai_feature.py — mocked tests (Control 4)</div><pre><code>from unittest.mock import MagicMock, patch
+from ai_feature import summarise_request
+
+def test_summarise_returns_text():
+    fake_content = MagicMock()
+    fake_content.text = &#x27;This is a one-sentence summary.&#x27;
+    fake_message = MagicMock()
+    fake_message.content = [fake_content]
+
+    with patch(&#x27;ai_feature.anthropic.Anthropic&#x27;) as MockClient:
+        MockClient.return_value.messages.create.return_value = fake_message
+        result = summarise_request(&#x27;Equipment&#x27;, &#x27;New standing desks.&#x27;)
+
+    assert result == &#x27;This is a one-sentence summary.&#x27;</code></pre><h2>Final repo checklist</h2><ul class="checklist"><li>.env file contains ANTHROPIC_API_KEY and is in .gitignore</li><li>pytest -v — all tests green (AI tests mocked, no API key needed)</li><li>ruff format . and ruff check . both pass cleanly</li><li>README.md has all four required sections including AI feature section and limitations</li><li>git log --oneline shows meaningful iterative commit history — not a single 'final' commit</li><li>GitHub URL pasted into Canvas before the deadline</li></ul><h2>The eight required presentation topics</h2><ol><li>Business problem — 60-second pitch: what breaks without this system?</li><li>Developer workflow demo — terminal live: (.venv) active, ruff clean, pytest green, git log visible.</li><li>OOP design — walk through models.py: class names, attributes, methods.</li><li>SQL schema — show schema.sql, run one query in the sqlite3 shell.</li><li>Streamlit live demo — all five features working against live data.</li><li>GenAI feature demo — show the AI tab, name the disclosure label and the review gate, explain what is and is not sent to the API.</li><li>Testing — show pytest -v green. Name one limitation of the system.</li><li>AI use during development — honest, specific statement of how you used AI tools (or did not).</li></ol><div class="warn"><div class="concept-label">⚠ Developer workflow demo must be live</div><p>Open your terminal. The venv must be active — (.venv) in the prompt. Run ruff check . — clean. Run pytest -v — green. Run git log --oneline — meaningful history. Then open the app. This sequence is the demonstration.</p></div><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 16 &nbsp;·&nbsp; GenAI Feature &amp; Final Demo</div></body></html>

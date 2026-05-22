@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 1 — Developer Mindset &amp; First Setup</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 1 — Developer Foundations</span>
+  <span class="nav-week">Week 1 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 01</div>
+  <h1 class="wk-title">Developer Mindset &amp; First Setup</h1>
+  <p class="wk-deck">Install and verify your tools, understand the directory tree, and run your first Python script.</p>
+  <div class="wk-meta"><span class="chip blue">Unit 1</span><span class="chip ">Weeks 1–4</span><span class="chip ">No prior experience required</span></div>
+</div><h2>Why this course starts with tools, not code</h2><p>Most programming courses start with <code>print('Hello world')</code>. This one starts with the terminal. That is intentional. The terminal is where professional developers live. Learning it first means every line of code you write from Week 2 onwards is written the right way — in the right folder, in the right environment, committed with a meaningful message.</p><p>By the end of this week you will have a working development environment, a course folder structure, and one working Python script. That is enough.</p><h2>The directory tree — the most important mental model</h2><div class="concept"><div class="concept-label">Key idea</div><p>Your computer organises every file inside a tree of folders. You are always somewhere in that tree. Every command you run affects files <em>relative to where you currently are</em>.</p></div><p>The root of the tree is <code>/</code> on Mac/Linux. Your home folder is <code>~</code> (which expands to <code>/Users/yourname</code>). Your course folder will live at <code>~/ism3232/</code>.</p><div class="code-label">How to read a path</div><pre><code>/Users/yourname/ism3232/module01_setup/hello_ism3232.py
+│               │        │               └── the file
+│               │        └── the module folder
+│               └── your course folder
+└── root of the filesystem</code></pre><p><strong>Absolute paths</strong> start from <code>/</code> and work from anywhere. <strong>Relative paths</strong> start from wherever you are right now. <code>cd ..</code> moves up one level. <code>cd ~</code> jumps home from anywhere.</p><h2>Your development environment</h2><h3>What you need installed</h3><ul><li><strong>zsh</strong> — your shell. The prompt ends with <code>%</code>. If it ends with <code>$</code> you are in bash — fix this before continuing.</li><li><strong>VS Code</strong> — your code editor. Open the integrated terminal with <code>Ctrl+`</code> (Windows) or <code>Cmd+`</code> (Mac).</li><li><strong>Python 3.10+</strong> — verify with <code>python3 --version</code>. Note: use <code>python3</code>, not <code>python</code>.</li><li><strong>Git 2.x</strong> — verify with <code>git --version</code>.</li></ul><div class="code-label">Six verification commands — run each one and read the output</div><pre><code>echo $SHELL       # must show /bin/zsh
+zsh --version     # must be 5.x or higher
+python3 --version # must be 3.10 or higher
+git --version     # must be 2.x
+pwd               # shows your home directory
+ls                # shows Desktop, Documents, etc.</code></pre><div class="warn"><div class="concept-label">⚠ Screenshot required</div><p>Take one screenshot showing all six commands and their outputs. This is Assignment 1, deliverable 1. All six outputs must be visible in a single window.</p></div><h2>Creating the course folder structure</h2><div class="code-label">Run these commands in order — type each one, do not paste</div><pre><code>cd ~                        # go home
+mkdir ism3232               # create the course folder
+cd ism3232                  # enter it
+mkdir module01_setup        # create the first module folder
+cd module01_setup           # enter it
+pwd                         # confirm: ends in /ism3232/module01_setup</code></pre><h2>Your first Python script</h2><div class="code-label">Create and run hello_ism3232.py</div><pre><code>touch hello_ism3232.py      # create empty file
+code hello_ism3232.py       # open in VS Code</code></pre><div class="code-label">Type this — do not paste</div><pre><code># hello_ism3232.py
+# Author: Your Name
+
+print(&#x27;Hello, ISM3232!&#x27;)
+
+course_name  = &#x27;Business Application Development&#x27;
+credit_hours = 3
+weekly_hours = credit_hours * 2
+
+print(f&#x27;Course: {course_name}&#x27;)
+print(f&#x27;Expected weekly hours: {weekly_hours}&#x27;)
+print(&#x27;Environment verified. Week 1 complete.&#x27;)</code></pre><div class="code-label">Save and run</div><pre><code>python3 hello_ism3232.py</code></pre><h2>Key terms this week</h2><div class="term"><span class="term-word">shell</span><span class="term-def">The program that reads your typed commands and executes them. We use zsh.</span></div><div class="term"><span class="term-word">terminal / terminal emulator</span><span class="term-def">The window you type commands into. VS Code has one built in.</span></div><div class="term"><span class="term-word">directory</span><span class="term-def">A folder. Directories contain files and other directories.</span></div><div class="term"><span class="term-word">absolute path</span><span class="term-def">A path starting from root (/). Works from anywhere.</span></div><div class="term"><span class="term-word">relative path</span><span class="term-def">A path starting from your current location. Shorter, but location-dependent.</span></div><div class="term"><span class="term-word">~ (tilde)</span><span class="term-def">Shorthand for your home directory. cd ~ takes you home from anywhere.</span></div><div class="term"><span class="term-word">.. (dot dot)</span><span class="term-def">The parent directory. cd .. moves you up one level.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Prompt ends with % (not $)</li><li>All six verification commands ran without errors</li><li>course folder at ~/ism3232/module01_setup/ exists</li><li>hello_ism3232.py runs and prints three lines</li><li>Screenshot taken and saved</li><li>Assignment 1 submitted to Canvas</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 1 &nbsp;·&nbsp; Developer Mindset &amp; First Setup</div></body></html>

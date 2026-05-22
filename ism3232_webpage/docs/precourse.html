@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 &mdash; Pre-Course Setup Tutorial</title>
+  <style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style>
+  <style>html{min-height:100vh;}
+
+  /* ── Setup-guide specific components ── */
+  .os-tabs { display:flex; gap:0; margin-bottom:0; border-bottom:2px solid var(--border); }
+  .os-tab  { font-family:'Courier New',Courier,monospace; font-size:11px; letter-spacing:.08em;
+             text-transform:uppercase; padding:8px 18px; cursor:pointer; border:1px solid var(--border);
+             border-bottom:none; margin-bottom:-2px; color:var(--text-muted); background:var(--bg-card-alt);
+             border-radius:6px 6px 0 0; }
+  .os-tab.active { color:var(--accent); background:var(--bg-card); border-color:var(--accent-bdr);
+                   border-bottom-color:var(--bg-card); font-weight:bold; }
+  .os-panel { display:none; background:var(--bg-card); border:1px solid var(--border);
+              border-top:none; border-radius:0 0 8px 8px; padding:18px 20px; margin-bottom:20px; }
+  .os-panel.active { display:block; }
+  .os-panel p { font-size:13px; color:var(--text-body); margin-bottom:10px; line-height:1.7; }
+  .os-panel p:last-child { margin-bottom:0; }
+
+  .step-block { counter-increment:steps; display:flex; gap:16px; margin-bottom:16px;
+                align-items:flex-start; }
+  .step-circle { min-width:32px; height:32px; border-radius:50%; background:var(--accent);
+                 color:#fff; font-family:'Courier New',Courier,monospace; font-size:13px;
+                 font-weight:bold; display:flex; align-items:center; justify-content:center;
+                 flex-shrink:0; margin-top:2px; }
+  .step-inner .step-title { font-size:14px; font-weight:bold; color:var(--text-primary); margin-bottom:6px; }
+  .step-inner p { font-size:13px; color:var(--text-body); margin-bottom:6px; line-height:1.7; }
+  .step-inner p:last-child { margin-bottom:0; }
+  .step-inner code { font-size:.82em; }
+
+  .verify-box { background:var(--ok-bg); border:1px solid var(--ok-bdr); border-radius:8px;
+                padding:14px 18px; margin-top:10px; }
+  .verify-box .vb-label { font-family:'Courier New',Courier,monospace; font-size:9px;
+                          letter-spacing:.12em; text-transform:uppercase; color:var(--green);
+                          margin-bottom:8px; }
+  .verify-box .vb-cmd  { font-family:'Courier New',Courier,monospace; font-size:12px;
+                         color:var(--text-primary); margin-bottom:4px; }
+  .verify-box .vb-exp  { font-size:12px; color:var(--text-body); }
+
+  .tool-header { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .tool-icon   { font-size:28px; flex-shrink:0; }
+  .tool-name   { font-size:20px; font-weight:bold; color:var(--text-primary); }
+  .tool-why    { font-size:13px; color:var(--text-secondary); font-style:italic; margin-bottom:16px; }
+
+  .platform-badge { display:inline-block; font-family:'Courier New',Courier,monospace;
+                    font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+                    padding:2px 8px; border-radius:12px; margin-right:4px; margin-bottom:4px; }
+  .pb-mac  { background:var(--ok-bg);     border:1px solid var(--ok-bdr);    color:var(--green); }
+  .pb-win  { background:var(--accent-bg); border:1px solid var(--accent-bdr); color:var(--accent); }
+  .pb-all  { background:var(--amber-bg);  border:1px solid var(--amber-bdr); color:var(--amber); }
+
+  .checklist-final { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+  .checklist-final li { display:flex; gap:10px; align-items:flex-start; font-size:13px;
+                        color:var(--text-body); line-height:1.6; }
+  .checklist-final li::before { content:"&#x2610;"; font-size:16px; color:var(--text-muted);
+                                 flex-shrink:0; margin-top:-2px; }
+
+  .big-verify { background:var(--bg-code); border-radius:10px; padding:18px 20px; margin-bottom:16px; }
+  .big-verify .bv-label { font-family:'Courier New',Courier,monospace; font-size:9px;
+                           letter-spacing:.12em; text-transform:uppercase; color:#6c7086;
+                           margin-bottom:12px; }
+  .big-verify pre { font-size:12px; color:var(--text-code); line-height:1.8; white-space:pre; }
+  .big-verify .cm  { color:#6c7086; }
+  .big-verify .kw  { color:#cba6f7; }
+  .big-verify .ok  { color:#a6e3a1; }
+  .big-verify .num { color:#fab387; }
+
+  .trouble-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  @media(max-width:580px) { .trouble-row { grid-template-columns:1fr; } }
+  .trouble-q { background:var(--warn-bg); border:1px solid var(--warn-bdr); border-radius:7px;
+               padding:12px 14px; }
+  .trouble-a { background:var(--bg-card); border:1px solid var(--border); border-radius:7px;
+               padding:12px 14px; }
+  .tq-label  { font-family:'Courier New',Courier,monospace; font-size:9px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--amber); margin-bottom:6px; }
+  .ta-label  { font-family:'Courier New',Courier,monospace; font-size:9px; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--green); margin-bottom:6px; }
+  .tq-text, .ta-text { font-size:12px; color:var(--text-body); line-height:1.6; }
+  .tq-text code, .ta-text code { font-size:.82em; }
+
+body{min-height:100vh;width:100%;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- ── Page header ── -->
+<div class="page-header">
+  <p class="eyebrow">ISM3232 &middot; Business Application Development &middot; Before Day 1</p>
+  <h1>Pre-Course Setup Tutorial</h1>
+  <p class="subtitle">Everything you need to install, configure, and verify before your first class session &mdash; with step-by-step instructions for both Mac and Windows.</p>
+  <div class="meta-pills">
+    <span class="meta-pill">Complete before Day 1</span>
+    <span class="meta-pill">Mac + Windows instructions</span>
+    <span class="meta-pill">~60&ndash;90 min total</span>
+    <span class="meta-pill">Final verification checklist included</span>
+  </div>
+</div>
+
+<!-- ── Why this matters ── -->
+<div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Why you need to do this before class starts</div><div class="callout-body">Week 1 begins with a live terminal session. Students who have not completed their setup cannot follow the demonstrations. If something goes wrong during installation, you will need time to troubleshoot &mdash; do not leave this for the morning of the first class. <strong>Allow 60&ndash;90 minutes.</strong> If you run into a problem you cannot solve, post in the course discussion board with a screenshot of the error.</div></div></div>
+
+<!-- ── What you are installing ── -->
+<div class="section-divider"><div class="line"></div><div class="label">What You Are Installing &mdash; Overview</div><div class="line"></div></div>
+<table class="concept-table">
+  <thead><tr><th>Tool</th><th>What it is</th><th>Mac</th><th>Windows</th></tr></thead>
+  <tbody>
+    <tr><td>VS Code</td><td>Code editor &mdash; where you write every script this semester</td><td>Install</td><td>Install</td></tr>
+    <tr><td>Python 3</td><td>The programming language used in this course</td><td>Usually pre-installed; verify version</td><td>Install from python.org</td></tr>
+    <tr><td>Git</td><td>Version control &mdash; how you submit every major assignment</td><td>Comes with Xcode Command Line Tools</td><td>Install from git-scm.com</td></tr>
+    <tr><td>zsh</td><td>The shell (terminal environment) required for this course</td><td>Default since macOS Catalina</td><td>Requires WSL Ubuntu</td></tr>
+    <tr><td>WSL (Ubuntu)</td><td>Windows Subsystem for Linux &mdash; gives Windows a Linux terminal</td><td>Not needed</td><td>Required</td></tr>
+    <tr><td>GitHub account</td><td>Where your repositories live and how assignments are submitted</td><td>Free account at github.com</td><td>Free account at github.com</td></tr>
+    <tr><td>VS Code Python extension</td><td>Adds Python language support to VS Code</td><td>Install inside VS Code</td><td>Install inside VS Code</td></tr>
+  </tbody>
+</table>
+
+<div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Windows users &mdash; read this first</div><div class="callout-body">Windows requires an extra step that Mac does not: installing WSL (Windows Subsystem for Linux). This gives your machine a real Linux terminal running Ubuntu, which is required for zsh. <strong>Plan an extra 20&ndash;30 minutes and make sure Windows Update is fully current before starting.</strong> WSL installation requires administrator access and a restart.</div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 1: VS Code                                 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 1 &mdash; VS Code</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F4BB;</div><div><div class="tool-name">Visual Studio Code</div><div><span class="platform-badge pb-all">Mac + Windows</span></div></div></div><p class="tool-why">Your primary code editor for every script, project, and capstone file in this course.</p>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('vscode','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('vscode','win',this)">&#x1FA9F; Windows</div></div><div id="vscode-mac" class="os-panel active"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Download VS Code</div><p>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> and click the big blue <strong>Download for Mac</strong> button. This downloads a <code>.zip</code> file.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Install</div><p>Open your Downloads folder. Double-click the <code>.zip</code> to unzip it. Drag <strong>Visual Studio Code.app</strong> into your <strong>Applications</strong> folder. Open it from Applications or Spotlight (<code>&#x2318;Space</code> &rarr; type &ldquo;code&rdquo;).</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Install the 'code' command</div><p>Open VS Code. Press <code>&#x2318;Shift+P</code> to open the Command Palette. Type <strong>Shell Command: Install 'code' command in PATH</strong> and press Enter. This lets you open VS Code from the terminal by typing <code>code .</code></p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ code --version</div><div class="vb-exp">Expected: <strong>1.80.x or higher</strong></div></div></div><div id="vscode-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Download VS Code</div><p>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> and click <strong>Download for Windows</strong>. This downloads a <code>.exe</code> installer.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Install</div><p>Run the installer. Accept the license agreement. On the <strong>Select Additional Tasks</strong> screen, check both <strong>Add to PATH</strong> boxes. Click through to Install. This is important &mdash; without adding to PATH you cannot use <code>code</code> from the terminal.</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Restart and verify</div><p>After installation completes, restart your computer. Open the Start menu and search for <strong>Visual Studio Code</strong> to confirm it installed.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ code --version</div><div class="vb-exp">Expected: <strong>1.80.x or higher (run this after WSL is set up)</strong></div></div></div>
+
+<!-- ── Python extension ── -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-title">Install the Python extension &mdash; required on all platforms</div>
+  <p>With VS Code open, click the Extensions icon in the left sidebar (four squares) or press <code>&#x2318;Shift+X</code> (Mac) / <code>Ctrl+Shift+X</code> (Windows).</p>
+  <p>Search for <strong>Python</strong>. Install the extension published by <strong>Microsoft</strong> (it will be the first result with millions of downloads). Wait for installation to complete.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 2: WSL (Windows only)                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 2 &mdash; WSL + Ubuntu (Windows Only)</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1FA9F;</div><div><div class="tool-name">WSL &mdash; Windows Subsystem for Linux</div><div><span class="platform-badge pb-win">Windows Only</span></div></div></div><p class="tool-why">Gives Windows a real Linux environment with zsh. Required for all terminal work in this course. Mac users skip this section.</p>
+
+<div class="callout tip"><div class="callout-icon">&#x1F4A1;</div><div><div class="callout-label">What WSL is</div><div class="callout-body">WSL lets your Windows machine run a full Ubuntu Linux terminal alongside Windows. Every terminal command in this course runs inside this Ubuntu environment. It is not a separate computer &mdash; it shares your files and runs natively on Windows 10/11.</div></div></div>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('wsl','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('wsl','win',this)">&#x1FA9F; Windows</div></div><div id="wsl-mac" class="os-panel active"><div class="card"><div class="card-title">Mac users &mdash; skip this step</div><p>zsh is the default shell on macOS Catalina and later. You do not need WSL. Proceed to Tool 3.</p></div></div><div id="wsl-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Check Windows version</div><p>WSL requires Windows 10 version 2004 or higher, or Windows 11. To check: press <code>Win+R</code>, type <code>winver</code>, press Enter. If your build number is below 19041, run Windows Update first.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Open PowerShell as Administrator</div><p>Click Start. Search for <strong>PowerShell</strong>. Right-click it and choose <strong>Run as administrator</strong>. Click Yes on the UAC prompt.</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Run the WSL install command</div><p>In the Administrator PowerShell window, paste this command and press Enter:</p><div class="code-block"><pre>wsl --install</pre></div><p>This installs WSL 2 and Ubuntu automatically. It will take 5&ndash;15 minutes depending on your internet speed. You will see a progress bar.</p></div></div><div class="step-block"><div class="step-circle">4</div><div class="step-inner"><div class="step-title">Restart your computer</div><p>When the installation finishes you will be prompted to restart. <strong>Do it.</strong> WSL will not work until after the restart.</p></div></div><div class="step-block"><div class="step-circle">5</div><div class="step-inner"><div class="step-title">Complete the Ubuntu setup</div><p>After restarting, Ubuntu will open automatically and ask you to create a UNIX username and password. Choose a simple username (no spaces, all lowercase). <strong>This is separate from your Windows login.</strong> The password will not show characters as you type &mdash; that is normal.</p></div></div><div class="step-block"><div class="step-circle">6</div><div class="step-inner"><div class="step-title">Install zsh inside Ubuntu</div><p>In the Ubuntu terminal, run these commands one at a time:</p><div class="code-block"><pre>sudo apt update
+sudo apt install zsh -y
+chsh -s $(which zsh)</pre></div><p>When asked for a password, enter the Ubuntu password you created in Step 5. After running <code>chsh</code>, close the Ubuntu window and reopen it &mdash; you should now be in zsh (the prompt changes).</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ echo $SHELL</div><div class="vb-exp">Expected: <strong>Should return /usr/bin/zsh or /bin/zsh</strong></div></div></div>
+
+<div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Windows &mdash; if wsl --install fails</div><div class="callout-body">Some Windows machines require virtualization to be enabled in BIOS/UEFI before WSL can install. If you get an error about virtualization: restart, enter BIOS setup (usually Del or F2 during startup), find &ldquo;Virtualization Technology&rdquo; or &ldquo;Intel VT-x&rdquo; and enable it. Save and restart. Then try <code>wsl --install</code> again.</div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 3: Python 3                                -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 3 &mdash; Python 3</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F40D;</div><div><div class="tool-name">Python 3</div><div><span class="platform-badge pb-all">Mac + Windows</span></div></div></div><p class="tool-why">The programming language for this course. You need Python 3.10 or higher.</p>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('python','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('python','win',this)">&#x1FA9F; Windows</div></div><div id="python-mac" class="os-panel active"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Check if Python 3 is already installed</div><p>Open Terminal (or the VS Code integrated terminal). Run:</p><div class="code-block"><pre>python3 --version</pre></div><p>If you see <code>Python 3.10.x</code> or higher, you are done. Skip to the verification box below.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">If Python 3 is missing or too old &mdash; install Xcode Command Line Tools</div><p>On Mac, the easiest way to get Python 3 and Git together is the Xcode Command Line Tools. Run:</p><div class="code-block"><pre>xcode-select --install</pre></div><p>A dialog appears asking to install. Click Install. This takes 5&ndash;10 minutes. After it completes, run <code>python3 --version</code> again.</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Alternative: download from python.org</div><p>If the Xcode method does not work, go to <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a> and download the latest Python 3 installer for macOS. Run the <code>.pkg</code> installer.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ python3 --version</div><div class="vb-exp">Expected: <strong>Python 3.10.x or Python 3.11.x or higher</strong></div></div></div><div id="python-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Python is installed inside WSL Ubuntu</div><p>If you completed the WSL setup in Tool 2, Ubuntu comes with Python 3. Open your Ubuntu/WSL terminal and run:</p><div class="code-block"><pre>python3 --version</pre></div><p>If you see Python 3.10 or higher, you are good. If the version is older:</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Update Python in Ubuntu if needed</div><div class="code-block"><pre>sudo apt update
+sudo apt install python3 python3-pip -y
+python3 --version</pre></div><p>This updates Python to the version available in Ubuntu&rsquo;s package manager.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ python3 --version</div><div class="vb-exp">Expected: <strong>Python 3.10.x or higher</strong></div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 4: Git                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 4 &mdash; Git</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F9F0;</div><div><div class="tool-name">Git</div><div><span class="platform-badge pb-all">Mac + Windows</span></div></div></div><p class="tool-why">Version control. Every major assignment is submitted via Git and GitHub. You will use it every week.</p>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('git','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('git','win',this)">&#x1FA9F; Windows</div></div><div id="git-mac" class="os-panel active"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Check if Git is installed</div><p>In the terminal, run:</p><div class="code-block"><pre>git --version</pre></div><p>If you see <code>git version 2.x.x</code>, it was installed with the Xcode Command Line Tools. You are done.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">If Git is missing</div><p>Run the Xcode Command Line Tools installer again:</p><div class="code-block"><pre>xcode-select --install</pre></div><p>Git is included. After installation, run <code>git --version</code> to confirm.</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Configure your Git identity</div><p>Run these two commands with your own name and email. These are attached to every commit you make and will appear on your GitHub profile:</p><div class="code-block"><pre>git config --global user.name 'Your Full Name'
+git config --global user.email 'you@youremail.com'
+git config --global --list</pre></div><p>The last command prints your config. Confirm your name and email are correct.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ git config --global user.name</div><div class="vb-exp">Expected: <strong>Your name (as you entered it)</strong></div></div></div><div id="git-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Git is already available inside WSL Ubuntu</div><p>Open your Ubuntu terminal and run:</p><div class="code-block"><pre>git --version</pre></div><p>Git is pre-installed in Ubuntu. You should see <code>git version 2.x</code>.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Configure your Git identity</div><div class="code-block"><pre>git config --global user.name 'Your Full Name'
+git config --global user.email 'you@youremail.com'
+git config --global --list</pre></div><p>Confirm your name and email appear in the output.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ git --version</div><div class="vb-exp">Expected: <strong>git version 2.x.x</strong></div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 5: zsh                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 5 &mdash; zsh (and setting up the VS Code terminal)</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F5A5;</div><div><div class="tool-name">zsh</div><div><span class="platform-badge pb-all">Mac + Windows (via WSL)</span></div></div></div><p class="tool-why">The shell (command-line environment) used in every class session. Every terminal command in this course runs in zsh.</p>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('zsh','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('zsh','win',this)">&#x1FA9F; Windows</div></div><div id="zsh-mac" class="os-panel active"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Verify zsh is your default shell</div><p>Open Terminal and run:</p><div class="code-block"><pre>echo $SHELL</pre></div><p>Expected output: <code>/bin/zsh</code>. macOS Catalina (2019) and later use zsh by default.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">If you see /bin/bash instead</div><p>Run this to switch:</p><div class="code-block"><pre>chsh -s /bin/zsh</pre></div><p>Enter your password. Close the terminal and reopen it. Run <code>echo $SHELL</code> again to confirm.</p></div></div><div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Configure the VS Code integrated terminal to use zsh</div><p>Open VS Code. Open Settings: <code>&#x2318;,</code></p><p>Search for: <strong>terminal default profile</strong></p><p>Click <strong>Terminal &gt; Integrated &gt; Default Profile: Osx</strong> and set it to <strong>zsh</strong>.</p><p>Close any open terminal panels in VS Code. Open a new one with <code>&#x2318;`</code>. The prompt should show <code>%</code>.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ echo $SHELL</div><div class="vb-exp">Expected: <strong>Should show /bin/zsh</strong></div></div></div><div id="zsh-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">zsh was set up in WSL during Tool 2</div><p>If you completed the WSL setup, zsh is already your shell inside Ubuntu. Open the Ubuntu terminal and confirm:</p><div class="code-block"><pre>echo $SHELL</pre></div><p>Expected: <code>/usr/bin/zsh</code> or <code>/bin/zsh</code></p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Configure the VS Code integrated terminal to use WSL</div><p>Open VS Code. Press <code>Ctrl+Shift+P</code> to open the Command Palette.</p><p>Type: <strong>Terminal: Select Default Profile</strong> and press Enter.</p><p>From the list, choose <strong>Ubuntu (WSL)</strong> or <strong>wsl.exe</strong>.</p><p>Open a new terminal in VS Code with <code>Ctrl+`</code>. It should open inside Ubuntu with a zsh prompt.</p></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ echo $SHELL</div><div class="vb-exp">Expected: <strong>Should show /usr/bin/zsh or /bin/zsh</strong></div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 6: GitHub                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 6 &mdash; GitHub Account</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F431;&#x200D;&#x1F4BB;</div><div><div class="tool-name">GitHub</div><div><span class="platform-badge pb-all">Mac + Windows</span></div></div></div><p class="tool-why">Where your code repositories live. Every major assignment is submitted as a GitHub repository URL. Your GitHub profile becomes your portfolio.</p>
+
+<div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Create a free GitHub account</div><p>Go to <a href="https://github.com" target="_blank">github.com</a> and click <strong>Sign up</strong>. Use a professional email address you check regularly.</p><p><strong>Choose your username carefully.</strong> This appears on your capstone portfolio and in every commit you make this semester. Use something professional &mdash; ideally firstname-lastname or a variation. Avoid nicknames or numbers if possible.</p></div></div>
+<div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Verify your email</div><p>GitHub will send a verification email. Click the link to verify. You cannot create repositories without a verified email.</p></div></div>
+<div class="step-block"><div class="step-circle">3</div><div class="step-inner"><div class="step-title">Configure SSH or use HTTPS</div><p>The easiest option for this course is <strong>HTTPS</strong> authentication. When you push code to GitHub for the first time, VS Code or Git will prompt you to log in. Use your GitHub username and password &mdash; or if prompted for a token, generate one at:</p><p><strong>GitHub.com &rarr; Settings &rarr; Developer Settings &rarr; Personal Access Tokens &rarr; Tokens (classic) &rarr; Generate new token</strong></p><p>Check the <strong>repo</strong> scope. Copy the token and paste it when Git asks for your password.</p></div></div>
+<div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ Visit github.com and log in</div><div class="vb-exp">Expected: <strong>Your profile page appears with your username</strong></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TOOL 7: tree                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Tool 7 &mdash; tree (directory visualiser)</div><div class="line"></div></div>
+<div class="tool-header"><div class="tool-icon">&#x1F333;</div><div><div class="tool-name">tree</div><div><span class="platform-badge pb-all">Mac + Windows (WSL)</span></div></div></div><p class="tool-why">A small command-line tool that prints a visual directory structure. Used in every lab and in the pre-submission ritual.</p>
+
+<div class="os-tabs"><div class="os-tab active" onclick="show('tree','mac',this)">&#x1F34E; Mac / Linux</div><div class="os-tab" onclick="show('tree','win',this)">&#x1FA9F; Windows</div></div><div id="tree-mac" class="os-panel active"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Install Homebrew (if not already installed)</div><p>Homebrew is the package manager for Mac. If you already have it, skip to Step 2. To install:</p><div class="code-block"><pre># Paste this entire line into your terminal:
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre></div><p>Follow the prompts. It will ask for your password. After it finishes, you may need to run one or two commands it prints at the end to add Homebrew to your PATH.</p></div></div><div class="step-block"><div class="step-circle">2</div><div class="step-inner"><div class="step-title">Install tree</div><div class="code-block"><pre>brew install tree</pre></div></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ tree --version</div><div class="vb-exp">Expected: <strong>tree v2.x or similar</strong></div></div></div><div id="tree-win" class="os-panel"><div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Install tree in Ubuntu</div><div class="code-block"><pre>sudo apt install tree -y</pre></div></div></div><div class="verify-box"><div class="vb-label">&#x2713; Verify</div><div class="vb-cmd">$ tree --version</div><div class="vb-exp">Expected: <strong>tree v2.x</strong></div></div></div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- FINAL VERIFICATION                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Final Verification &mdash; Run All Six Commands</div><div class="line"></div></div>
+
+<div class="callout blue"><div class="callout-icon">&#x1F3C1;</div><div><div class="callout-label">Run this after everything is installed</div><div class="callout-body">Open VS Code. Open the integrated terminal (<code>&#x2318;`</code> on Mac, <code>Ctrl+`</code> on Windows). Confirm the terminal is running zsh. Then run each command below and verify it matches the expected output. If all six pass, you are ready for Day 1.</div></div></div>
+
+<div class="big-verify">
+  <div class="bv-label">Run these six commands in the VS Code integrated terminal &mdash; all must return expected output</div>
+  <pre><span class="cm"># 1. Confirm zsh is running</span>
+echo $SHELL
+<span class="ok">Expected: /bin/zsh  (Mac)  or  /usr/bin/zsh  (WSL)</span>
+
+<span class="cm"># 2. Confirm zsh version</span>
+zsh --version
+<span class="ok">Expected: zsh 5.x or higher</span>
+
+<span class="cm"># 3. Confirm Python 3 is installed and recent enough</span>
+python3 --version
+<span class="ok">Expected: Python 3.10.x  or  Python 3.11.x  or  Python 3.12.x</span>
+
+<span class="cm"># 4. Confirm Git is installed</span>
+git --version
+<span class="ok">Expected: git version 2.x.x</span>
+
+<span class="cm"># 5. Confirm you are in your home directory</span>
+pwd
+<span class="ok">Expected: /Users/yourname  (Mac)  or  /home/yourname  (WSL)</span>
+
+<span class="cm"># 6. Confirm the directory listing works</span>
+ls
+<span class="ok">Expected: Desktop  Documents  Downloads  (and other folders)</span></pre>
+</div>
+
+<!-- Checklist -->
+<div class="section-divider"><div class="line"></div><div class="label">Pre-Course Checklist &mdash; Everything Done?</div><div class="line"></div></div>
+<ul class="checklist-final">
+  <li>VS Code is installed and opens without errors</li>
+  <li>The <code>code</code> command works from the terminal (<code>code --version</code>)</li>
+  <li>The VS Code Python extension is installed</li>
+  <li>The VS Code integrated terminal opens in <strong>zsh</strong> (not bash or PowerShell)</li>
+  <li><strong>Windows:</strong> WSL Ubuntu is installed and the Ubuntu terminal opens correctly</li>
+  <li>Python 3.10 or higher is installed (<code>python3 --version</code>)</li>
+  <li>Git 2.x is installed (<code>git --version</code>)</li>
+  <li>Git identity is configured (<code>git config --global user.name</code> returns your name)</li>
+  <li>tree is installed (<code>tree --version</code>)</li>
+  <li>GitHub account is created with a verified email</li>
+  <li>All six verification commands return expected output from the VS Code terminal</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TROUBLESHOOTING                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Troubleshooting &mdash; Common Problems and Fixes</div><div class="line"></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">I see <code>$</code> in my terminal prompt instead of <code>%</code></div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">You are running bash, not zsh. On Mac: run <code>chsh -s /bin/zsh</code> and restart the terminal. On Windows: make sure VS Code is set to use the WSL (Ubuntu) profile, not PowerShell.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>python3: command not found</code></div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">On Mac: run <code>xcode-select --install</code> to get Python 3. On Windows/WSL: run <code>sudo apt install python3 -y</code> inside the Ubuntu terminal.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>git: command not found</code></div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">On Mac: run <code>xcode-select --install</code>. On Windows/WSL: run <code>sudo apt install git -y</code>. Then configure your identity with <code>git config --global user.name</code>.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>code: command not found</code> when typing in terminal</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">In VS Code, press <code>&#x2318;Shift+P</code> (Mac) or <code>Ctrl+Shift+P</code> (Windows). Type <strong>Shell Command: Install 'code' command in PATH</strong>. Press Enter. Restart the terminal.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">WSL installation fails with a virtualisation error</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Enter BIOS/UEFI at startup (usually Del, F2, or F10). Find <strong>Intel VT-x</strong> or <strong>AMD-V</strong> or <strong>Virtualization Technology</strong> and enable it. Save and restart. Run <code>wsl --install</code> again.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">VS Code terminal opens PowerShell instead of WSL</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Press <code>Ctrl+Shift+P</code> in VS Code. Type <strong>Terminal: Select Default Profile</strong>. Choose <strong>Ubuntu (WSL)</strong>. Open a new terminal panel. It should now open in Ubuntu/zsh.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>brew: command not found</code> after installing Homebrew</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">After Homebrew installs, it prints one or two commands to add it to your PATH. Run those commands exactly. Then close and reopen the terminal.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text"><code>chsh: PAM authentication error</code> when switching to zsh on WSL</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">This happens when WSL is not set up correctly. Try: <code>sudo chsh -s $(which zsh) $USER</code> instead. If that fails, reinstall WSL by running <code>wsl --unregister Ubuntu</code> and then <code>wsl --install</code> again.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">Python version is 2.7 or older</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Run <code>python3 --version</code> not <code>python --version</code>. On modern systems, <code>python</code> may still point to Python 2. This course always uses <code>python3</code>.</div></div></div>
+
+<div class="trouble-row"><div class="trouble-q"><div class="tq-label">&#x26A0; Problem</div><div class="tq-text">I cannot create a GitHub repository</div></div><div class="trouble-a"><div class="ta-label">&#x2713; Fix</div><div class="ta-text">Your email must be verified before you can create repositories. Check your inbox for the verification email from GitHub. If you cannot find it, go to github.com/settings/emails and resend.</div></div></div>
+
+<!-- ── Getting help ── -->
+<div class="section-divider"><div class="line"></div><div class="label">Getting Help Before Day 1</div><div class="line"></div></div>
+<div class="callout tip"><div class="callout-icon">&#x1F4AC;</div><div><div class="callout-label">If something does not work</div><div class="callout-body">Post in the course discussion board with: (1) your operating system and version, (2) which step you are on, (3) a screenshot of the error message. The instructor monitors the board before the semester starts. <strong>Do not wait until Day 1 to report a setup problem.</strong> Setup issues that are not fixed before Week 1 will cause you to fall behind immediately.</div></div></div>
+
+<div class="card"><div class="card-title">What to include in a help post</div><p>&bull; <strong>Operating system:</strong> e.g., macOS 14.2 Sonoma, Windows 11 Home 23H2</p><p>&bull; <strong>Step:</strong> e.g., &ldquo;Tool 2, Step 3 &mdash; installing zsh inside Ubuntu&rdquo;</p><p>&bull; <strong>What you ran:</strong> the exact command you typed</p><p>&bull; <strong>What happened:</strong> the exact error message (screenshot preferred)</p><p>&bull; <strong>What you already tried:</strong> so we do not repeat suggestions</p></div>
+
+<div class="page-footer">
+  ISM3232 &middot; Business Application Development &middot; Pre-Course Setup Tutorial &middot; Complete before Day 1
+</div>
+
+</div>
+<script>
+function show(group, panel, el) {
+  document.querySelectorAll('[id^="'+group+'"]').forEach(p => p.classList.remove('active'));
+  document.getElementById(group+'-'+panel).classList.add('active');
+  el.parentElement.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISM3232 – Week 3: Module 2C &amp; 2D — Virtual Environments, Dependencies, and .zshrc</title>
+  <style>html{min-height:100vh;}
+
+    :root {
+      --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
+      --border:#e0e0de;--border-light:#ebebea;
+      --text-primary:#1a1a1a;--text-secondary:#555;--text-muted:#888;--text-faint:#aaa;
+      --text-body:#444;--text-code:#cdd6f4;--divider:#1a1a1a;
+      --accent:#1e40af;--accent-bg:#dbeafe;--accent-bdr:#bfdbfe;
+      --green:#166534;--green-bg:#dcfce7;--green-bdr:#bbf7d0;
+      --amber:#92400e;--amber-bg:#fef9c3;--amber-bdr:#fde68a;
+      --purple:#4c1d95;--purple-bg:#ede9fe;--purple-bdr:#ddd6fe;
+      --red:#991b1b;--red-bg:#fee2e2;--red-bdr:#fecaca;
+      --warn-bg:#fef3c7;--warn-bdr:#fcd34d;--warn-txt:#92400e;
+      --ok-bg:#f0fdf4;--ok-bdr:#86efac;--ok-txt:#166534;
+      --tip-bg:#eff6ff;--tip-bdr:#93c5fd;--tip-txt:#1e40af;
+      --step-bg:#f8fafc;--step-bdr:#e2e8f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:#0f0f0f;--bg-card:#1a1a1a;--bg-card-alt:#222;--bg-code:#1e1e2e;
+        --border:#2e2e2e;--border-light:#272727;
+        --text-primary:#f0f0f0;--text-secondary:#aaa;--text-muted:#666;--text-faint:#444;
+        --text-body:#ccc;--text-code:#cdd6f4;--divider:#444;
+        --accent-bg:#1e2d47;--accent-bdr:#2a3f60;
+        --green-bg:#14291e;--green-bdr:#1a3828;
+        --amber-bg:#2a1f08;--amber-bdr:#3d2e0d;
+        --purple-bg:#1e1433;--purple-bdr:#2d1f4a;
+        --red-bg:#2a1010;--red-bdr:#4a1818;
+        --warn-bg:#2a1f08;--warn-bdr:#92400e;--warn-txt:#fcd34d;
+        --ok-bg:#0f2018;--ok-bdr:#166534;--ok-txt:#4ade80;
+        --tip-bg:#0d1e33;--tip-bdr:#1e3a8a;--tip-txt:#60a5fa;
+        --step-bg:#1a1a1a;--step-bdr:#2e2e2e;
+      }
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Georgia,'Times New Roman',serif;background:var(--bg-page);color:var(--text-primary);padding:40px 20px 80px;line-height:1.7;}
+    .wrapper{padding-left:clamp(20px,4vw,56px);padding-right:clamp(20px,4vw,56px);max-width:100%;width:100%;}
+    h1,h2,h3,h4{font-weight:normal;}
+    code,pre{font-family:'Courier New',Courier,monospace;}
+    code{font-size:.85em;background:var(--bg-code);color:var(--text-code);padding:2px 6px;border-radius:3px;}
+    a{color:var(--accent);text-decoration:none;}
+
+    /* ── Page header ── */
+    .page-header{border-bottom:2px solid var(--divider);padding-bottom:20px;margin-bottom:36px;}
+    .eyebrow{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .page-header h1{font-size:26px;letter-spacing:-.3px;margin-bottom:8px;}
+    .page-header .subtitle{font-size:13px;color:var(--text-secondary);font-style:italic;}
+    .meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .meta-pill{font-family:'Courier New',Courier,monospace;font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);background:var(--bg-card);}
+
+    /* ── Course map ── */
+    .course-map{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:36px;}
+    .map-item{font-size:11px;padding:4px 11px;border:1px solid var(--border);border-radius:20px;color:var(--text-body);background:var(--bg-card);}
+    .map-item.current{background:var(--accent-bg);border-color:var(--accent-bdr);color:var(--accent);font-weight:bold;}
+    .map-arrow{font-size:12px;color:var(--text-muted);}
+
+    /* ── Section headings ── */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+    .section-divider .line{flex:1;height:1px;background:var(--border);}
+    .section-divider .label{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+    .section-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:12px;flex-shrink:0;}
+    h2.section-title{font-size:20px;color:var(--text-primary);margin-bottom:4px;}
+    h2.section-title + .section-sub{font-size:13px;color:var(--text-secondary);font-style:italic;margin-bottom:20px;}
+
+    /* ── Cards ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+    .card-title{font-size:14px;font-weight:bold;color:var(--text-primary);margin-bottom:10px;}
+    .card p{font-size:13px;color:var(--text-body);margin-bottom:8px;}
+    .card p:last-child{margin-bottom:0;}
+
+    /* ── Callouts ── */
+    .callout{border-left:4px solid;border-radius:7px;padding:12px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;}
+    .callout.warn{background:var(--warn-bg);border-color:var(--warn-bdr);}
+    .callout.ok{background:var(--ok-bg);border-color:var(--ok-bdr);}
+    .callout.tip{background:var(--tip-bg);border-color:var(--tip-bdr);}
+    .callout.blue{background:var(--accent-bg);border-color:var(--accent-bdr);}
+    .callout-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+    .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+    .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .callout-body strong{color:var(--text-primary);}
+
+    /* ── Step blocks ── */
+    .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+    .step{display:flex;gap:14px;align-items:flex-start;background:var(--step-bg);border:1px solid var(--step-bdr);border-radius:8px;padding:14px 16px;}
+    .step-num{min-width:28px;height:28px;border-radius:50%;background:var(--text-primary);color:var(--bg-page);font-family:'Courier New',Courier,monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-content .step-title{font-size:13px;font-weight:bold;color:var(--text-primary);margin-bottom:4px;}
+    .step-content .step-body{font-size:12px;color:var(--text-body);line-height:1.6;}
+    .step-content .step-body code{font-size:.82em;}
+
+    /* ── Code blocks ── */
+    .code-block{background:var(--bg-code);border-radius:8px;padding:14px 16px;margin-bottom:14px;overflow-x:auto;}
+    .code-block .cb-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6c7086;margin-bottom:8px;}
+    .code-block pre{font-size:12px;color:var(--text-code);line-height:1.7;white-space:pre;}
+    .code-block .comment{color:#6c7086;}
+    .code-block .kw{color:#cba6f7;}
+    .code-block .fn{color:#89b4fa;}
+    .code-block .str{color:#a6e3a1;}
+    .code-block .num{color:#fab387;}
+    .code-block .op{color:#89dceb;}
+
+    /* ── Two-col grid ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Concept table ── */
+    .concept-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+    .concept-table th{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:7px 12px;border-bottom:1px solid var(--border);background:var(--bg-card-alt);}
+    .concept-table td{padding:8px 12px;border-bottom:1px solid var(--border-light);color:var(--text-body);vertical-align:top;}
+    .concept-table tr:last-child td{border-bottom:none;}
+    .concept-table td:first-child{font-family:'Courier New',Courier,monospace;font-size:11px;color:var(--text-primary);white-space:nowrap;}
+
+    /* ── Check list ── */
+    .check-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .check-list li{font-size:12px;color:var(--text-body);display:flex;gap:8px;align-items:flex-start;}
+    .check-list li::before{content:"☐";font-size:14px;color:var(--text-muted);flex-shrink:0;margin-top:-1px;}
+    .check-list li.done::before{content:"☑";color:var(--green);}
+
+    /* ── Discussion prompts ── */
+    .prompt-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+    .prompt{background:var(--purple-bg);border:1px solid var(--purple-bdr);border-radius:7px;padding:12px 14px;}
+    .prompt .p-num{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+    .prompt .p-text{font-size:13px;color:var(--text-primary);font-style:italic;}
+    .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+    /* ── Timing bar ── */
+    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
+    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
+    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
+    .timing-block .t-label{font-size:10px;color:var(--text-body);}
+    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
+    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
+    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
+    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
+    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
+
+    /* ── Pills ── */
+    .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+    .pill{font-size:10px;padding:2px 9px;border-radius:20px;border:1px solid var(--border-light);color:var(--text-muted);background:var(--bg-card-alt);}
+
+    /* ── Assignment box ── */
+    .assignment{background:var(--bg-card);border:2px solid var(--accent-bdr);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+    .assignment .a-header{font-family:'Courier New',Courier,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+    .assignment h3{font-size:16px;color:var(--text-primary);margin-bottom:12px;}
+    .assignment .deliverable{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border-light);}
+    .assignment .deliverable:last-child{border-bottom:none;padding-bottom:0;}
+    .assignment .d-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+    .assignment .d-text{font-size:12px;color:var(--text-body);}
+    .assignment .d-text strong{color:var(--text-primary);}
+
+    /* ── Footer ── */
+    .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
+  
+body{min-height:100vh;width:100%;}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="page-header">
+    <p class="eyebrow">ISM3232 · Business Application Development · Week 3 Lecture Material</p>
+    <h1>Week 3 — Module 2C &amp; 2D — Virtual Environments, Dependencies, and .zshrc</h1>
+    <p class="subtitle">Students create and manage Python virtual environments, handle dependencies with pip, and customize zsh with aliases and shell functions.</p>
+    <div class="meta-pills"><span class="meta-pill">Week 3 of 17</span><span class="meta-pill">Unit 1: Developer Foundations</span><span class="meta-pill">Module 2C &amp; 2D</span><span class="meta-pill">~75 min contact time</span><span class="meta-pill">Assignment 3 due end of week</span></div>
+  </div>
+  <div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
+  <div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div>
+  <div class="timing-bar"><div class="timing-block blue"><div class="t-time">0–15 min</div><div class="t-label">Why venv? Concept</div></div><div class="timing-block green"><div class="t-time">15–40 min</div><div class="t-label">venv + pip live demo</div></div><div class="timing-block amber"><div class="t-time">40–55 min</div><div class="t-label">.zshrc aliases + mkcd</div></div><div class="timing-block purple"><div class="t-time">55–70 min</div><div class="t-label">Practice</div></div><div class="timing-block red"><div class="t-time">70–80 min</div><div class="t-label">Assignment walkthrough</div></div></div>
+  
+  <div class="section-divider"><div class="line"></div><div class="label">Section 1 — Why Virtual Environments?</div><div class="line"></div></div>
+  <div class="card"><div class="card-title">The problem venv solves</div>
+    <p>Without a virtual environment, every Python package you install goes into one global installation shared by every project. This works until Project A needs <code>requests==2.28</code> and Project B needs <code>requests==2.31</code> — they conflict. A virtual environment gives each project its own private Python installation. Packages installed inside it affect nothing else.</p>
+    <p>Professional Python developers always work inside a venv. This course treats it the same way: every assignment uses a venv, and the pre-submission ritual requires it to be active.</p>
+  </div>
+  <div class="callout tip"><div class="callout-icon">💡</div><div><div class="callout-label">Mental model for students</div>
+    <div class="callout-body">A venv is like a private room for each project. The room has its own Python and its own shelves of packages. When you activate it, you walk in. When you deactivate, you walk out. Other rooms — other projects — are completely unaffected.</div>
+  </div></div>
+
+  <div class="section-divider"><div class="line"></div><div class="label">Section 2 — Creating and Managing Virtual Environments</div><div class="line"></div></div>
+  <div class="cb"><div class="cb-label">Complete venv workflow — run inside module02_zsh/</div><pre><span class="cm"># 1. Create the virtual environment</span>
+<span class="cm">#    Always name it .venv (the dot hides it from normal ls)</span>
+<span class="kw">python3</span> -m venv .venv
+
+<span class="cm"># 2. Activate it</span>
+<span class="cm">#    Your prompt changes to show (.venv) — this confirms it is active</span>
+<span class="kw">source</span> .venv/bin/activate
+
+<span class="cm"># 3. Confirm you are inside the venv</span>
+<span class="kw">which</span> python3        <span class="cm"># should point inside .venv/bin/</span>
+<span class="kw">pip</span> list             <span class="cm"># shows minimal packages</span>
+
+<span class="cm"># 4. Install required tools for every project in this course</span>
+<span class="kw">pip</span> install pytest ruff
+
+<span class="cm"># 5. Freeze the environment to requirements.txt</span>
+<span class="kw">pip</span> freeze &gt; requirements.txt
+<span class="kw">cat</span> requirements.txt     <span class="cm"># verify it was written correctly</span>
+
+<span class="cm"># 6. To recreate the environment on another machine</span>
+<span class="kw">pip</span> install -r requirements.txt
+
+<span class="cm"># 7. Deactivate when done</span>
+<span class="kw">deactivate</span>
+<span class="kw">which</span> python3        <span class="cm"># back to system Python</span></pre></div>
+  <div class="callout warn"><div class="callout-icon">⚠</div><div><div class="callout-label">Never commit .venv to GitHub</div>
+    <div class="callout-body">The <code>.venv/</code> folder is large, platform-specific, and unnecessary — <code>requirements.txt</code> is what you share. Add <code>.venv/</code> to your <code>.gitignore</code> before your first push. We will cover .gitignore in Week 4 but start the habit now.</div>
+  </div></div>
+
+  <div class="section-divider"><div class="line"></div><div class="label">Section 3 — .zshrc Customization — Aliases and Functions</div><div class="line"></div></div>
+  <div class="card"><div class="card-title">What is .zshrc?</div>
+    <p><code>.zshrc</code> is a hidden configuration file in your home directory that zsh reads every time a new terminal opens. It is a startup script. Anything defined inside it — aliases, functions, environment variables — is automatically available in every terminal session.</p>
+    <p>Open it with <code>code ~/.zshrc</code>. After making changes, run <code>source ~/.zshrc</code> to apply them without restarting the terminal.</p>
+  </div>
+  <div class="cb"><div class="cb-label">Required aliases and function — add to ~/.zshrc</div><pre><span class="cm"># Open the config file</span>
+<span class="kw">code</span> ~/.zshrc
+
+<span class="cm"># --- Paste these lines into .zshrc ---</span>
+
+<span class="cm"># Navigation shortcuts</span>
+alias ll='ls -la'           <span class="cm"># detailed listing including hidden files</span>
+alias c='clear'             <span class="cm"># clear the screen</span>
+alias tree2='tree -L 2'     <span class="cm"># 2-level directory tree</span>
+
+<span class="cm"># Python shortcut</span>
+alias py='python3'          <span class="cm"># type py instead of python3</span>
+
+<span class="cm"># Git shortcuts (used in the pre-submission ritual)</span>
+alias gs='git status'
+alias ga='git add .'
+alias gcmsg='git commit -m'
+alias gp='git push'
+alias gl='git log --oneline'
+
+<span class="cm"># Shell function: create a folder and immediately enter it</span>
+mkcd() { mkdir -p "$1" &amp;&amp; cd "$1" }
+
+<span class="cm"># --- After saving the file ---</span>
+<span class="kw">source</span> ~/.zshrc     <span class="cm"># apply changes to the current session</span>
+
+<span class="cm"># Test</span>
+<span class="kw">ll</span>                  <span class="cm"># should work as ls -la</span>
+<span class="kw">mkcd</span> testdir        <span class="cm"># should create and enter testdir/</span>
+<span class="kw">pwd</span>                 <span class="cm"># should be inside testdir/</span></pre></div>
+  <table class="concept-table"><thead><tr><th>Alias</th><th>Expands to</th><th>When to use it</th></tr></thead><tbody>
+    <tr><td>ll</td><td>ls -la</td><td>Any time you need to see hidden files or file permissions</td></tr>
+    <tr><td>py</td><td>python3</td><td>Running Python scripts from the terminal</td></tr>
+    <tr><td>gs</td><td>git status</td><td>Before every git add to see what will be staged</td></tr>
+    <tr><td>ga</td><td>git add .</td><td>Staging all changed files</td></tr>
+    <tr><td>gcmsg</td><td>git commit -m</td><td>Committing with a message: gcmsg 'describe change'</td></tr>
+    <tr><td>gp</td><td>git push</td><td>Pushing to GitHub after committing</td></tr>
+    <tr><td>gl</td><td>git log --oneline</td><td>Reviewing commit history in compact format</td></tr>
+    <tr><td>mkcd</td><td>mkdir -p + cd</td><td>Creating a new project or week folder and entering it</td></tr>
+  </tbody></table>
+
+  
+  <div class="assignment">
+    <div class="a-header">Assignment 3 · Due end of Week 3 · Submitted to Canvas</div>
+    <h3>Virtual Environments and .zshrc Configuration</h3>
+    <div class="deliverable"><div class="d-icon">📸</div><div class="d-text"><strong>Screenshot 1:</strong> Terminal showing venv creation, activation (prompt shows <code>(.venv)</code>), and <code>pip install pytest ruff</code>.</div></div>
+    <div class="deliverable"><div class="d-icon">📸</div><div class="d-text"><strong>Screenshot 2:</strong> <code>pip freeze &gt; requirements.txt</code> followed by <code>cat requirements.txt</code>.</div></div>
+    <div class="deliverable"><div class="d-icon">📸</div><div class="d-text"><strong>Screenshot 3:</strong> Each custom alias and <code>mkcd</code> function tested in the terminal after <code>source ~/.zshrc</code>.</div></div>
+    <div class="deliverable"><div class="d-icon">📄</div><div class="d-text"><strong>File:</strong> <code>module02_zsh/.gitignore</code> containing at minimum <code>.venv/</code> and <code>__pycache__/</code>.</div></div>
+    <div class="deliverable"><div class="d-icon">📄</div><div class="d-text"><strong>File:</strong> <code>module02_zsh/requirements.txt</code> — from pip freeze inside the active venv.</div></div>
+  </div>
+
+  <div class="page-footer">ISM3232 · Business Application Development · Week 3 Lecture Material · Module 2C &amp; 2D — Virtual Environments, Dependencies, and .zshrc</div>
+</div>
+</body>
+</html>

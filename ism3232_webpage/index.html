@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 — Business Application Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0a0a0f;
+  --bg2:     #111119;
+  --bg3:     #18181f;
+  --bg4:     #1e1e28;
+  --border:  rgba(255,255,255,.07);
+  --border2: rgba(255,255,255,.13);
+  --text:    #e2e2ec;
+  --muted:   #7a7a95;
+  --dim:     #3a3a50;
+
+  --u1:  #00c9a7; --u1d: rgba(0,201,167,.12);  --u1g: rgba(0,201,167,.3);
+  --u2:  #818cf8; --u2d: rgba(129,140,248,.12); --u2g: rgba(129,140,248,.3);
+  --u3:  #fb7185; --u3d: rgba(251,113,133,.12); --u3g: rgba(251,113,133,.3);
+  --u4:  #fbbf24; --u4d: rgba(251,191,36,.12);  --u4g: rgba(251,191,36,.3);
+  --pre: #94e2d5; --pred:rgba(148,226,213,.12);
+
+  --mono: 'DM Mono', monospace;
+  --disp: 'Syne', sans-serif;
+}
+
+html { background: var(--bg); color: var(--text);
+       font-family: var(--disp); scroll-behavior: smooth; }
+body { min-height: 100vh; }
+
+/* ── Top nav ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,15,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 0;
+  height: 52px;
+}
+.nav-logo {
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--text);
+  text-decoration: none; margin-right: 32px; flex-shrink: 0;
+}
+.nav-links { display: flex; gap: 0; flex: 1; overflow-x: auto; }
+.nav-link {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+  padding: 0 14px; height: 52px; display: flex; align-items: center;
+  border-bottom: 2px solid transparent; transition: color .2s, border-color .2s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.nav-link:hover { color: var(--text); }
+.nav-link.u1:hover { color: var(--u1); border-color: var(--u1); }
+.nav-link.u2:hover { color: var(--u2); border-color: var(--u2); }
+.nav-link.u3:hover { color: var(--u3); border-color: var(--u3); }
+.nav-link.u4:hover { color: var(--u4); border-color: var(--u4); }
+
+/* ── Hero ── */
+.hero {
+  padding: 80px 32px 64px;
+  max-width: 900px; margin: 0 auto;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--border2); padding: 5px 14px;
+  border-radius: 20px; display: inline-block; margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(32px,5vw,56px); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.1;
+  color: var(--text); margin-bottom: 16px;
+}
+.hero h1 em { font-style: normal; color: var(--u2); }
+.hero-sub {
+  font-size: 17px; color: var(--muted); max-width: 580px;
+  margin: 0 auto 32px; line-height: 1.7;
+}
+.hero-chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.chip {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .08em;
+  padding: 5px 12px; border-radius: 20px;
+  background: var(--bg3); color: var(--muted); border: 1px solid var(--border2);
+}
+
+/* ── Layout ── */
+.main { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── Section headers ── */
+.sec-head {
+  display: flex; align-items: baseline; gap: 14px;
+  margin: 56px 0 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
+  flex-shrink: 0;
+}
+.sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
+.sec-count { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: auto; }
+
+/* ── Pre-course card ── */
+.precourse-card {
+  background: var(--pred); border: 1px solid rgba(148,226,213,.25);
+  border-radius: 14px; padding: 24px 28px;
+  display: flex; align-items: center; gap: 24px;
+  text-decoration: none; transition: transform .2s, box-shadow .2s;
+  margin-bottom: 12px;
+}
+.precourse-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(148,226,213,.15);
+}
+.pre-icon { font-size: 32px; flex-shrink: 0; }
+.pre-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pre-sub { font-size: 13px; color: var(--muted); }
+.pre-arrow { margin-left: auto; color: var(--pre); font-size: 20px; opacity: .7; }
+
+/* ── Unit overview strip ── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; margin-bottom: 12px;
+}
+.ov-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px;
+  text-decoration: none; display: block;
+  transition: border-color .2s, transform .2s;
+}
+.ov-card:hover { transform: translateY(-2px); }
+.ov-num { font-family: var(--mono); font-size: 9px; letter-spacing: .15em;
+  text-transform: uppercase; margin-bottom: 6px; }
+.ov-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.ov-weeks { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+/* ── Cheatsheet row ── */
+.cheat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px; margin-bottom: 12px;
+}
+.cheat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px;
+  text-decoration: none; display: flex; align-items: center; gap: 10px;
+  transition: border-color .2s, transform .2s;
+}
+.cheat-card:hover { transform: translateY(-2px); }
+.cheat-icon { font-size: 18px; flex-shrink: 0; }
+.cheat-label { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+/* ── Week grid ── */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+.week-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color .2s, transform .2s;
+}
+.week-card:hover { transform: translateY(-2px); }
+.wk-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: baseline; gap: 10px;
+}
+.wk-num {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; flex-shrink: 0;
+}
+.wk-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.wk-links { padding: 10px 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+.wk-link {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .05em;
+  padding: 5px 11px; border-radius: 20px; text-decoration: none;
+  border: 1px solid var(--border2); color: var(--muted);
+  transition: background .15s, color .15s, border-color .15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.wk-link:hover { color: var(--text); background: var(--bg4); border-color: var(--border2); }
+.wk-link .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Unit colour application ── */
+.u1-theme .sec-label { background:var(--u1d); color:var(--u1); }
+.u1-theme .ov-card:hover,.u1-theme .cheat-card:hover,.u1-theme .week-card:hover
+  { border-color:var(--u1); }
+.u1-theme .wk-num { color:var(--u1); }
+.u2-theme .sec-label { background:var(--u2d); color:var(--u2); }
+.u2-theme .ov-card:hover,.u2-theme .cheat-card:hover,.u2-theme .week-card:hover
+  { border-color:var(--u2); }
+.u2-theme .wk-num { color:var(--u2); }
+.u3-theme .sec-label { background:var(--u3d); color:var(--u3); }
+.u3-theme .ov-card:hover,.u3-theme .cheat-card:hover,.u3-theme .week-card:hover
+  { border-color:var(--u3); }
+.u3-theme .wk-num { color:var(--u3); }
+.u4-theme .sec-label { background:var(--u4d); color:var(--u4); }
+.u4-theme .ov-card:hover,.u4-theme .cheat-card:hover,.u4-theme .week-card:hover
+  { border-color:var(--u4); }
+.u4-theme .wk-num { color:var(--u4); }
+
+/* link colours per type */
+.l-read  { --lc: var(--u2); --ld: var(--u2d); }
+.l-lect  { --lc: var(--pre); --ld: var(--pred); }
+.l-lab   { --lc: var(--u1); --ld: var(--u1d); }
+.wk-link.l-read:hover  { background:var(--u2d); color:var(--u2); border-color:rgba(129,140,248,.3); }
+.wk-link.l-lect:hover  { background:var(--pred); color:var(--pre); border-color:rgba(148,226,213,.3); }
+.wk-link.l-lab:hover   { background:var(--u1d); color:var(--u1); border-color:rgba(0,201,167,.3); }
+.wk-link .dot.read  { background:var(--u2); }
+.wk-link .dot.lect  { background:var(--pre); }
+.wk-link .dot.lab   { background:var(--u1); }
+
+/* ── Midterm band ── */
+.midterm-band {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 18px 24px;
+  display: flex; align-items: center; gap: 16px; margin: 12px 0;
+}
+.mid-icon { font-size: 24px; }
+.mid-text { flex: 1; }
+.mid-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.mid-sub { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* ── Legend ── */
+.legend {
+  display: flex; gap: 16px; margin-bottom: 20px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  flex-wrap: wrap;
+}
+.leg-item { display: flex; align-items: center; gap: 6px; }
+.leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border); padding: 28px 32px;
+  text-align: center; font-family: var(--mono); font-size: 11px;
+  color: var(--dim); letter-spacing: .08em;
+}
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { color: var(--text); }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.hero       { animation: fadeUp .6s ease; }
+.hero-chips { animation: fadeUp .6s .1s ease both; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .hero { padding: 48px 20px 40px; }
+  .main { padding: 0 16px 60px; }
+  .cheat-row { grid-template-columns: 1fr 1fr; }
+  .topnav { padding: 0 16px; }
+  .sec-count { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top nav ── -->
+<nav class="topnav">
+  <a class="nav-logo" href="#">ISM3232</a>
+  <div class="nav-links">
+    <a class="nav-link" href="#precourse">Pre-Course</a>
+    <a class="nav-link u1" href="#unit1">Unit 1</a>
+    <a class="nav-link u2" href="#unit2">Unit 2</a>
+    <a class="nav-link u3" href="#unit3">Unit 3</a>
+    <a class="nav-link u4" href="#unit4">Unit 4</a>
+    <a class="nav-link" href="#cheatsheets">Cheat Sheets</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-eyebrow">ISM3232 &nbsp;·&nbsp; USF Muma College of Business</div>
+  <h1>Business Application<br><em>Development</em></h1>
+  <p class="hero-sub">
+    Build a full-stack business application in 16 weeks —
+    developer foundations, Python, object-oriented design,
+    SQL, Streamlit, and a controlled AI feature.
+  </p>
+  <div class="hero-chips">
+    <span class="chip">16 weeks</span>
+    <span class="chip">4 units</span>
+    <span class="chip">zsh · Python · Git</span>
+    <span class="chip">SQLite · Streamlit</span>
+    <span class="chip">Anthropic API</span>
+    <span class="chip">No prior experience required</span>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- ── Legend ── -->
+  <div class="legend">
+    <span class="leg-item"><span class="leg-dot" style="background:var(--u2)"></span>Reading</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--pre)"></span>Lecture</span>
+    <span class="leg-item"><span class="leg-dot" style="background:var(--u1)"></span>Lab</span>
+  </div>
+
+  <!-- ══ PRE-COURSE ════════════════════════════════════════════════════════════ -->
+  <section id="precourse">
+    <div class="sec-head">
+      <span class="sec-label" style="background:var(--pred);color:var(--pre);">Before Week 1</span>
+      <span class="sec-title">Pre-Course Setup</span>
+    </div>
+    <a class="precourse-card" href="docs/precourse.html">
+      <span class="pre-icon">🛠</span>
+      <div>
+        <div class="pre-title">Pre-Course Setup Tutorial</div>
+        <div class="pre-sub">Install VS Code, Python 3, Git, and zsh. Verify all tools before the first class. Allow 60–90 minutes.</div>
+      </div>
+      <span class="pre-arrow">→</span>
+    </a>
+  </section>
+
+  <!-- ══ UNIT OVERVIEWS ════════════════════════════════════════════════════════ -->
+  <section id="overviews">
+    <div class="sec-head">
+      <span class="sec-label" style="background:var(--bg3);color:var(--muted);">All Units</span>
+      <span class="sec-title">Course Overview</span>
+    </div>
+    <div class="overview-grid">
+      <a class="ov-card" href="docs/unit_all_overview.html" style="border-color:var(--border2);">
+        <div class="ov-num" style="color:var(--muted);">Overview</div>
+        <div class="ov-title">All Four Units</div>
+        <div class="ov-weeks">Weeks 1–16 · Full course map</div>
+      </a>
+      <a class="ov-card" href="docs/unit_1_overview.html">
+        <div class="ov-num" style="color:var(--u1);">Unit 1</div>
+        <div class="ov-title">Developer Foundations</div>
+        <div class="ov-weeks">Weeks 1–4</div>
+      </a>
+      <a class="ov-card" href="docs/unit_2_overview.html">
+        <div class="ov-num" style="color:var(--u2);">Unit 2</div>
+        <div class="ov-title">Python Foundations</div>
+        <div class="ov-weeks">Weeks 5–8 + Midterm</div>
+      </a>
+      <a class="ov-card" href="docs/unit_3_overview.html">
+        <div class="ov-num" style="color:var(--u3);">Unit 3</div>
+        <div class="ov-title">Object-Oriented Design</div>
+        <div class="ov-weeks">Weeks 10–12</div>
+      </a>
+      <a class="ov-card" href="docs/unit_4_overview.html">
+        <div class="ov-num" style="color:var(--u4);">Unit 4</div>
+        <div class="ov-title">Capstone Build</div>
+        <div class="ov-weeks">Weeks 13–16</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ UNIT 1 ════════════════════════════════════════════════════════════════ -->
+  <section id="unit1" class="u1-theme">
+    <div class="sec-head">
+      <span class="sec-label">Unit 1</span>
+      <span class="sec-title">Developer Foundations</span>
+      <span class="sec-count">Weeks 1–4 &nbsp;·&nbsp; zsh · venv · Git · ritual</span>
+    </div>
+    <div class="week-grid">
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 01</span>
+          <span class="wk-title">Developer Mindset &amp; First Setup</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week01_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week01_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week01_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 02</span>
+          <span class="wk-title">zsh Navigation &amp; File Operations</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week02_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week02_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week02_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 03</span>
+          <span class="wk-title">Virtual Environments &amp; .zshrc</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week03_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week03_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week03_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 04</span>
+          <span class="wk-title">Search Tools, Ritual &amp; Git</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week04_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week04_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week04_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ UNIT 2 ════════════════════════════════════════════════════════════════ -->
+  <section id="unit2" class="u2-theme">
+    <div class="sec-head">
+      <span class="sec-label">Unit 2</span>
+      <span class="sec-title">Python Foundations</span>
+      <span class="sec-count">Weeks 5–8 + Midterm &nbsp;·&nbsp; types · loops · functions · testing</span>
+    </div>
+    <div class="week-grid">
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 05</span>
+          <span class="wk-title">Variables, Data Types &amp; Operators</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week05_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week05_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week05_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 06</span>
+          <span class="wk-title">Conditionals, Loops &amp; Dictionaries</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week06_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week06_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week06_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 07</span>
+          <span class="wk-title">Functions, Modules &amp; pytest</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week07_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week07_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week07_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 08</span>
+          <span class="wk-title">Debugging, AI Literacy &amp; Midterm Review</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week08_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week08_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week08_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="midterm-band">
+        <span class="mid-icon">📝</span>
+        <div class="mid-text">
+          <div class="mid-title">Week 9 — Midterm Exam</div>
+          <div class="mid-sub">Open notes · Weeks 1–8 · ~60 minutes · No new content</div>
+        </div>
+        <a class="wk-link l-read" href="docs/week09_reading.html" style="flex-shrink:0;"><span class="dot read"></span>Exam Guide</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ UNIT 3 ════════════════════════════════════════════════════════════════ -->
+  <section id="unit3" class="u3-theme">
+    <div class="sec-head">
+      <span class="sec-label">Unit 3</span>
+      <span class="sec-title">Object-Oriented Design</span>
+      <span class="sec-count">Weeks 10–12 &nbsp;·&nbsp; classes · composition · inheritance</span>
+    </div>
+    <div class="week-grid">
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 10</span>
+          <span class="wk-title">OOP I — Classes &amp; Objects</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week10_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week10_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week10_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 11</span>
+          <span class="wk-title">OOP II — Composition &amp; Inheritance</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week11_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week11_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week11_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 12</span>
+          <span class="wk-title">OOP III — Applied Practice &amp; Design</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week12_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week12_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week12_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ UNIT 4 ════════════════════════════════════════════════════════════════ -->
+  <section id="unit4" class="u4-theme">
+    <div class="sec-head">
+      <span class="sec-label">Unit 4</span>
+      <span class="sec-title">Capstone Build</span>
+      <span class="sec-count">Weeks 13–16 &nbsp;·&nbsp; SQL · Streamlit · GenAI · demo</span>
+    </div>
+    <div class="week-grid">
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 13</span>
+          <span class="wk-title">Capstone Design &amp; SQL Foundations</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week13_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week13_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week13_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 14</span>
+          <span class="wk-title">Python + SQL Integration</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week14_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week14_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week14_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 15</span>
+          <span class="wk-title">Streamlit Business Interface</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week15_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week15_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week15_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="wk-head">
+          <span class="wk-num">Week 16</span>
+          <span class="wk-title">GenAI Feature &amp; Final Demo</span>
+        </div>
+        <div class="wk-links">
+          <a class="wk-link l-read" href="docs/week16_reading.html"><span class="dot read"></span>Reading</a>
+          <a class="wk-link l-lect" href="docs/week16_lecture.html"><span class="dot lect"></span>Lecture</a>
+          <a class="wk-link l-lab"  href="docs/week16_lab.html"><span class="dot lab"></span>Lab</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ CHEAT SHEETS ══════════════════════════════════════════════════════════ -->
+  <section id="cheatsheets">
+    <div class="sec-head">
+      <span class="sec-label" style="background:var(--bg3);color:var(--muted);">Reference</span>
+      <span class="sec-title">Unit Cheat Sheets</span>
+      <span class="sec-count">4 sheets — keep these open while working</span>
+    </div>
+    <div class="cheat-row">
+      <a class="cheat-card" href="docs/unit_1_cheatsheet.html">
+        <span class="cheat-icon" style="color:var(--u1)">📋</span>
+        <div><div class="cheat-label" style="color:var(--u1)">Unit 1</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);">Developer Foundations</div></div>
+      </a>
+      <a class="cheat-card" href="docs/unit_2_cheatsheet.html">
+        <span class="cheat-icon" style="color:var(--u2)">📋</span>
+        <div><div class="cheat-label" style="color:var(--u2)">Unit 2</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);">Python Foundations</div></div>
+      </a>
+      <a class="cheat-card" href="docs/unit_3_cheatsheet.html">
+        <span class="cheat-icon" style="color:var(--u3)">📋</span>
+        <div><div class="cheat-label" style="color:var(--u3)">Unit 3</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);">Object-Oriented Design</div></div>
+      </a>
+      <a class="cheat-card" href="docs/unit_4_cheatsheet.html">
+        <span class="cheat-icon" style="color:var(--u4)">📋</span>
+        <div><div class="cheat-label" style="color:var(--u4)">Unit 4</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);">Capstone Build</div></div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ISM3232 &nbsp;·&nbsp; Business Application Development &nbsp;·&nbsp;
+  USF Muma College of Business &nbsp;·&nbsp;
+  <a href="https://github.com">GitHub</a>
+</footer>
+
+</body>
+</html>

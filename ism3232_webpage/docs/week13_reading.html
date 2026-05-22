@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 13 — Capstone Design &amp; SQL Foundations</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 4 — Capstone Build</span>
+  <span class="nav-week">Week 13 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 13</div>
+  <h1 class="wk-title">Capstone Design &amp; SQL Foundations</h1>
+  <p class="wk-deck">Submit your project proposal with instructor sign-off, then learn the SQL operations your database will use.</p>
+  <div class="wk-meta"><span class="chip amber">Unit 4</span><span class="chip ">Weeks 13–16</span><span class="chip ">SQL · proposal</span></div>
+</div><h2>The project proposal — all 10 fields required</h2><div class="warn"><div class="concept-label">⚠ Do not start coding before sign-off</div><p>Your proposal needs instructor approval before you write a line of database code. A vague proposal approved hastily creates a build problem in Weeks 14–15 that cannot be fixed in time.</p></div><div class="code-label">PROPOSAL.md — required structure</div><pre><code>## Project name
+[Short descriptive name]
+
+## Business problem
+[2+ sentences. What breaks without this system? Who is affected?]
+
+## Primary user
+[One sentence: who uses this day-to-day?]
+
+## Records stored
+[What data is tracked? One bullet per record type.]
+
+## Business rules
+[Minimum 2. Each must have a threshold and a consequence.
+ Good: &#x27;Leave requests over 10 days require director approval.&#x27;
+ Bad: &#x27;Validate the data.&#x27; — not a rule, not testable.]
+
+## OOP classes
+[EntityClass: attributes and methods. ManagerClass: attributes and methods.]
+
+## SQL tables
+[Column names and types. Match your OOP attributes exactly.]
+
+## Streamlit features
+[All 5 required features named specifically for your domain.]
+
+## GenAI feature
+[What it does. What is sent to the API. What is NOT sent (no PII).]
+
+## Out of scope
+[At least 2 things you are explicitly NOT building.]</code></pre><h2>SQL fundamentals — five required operations</h2><div class="code-label">Run every query in the sqlite3 shell — show output each time</div><pre><code>-- Open the shell
+sqlite3 data/requests.db
+
+-- CREATE
+CREATE TABLE IF NOT EXISTS requests (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT &#x27;Pending&#x27;
+);
+
+-- INSERT
+INSERT INTO requests (requester, category, amount)
+    VALUES (&#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00);
+
+-- SELECT
+SELECT * FROM requests;
+SELECT * FROM requests WHERE status = &#x27;Pending&#x27;;
+SELECT * FROM requests ORDER BY amount DESC;
+
+-- UPDATE (WHERE is required)
+UPDATE requests SET status = &#x27;Approved&#x27; WHERE id = 1;
+
+-- GROUP BY
+SELECT status, COUNT(*) AS count, SUM(amount) AS total
+FROM requests
+GROUP BY status;
+
+.quit</code></pre><div class="warn"><div class="concept-label">⚠ UPDATE without WHERE is catastrophic</div><p>UPDATE requests SET status = 'Approved' — without WHERE — changes every single row. Always test your UPDATE with a SELECT first to confirm which rows will be affected.</p></div><div class="code-label">sqlite3 shell commands for debugging</div><pre><code>.tables          -- list all tables
+.schema requests -- show CREATE TABLE statement
+.mode column     -- aligned output
+.headers on      -- show column names
+.quit            -- exit the shell</code></pre><h2>Schema design — choosing the right types</h2><div class="term"><span class="term-word">TEXT</span><span class="term-def">Names, categories, statuses. Any string value.</span></div><div class="term"><span class="term-word">INTEGER</span><span class="term-def">IDs, counts, whole numbers.</span></div><div class="term"><span class="term-word">REAL</span><span class="term-def">Prices, rates, decimal numbers. Use for all money values.</span></div><div class="term"><span class="term-word">NOT NULL</span><span class="term-def">This column is required — INSERT fails if omitted.</span></div><div class="term"><span class="term-word">DEFAULT &#x27;Pending&#x27;</span><span class="term-def">Automatically used if no value is provided on INSERT.</span></div><div class="term"><span class="term-word">PRIMARY KEY AUTOINCREMENT</span><span class="term-def">Database assigns a unique integer ID automatically. Never provide this yourself.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>PROPOSAL.md submitted and approved by instructor</li><li>Can run all five SQL operations in the sqlite3 shell</li><li>Understand why UPDATE must always have a WHERE clause</li><li>SQL schema designed for your specific capstone (column names and types)</li><li>Assignment 13 submitted to Canvas</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 13 &nbsp;·&nbsp; Capstone Design &amp; SQL Foundations</div></body></html>

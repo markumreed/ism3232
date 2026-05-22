@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 10 — OOP I — Classes &amp; Objects</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+</style></head><body><div class="nav">
+  <span class="nav-course">ISM3232</span>
+  <span class="nav-title">Unit 3 — Object-Oriented Design</span>
+  <span class="nav-week">Week 10 of 16</span>
+</div>
+<div class="wk-header">
+  <div class="wk-num">Week 10</div>
+  <h1 class="wk-title">OOP I — Classes &amp; Objects</h1>
+  <p class="wk-deck">Build your first business class with __init__, instance attributes, business logic methods, and a full test suite.</p>
+  <div class="wk-meta"><span class="chip blue">Unit 3</span><span class="chip ">Weeks 10–12</span><span class="chip ">Classes · instances</span></div>
+</div><h2>The mental model — blueprint and instance</h2><div class="concept"><div class="concept-label">Class = blank form. Instance = filled-out form.</div><p>A class defines what every object of that type has and can do. An instance is one specific object built from that blueprint. BusinessRequest is the blank purchase form. req_101 is Taylor's filled-out request.</p></div><div class="code-label">Writing the BusinessRequest class — every line explained</div><pre><code>APPROVAL_LIMIT = 1000.00
+
+class BusinessRequest:
+    &quot;&quot;&quot;Represents a single purchase approval request.&quot;&quot;&quot;
+
+    def __init__(self, req_id: int, requester: str,
+                 category: str, amount: float) -&gt; None:
+        &quot;&quot;&quot;Initialise a new request with Pending status.&quot;&quot;&quot;
+        self.req_id    = req_id
+        self.requester = requester
+        self.category  = category
+        self.amount    = amount
+        self.status    = &#x27;Pending&#x27;   # default — not a parameter
+
+    def approve(self) -&gt; None:
+        &quot;&quot;&quot;Mark this request as Approved.&quot;&quot;&quot;
+        self.status = &#x27;Approved&#x27;
+
+    def reject(self) -&gt; None:
+        &quot;&quot;&quot;Mark this request as Rejected.&quot;&quot;&quot;
+        self.status = &#x27;Rejected&#x27;
+
+    def requires_review(self) -&gt; bool:
+        &quot;&quot;&quot;Return True if amount exceeds the approval limit.&quot;&quot;&quot;
+        return self.amount &gt; APPROVAL_LIMIT
+
+    def __repr__(self) -&gt; str:
+        return (f&#x27;BusinessRequest(id={self.req_id}, &#x27;
+                f&#x27;requester={self.requester!r}, &#x27;
+                f&#x27;amount=${self.amount:,.2f}, &#x27;
+                f&#x27;status={self.status!r})&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ self is the instance</div><p>When you call <code>req.approve()</code>, Python passes <code>req</code> as <code>self</code> automatically. <code>self.status = 'Approved'</code> changes the status of that specific instance. Forgetting <code>self</code> causes TypeError. Writing <code>status = 'Approved'</code> without <code>self</code> creates a local variable that vanishes immediately.</p></div><h2>Instance independence — the most important demo</h2><div class="code-label">Approving one instance must not affect others</div><pre><code>req1 = BusinessRequest(1, &#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00)
+req2 = BusinessRequest(2, &#x27;Jordan&#x27;, &#x27;Travel&#x27;,     350.00)
+
+req1.approve()
+
+print(req1.status)  # Approved
+print(req2.status)  # Pending ← still Pending!
+
+# Each instance has its own copy of every attribute.</code></pre><h2>The six required test types</h2><div class="code-label">tests/test_models.py</div><pre><code>from models import BusinessRequest
+
+def test_default_status_is_pending():
+    req = BusinessRequest(1, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
+    assert req.status == &#x27;Pending&#x27;
+
+def test_approve_sets_status():
+    req = BusinessRequest(2, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
+    req.approve()
+    assert req.status == &#x27;Approved&#x27;
+
+def test_requires_review_true():
+    req = BusinessRequest(3, &#x27;T&#x27;, &#x27;Equipment&#x27;, 1200.00)
+    assert req.requires_review() is True
+
+def test_requires_review_false():
+    req = BusinessRequest(4, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
+    assert req.requires_review() is False
+
+def test_boundary_at_limit():
+    req = BusinessRequest(5, &#x27;T&#x27;, &#x27;Equipment&#x27;, 1000.00)
+    assert req.requires_review() is False   # &gt; not &gt;=
+
+def test_instance_independence():
+    req1 = BusinessRequest(6, &#x27;A&#x27;, &#x27;Equipment&#x27;, 500.00)
+    req2 = BusinessRequest(7, &#x27;B&#x27;, &#x27;Travel&#x27;,    500.00)
+    req1.approve()
+    assert req1.status == &#x27;Approved&#x27;
+    assert req2.status == &#x27;Pending&#x27;   # unchanged</code></pre><h2>Key terms this week</h2><div class="term"><span class="term-word">class</span><span class="term-def">A blueprint that defines what objects of that type have (attributes) and can do (methods).</span></div><div class="term"><span class="term-word">instance / object</span><span class="term-def">One specific thing built from a class.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The constructor — runs once when an instance is created.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The specific instance the method is being called on.</span></div><div class="term"><span class="term-word">instance attribute</span><span class="term-def">A variable stored on a specific instance. Accessed with self.name.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Always takes self as the first parameter.</span></div><div class="term"><span class="term-word">__repr__</span><span class="term-def">Returns a readable string representation of the object. Used by print().</span></div><div class="term"><span class="term-word">encapsulation</span><span class="term-def">Bundling data and the methods that operate on it inside one class.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a class with __init__, three methods, and __repr__ without notes</li><li>Understand what self refers to and why every method needs it</li><li>Can demonstrate instance independence with a live example</li><li>All six test types present and passing (pytest -v)</li><li>Assignment 10 submitted via GitHub URL</li></ul><div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; OOP I — Classes &amp; Objects</div></body></html>
