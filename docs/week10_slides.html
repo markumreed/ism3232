@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 10</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 10</h1><h2>Students build their first business class with __init__, instance attributes, business logic methods, and pytest tests.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — What is a class? Mental model</span><span class="t-chip">15–40 min — Write BusinessRequest live</span><span class="t-chip">40–55 min — Create instances + call methods</span><span class="t-chip">55–70 min — Encapsulation concept</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;What is a class? Mental model</li><li><code style="color:var(--blue);font-size:.85em;">15–40 min</code>&nbsp;&nbsp;Write BusinessRequest live</li><li><code style="color:var(--blue);font-size:.85em;">40–55 min</code>&nbsp;&nbsp;Create instances + call methods</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;Encapsulation concept</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; Unit 3 begins — Object-Oriented System Design</h2><div class="concept-card">OOP is the bridge between the Python fundamentals of Units 1–2 and the full-stack capstone of Unit 4. Students who understand classes and objects will be able to design their capstone data models. Students who do not will struggle with every layer on top of them.</div><aside class="notes">“A class is a blueprint. An object is a specific thing built from that blueprint. The BusinessRequest class describes what every request has and what every request can do. Each individual request — request #101, request #102 — is a separate instance of that class.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">What Is a Class? What Is an Object?</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;What is a class? Mental model</span></section>
+<section class="s-concept"><h2>&#x1F9E9; The core mental model</h2><div class="concept-card">A class is a blueprint. An object is a specific thing built from that blueprint. A BusinessRequest class describes what every request has (attributes) and what every request can do (methods). Each individual request — request #101, request #102 — is a separate instance of that…</div><aside class="notes">“The BusinessRequest class is the purchase request form template. req_101 is a filled-out form for Taylor&#x27;s laptop request. req_102 is Jordan&#x27;s equipment request. Same template, different data, completely independent.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">class BusinessRequest:
+    &quot;&quot;&quot;Represents a single business purchase or travel request.&quot;&quot;&quot;
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = &quot;Pending&quot;   # default — not passed in
+
+    def approve(self):
+        &quot;&quot;&quot;Mark this request as approved.&quot;&quot;&quot;
+        self.status = &quot;Approved&quot;
+
+    def reject(self):
+        &quot;&quot;&quot;Mark this request as rejected.&quot;&quot;&quot;
+        self.status = &quot;Rejected&quot;
+
+    def requires_review(self):
+        &quot;&quot;&quot;Return True if the amount exceeds the approval limit.&quot;&quot;&quot;
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f&quot;BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})&quot;</code></pre><aside class="notes">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+   </aside><aside class="notes">“We are going to build this class together. I will explain what each line means before we type it. No copy-paste.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Writing the BusinessRequest Class</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–40 min &nbsp;Write BusinessRequest live</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Class = blueprint</h2><div class="concept-card">Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The BusinessRequest class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic — it…</div><aside class="notes">“Encapsulation means bundling the data and the operations on that data into a single unit. The BusinessRequest class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic — it just calls the method.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python"># Create two separate instances from the same class
+req_101 = BusinessRequest(101, &quot;Taylor&quot;, &quot;Travel&quot;, 1200)
+req_102 = BusinessRequest(102, &quot;Jordan&quot;, &quot;Equipment&quot;, 450)
+
+# Access attributes
+print(req_101.requester)          # Taylor
+print(req_101.status)             # Pending
+
+# Call methods
+print(req_101.requires_review())  # True (1200 &gt; 1000)
+print(req_102.requires_review())  # False (450 &lt;= 1000)
+
+req_101.approve()
+print(req_101.status)             # Approved
+print(req_102.status)             # Pending — unchanged
+
+# Instances are independent — changing one does not affect the other
+print(req_101)   # BusinessRequest(101, Taylor, $1200, Approved)
+print(req_102)   # BusinessRequest(102, Jordan, $450, Pending)</code></pre><aside class="notes"># Create two separate instances from the same class
+req_101 = BusinessRequest(101, "Taylor", "Travel", 1200)
+req_102 = BusinessRequest(102, "Jordan", "Equipment", 450)
+
+# Access attributes
+print(req_101.requester)          # Taylor
+print(req_101.status)             # Pending
+
+# Call methods
+print(re</aside><aside class="notes">“This is better design than checking req[&#x27;amount&#x27;] &gt; 1000 everywhere in your code. If the approval threshold changes, you update it in one place inside the class. Every caller gets the new behaviour automatically — the same reason we wrote functions in Week 7.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Creating and Using Instances</h2><span class='badge badge-yellow' style='margin-top:.3em;'>40–55 min &nbsp;Create instances + call methods</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Object / Instance = a specific thing</h2><div class="concept-card"></div></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Encapsulation</h2><span class='badge badge-yellow' style='margin-top:.3em;'>55–70 min &nbsp;Encapsulation concept</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Encapsulation: data and behaviour belong together</h2><div class="concept-card"></div></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Term</th><th>Meaning</th><th>Business analogy</th></tr></thead><tbody><tr><td>class</td><td>The blueprint / template</td><td>The Purchase Request form template</td></tr><tr><td>object / instance</td><td>A specific thing made from the blueprint</td><td>A filled-out request form for Laptop, $450</td></tr><tr><td>__init__</td><td>The constructor — runs when an instance is created</td><td>Filling in the blank fields when you create a new request</td></tr><tr><td>attribute (instance variable)</td><td>Data stored on a specific object</td><td>requester=&quot;Taylor&quot;, amount=1200, status=&quot;Pending&quot;</td></tr><tr><td>method</td><td>A function defined inside a class</td><td>approve(), reject(), requires_review()</td></tr><tr><td>self</td><td>Reference to the specific instance being operated on</td><td>The form itself, not the template</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 10</div><div class="assign-title">Assignment 10</div><div class="assign-items"><ul><li>File: models.py containing the BusinessRequest class with __init__ , at least 3 methods, and __repr__ .</li><li>File: main.py — creates at least 3 instances, calls each method, and prints results showing the methods work correctly.</li><li>File: tests/test_models.py — at least 4 pytest tests covering the class methods.</li><li>Screenshot: Full pre-submission ritual passing before push.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 10</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; Encapsulation</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

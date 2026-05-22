@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 W6 — Conditionals, Loops & Dictionaries</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--blue:#89b4fa;--green:#a6e3a1;--yellow:#f9e2af;--red:#f38ba8;
+  --purple:#cba6f7;--teal:#94e2d5;--orange:#fab387;
+  --s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+  --base:#1e1e2e;--mantle:#181825;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;font-size:34px;}
+.reveal h1{font-size:1.8em;color:var(--blue);line-height:1.2;margin-bottom:.25em;}
+.reveal h2{font-size:1.2em;color:var(--blue);line-height:1.3;margin-bottom:.2em;}
+.reveal h3{font-size:.8em;color:var(--sub);font-weight:400;margin-bottom:.3em;}
+.reveal p{font-size:.78em;color:var(--text);line-height:1.7;margin:.2em 0;}
+.reveal ul{list-style:none;padding:0;margin:.25em 0;}
+.reveal ul li{font-size:.75em;color:var(--text);padding:.16em 0;line-height:1.55;}
+.reveal ul li::before{content:"▸ ";color:var(--blue);}
+.reveal pre{font-size:.48em;margin:.25em 0;border-radius:8px;}
+.reveal strong{color:var(--yellow);}
+.reveal em{color:var(--sub);}
+.reveal code{font-family:"Courier New",monospace;}
+/* backgrounds */
+.s-title{background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%);}
+.s-video{background:#12121f;}
+.s-say{background:#0d1420;}
+.s-do{background:#091209;}
+.s-code{background:#0d0d1a;}
+.s-warn{background:#1a0808;}
+.s-outline{background:var(--mantle);}
+.s-yt{background:#13091a;}
+.s-divider{background:#0e0e14;}
+/* cards */
+.card{border-radius:8px;padding:.5em .85em;margin:.25em 0;text-align:left;font-size:.76em;line-height:1.7;}
+.say{background:rgba(137,180,250,.09);border-left:4px solid var(--blue);color:var(--text);}
+.do{background:rgba(166,227,161,.09);border-left:4px solid var(--green);color:var(--text);font-family:"Courier New",monospace;}
+.warn{background:rgba(243,139,168,.1);border-left:4px solid var(--red);color:var(--text);}
+.yt-c{background:rgba(203,166,247,.09);border-left:4px solid var(--purple);color:var(--text);}
+.clbl{font-family:"Courier New",monospace;font-size:.78em;font-weight:bold;
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:.25em;}
+.say .clbl{color:var(--blue);}
+.do  .clbl{color:var(--green);}
+.warn .clbl{color:var(--red);}
+.yt-c .clbl{color:var(--purple);}
+/* outline table */
+.ot{width:100%;border-collapse:collapse;font-size:.72em;text-align:left;margin:.3em 0;}
+.ot td{padding:.32em .55em;border-bottom:1px solid var(--s1);color:var(--text);vertical-align:top;line-height:1.5;}
+.ot td:first-child{font-family:"Courier New",monospace;color:var(--blue);font-weight:bold;white-space:nowrap;min-width:62px;}
+.ot tr:last-child td{border-bottom:none;}
+/* badges */
+.badge{display:inline-block;padding:.12em .55em;border-radius:20px;font-size:.44em;
+  font-family:"Courier New",monospace;font-weight:bold;letter-spacing:.06em;
+  text-transform:uppercase;vertical-align:middle;margin:.1em .1em 0 0;}
+.b-concept{background:rgba(137,180,250,.18);color:var(--blue);border:1px solid rgba(137,180,250,.35);}
+.b-demo{background:rgba(166,227,161,.18);color:var(--green);border:1px solid rgba(166,227,161,.35);}
+.b-code{background:rgba(249,226,175,.18);color:var(--yellow);border:1px solid rgba(249,226,175,.35);}
+.b-policy{background:rgba(243,139,168,.18);color:var(--red);border:1px solid rgba(243,139,168,.35);}
+.b-grey{background:rgba(255,255,255,.07);color:var(--sub);border:1px solid var(--s1);}
+/* week title */
+.wk-eyebrow{font-size:.52em;color:var(--sub);font-family:"Courier New",monospace;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em;}
+.wk-vids{font-size:.48em;color:var(--sub);margin-top:.55em;}
+/* video divider */
+.vid-divider{border:1px solid var(--s1);border-radius:10px;padding:.55em .9em;
+  margin:.25em 0;text-align:left;}
+.vid-divider .vd-id{font-family:"Courier New",monospace;font-size:.55em;
+  color:var(--sub);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2em;}
+.vid-divider .vd-title{font-size:1.0em;font-weight:bold;color:var(--text);line-height:1.3;}
+/* section label */
+.sec-chip{font-family:"Courier New",monospace;font-size:.5em;padding:.18em .65em;
+  border-radius:20px;background:var(--s0);color:var(--sub);border:1px solid var(--s1);
+  display:inline-block;margin-bottom:.3em;}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><div class="wk-eyebrow">ISM3232 &nbsp;·&nbsp; Unit 2 — Python Foundations</div><h1>Week 6</h1><h2>Conditionals, Loops &amp; Dictionaries</h2><div class="wk-vids">W6-V1&nbsp; · &nbsp;W6-V2&nbsp; · &nbsp;W6-V3&nbsp; · &nbsp;W6-V4 &nbsp;·&nbsp; ~29 min</div><p style="font-size:.4em;color:var(--sub);margin-top:.7em;">Video script slides &nbsp;·&nbsp; Arrow keys &nbsp;·&nbsp; S = speaker notes &nbsp;·&nbsp; F = fullscreen</p></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W6-V1</div><div class="vd-title">Conditionals — if, elif, else</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 6 | Python Conditionals — if, elif, else (Approval Routing Example)</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python if elif else</span><span class="badge b-grey">conditionals</span><span class="badge b-grey">python beginner</span><span class="badge b-grey">business logic</span><span class="badge b-grey">approval routing</span><span class="badge b-grey">python branching</span><span class="badge b-grey">ISM3232 Week 6</span></div><aside class="notes">YT: ISM3232 Week 6 | Python Conditionals — if, elif, else (Approval Routing Example)</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W6-V1 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**The business problem:** route purchase requests by amount</td></tr><tr><td>0:45</td><td>**if/elif/else syntax:** write the approval router</td></tr><tr><td>2:30</td><td>**Test boundary values:** 500, 501, 2000, 2001Critical</td></tr><tr><td>4:00</td><td>**Compound conditions:** and / or in one if</td></tr><tr><td>5:00</td><td>**Nested if:** category-based routing inside amount routing</td></tr><tr><td>5:45</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Purchase approval router — type this and test every boundary</code></pre><aside class="notes">CODE: Purchase approval router — type this and test every boundary</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 After running</div><p style="font-size:.84em;line-height:1.8;">Look at the output. $500.00 is Auto-approved. $501.00 is Manager. These are boundary values — the exact points where behaviour changes. Every conditional block you write for the capstone gets tested this way. Not with obvious values like 100 and 1000. With 500 and 501.</p></div><aside class="notes">SAY: Look at the output. $500.00 is Auto-approved. $501.00 is Manager. These are boundary values — the exact points where behaviour changes. Every conditional block you write for the capstone gets tested this way. Not with obvious values like 100 and 1000</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Indentation is not optional. Python uses indentation to define the body of each branch. Four spaces per level. Inconsistent indentation causes IndentationError.</p></div><aside class="notes">WARN: Indentation is not optional. Python uses indentation to define the body of each branch. Four spaces per level. Inconsistent indentation causes IndentationError.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W6-V2</div><div class="vd-title">Lists and the Accumulator Pattern</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 6 | Python Lists &amp; the Accumulator Pattern — for Loops Explained</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python lists</span><span class="badge b-grey">for loop</span><span class="badge b-grey">accumulator pattern</span><span class="badge b-grey">python beginner</span><span class="badge b-grey">list indexing</span><span class="badge b-grey">append</span><span class="badge b-grey">ISM3232 Week 6</span></div><aside class="notes">YT: ISM3232 Week 6 | Python Lists &amp; the Accumulator Pattern — for Loops Explained</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W6-V2 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**List basics:** creation, indexing, len</td></tr><tr><td>1:15</td><td>**Negative indexing:** items[-1] = last item</td></tr><tr><td>1:45</td><td>**append() and remove()**</td></tr><tr><td>2:15</td><td>**for loop over a list:** read each item</td></tr><tr><td>3:00</td><td>**Accumulator pattern:** total = 0 BEFORE the loopTrace manually</td></tr><tr><td>4:30</td><td>**Filtered accumulator:** only add if condition is met</td></tr><tr><td>5:30</td><td>**Build a filtered list inside a loop**</td></tr><tr><td>6:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Lists and the accumulator — type and trace</code></pre><aside class="notes">CODE: Lists and the accumulator — type and trace</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Trace the accumulator</div><p style="font-size:.84em;line-height:1.8;">Let me trace this manually. Before the loop: total is 0. Iteration 1: total = 0 + 200 = 200. Iteration 2: total = 200 + 1500 = 1700. Iteration 3: total = 1700 + 400 = 2100. Iteration 4: total = 2100 + 2200 = 4300. Iteration 5: total = 4300 + 850 = 5150. The key: total is initialised to zero BEFORE the loop. If you initialise inside the loop, it resets to zero on every iteration. That is the single most common accumulator bug.</p></div><aside class="notes">SAY: Let me trace this manually. Before the loop: total is 0. Iteration 1: total = 0 + 200 = 200. Iteration 2: total = 200 + 1500 = 1700. Iteration 3: total = 1700 + 400 = 2100. Iteration 4: total = 2100 + 2200 = 4300. Iteration 5: total = 4300 + 850 = 51</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Initialise the accumulator ( total = 0 ) BEFORE the loop. Never inside. Inside means it resets every iteration.</p></div><aside class="notes">WARN: Initialise the accumulator ( total = 0 ) BEFORE the loop. Never inside. Inside means it resets every iteration.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W6-V3</div><div class="vd-title">Dictionaries and the List-of-Dicts Pattern</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 6 | Python Dictionaries — Key Access, Update, and the List-of-Dicts Table Pattern</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python dictionary</span><span class="badge b-grey">list of dicts</span><span class="badge b-grey">dict key access</span><span class="badge b-grey">KeyError</span><span class="badge b-grey">python records</span><span class="badge b-grey">python table</span><span class="badge b-grey">ISM3232 Week 6</span></div><aside class="notes">YT: ISM3232 Week 6 | Python Dictionaries — Key Access, Update, and the List-of-Dicts Table Pattern</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W6-V3 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Dict syntax:** {key: value} — curly braces</td></tr><tr><td>0:45</td><td>**Key access:** rec[&#x27;amount&#x27;] — square brackets, string key</td></tr><tr><td>1:15</td><td>**KeyError:** what happens with a missing key</td></tr><tr><td>1:45</td><td>**Update a key:** rec[&#x27;status&#x27;] = &#x27;Approved&#x27; — = not ==</td></tr><tr><td>2:30</td><td>**The list-of-dicts pattern:** one dict = one rowSay it three times</td></tr><tr><td>3:15</td><td>**Loop and filter:** find Pending records</td></tr><tr><td>4:15</td><td>**Loop and update:** approve one record</td></tr><tr><td>5:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Dictionaries and list-of-dicts</code></pre><aside class="notes">CODE: Dictionaries and list-of-dicts</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 List-of-dicts mental model</div><p style="font-size:.84em;line-height:1.8;">Say this out loud: one dict is one row. A list of dicts is the table. Every record has the same keys — the keys are the column names. In Week 14 we replace this list with a real SQLite database. The structure — and the operations — are identical. SELECT * WHERE status = Pending is exactly what our list comprehension just did.</p></div><aside class="notes">SAY: Say this out loud: one dict is one row. A list of dicts is the table. Every record has the same keys — the keys are the column names. In Week 14 we replace this list with a real SQLite database. The structure — and the operations — are identical. SEL</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">The most common dict mistake in Week 6: using == (comparison) instead of = (assignment) when updating a key. rec[&#x27;status&#x27;] == &#x27;Approved&#x27; checks — it does not change anything.</p></div><aside class="notes">WARN: The most common dict mistake in Week 6: using == (comparison) instead of = (assignment) when updating a key. rec[&#x27;status&#x27;] == &#x27;Approved&#x27; checks — it does not change anything.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W6-V4</div><div class="vd-title">Business Record Processor — Live Coding Walkthrough</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 10 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 6 | Live Coding — Build a Business Record Processor from Scratch</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python live coding</span><span class="badge b-grey">business record processor</span><span class="badge b-grey">list of dicts</span><span class="badge b-grey">python for loop</span><span class="badge b-grey">accumulator</span><span class="badge b-grey">ISM3232 Week 6</span><span class="badge b-grey">write python from scratch</span></div><aside class="notes">YT: ISM3232 Week 6 | Live Coding — Build a Business Record Processor from Scratch</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W6-V4 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Setup + dataset:** five purchase records</td></tr><tr><td>1:30</td><td>**Business rule 1:** route by amount tier</td></tr><tr><td>3:00</td><td>**Business rule 2:** flag high-value pending</td></tr><tr><td>4:30</td><td>**Summary output:** totals, counts, flagged list</td></tr><tr><td>6:30</td><td>**Write to file:** os.makedirs + open</td></tr><tr><td>8:30</td><td>**Run and verify output**</td></tr><tr><td>9:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">week6_record_processor.py — type every line</code></pre><aside class="notes">CODE: week6_record_processor.py — type every line</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Run it</code></pre><aside class="notes">CODE: Run it</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">os.makedirs(&#x27;data&#x27;, exist_ok=True) creates the data/ folder if it does not exist. exist_ok=True means it does not error if the folder is already there. Without this line, open() will fail if data/ does not exist.</p></div><aside class="notes">WARN: os.makedirs(&#x27;data&#x27;, exist_ok=True) creates the data/ folder if it does not exist. exist_ok=True means it does not error if the folder is already there. Without this line, open() will fail if data/ doe</aside></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+</script></body></html>

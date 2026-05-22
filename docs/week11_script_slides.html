@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 W11 — OOP II — Composition & Inheritance</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--blue:#89b4fa;--green:#a6e3a1;--yellow:#f9e2af;--red:#f38ba8;
+  --purple:#cba6f7;--teal:#94e2d5;--orange:#fab387;
+  --s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+  --base:#1e1e2e;--mantle:#181825;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;font-size:34px;}
+.reveal h1{font-size:1.8em;color:var(--blue);line-height:1.2;margin-bottom:.25em;}
+.reveal h2{font-size:1.2em;color:var(--blue);line-height:1.3;margin-bottom:.2em;}
+.reveal h3{font-size:.8em;color:var(--sub);font-weight:400;margin-bottom:.3em;}
+.reveal p{font-size:.78em;color:var(--text);line-height:1.7;margin:.2em 0;}
+.reveal ul{list-style:none;padding:0;margin:.25em 0;}
+.reveal ul li{font-size:.75em;color:var(--text);padding:.16em 0;line-height:1.55;}
+.reveal ul li::before{content:"▸ ";color:var(--blue);}
+.reveal pre{font-size:.48em;margin:.25em 0;border-radius:8px;}
+.reveal strong{color:var(--yellow);}
+.reveal em{color:var(--sub);}
+.reveal code{font-family:"Courier New",monospace;}
+/* backgrounds */
+.s-title{background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%);}
+.s-video{background:#12121f;}
+.s-say{background:#0d1420;}
+.s-do{background:#091209;}
+.s-code{background:#0d0d1a;}
+.s-warn{background:#1a0808;}
+.s-outline{background:var(--mantle);}
+.s-yt{background:#13091a;}
+.s-divider{background:#0e0e14;}
+/* cards */
+.card{border-radius:8px;padding:.5em .85em;margin:.25em 0;text-align:left;font-size:.76em;line-height:1.7;}
+.say{background:rgba(137,180,250,.09);border-left:4px solid var(--blue);color:var(--text);}
+.do{background:rgba(166,227,161,.09);border-left:4px solid var(--green);color:var(--text);font-family:"Courier New",monospace;}
+.warn{background:rgba(243,139,168,.1);border-left:4px solid var(--red);color:var(--text);}
+.yt-c{background:rgba(203,166,247,.09);border-left:4px solid var(--purple);color:var(--text);}
+.clbl{font-family:"Courier New",monospace;font-size:.78em;font-weight:bold;
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:.25em;}
+.say .clbl{color:var(--blue);}
+.do  .clbl{color:var(--green);}
+.warn .clbl{color:var(--red);}
+.yt-c .clbl{color:var(--purple);}
+/* outline table */
+.ot{width:100%;border-collapse:collapse;font-size:.72em;text-align:left;margin:.3em 0;}
+.ot td{padding:.32em .55em;border-bottom:1px solid var(--s1);color:var(--text);vertical-align:top;line-height:1.5;}
+.ot td:first-child{font-family:"Courier New",monospace;color:var(--blue);font-weight:bold;white-space:nowrap;min-width:62px;}
+.ot tr:last-child td{border-bottom:none;}
+/* badges */
+.badge{display:inline-block;padding:.12em .55em;border-radius:20px;font-size:.44em;
+  font-family:"Courier New",monospace;font-weight:bold;letter-spacing:.06em;
+  text-transform:uppercase;vertical-align:middle;margin:.1em .1em 0 0;}
+.b-concept{background:rgba(137,180,250,.18);color:var(--blue);border:1px solid rgba(137,180,250,.35);}
+.b-demo{background:rgba(166,227,161,.18);color:var(--green);border:1px solid rgba(166,227,161,.35);}
+.b-code{background:rgba(249,226,175,.18);color:var(--yellow);border:1px solid rgba(249,226,175,.35);}
+.b-policy{background:rgba(243,139,168,.18);color:var(--red);border:1px solid rgba(243,139,168,.35);}
+.b-grey{background:rgba(255,255,255,.07);color:var(--sub);border:1px solid var(--s1);}
+/* week title */
+.wk-eyebrow{font-size:.52em;color:var(--sub);font-family:"Courier New",monospace;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em;}
+.wk-vids{font-size:.48em;color:var(--sub);margin-top:.55em;}
+/* video divider */
+.vid-divider{border:1px solid var(--s1);border-radius:10px;padding:.55em .9em;
+  margin:.25em 0;text-align:left;}
+.vid-divider .vd-id{font-family:"Courier New",monospace;font-size:.55em;
+  color:var(--sub);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2em;}
+.vid-divider .vd-title{font-size:1.0em;font-weight:bold;color:var(--text);line-height:1.3;}
+/* section label */
+.sec-chip{font-family:"Courier New",monospace;font-size:.5em;padding:.18em .65em;
+  border-radius:20px;background:var(--s0);color:var(--sub);border:1px solid var(--s1);
+  display:inline-block;margin-bottom:.3em;}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><div class="wk-eyebrow">ISM3232 &nbsp;·&nbsp; Unit 3 — OOP</div><h1>Week 11</h1><h2>OOP II — Composition &amp; Inheritance</h2><div class="wk-vids">W11-V1&nbsp; · &nbsp;W11-V2&nbsp; · &nbsp;W11-V3&nbsp; · &nbsp;W11-V4 &nbsp;·&nbsp; ~26 min</div><p style="font-size:.4em;color:var(--sub);margin-top:.7em;">Video script slides &nbsp;·&nbsp; Arrow keys &nbsp;·&nbsp; S = speaker notes &nbsp;·&nbsp; F = fullscreen</p></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W11-V1</div><div class="vd-title">Composition — The Manager Pattern</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 11 | Composition — The Manager Pattern (Has-a Relationship)</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">composition python</span><span class="badge b-grey">manager pattern</span><span class="badge b-grey">has-a</span><span class="badge b-grey">OOP</span><span class="badge b-grey">python classes</span><span class="badge b-grey">ISM3232 Week 11</span><span class="badge b-grey">request manager</span></div><aside class="notes">YT: ISM3232 Week 11 | Composition — The Manager Pattern (Has-a Relationship)</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W11-V1 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Draw the diagram:** manager holds a list of entities</td></tr><tr><td>1:00</td><td>**has-a vs is-a:** composition vs inheritance</td></tr><tr><td>2:00</td><td>**Why the entity owns its methods:** approve() on BusinessRequest</td></tr><tr><td>3:00</td><td>**What the manager does:** holds, adds, filters, aggregates</td></tr><tr><td>4:00</td><td>**Preview: five required methods**</td></tr><tr><td>5:00</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-do"><div class="do card"><div class="clbl">&#x1F4BB; 💻 Draw</div><p style="font-size:.84em;line-height:1.7;">RequestManager box → [req_101, req_102, req_103] list. Each req is a BusinessRequest instance. Arrows from manager to list, from list to instances.</p></div><aside class="notes">DO: RequestManager box → [req_101, req_102, req_103] list. Each req is a BusinessRequest instance. Arrows from manager to list, from list to instances.</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Script</div><p style="font-size:.84em;line-height:1.8;">The manager does not own the business logic. The entity does. approve() lives on BusinessRequest — not on RequestManager. The manager&#x27;s job is to hold a collection, add to it, filter it, and report on it. The entity&#x27;s job is to manage its own state. If you put approve() on the manager, you&#x27;ve mixed responsibilities. This is the single responsibility principle.</p></div><aside class="notes">SAY: The manager does not own the business logic. The entity does. approve() lives on BusinessRequest — not on RequestManager. The manager&#x27;s job is to hold a collection, add to it, filter it, and report on it. The entity&#x27;s job is to manage its own state. </aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 has-a vs is-a</div><p style="font-size:.84em;line-height:1.8;">Composition is a has-a relationship. A RequestManager HAS A list of requests. Inheritance is an is-a relationship. A TravelRequest IS A BusinessRequest. Use composition when one class manages a collection of another. Use inheritance when one class is a specialised version of another.</p></div><aside class="notes">SAY: Composition is a has-a relationship. A RequestManager HAS A list of requests. Inheritance is an is-a relationship. A TravelRequest IS A BusinessRequest. Use composition when one class manages a collection of another. Use inheritance when one class is</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W11-V2</div><div class="vd-title">Building RequestManager — All Five Methods</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 9 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 11 | Build RequestManager — All 5 Methods Including the Class-Level List Trap</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">RequestManager</span><span class="badge b-grey">composition</span><span class="badge b-grey">OOP</span><span class="badge b-grey">python classes</span><span class="badge b-grey">class level list</span><span class="badge b-grey">instance level</span><span class="badge b-grey">ISM3232 Week 11</span></div><aside class="notes">YT: ISM3232 Week 11 | Build RequestManager — All 5 Methods Including the Class-Level List Trap</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W11-V2 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**The class-level list trap:** show it breaking firstTwo managers, shared list</td></tr><tr><td>1:30</td><td>**The fix:** self.requests = [] inside __init__</td></tr><tr><td>2:15</td><td>**add_request method**</td></tr><tr><td>2:45</td><td>**list_by_status method**List comprehension</td></tr><tr><td>3:30</td><td>**total_amount method**sum() with generator</td></tr><tr><td>4:15</td><td>**summary_report method**</td></tr><tr><td>5:30</td><td>**Wire manager and entity in main.py**</td></tr><tr><td>7:30</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 0:00 – 1:30</span><h2 style="margin-top:.35em;">The Class-Level List Trap — Show the Bug First</h2></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">WRONG: class-level list — all instances share it</code></pre><aside class="notes">CODE: WRONG: class-level list — all instances share it</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 After demo</div><p style="font-size:.84em;line-height:1.8;">Did you see that? mgr2 has 1 request even though we only added to mgr1. That is the class-level list trap. A list defined outside __init__ is shared across ALL instances of the class. Every manager in your program sees the same list.</p></div><aside class="notes">SAY: Did you see that? mgr2 has 1 request even though we only added to mgr1. That is the class-level list trap. A list defined outside __init__ is shared across ALL instances of the class. Every manager in your program sees the same list.</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">models.py — CORRECT RequestManager with instance-level list</code></pre><aside class="notes">CODE: models.py — CORRECT RequestManager with instance-level list</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">self.requests = [] MUST be inside __init__. Outside __init__ means class-level — shared across all instances. The independence test will fail.</p></div><aside class="notes">WARN: self.requests = [] MUST be inside __init__. Outside __init__ means class-level — shared across all instances. The independence test will fail.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W11-V3</div><div class="vd-title">Light Inheritance — When to Use It</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 6 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 11 | Inheritance — When to Use It, super().__init__(), Method Overriding</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python inheritance</span><span class="badge b-grey">super()</span><span class="badge b-grey">method overriding</span><span class="badge b-grey">is-a</span><span class="badge b-grey">subclass</span><span class="badge b-grey">OOP</span><span class="badge b-grey">ISM3232 Week 11</span></div><aside class="notes">YT: ISM3232 Week 11 | Inheritance — When to Use It, super().__init__(), Method Overriding</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W11-V3 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**The is-a test:** TravelRequest IS A BusinessRequest</td></tr><tr><td>0:45</td><td>**class TravelRequest(BusinessRequest):**</td></tr><tr><td>1:15</td><td>**super().__init__():** call parent constructor</td></tr><tr><td>2:00</td><td>**Add new attributes:** self.destination</td></tr><tr><td>2:30</td><td>**Override requires_review:** lower threshold for travel</td></tr><tr><td>3:30</td><td>**Test the override works:** 600 is True for travel, False for base</td></tr><tr><td>4:30</td><td>**is-a vs has-a summary**</td></tr><tr><td>5:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">TravelRequest inherits BusinessRequest</code></pre><aside class="notes">CODE: TravelRequest inherits BusinessRequest</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 super().__init__()</div><p style="font-size:.84em;line-height:1.8;">super() refers to the parent class — BusinessRequest. super().__init__() calls the parent&#x27;s __init__ to set up the inherited attributes: req_id, requester, category, amount, and status. Without this call, the child instance would be missing all those attributes and you would get AttributeError the first time you tried to access them.</p></div><aside class="notes">SAY: super() refers to the parent class — BusinessRequest. super().__init__() calls the parent&#x27;s __init__ to set up the inherited attributes: req_id, requester, category, amount, and status. Without this call, the child instance would be missing all those</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W11-V4</div><div class="vd-title">OOP to SQL Mapping — Classes Become Tables</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 5 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 11 | OOP to SQL Mapping — How Classes, Instances, and Methods Map to SQL</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">OOP to SQL</span><span class="badge b-grey">python SQL</span><span class="badge b-grey">class to table</span><span class="badge b-grey">instance to row</span><span class="badge b-grey">SQLite</span><span class="badge b-grey">ISM3232 Week 11</span><span class="badge b-grey">OOP mapping</span></div><aside class="notes">YT: ISM3232 Week 11 | OOP to SQL Mapping — How Classes, Instances, and Methods Map to SQL</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W11-V4 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**The mapping table:** draw OOP | SQL side by side</td></tr><tr><td>1:00</td><td>**Class → table:** BusinessRequest → requests table</td></tr><tr><td>1:30</td><td>**Instance → row:** req_101 → one row</td></tr><tr><td>2:00</td><td>**Attribute → column:** self.amount → amount REAL</td></tr><tr><td>2:45</td><td>**list_by_status(&#x27;Pending&#x27;) → WHERE status = &#x27;Pending&#x27;**</td></tr><tr><td>3:15</td><td>**total_amount() → SELECT SUM(amount)**</td></tr><tr><td>4:00</td><td>**Why this matters:** Week 14 builds the database version</td></tr><tr><td>4:45</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-do"><div class="do card"><div class="clbl">&#x1F4BB; 💻 Draw two columns</div><p style="font-size:.84em;line-height:1.7;">Left: OOP | Right: SQL. Fill in five rows as you speak.</p></div><aside class="notes">DO: Left: OOP | Right: SQL. Fill in five rows as you speak.</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Script row by row</div><p style="font-size:.84em;line-height:1.8;">Class — BusinessRequest — maps to a SQL table named requests.
+One instance — req_101 — maps to one row in that table.
+An attribute — self.amount — maps to a column: amount REAL.
+list_by_status(&#x27;Pending&#x27;) — our Python list comprehension — maps to: SELECT * FROM requests WHERE status = &#x27;Pending&#x27;
+total_amount() — our sum() call — maps to: SELECT SUM(amount) FROM requests</p></div><aside class="notes">SAY: Class — BusinessRequest — maps to a SQL table named requests.
+One instance — req_101 — maps to one row in that table.
+An attribute — self.amount — maps to a column: amount REAL.
+list_by_status(&#x27;Pending&#x27;) — our Python list comprehension — maps to: SEL</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Script row by row (cont.)</div><p style="font-size:.84em;line-height:1.8;">The operations are identical. The syntax is different. In Week 14 we will write the SQL version. If you understand the OOP version, the SQL version is a translation, not a new concept.</p></div><aside class="notes">SAY: The operations are identical. The syntax is different. In Week 14 we will write the SQL version. If you understand the OOP version, the SQL version is a translation, not a new concept.</aside></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+</script></body></html>

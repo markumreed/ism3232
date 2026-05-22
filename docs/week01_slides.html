@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 1</h1><h2>Students install and verify the required tools, understand what a developer workflow is, and run their first Python script from zsh inside VS Code.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Course intro &amp; developer mindset</span><span class="t-chip">15–35 min — Files, folders, paths — concepts</span><span class="t-chip">35–55 min — Live setup: VS Code, Python, zsh verification</span><span class="t-chip">55–70 min — First Python script — live code-along</span><span class="t-chip">70–80 min — Assignment 1 walkthrough + Q&amp;A</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Course intro &amp; developer mindset</li><li><code style="color:var(--blue);font-size:.85em;">15–35 min</code>&nbsp;&nbsp;Files, folders, paths — concepts</li><li><code style="color:var(--blue);font-size:.85em;">35–55 min</code>&nbsp;&nbsp;Live setup: VS Code, Python, zsh verification</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;First Python script — live code-along</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment 1 walkthrough + Q&amp;A</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; Required tools this week</h2><div class="concept-card">VS Code — required editor · Python 3.x — required language · Git — required version control · zsh — required shell · WSL Ubuntu — required for Windows students · GitHub account — required · VS Code Python extension — required · VS Code integrated terminal set to zsh — required</div><aside class="notes">“Welcome to ISM3232. This course is not a programming course and not a tools course — it is a business application development course . The difference matters. A programming course teaches you Python syntax. This course teaches you to build things that work, on a machine configured correctly, submitted cleanly through Git, with tested code. The workflow is the course. ”</aside></section>
+<section class="s-ok"><h2 style="color:var(--green);">&#x2713; Checkpoint — before moving on</h2><div class="ok-card">Every student should be able to see all six commands returning expected output in the VS Code integrated terminal running zsh. If anyone is still stuck on WSL, pair them with a neighbor or move them to a lab machine. Do not let setup problems prevent participation in the live coding section.</div><aside class="notes">“Everything we do in the first four weeks — the terminal, the virtual environment, the folder structure, Git — is not preamble before the real content. It is the content. The midterm in Week 9 tests all of it.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Week 1 AI policy — this week specifically</h2><div class="concept-card">For Assignment 1, do not use AI at all . The assignment is about verifying that your environment works and that you can navigate your own computer. There is nothing to explain to an AI. If you need help, post in the course discussion board or come to office hours.</div><aside class="notes">“Every file on your computer lives at a specific address. That address is called a path . A path is just a sequence of folder names that tells the computer how to navigate from the top of the disk to your file. Understanding paths is the single most useful thing you will learn in Week 1 of this course.”</aside></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; Common Week 1 submission mistakes</h2><div class="warn-card">Wrong shell in screenshots — students submit PowerShell or bash screenshots instead of zsh. The prompt must be zsh. Script in the wrong folder — hello_ism3232.py must be inside module01_setup/ , not in the root ism3232/ folder. Missing README — students forget the README or submit it empty. Screenshots taken on phone — require digital screenshots,…</div><aside class="notes">“An absolute path is the full address from the root. It always works, regardless of where you are. An example:”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Developer Mindset and Course Identity</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Course intro &amp; developer mindset</span></section>
+<section class="s-step"><h2>Developer Mindset and Course Identity</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>VS Code — install and open</strong><br><span style="color:var(--subtext);font-size:.9em;">Download from code.visualstudio.com . Install the Python extension (search &quot;Python&quot; in the Extensions panel, install…</span></div></div></div><aside class="notes">“A relative path is the address from wherever you are right now. Shorter, but only works if you are in the right place. If you are already inside ism3232/ , the same file is just:”</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; The core idea to land in Week 1</h2><div class="concept-card">This course is not a typing class or a memorization course. It is a professional practice course. Every habit you build in Week 1 — how you name files, how you organize folders, how you verify your tools before touching code — is what separates a developer who ships working…</div><aside class="notes">“We are going to install and verify every tool together. Do not skip steps. Do not move ahead. If something does not work for you, raise your hand immediately — do not silently move on, because the next step depends on this one.”</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; What this course is</h2><div class="concept-card">Every file on a computer lives at a specific address called a path . A path is just a sequence of folder names that tells the computer how to find a file, starting from the root of the disk ( / on Mac/Linux, C:\ on Windows) or from wherever you are right now. Draw this on the…</div><aside class="notes">“We are creating the folder structure for the entire course right now. You will use these folders every week. The naming conventions — lowercase, underscores, module numbers — are not arbitrary. They are professional Python project conventions. If your file is in the wrong folder, it is in the wrong place.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">/                          # root of the filesystem (Mac/Linux)
+└── Users/
+    └── yourname/          # your home directory  ~
+        ├── Desktop/
+        ├── Documents/
+        └── ism3232/       # ← your course folder lives HERE
+            ├── module01_setup/
+            │   ├── hello_ism3232.py
+            │   └── README.md
+            ├── module02_zsh/
+            ├── module03_git_github/
+            ├── module04_programming/
+            ├── module05_functions/
+            ├── module06_oop/
+            ├── module07_final_project/
+            ├── data/
+            └── screenshots/</code></pre><aside class="notes">/                          # root of the filesystem (Mac/Linux)
+└── Users/
+    └── yourname/          # your home directory  ~
+        ├── Desktop/
+        ├── Documents/
+        └── ism3232/       # ← your course folder lives HERE
+            ├── module01_setup/
+            │   ├── hello_ism3232.py</aside><aside class="notes">“We are not learning Python today — that starts in Week 5. The point of this script is to complete the full workflow loop for the first time: create a file in the right place, write code, save, run from the terminal, read the output. Every assignment this semester follows this exact loop.” “ Type every character. Do not copy-paste. Reading and typing code are different cognitive activities. Every </aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Files, Folders, Paths, and Directory Trees</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–35 min &nbsp;Files, folders, paths — concepts</span></section>
+<section class="s-step"><h2>Files, Folders, Paths, and Directory Trees</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Windows only — WSL + Ubuntu + zsh</strong><br><span style="color:var(--subtext);font-size:.9em;">Open PowerShell as Administrator and run wsl --install . Restart when prompted. Open the Ubuntu app, complete the UNIX…</span></div></div></div><aside class="notes">“AI tools are permitted in this course in specific, controlled ways — but not as solution providers. The distinction is this: using AI to understand something is legitimate. Using AI to skip understanding is academic dishonesty.” “The midterm and capstone presentation both require you to explain your code out loud. If AI wrote it and you cannot explain it, that will be obvious in about thirty seco</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; What this course is not</h2><div class="concept-card">Students who do not have a consistent, organized course folder spend the rest of the semester hunting for files, making path errors in scripts, and failing to submit the right files. Getting this right in Week 1 takes five minutes. Fixing it in Week 8 takes much longer. Have…</div><aside class="notes">“A README is the first thing anyone reads when they open a GitHub repository. In this course, every submission includes one. We start the habit now — even for a Week 1 setup assignment — so that by Week 8 it is automatic.”</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; Key mental model: the directory tree</h2><div class="concept-card">Students will learn Python properly in Unit 2. The point of hello_ism3232.py is to complete the full workflow loop for the first time: create a file in the right place → write code → save → run from the terminal → verify the output . Every assignment for the rest of the semester…</div><aside class="notes">“Assignment 1 has five deliverables. I am going to read each one out loud. If you have not done it yet, do it now before you leave.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># 1. Confirm zsh is running
+echo $SHELL
+# Expected: /bin/zsh  (or /usr/bin/zsh on some Linux)
+
+# 2. Confirm zsh version
+zsh --version
+# Expected: zsh 5.x or higher
+
+# 3. Confirm Python 3 is installed
+python3 --version
+# Expected: Python 3.10 or higher (3.11+ preferred)
+
+# 4. Confirm Git is installed
+git --version
+# Expected: git version 2.x
+
+# 5. Show current location
+pwd
+# Expected: your home directory  e.g. /Users/yourname
+
+# 6. List files in current directory
+ls
+# Expected: Desktop  Documents  Downloads  etc.</code></pre><aside class="notes"># 1. Confirm zsh is running
+echo $SHELL
+# Expected: /bin/zsh  (or /usr/bin/zsh on some Linux)
+
+# 2. Confirm zsh version
+zsh --version
+# Expected: zsh 5.x or higher
+
+# 3. Confirm Python 3 is installed
+python3 --version
+# Expected: Python 3.10 or higher (3.11+ preferred)
+
+# 4. Confirm Git is installed</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">VS Code, the Integrated Terminal, and zsh</h2><span class='badge badge-yellow' style='margin-top:.3em;'>35–55 min &nbsp;Live setup: VS Code, Python, zsh verification</span></section>
+<section class="s-step"><h2>VS Code, the Integrated Terminal, and zsh</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Mac/Linux — verify zsh is the default shell</strong><br><span style="color:var(--subtext);font-size:.9em;">Mac Catalina and later use zsh by default. Run echo $SHELL — it should return /bin/zsh . If not, run chsh -s /bin/zsh…</span></div></div></div></section>
+<section class="s-concept"><h2>&#x1F9E9; Absolute path</h2><div class="concept-card">✓ Permitted AI uses Explain an error message Explain what code does Suggest test cases Draft README sections Explain SQL queries Review class design AI is a development assistant , not a solution provider. You use it to understand — not to avoid understanding. …</div></section>
+<section class="s-concept"><h2>&#x1F9E9; Relative path</h2><div class="concept-card">A README is the first thing anyone reads when they open a GitHub repository. In this course, every submission includes one. Starting the habit now — even for a Week 1 setup assignment — means it is automatic by Week 8 when the content is actually complex. …</div></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># Start from your home directory
+cd ~
+
+# Create the top-level course folder
+mkdir ism3232
+cd ism3232
+
+# Create all module folders at once
+mkdir module01_setup module02_zsh module03_git_github \
+      module04_programming module05_functions \
+      module06_oop module07_final_project \
+      data screenshots
+
+# Verify the structure looks right
+ls
+
+# Open the entire course folder in VS Code
+code .
+
+# Move into the Week 1 module folder
+cd module01_setup</code></pre><aside class="notes"># Start from your home directory
+cd ~
+
+# Create the top-level course folder
+mkdir ism3232
+cd ism3232
+
+# Create all module folders at once
+mkdir module01_setup module02_zsh module03_git_github \
+      module04_programming module05_functions \
+      module06_oop module07_final_project \
+      data scr</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Course Folder Structure</h2><span class='badge badge-yellow' style='margin-top:.3em;'>55–70 min &nbsp;First Python script — live code-along</span></section>
+<section class="s-step"><h2>Course Folder Structure</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Configure VS Code&#x27;s integrated terminal to use zsh</strong><br><span style="color:var(--subtext);font-size:.9em;">Open VS Code → ⌘, (Mac) or Ctrl+, (Windows) → search &quot;terminal default profile&quot; → set to zsh (Mac/Linux) or WSL…</span></div></div></div></section>
+<section class="s-concept"><h2>&#x1F9E9; Why folder structure matters before Week 2</h2><div class="concept-card">Week 2 begins immediately in the terminal with zsh navigation. Students who have not completed their environment setup will not be able to follow the live demonstrations. If your setup is broken, fix it before Week 2 — attend office hours, post in the discussion board, or pair…</div></section>
+<section class="s-concept"><h2>&#x1F9E9; The point of this script is not the Python</h2><div class="concept-card"></div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python"># hello_ism3232.py
+# ISM3232 – Business Application Development
+# Week 1, Module 1: First Python Script
+# Author: [Your Name]
+
+# Print a welcome message
+print(&quot;Hello, ISM3232!&quot;)
+print(&quot;This script is running from the zsh terminal inside VS Code.&quot;)
+
+# Show some basic Python: a variable and a calculation
+course_name = &quot;Business Application Development&quot;
+credit_hours = 3
+weekly_hours = credit_hours * 2
+
+print(f&quot;Course: {course_name}&quot;)
+print(f&quot;You should expect to spend about {weekly_hours} hours per week on coursework.&quot;)
+
+# Confirm the script completed
+print(&quot;Environment verified. Week 1 complete.&quot;)</code></pre><aside class="notes"># hello_ism3232.py
+# ISM3232 – Business Application Development
+# Week 1, Module 1: First Python Script
+# Author: [Your Name]
+
+# Print a welcome message
+print("Hello, ISM3232!")
+print("This script is running from the zsh terminal inside VS Code.")
+
+# Show some basic Python: a variable and a calculat</aside></section>
+<section class="s-section"><span class="badge badge-blue">05</span><h2 style="margin-top:.4em;">Writing and Running the First Python Script</h2><span class='badge badge-yellow' style='margin-top:.3em;'>70–80 min &nbsp;Assignment 1 walkthrough + Q&amp;A</span></section>
+<section class="s-step"><h2>Writing and Running the First Python Script</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Verify the full required stack</strong><br><span style="color:var(--subtext);font-size:.9em;">Run each command and confirm the expected output. Everyone in the room must see all four pass before proceeding.</span></div></div></div></section>
+<section class="s-concept"><h2>&#x1F9E9; Why a README matters from Day 1</h2><div class="concept-card"></div></section>
+<section class="s-concept"><h2>&#x1F9E9; What Week 2 expects from you</h2><div class="concept-card"></div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">Hello, ISM3232!
+This script is running from the zsh terminal inside VS Code.
+Course: Business Application Development
+You should expect to spend about 6 hours per week on coursework.
+Environment verified. Week 1 complete.</code></pre><aside class="notes">Hello, ISM3232!
+This script is running from the zsh terminal inside VS Code.
+Course: Business Application Development
+You should expect to spend about 6 hours per week on coursework.
+Environment verified. Week 1 complete.</aside></section>
+<section class="s-section"><span class="badge badge-blue">06</span><h2 style="margin-top:.4em;">AI Use Policy Introduction</h2></section>
+<section class="s-step"><h2>AI Use Policy Introduction</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Create the file from the terminal</strong><br><span style="color:var(--subtext);font-size:.9em;">Make sure you are in ism3232/module01_setup/ . Run touch hello_ism3232.py . The file appears in the VS Code Explorer…</span></div></div></div></section>
+<section class="s-concept"><h2>&#x1F9E9; End-of-class student checklist</h2><div class="concept-card"></div></section>
+<section class="s-concept"><h2>&#x1F9E9; If something is broken</h2><div class="concept-card"></div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python"># ISM3232 – Module 1: Course Setup
+
+**Name:** [Your Name]
+**Date:** [Today&#x27;s Date]
+**Module:** 1 – Course Setup, VS Code, Developer Environment
+
+## What I Did
+
+- Installed VS Code, Python 3, Git, and configured zsh as the default shell
+- Created the course folder structure under `~/ism3232/`
+- Ran and verified the first Python script from the integrated zsh terminal
+
+## Verification Results
+
+| Tool        | Version Confirmed |
+|-------------|-------------------|
+| zsh         | ✓                 |
+| Python 3    | ✓                 |
+| Git         | ✓                 |
+| VS Code     | ✓                 |
+
+## Notes
+
+[Any issues encountered during setup and how they were resolved]
+# ⋯ continues</code></pre><aside class="notes"># ISM3232 – Module 1: Course Setup
+
+**Name:** [Your Name]
+**Date:** [Today's Date]
+**Module:** 1 – Course Setup, VS Code, Developer Environment
+
+## What I Did
+
+- Installed VS Code, Python 3, Git, and configured zsh as the default shell
+- Created the course folder structure under `~/ism3232/`
+- Ran a</aside></section>
+<section class="s-section"><span class="badge badge-blue">07</span><h2 style="margin-top:.4em;">Creating the README.md</h2></section>
+<section class="s-step"><h2>Creating the README.md</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Open and write the script</strong><br><span style="color:var(--subtext);font-size:.9em;">Run code hello_ism3232.py to open it in the editor. Type the script below — do not paste. Reading and typing code is a…</span></div></div></div></section>
+<section class="s-section"><span class="badge badge-blue">08</span><h2 style="margin-top:.4em;">Assignment 1 — Environment Verification</h2></section>
+<section class="s-step"><h2>Assignment 1 — Environment Verification</h2><div class="step-list"><div class="step-row"><div class="step-n">1</div><div class="step-body"><strong>Run from the terminal</strong><br><span style="color:var(--subtext);font-size:.9em;">Save the file ( ⌘S / Ctrl+S ). In the terminal (make sure you are in the same folder as the file), run python3…</span></div></div></div></section>
+<section class="s-section"><span class="badge badge-blue">09</span><h2 style="margin-top:.4em;">Looking Ahead</h2></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Symbol / Term</th><th>What it means</th><th>Example</th></tr></thead><tbody><tr><td>/</td><td>Root of the entire filesystem (Mac/Linux). The top of the tree.</td><td>/Users/yourname</td></tr><tr><td>~</td><td>Your home directory. Shortcut for /Users/yourname .</td><td>~/ism3232</td></tr><tr><td>.</td><td>The current directory — wherever you are right now.</td><td>./module01_setup</td></tr><tr><td>..</td><td>One directory up from where you are.</td><td>cd .. goes up one level</td></tr><tr><td>File extension</td><td>The suffix after the dot. Tells the OS and editor what type of file it is.</td><td>.py · .md · .txt · .csv</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 1</div><div class="assign-title">Assignment 1</div><div class="assign-items"><ul><li>Screenshot 1: VS Code with the ism3232 folder open in the Explorer panel, showing all module subfolders visible in the…</li><li>Screenshot 2: The VS Code integrated terminal showing zsh running — the prompt should be visible and clearly zsh (not…</li><li>Screenshot 3: The terminal showing all six verification commands and their output: echo $SHELL , zsh --version ,…</li><li>File: module01_setup/hello_ism3232.py — the script written during the live code-along, with your name in the header…</li><li>File: module01_setup/README.md — completed with your name, date, verification results table, and AI use statement.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 1</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 1 &nbsp;·&nbsp; Looking Ahead</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

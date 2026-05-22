@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 6</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 6</h1><h2>Students implement multi-tier business decision logic and model collections of business records using lists and dictionaries.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Conditionals</span><span class="t-chip">15–35 min — Lists + for loops</span><span class="t-chip">35–50 min — Dictionaries</span><span class="t-chip">50–70 min — Live coding</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Conditionals</li><li><code style="color:var(--blue);font-size:.85em;">15–35 min</code>&nbsp;&nbsp;Lists + for loops</li><li><code style="color:var(--blue);font-size:.85em;">35–50 min</code>&nbsp;&nbsp;Dictionaries</li><li><code style="color:var(--blue);font-size:.85em;">50–70 min</code>&nbsp;&nbsp;Live coding</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Conditionals</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Conditionals</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Business rules are conditionals</h2><div class="concept-card">An approval threshold, an eligibility check, a routing rule — all of these are if/elif/else statements. Every conditional in a business script should map to a real business rule a human decision-maker would recognise. if / elif / else — multi-tier business approval routing…</div><aside class="notes">“Every business rule you have ever seen is a conditional. An approval threshold. An eligibility check. A routing decision. In Python, these are if/elif/else statements. When you write one, you should be able to point to a real business rule it represents.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">amount = 1500
+if amount &lt;= 500:
+    print(&quot;Auto-approved&quot;)
+elif amount &lt;= 2000:
+    print(&quot;Manager approval required&quot;)
+elif amount &lt;= 10000:
+    print(&quot;Director approval required&quot;)
+else:
+    print(&quot;Executive approval required&quot;)
+
+# Combined conditions
+category = &quot;Travel&quot;
+if amount &gt; 500 and category == &quot;Travel&quot;:
+    print(&quot;Requires travel policy acknowledgment&quot;)</code></pre><aside class="notes">amount = 1500
+if amount <= 500:
+    print("Auto-approved")
+elif amount <= 2000:
+    print("Manager approval required")
+elif amount <= 10000:
+    print("Director approval required")
+else:
+    print("Executive approval required")
+
+# Combined conditions
+category = "Travel"
+if amount > 500 and category </aside><aside class="notes">“A list holds multiple items of the same kind. In a business system, a list might hold all pending requests, all products in a category, or all transactions from today. A for loop processes every item one at a time.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Lists and for Loops</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–35 min &nbsp;Lists + for loops</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Lists hold multiple records of the same kind</h2><div class="concept-card">In business systems a list holds pending requests, product lines, or daily transactions. A for loop processes every item in order. The accumulator pattern — start a counter at zero, add to it each iteration — is how you compute totals and filtered counts. Lists, for loops, and…</div><aside class="notes">“The accumulator pattern is one of the most important patterns in business programming: start a counter at zero, loop through the data, add to the counter each iteration. This is how you compute totals, filtered counts, and summaries.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">amounts = [450, 1200, 89, 3500, 250]
+
+total    = 0
+flagged  = []
+for amount in amounts:
+    total += amount
+    if amount &gt; 1000:
+        flagged.append(amount)
+
+print(f&quot;Total: ${total:,.2f}&quot;)
+print(f&quot;Flagged ({len(flagged)}): {flagged}&quot;)
+
+# Common list operations
+amounts.append(600)   # add to end
+len(amounts)           # count items
+amounts[0]            # first item — index starts at 0
+amounts[-1]           # last item
+sorted(amounts)        # sorted copy (original unchanged)</code></pre><aside class="notes">amounts = [450, 1200, 89, 3500, 250]
+
+total    = 0
+flagged  = []
+for amount in amounts:
+    total += amount
+    if amount > 1000:
+        flagged.append(amount)
+
+print(f"Total: ${total:,.2f}")
+print(f"Flagged ({len(flagged)}): {flagged}")
+
+# Common list operations
+amounts.append(600)   # add to end
+</aside><aside class="notes">“A dictionary stores data as key–value pairs — like a single row in a spreadsheet. A business request has a requester, a category, an amount, and a status. A dictionary holds all of these together under one name.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Dictionaries as Business Records</h2><span class='badge badge-yellow' style='margin-top:.3em;'>35–50 min &nbsp;Dictionaries</span></section>
+<section class="s-concept"><h2>&#x1F9E9; A dictionary is a single business record</h2><div class="concept-card">A dictionary stores data as key–value pairs — like one row in a spreadsheet. A list of dictionaries is a collection of records, mirroring a full database table. This is the data pattern you will use in every remaining assignment and in the capstone. Dictionary operations and the…</div><aside class="notes">“A list of dictionaries is a collection of records. It mirrors a database table. One dict = one row. A list of dicts = the whole table. You will use this pattern for the rest of the course until we replace it with actual SQL in Week 13.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">request = {
+    &quot;id&quot;:        101,
+    &quot;requester&quot;: &quot;Taylor&quot;,
+    &quot;category&quot;:  &quot;Travel&quot;,
+    &quot;amount&quot;:    1200.00,
+    &quot;status&quot;:    &quot;Pending&quot;
+}
+print(request[&quot;requester&quot;])       # Taylor
+request[&quot;status&quot;] = &quot;Approved&quot;  # update a value
+
+# List of dicts = table of records
+requests = [
+    {&quot;id&quot;: 101, &quot;requester&quot;: &quot;Taylor&quot;, &quot;amount&quot;: 1200, &quot;status&quot;: &quot;Pending&quot;},
+    {&quot;id&quot;: 102, &quot;requester&quot;: &quot;Jordan&quot;, &quot;amount&quot;: 450,  &quot;status&quot;: &quot;Pending&quot;},
+    {&quot;id&quot;: 103, &quot;requester&quot;: &quot;Morgan&quot;, &quot;amount&quot;: 3500, &quot;status&quot;: &quot;Approved&quot;},
+]
+for req in requests:
+    if req[&quot;status&quot;] == &quot;Pending&quot;:
+        print(f&quot;Pending: {req[&#x27;requester&#x27;]} — ${req[&#x27;amount&#x27;]:,.2f}&quot;)</code></pre><aside class="notes">request = {
+    "id":        101,
+    "requester": "Taylor",
+    "category":  "Travel",
+    "amount":    1200.00,
+    "status":    "Pending"
+}
+print(request["requester"])       # Taylor
+request["status"] = "Approved"  # update a value
+
+# List of dicts = table of records
+requests = [
+    {"id": 101, </aside><aside class="notes">“This script combines everything from Weeks 5 and 6. It is the Module 4 capstone. Students will extend it for Assignment 6.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Live Coding: Business Record Processor</h2><span class='badge badge-yellow' style='margin-top:.3em;'>50–70 min &nbsp;Live coding</span></section>
+<section class="s-live"><div class="live-wrap"><div class="live-icon">&#x1F4BB;</div><div class="live-title">Open VS Code &nbsp;·&nbsp; Code Along</div><div class="live-sub">Live Coding: Business Record Processor</div><ul class="live-rules"><li>Watch the demo once, then type it yourself</li><li>Open the integrated terminal &nbsp;<code style="color:var(--green);">Ctrl+`</code></li><li>Type every character — do not copy-paste</li><li>Raise your hand if you fall behind — we will wait</li></ul></div><aside class="notes">LIVE DEMO: Live Coding: Business Record Processor — students follow along</aside></section>
+<section class="s-code"><h3 style="color:var(--green);font-size:.65em;text-align:left;">&#x1F4BB; Code</h3><pre><code class="language-python">requests = [
+    {&quot;id&quot;: 101, &quot;requester&quot;: &quot;Taylor&quot;, &quot;amount&quot;: 1200, &quot;status&quot;: &quot;Pending&quot;},
+    {&quot;id&quot;: 102, &quot;requester&quot;: &quot;Jordan&quot;, &quot;amount&quot;: 450,  &quot;status&quot;: &quot;Pending&quot;},
+    {&quot;id&quot;: 103, &quot;requester&quot;: &quot;Morgan&quot;, &quot;amount&quot;: 3500, &quot;status&quot;: &quot;Approved&quot;},
+    {&quot;id&quot;: 104, &quot;requester&quot;: &quot;Riley&quot;,  &quot;amount&quot;: 89,   &quot;status&quot;: &quot;Pending&quot;},
+]
+APPROVAL_LIMIT = 1000
+total, flagged = 0, []
+for req in requests:
+    if req[&quot;status&quot;] == &quot;Pending&quot;:
+        total += req[&quot;amount&quot;]
+        if req[&quot;amount&quot;] &gt; APPROVAL_LIMIT:
+            flagged.append(req)
+print(f&quot;Total pending: ${total:,.2f}&quot;)
+print(f&quot;Needing review: {len(flagged)}&quot;)
+with open(&quot;output/summary.txt&quot;, &quot;w&quot;) as f:
+    f.write(f&quot;Total: ${total:,.2f}\nFlagged: {len(flagged)}\n&quot;)</code></pre><aside class="notes">requests = [
+    {"id": 101, "requester": "Taylor", "amount": 1200, "status": "Pending"},
+    {"id": 102, "requester": "Jordan", "amount": 450,  "status": "Pending"},
+    {"id": 103, "requester": "Morgan", "amount": 3500, "status": "Approved"},
+    {"id": 104, "requester": "Riley",  "amount": 89,   </aside></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 6</div><div class="assign-title">Assignment 6</div><div class="assign-items"><ul><li>Script: At least 5 records as a list of dicts, at least 2 conditional business rules, formatted summary output, results…</li><li>Tests: At least 2 pytest tests verifying business rule logic.</li><li>Screenshot: Full pre-submission ritual passing before push.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 6</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Live Coding: Business Record Processor</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

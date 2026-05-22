@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 W7 — Functions, Modules & pytest</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--blue:#89b4fa;--green:#a6e3a1;--yellow:#f9e2af;--red:#f38ba8;
+  --purple:#cba6f7;--teal:#94e2d5;--orange:#fab387;
+  --s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+  --base:#1e1e2e;--mantle:#181825;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;font-size:34px;}
+.reveal h1{font-size:1.8em;color:var(--blue);line-height:1.2;margin-bottom:.25em;}
+.reveal h2{font-size:1.2em;color:var(--blue);line-height:1.3;margin-bottom:.2em;}
+.reveal h3{font-size:.8em;color:var(--sub);font-weight:400;margin-bottom:.3em;}
+.reveal p{font-size:.78em;color:var(--text);line-height:1.7;margin:.2em 0;}
+.reveal ul{list-style:none;padding:0;margin:.25em 0;}
+.reveal ul li{font-size:.75em;color:var(--text);padding:.16em 0;line-height:1.55;}
+.reveal ul li::before{content:"▸ ";color:var(--blue);}
+.reveal pre{font-size:.48em;margin:.25em 0;border-radius:8px;}
+.reveal strong{color:var(--yellow);}
+.reveal em{color:var(--sub);}
+.reveal code{font-family:"Courier New",monospace;}
+/* backgrounds */
+.s-title{background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%);}
+.s-video{background:#12121f;}
+.s-say{background:#0d1420;}
+.s-do{background:#091209;}
+.s-code{background:#0d0d1a;}
+.s-warn{background:#1a0808;}
+.s-outline{background:var(--mantle);}
+.s-yt{background:#13091a;}
+.s-divider{background:#0e0e14;}
+/* cards */
+.card{border-radius:8px;padding:.5em .85em;margin:.25em 0;text-align:left;font-size:.76em;line-height:1.7;}
+.say{background:rgba(137,180,250,.09);border-left:4px solid var(--blue);color:var(--text);}
+.do{background:rgba(166,227,161,.09);border-left:4px solid var(--green);color:var(--text);font-family:"Courier New",monospace;}
+.warn{background:rgba(243,139,168,.1);border-left:4px solid var(--red);color:var(--text);}
+.yt-c{background:rgba(203,166,247,.09);border-left:4px solid var(--purple);color:var(--text);}
+.clbl{font-family:"Courier New",monospace;font-size:.78em;font-weight:bold;
+  letter-spacing:.07em;text-transform:uppercase;margin-bottom:.25em;}
+.say .clbl{color:var(--blue);}
+.do  .clbl{color:var(--green);}
+.warn .clbl{color:var(--red);}
+.yt-c .clbl{color:var(--purple);}
+/* outline table */
+.ot{width:100%;border-collapse:collapse;font-size:.72em;text-align:left;margin:.3em 0;}
+.ot td{padding:.32em .55em;border-bottom:1px solid var(--s1);color:var(--text);vertical-align:top;line-height:1.5;}
+.ot td:first-child{font-family:"Courier New",monospace;color:var(--blue);font-weight:bold;white-space:nowrap;min-width:62px;}
+.ot tr:last-child td{border-bottom:none;}
+/* badges */
+.badge{display:inline-block;padding:.12em .55em;border-radius:20px;font-size:.44em;
+  font-family:"Courier New",monospace;font-weight:bold;letter-spacing:.06em;
+  text-transform:uppercase;vertical-align:middle;margin:.1em .1em 0 0;}
+.b-concept{background:rgba(137,180,250,.18);color:var(--blue);border:1px solid rgba(137,180,250,.35);}
+.b-demo{background:rgba(166,227,161,.18);color:var(--green);border:1px solid rgba(166,227,161,.35);}
+.b-code{background:rgba(249,226,175,.18);color:var(--yellow);border:1px solid rgba(249,226,175,.35);}
+.b-policy{background:rgba(243,139,168,.18);color:var(--red);border:1px solid rgba(243,139,168,.35);}
+.b-grey{background:rgba(255,255,255,.07);color:var(--sub);border:1px solid var(--s1);}
+/* week title */
+.wk-eyebrow{font-size:.52em;color:var(--sub);font-family:"Courier New",monospace;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em;}
+.wk-vids{font-size:.48em;color:var(--sub);margin-top:.55em;}
+/* video divider */
+.vid-divider{border:1px solid var(--s1);border-radius:10px;padding:.55em .9em;
+  margin:.25em 0;text-align:left;}
+.vid-divider .vd-id{font-family:"Courier New",monospace;font-size:.55em;
+  color:var(--sub);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2em;}
+.vid-divider .vd-title{font-size:1.0em;font-weight:bold;color:var(--text);line-height:1.3;}
+/* section label */
+.sec-chip{font-family:"Courier New",monospace;font-size:.5em;padding:.18em .65em;
+  border-radius:20px;background:var(--s0);color:var(--sub);border:1px solid var(--s1);
+  display:inline-block;margin-bottom:.3em;}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><div class="wk-eyebrow">ISM3232 &nbsp;·&nbsp; Unit 2 — Python Foundations</div><h1>Week 7</h1><h2>Functions, Modules &amp; pytest</h2><div class="wk-vids">W7-V1&nbsp; · &nbsp;W7-V2&nbsp; · &nbsp;W7-V3&nbsp; · &nbsp;W7-V4&nbsp; · &nbsp;W7-V5 &nbsp;·&nbsp; ~31 min</div><p style="font-size:.4em;color:var(--sub);margin-top:.7em;">Video script slides &nbsp;·&nbsp; Arrow keys &nbsp;·&nbsp; S = speaker notes &nbsp;·&nbsp; F = fullscreen</p></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W7-V1</div><div class="vd-title">Why Functions? Reuse and Testability</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 5 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 7 | Why Functions? Reuse, Testability, and DRY Code Explained</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python functions</span><span class="badge b-grey">DRY principle</span><span class="badge b-grey">pytest</span><span class="badge b-grey">python beginner</span><span class="badge b-grey">why functions</span><span class="badge b-grey">reusable code</span><span class="badge b-grey">ISM3232 Week 7</span></div><aside class="notes">YT: ISM3232 Week 7 | Why Functions? Reuse, Testability, and DRY Code Explained</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W7-V1 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Show the problem:** same approval logic copied three timesCode on screen</td></tr><tr><td>1:15</td><td>**The fix:** extract into one functionLive refactor</td></tr><tr><td>2:30</td><td>**Why this enables pytest:** functions have a return value to assert</td></tr><tr><td>3:30</td><td>**One function = one responsibility**Design principle</td></tr><tr><td>4:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 0:00 – 1:15</span><h2 style="margin-top:.35em;">The Problem — Repeated Logic</h2></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Before — bad: approval logic copied three times</code></pre><aside class="notes">CODE: Before — bad: approval logic copied three times</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 1:15 – 2:30</span><h2 style="margin-top:.35em;">The Fix — One Function</h2></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">After — good: one function, call it anywhere</code></pre><aside class="notes">CODE: After — good: one function, call it anywhere</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Why testability matters</div><p style="font-size:.84em;line-height:1.8;">Functions that return values can be tested with assert. requires_review(1001) should return True. requires_review(1000) should return False — the threshold is &gt;, not &gt;=. You cannot assert a print statement. You can assert a return value. This is why business logic functions always return, never print.</p></div><aside class="notes">SAY: Functions that return values can be tested with assert. requires_review(1001) should return True. requires_review(1000) should return False — the threshold is &gt;, not &gt;=. You cannot assert a print statement. You can assert a return value. This is why </aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W7-V2</div><div class="vd-title">Defining Functions — def, Parameters, return, Docstrings</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 7 | Python Functions — def, Parameters, return, Type Hints, Docstrings</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python functions</span><span class="badge b-grey">def</span><span class="badge b-grey">return statement</span><span class="badge b-grey">type hints</span><span class="badge b-grey">docstrings</span><span class="badge b-grey">parameters arguments</span><span class="badge b-grey">ISM3232 Week 7</span></div><aside class="notes">YT: ISM3232 Week 7 | Python Functions — def, Parameters, return, Type Hints, Docstrings</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W7-V2 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**def syntax:** keyword, name, parentheses, colon</td></tr><tr><td>0:45</td><td>**Parameters vs arguments:** definition vs call</td></tr><tr><td>1:30</td><td>**return vs print:** the critical distinctionShow both, explain</td></tr><tr><td>2:30</td><td>**Type hints:** price: float → float</td></tr><tr><td>3:00</td><td>**Docstrings:** triple quotes, one sentence minimum</td></tr><tr><td>3:45</td><td>**Default parameters:** tax_rate: float = 0.07</td></tr><tr><td>4:30</td><td>**Multiple return values**Tuple unpacking</td></tr><tr><td>5:30</td><td>**Three complete business functions**Write all three</td></tr><tr><td>6:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Complete function anatomy — all required elements</code></pre><aside class="notes">CODE: Complete function anatomy — all required elements</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">Functions must **return** values, not **print()** them. A function that only prints cannot be tested with assert. A function that returns a value can. Design every business logic function to return.</p></div><aside class="notes">WARN: Functions must **return** values, not **print()** them. A function that only prints cannot be tested with assert. A function that returns a value can. Design every business logic function to return.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W7-V3</div><div class="vd-title">Scope — Local Variables and NameError</div><div style="margin-top:.35em;"><span class="badge b-concept">Concept</span><span class="badge b-grey">&#x23F1; 5 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 7 | Python Scope — Why Local Variables Disappear After the Function Ends</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python scope</span><span class="badge b-grey">local variable</span><span class="badge b-grey">NameError</span><span class="badge b-grey">module level</span><span class="badge b-grey">python beginner</span><span class="badge b-grey">ISM3232 Week 7</span><span class="badge b-grey">variable scope python</span></div><aside class="notes">YT: ISM3232 Week 7 | Python Scope — Why Local Variables Disappear After the Function Ends</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W7-V3 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Demo the NameError:** define x inside function, print x outsideLive crash</td></tr><tr><td>1:00</td><td>**Explain why:** function creates a local namespace that closes when done</td></tr><tr><td>2:00</td><td>**Module-level constants:** ALL_CAPS accessible inside functions</td></tr><tr><td>3:00</td><td>**Fix:** return the value instead of accessing from outside</td></tr><tr><td>4:00</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-outline"><span class="sec-chip">⏱ 0:00 – 1:00</span><h2 style="margin-top:.35em;">Live NameError Demo</h2></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Scope demonstration — this crashes by design</code></pre><aside class="notes">CODE: Scope demonstration — this crashes by design</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 After crash</div><p style="font-size:.84em;line-height:1.8;">See that? NameError: name &#x27;tax&#x27; is not defined. The variable &#x27;tax&#x27; existed inside calculate_tax while it was running. When the function returned, that local namespace was destroyed. The variable no longer exists. This is scope. Local variables live and die with their function call.</p></div><aside class="notes">SAY: See that? NameError: name &#x27;tax&#x27; is not defined. The variable &#x27;tax&#x27; existed inside calculate_tax while it was running. When the function returned, that local namespace was destroyed. The variable no longer exists. This is scope. Local variables live a</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Module-level constants ARE accessible inside functions</code></pre><aside class="notes">CODE: Module-level constants ARE accessible inside functions</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Constants rule</div><p style="font-size:.84em;line-height:1.8;">Module-level constants — those ALL_CAPS names at the top of your file — are visible inside functions. Local variables are not. Use return to bring values out of a function. Do not try to read local variables from outside.</p></div><aside class="notes">SAY: Module-level constants — those ALL_CAPS names at the top of your file — are visible inside functions. Local variables are not. Use return to bring values out of a function. Do not try to read local variables from outside.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W7-V4</div><div class="vd-title">Modules, Imports, and Required Project Structure</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 7 | Modules &amp; Project Structure — Splitting business_rules.py from main.py</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">python modules</span><span class="badge b-grey">import statement</span><span class="badge b-grey">project structure</span><span class="badge b-grey">business_rules.py</span><span class="badge b-grey">from import</span><span class="badge b-grey">tests folder</span><span class="badge b-grey">ISM3232 Week 7</span></div><aside class="notes">YT: ISM3232 Week 7 | Modules &amp; Project Structure — Splitting business_rules.py from main.py</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W7-V4 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**Create the project structure** with mkdir and touch</td></tr><tr><td>1:00</td><td>**Write business_rules.py:** functions only, no print at module level</td></tr><tr><td>2:30</td><td>**Write main.py:** from business_rules import ...</td></tr><tr><td>3:30</td><td>**Create tests/__init__.py** — why it is required</td></tr><tr><td>4:00</td><td>**Run main.py** — confirm import works</td></tr><tr><td>5:00</td><td>**Show tree output** — the required structure</td></tr><tr><td>6:00</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">Create the required project structure</code></pre><aside class="notes">CODE: Create the required project structure</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">business_rules.py — functions only, no print at module level</code></pre><aside class="notes">CODE: business_rules.py — functions only, no print at module level</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">main.py — import and call</code></pre><aside class="notes">CODE: main.py — import and call</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 Why __init__.py</div><p style="font-size:.84em;line-height:1.8;">The empty tests/__init__.py file makes the tests/ folder a Python package. Without it, pytest may have trouble importing your business_rules module from inside the tests/ folder. Always create it. It is always empty. It is always required.</p></div><aside class="notes">SAY: The empty tests/__init__.py file makes the tests/ folder a Python package. Without it, pytest may have trouble importing your business_rules module from inside the tests/ folder. Always create it. It is always empty. It is always required.</aside></section>
+<section class="s-divider"><div class="vid-divider"><div class="vd-id">&#x1F3AC; W7-V5</div><div class="vd-title">Writing pytest Tests — Assertions, Boundary Cases, and Test Discovery</div><div style="margin-top:.35em;"><span class="badge b-code">Code-Along</span><span class="badge b-grey">&#x23F1; 7 min</span></div></div></section>
+<section class="s-yt"><div class="yt-c card"><div class="clbl">&#x1F534; YouTube Title</div><p style="font-weight:bold;font-size:.85em;color:var(--text);margin-bottom:.3em;">ISM3232 Week 7 | Writing pytest Tests — assert, Boundary Cases, and Running pytest -v</p></div><div style=margin-top:.4em;><span class="badge b-grey">ISM3232</span><span class="badge b-grey">pytest</span><span class="badge b-grey">python testing</span><span class="badge b-grey">assert</span><span class="badge b-grey">boundary testing</span><span class="badge b-grey">test discovery</span><span class="badge b-grey">pytest -v</span><span class="badge b-grey">ISM3232 Week 7</span></div><aside class="notes">YT: ISM3232 Week 7 | Writing pytest Tests — assert, Boundary Cases, and Running pytest -v</aside></section>
+<section class="s-outline"><h3 style="font-size:.58em;margin-bottom:.25em;">&#x1F4CB; W7-V5 — Outline</h3><table class="ot"><tbody><tr><td>0:00</td><td>**pytest discovery rules:** test_ files, test_ functions</td></tr><tr><td>0:45</td><td>**Write test_calculate_total:** simple assert</td></tr><tr><td>1:30</td><td>**Write requires_review True and False**</td></tr><tr><td>2:15</td><td>**The boundary test:** 1000 is False, 1001 is TrueCritical</td></tr><tr><td>3:15</td><td>**Write get_approver tests:** one per tier</td></tr><tr><td>4:30</td><td>**Run pytest -v:** read the output</td></tr><tr><td>5:15</td><td>**A failing test:** make one fail deliberatelyShow the failure message</td></tr><tr><td>6:15</td><td>**Outro**</td></tr></tbody></table><aside class="notes">Outline</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-python">tests/test_business_rules.py — all six required test types</code></pre><aside class="notes">CODE: tests/test_business_rules.py — all six required test types</aside></section>
+<section class="s-code"><h3 style="color:var(--yellow);font-size:.58em;text-align:left;margin-bottom:.2em;">&#x2328; ⌨ Type this</h3><pre><code class="language-bash">Run pytest — must be green before any commit</code></pre><aside class="notes">CODE: Run pytest — must be green before any commit</aside></section>
+<section class="s-say"><div class="say card"><div class="clbl">&#x1F5E3; 🗣 After running</div><p style="font-size:.84em;line-height:1.8;">Green. Eight tests passed. Look at the boundary tests — test_requires_review_at_limit is the most important one. 1000.00 is NOT greater than 1000 — the function uses &gt;, not &gt;=. So it returns False. That test catches a bug that &#x27;test with 500 and 1200&#x27; would never catch.</p></div><aside class="notes">SAY: Green. Eight tests passed. Look at the boundary tests — test_requires_review_at_limit is the most important one. 1000.00 is NOT greater than 1000 — the function uses &gt;, not &gt;=. So it returns False. That test catches a bug that &#x27;test with 500 and 1200</aside></section>
+<section class="s-warn"><div class="warn card"><div class="clbl">&#x26A0; Key point — say this slowly</div><p style="font-size:.84em;line-height:1.8;">A trivial test like assert True or assert 1 == 1 passes always — it tests nothing. Tests must assert your actual function&#x27;s return value against an expected result.</p></div><aside class="notes">WARN: A trivial test like assert True or assert 1 == 1 passes always — it tests nothing. Tests must assert your actual function&#x27;s return value against an expected result.</aside></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+</script></body></html>

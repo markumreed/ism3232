@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 13</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 13</h1><h2>Students write a full project proposal with instructor sign-off, then learn SQL fundamentals and design their capstone database schema.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–20 min — Project proposal: all 10 fields</span><span class="t-chip">20–45 min — SQL fundamentals — live demo</span><span class="t-chip">45–60 min — sqlite3 shell exploration</span><span class="t-chip">60–70 min — Schema design for own project</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–20 min</code>&nbsp;&nbsp;Project proposal: all 10 fields</li><li><code style="color:var(--blue);font-size:.85em;">20–45 min</code>&nbsp;&nbsp;SQL fundamentals — live demo</li><li><code style="color:var(--blue);font-size:.85em;">45–60 min</code>&nbsp;&nbsp;sqlite3 shell exploration</li><li><code style="color:var(--blue);font-size:.85em;">60–70 min</code>&nbsp;&nbsp;Schema design for own project</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; Unit 4 begins — Business Application Development Project</h2><div class="concept-card">Students now apply everything from Units 1–3 to build a real business information system. Week 13 covers project design and the SQL foundations. The capstone is built incrementally over Weeks 13–17.</div><aside class="notes">“The proposal forces you to think through the full design before a single line of capstone code is written. A student who cannot complete all 10 fields does not yet know what they are building — and that uncertainty will hurt every subsequent week.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Good capstone domains for ISM3232</h2><div class="concept-card">Purchase request tracker · Leave request system · Inventory alert manager · IT helpdesk ticket tracker · Vendor bid comparison tool · Employee onboarding checklist. Choose a domain with clear business rules, discrete records, and obvious status fields (Pending / Approved / Rejected).</div><aside class="notes">“The Out of Scope field is as important as the rest. Students who do not constrain their scope build too much or too little. A clear out-of-scope statement keeps the capstone focused and achievable in four weeks.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Project Proposal</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–20 min &nbsp;Project proposal: all 10 fields</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Write the proposal before touching any code</h2><div class="concept-card">The project proposal forces students to think through the full design before a single line of capstone code is written. A student who cannot answer all ten fields does not yet know what they are building — and that uncertainty will hurt every subsequent week. Proposals are…</div><aside class="notes">“SQL is how business data is stored and retrieved at scale. SQLite stores the entire database in a single .db file — no server required. The SQL you learn today applies directly to PostgreSQL, MySQL, and every production database.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># ISM3232 — Capstone Project Proposal
+
+Project Name:      [e.g., Employee Leave Request Tracker]
+Business Problem:  [What problem does this solve? Who has this problem?]
+Primary User:      [Who will use this system?]
+Records Stored:    [What data is stored? e.g., leave requests, employees]
+Business Rules:    [At least 2 rules. e.g., requests over 5 days need director approval]
+OOP Classes:       [List your classes and their key attributes + methods]
+SQL Tables:        [List your tables and their columns + types]
+Streamlit Features:[Add record, view records, filter, update status, one report]
+GenAI Feature:     [What will AI do? e.g., summarise a request in plain English]
+Out of Scope:      [What are you explicitly NOT building? Keeps scope realistic]</code></pre><aside class="notes"># ISM3232 — Capstone Project Proposal
+
+Project Name:      [e.g., Employee Leave Request Tracker]
+Business Problem:  [What problem does this solve? Who has this problem?]
+Primary User:      [Who will use this system?]
+Records Stored:    [What data is stored? e.g., leave requests, employees]
+Business </aside><aside class="notes">“The sqlite3 shell is your database debugging tool. When something goes wrong in your Python code next week, open the shell and query the database directly. If the data is there, the problem is in Python. If it is not, the problem is in the SQL.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">SQL Foundations</h2><span class='badge badge-yellow' style='margin-top:.3em;'>20–45 min &nbsp;SQL fundamentals — live demo</span></section>
+<section class="s-concept"><h2>&#x1F9E9; SQL is how business data is stored and retrieved at scale</h2><div class="concept-card">SQLite is the database engine for this course — it stores the entire database in a single .db file with no server required. The SQL you learn here (CREATE TABLE, INSERT, SELECT, WHERE, UPDATE, GROUP BY) applies directly to PostgreSQL, MySQL, and every production database system.…</div><aside class="notes">“Using the domain from your proposal, write your CREATE TABLE statement now. Include all columns you identified in the proposal&#x27;s Records Stored field. Add appropriate types and constraints.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">-- Create a table (run once)
+CREATE TABLE requests (
+    id        INTEGER PRIMARY KEY,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT &#x27;Pending&#x27;,
+    notes     TEXT
+);
+
+-- Insert records
+INSERT INTO requests (requester, category, amount)
+VALUES (&#x27;Taylor&#x27;, &#x27;Travel&#x27;, 1200.00);
+
+-- Query all records
+SELECT * FROM requests;
+
+-- Filter records
+SELECT * FROM requests WHERE status = &#x27;Pending&#x27;;
+SELECT * FROM requests WHERE amount &gt; 1000;
+
+-- Sort results
+SELECT * FROM requests ORDER BY amount DESC;
+
+# ⋯ continues</code></pre><aside class="notes">-- Create a table (run once)
+CREATE TABLE requests (
+    id        INTEGER PRIMARY KEY,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT 'Pending',
+    notes     TEXT
+);
+
+-- Insert records
+INSERT INTO requests (requester, category, amo</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Running SQL in the Terminal with sqlite3</h2><span class='badge badge-yellow' style='margin-top:.3em;'>45–60 min &nbsp;sqlite3 shell exploration</span></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python"># Open or create a database file
+sqlite3 requests.db
+
+-- Inside the sqlite3 shell:
+.tables                         -- list all tables
+.schema requests                -- show CREATE TABLE statement
+.mode column                    -- formatted column output
+.headers on                     -- show column names
+SELECT * FROM requests;         -- query the table
+.quit                           -- exit the shell</code></pre><aside class="notes"># Open or create a database file
+sqlite3 requests.db
+
+-- Inside the sqlite3 shell:
+.tables                         -- list all tables
+.schema requests                -- show CREATE TABLE statement
+.mode column                    -- formatted column output
+.headers on                     -- show colu</aside></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>SQL keyword</th><th>Purpose</th><th>Business example</th></tr></thead><tbody><tr><td>CREATE TABLE</td><td>Define a table and its columns</td><td>Set up the requests table once at startup</td></tr><tr><td>INSERT INTO</td><td>Add a new row to a table</td><td>Add a new purchase request</td></tr><tr><td>SELECT</td><td>Retrieve rows from a table</td><td>Show all pending requests</td></tr><tr><td>WHERE</td><td>Filter rows by a condition</td><td>Requests where amount &gt; 1000</td></tr><tr><td>UPDATE ... SET</td><td>Change values in existing rows</td><td>Approve a request: set status = &quot;Approved&quot;</td></tr><tr><td>ORDER BY</td><td>Sort the result set</td><td>Show requests from largest to smallest amount</td></tr><tr><td>GROUP BY</td><td>Aggregate rows by a column value</td><td>Count requests by status</td></tr><tr><td>COUNT / SUM / AVG</td><td>Compute a single value across rows</td><td>Total amount of pending requests</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 13</div><div class="assign-title">Assignment 13</div><div class="assign-items"><ul><li>File: PROPOSAL.md — all 10 proposal fields completed. Requires instructor sign-off before Week 14 begins.</li><li>File: schema.sql — the CREATE TABLE statement(s) for your capstone, with appropriate columns and types.</li><li>Screenshot: The schema run in sqlite3 shell: .schema and at least one INSERT + SELECT confirming it works.</li><li>Link: GitHub repository URL with proposal and schema committed.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 13</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 13 &nbsp;·&nbsp; Running SQL in the Terminal with sqlite3</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

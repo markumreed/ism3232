@@ -17,13 +17,16 @@ A student-facing course hub. Every page is a standalone HTML file — no framewo
 
 | Type | Count | Description |
 |---|---|---|
+| Course map | 1 | Interactive unit map — click any unit to expand, keyboard shortcuts 1–4 |
 | Pre-course setup | 1 | Installation and verification tutorial — complete before Week 1 |
 | Unit overviews | 5 | One per unit + an all-units summary |
 | Weekly readings | 16 | Purpose-written reading for each week — the *why* before the *how* |
 | Weekly lectures | 16 | Student-facing lecture pages with code blocks, concept cards, and timing |
 | In-class labs | 15 | Lab instructions for Weeks 1–8 and 10–16 (no lab Week 9 — midterm) |
 | Unit cheat sheets | 4 | One per unit — key commands, patterns, and syntax in one place |
-| **Total** | **57 pages** | |
+| Student slides | 16 | Reveal.js slide decks — one per week, student-facing content |
+| Video script slides | 15 | Instructor slides for each video (Weeks 1–8, 10–16) |
+| **Total** | **89 pages** | |
 
 ---
 
@@ -33,6 +36,7 @@ A student-facing course hub. Every page is a standalone HTML file — no framewo
 .
 ├── index.html          # Course hub — links to all 57 pages
 └── docs/               # All content pages
+    ├── course_map.html
     ├── precourse.html
     ├── unit_all_overview.html
     ├── unit_1_overview.html
@@ -43,9 +47,11 @@ A student-facing course hub. Every page is a standalone HTML file — no framewo
     ├── unit_2_cheatsheet.html
     ├── unit_3_cheatsheet.html
     ├── unit_4_cheatsheet.html
-    ├── week01_reading.html   # Weeks 01–16
+    ├── week01_reading.html      # Weeks 01–16
     ├── week01_lecture.html
     ├── week01_lab.html
+    ├── week01_slides.html
+    ├── week01_script_slides.html
     └── ...
 ```
 
@@ -123,10 +129,23 @@ The submission ritual (ruff → pytest → git add → commit → push) runs in 
 
 ---
 
+## Site design
+
+- **Dark theme** throughout — readable in a classroom on a projector
+- **No JavaScript frameworks** — plain HTML + CSS, nothing to install or build
+- **Full-width layout** — fills the screen on any display size
+- **`clamp()`-based padding** — comfortable on mobile, generous on wide monitors
+- **All internal links** are relative — the site works locally without a server
+
 To preview locally, open `index.html` directly in a browser or run:
 ```bash
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
+---
 
+## License
+
+Course materials © University of South Florida. All rights reserved.
+Not for redistribution without permission.

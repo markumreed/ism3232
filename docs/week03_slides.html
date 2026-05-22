@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 3</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 3</h1><h2>Students create and manage Python virtual environments, handle dependencies with pip, and customize zsh with aliases and shell functions.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Why venv? Concept</span><span class="t-chip">15–40 min — venv + pip live demo</span><span class="t-chip">40–55 min — .zshrc aliases + mkcd</span><span class="t-chip">55–70 min — Practice</span><span class="t-chip">70–80 min — Assignment walkthrough</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Why venv? Concept</li><li><code style="color:var(--blue);font-size:.85em;">15–40 min</code>&nbsp;&nbsp;venv + pip live demo</li><li><code style="color:var(--blue);font-size:.85em;">40–55 min</code>&nbsp;&nbsp;.zshrc aliases + mkcd</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;Practice</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment walkthrough</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; Mental model for students</h2><div class="concept-card">A venv is like a private room for each project. The room has its own Python and its own shelves of packages. When you activate it, you walk in. When you deactivate, you walk out. Other rooms — other projects — are completely unaffected.</div><aside class="notes">“Without a virtual environment, every Python package you install goes into one shared global installation. This works fine for one project. It breaks when Project A needs requests==2.28 and Project B needs requests==2.31 . They cannot both be installed globally at once. One of them breaks.”</aside></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; Never commit .venv to GitHub</h2><div class="warn-card">The .venv/ folder is large, platform-specific, and unnecessary — requirements.txt is what you share. Add .venv/ to your .gitignore before your first push. We will cover .gitignore in Week 4 but start the habit now.</div><aside class="notes">“A venv is like a private room for each project. The room has its own Python and its own shelves of packages. When you activate it, you walk in. When you deactivate, you walk out. Other rooms are completely unaffected.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Why Virtual Environments?</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Why venv? Concept</span></section>
+<section class="s-concept"><h2>&#x1F9E9; The problem venv solves</h2><div class="concept-card">Without a virtual environment, every Python package you install goes into one global installation shared by every project. This works until Project A needs requests==2.28 and Project B needs requests==2.31 — they conflict. A virtual environment gives each project its own private…</div><aside class="notes">“In this course: every assignment uses a venv. The pre-submission ritual requires it to be active before you run ruff or pytest. Starting now, this is non-negotiable.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># 1. Create the virtual environment
+#    Always name it .venv (the dot hides it from normal ls)
+python3 -m venv .venv
+
+# 2. Activate it
+#    Your prompt changes to show (.venv) — this confirms it is active
+source .venv/bin/activate
+
+# 3. Confirm you are inside the venv
+which python3        # should point inside .venv/bin/
+pip list             # shows minimal packages
+
+# 4. Install required tools for every project in this course
+pip install pytest ruff
+
+# 5. Freeze the environment to requirements.txt
+pip freeze &gt; requirements.txt
+cat requirements.txt     # verify it was written correctly
+
+# 6. To recreate the environment on another machine
+pip install -r requirements.txt
+
+# 7. Deactivate when done
+deactivate
+# ⋯ continues</code></pre><aside class="notes"># 1. Create the virtual environment
+#    Always name it .venv (the dot hides it from normal ls)
+python3 -m venv .venv
+
+# 2. Activate it
+#    Your prompt changes to show (.venv) — this confirms it is active
+source .venv/bin/activate
+
+# 3. Confirm you are inside the venv
+which python3        # should </aside><aside class="notes">“Watch me do the full workflow once. Then you repeat every step in your own terminal.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Creating and Managing Virtual Environments</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–40 min &nbsp;venv + pip live demo</span></section>
+<section class="s-concept"><h2>&#x1F9E9; What is .zshrc?</h2><div class="concept-card">.zshrc is a hidden configuration file in your home directory that zsh reads every time a new terminal opens. It is a startup script. Anything defined inside it — aliases, functions, environment variables — is automatically available in every terminal session. Open it with code…</div><aside class="notes">“ .zshrc is a hidden configuration file in your home directory. zsh reads it every time a new terminal opens. Think of it as a startup script. Anything defined inside it — aliases, functions — is automatically available in every session.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># Open the config file
+code ~/.zshrc
+
+# --- Paste these lines into .zshrc ---
+
+# Navigation shortcuts
+alias ll=&#x27;ls -la&#x27;           # detailed listing including hidden files
+alias c=&#x27;clear&#x27;             # clear the screen
+alias tree2=&#x27;tree -L 2&#x27;     # 2-level directory tree
+
+# Python shortcut
+alias py=&#x27;python3&#x27;          # type py instead of python3
+
+# Git shortcuts (used in the pre-submission ritual)
+alias gs=&#x27;git status&#x27;
+alias ga=&#x27;git add .&#x27;
+alias gcmsg=&#x27;git commit -m&#x27;
+alias gp=&#x27;git push&#x27;
+alias gl=&#x27;git log --oneline&#x27;
+
+# Shell function: create a folder and immediately enter it
+mkcd() { mkdir -p &quot;$1&quot; &amp;&amp; cd &quot;$1&quot; }
+
+# --- After saving the file ---
+# ⋯ continues</code></pre><aside class="notes"># Open the config file
+code ~/.zshrc
+
+# --- Paste these lines into .zshrc ---
+
+# Navigation shortcuts
+alias ll='ls -la'           # detailed listing including hidden files
+alias c='clear'             # clear the screen
+alias tree2='tree -L 2'     # 2-level directory tree
+
+# Python shortcut
+alias py=</aside><aside class="notes">“Test each alias right now. Type ll . Type mkcd testdir and watch it create and enter the folder in one command. These are not just shortcuts — they are muscle memory you will build over the next 14 weeks.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">.zshrc Customization — Aliases and Functions</h2><span class='badge badge-yellow' style='margin-top:.3em;'>40–55 min &nbsp;.zshrc aliases + mkcd</span></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Alias</th><th>Expands to</th><th>When to use it</th></tr></thead><tbody><tr><td>ll</td><td>ls -la</td><td>Any time you need to see hidden files or file permissions</td></tr><tr><td>py</td><td>python3</td><td>Running Python scripts from the terminal</td></tr><tr><td>gs</td><td>git status</td><td>Before every git add to see what will be staged</td></tr><tr><td>ga</td><td>git add .</td><td>Staging all changed files</td></tr><tr><td>gcmsg</td><td>git commit -m</td><td>Committing with a message: gcmsg &#x27;describe change&#x27;</td></tr><tr><td>gp</td><td>git push</td><td>Pushing to GitHub after committing</td></tr><tr><td>gl</td><td>git log --oneline</td><td>Reviewing commit history in compact format</td></tr><tr><td>mkcd</td><td>mkdir -p + cd</td><td>Creating a new project or week folder and entering it</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 3</div><div class="assign-title">Assignment 3</div><div class="assign-items"><ul><li>Screenshot 1: Terminal showing venv creation, activation (prompt shows (.venv) ), and pip install pytest ruff .</li><li>Screenshot 2: pip freeze &gt; requirements.txt followed by cat requirements.txt .</li><li>Screenshot 3: Each custom alias and mkcd function tested in the terminal after source ~/.zshrc .</li><li>File: module02_zsh/.gitignore containing at minimum .venv/ and __pycache__/ .</li><li>File: module02_zsh/requirements.txt — from pip freeze inside the active venv.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 3</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 3 &nbsp;·&nbsp; .zshrc Customization — Aliases and Functions</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

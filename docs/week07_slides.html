@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 7</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 7</h1><h2>Students organise business logic into named, reusable, testable functions and separate code across multiple modules using imports.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Why functions?</span><span class="t-chip">15–35 min — Define, call, return</span><span class="t-chip">35–55 min — Parameters + scope</span><span class="t-chip">55–70 min — Modules + pytest</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Why functions?</li><li><code style="color:var(--blue);font-size:.85em;">15–35 min</code>&nbsp;&nbsp;Define, call, return</li><li><code style="color:var(--blue);font-size:.85em;">35–55 min</code>&nbsp;&nbsp;Parameters + scope</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;Modules + pytest</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Why Functions?</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Why functions?</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Without functions</h2><div class="concept-card">Business rules are repeated in multiple places. Changing a threshold means finding every copy. Easy to miss one. Impossible to unit-test any of them. Each rule has a name, is defined once, and is testable. Changing a threshold takes one edit. Every caller receives the update…</div><aside class="notes">“Without functions, every business rule is written out in full every time it is needed. If the approval threshold changes from $1,000 to $2,000, you must find and update every copy. Miss one and you have a bug. With a function, you update it in one place and every caller gets the new behaviour.”</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; With functions</h2><div class="concept-card">You cannot write a pytest test for an anonymous block of code. Naming business logic is what makes it testable. Every function in business_rules.py will have a corresponding test in tests/test_business_rules.py . Section 2 — Defining, Calling, Returning</div><aside class="notes">“You cannot write a pytest test for an anonymous block of code. Naming the logic is what makes it testable. Every function in business_rules.py will have a corresponding test. If you cannot test it, you cannot trust it.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">def calculate_total(price: float, quantity: int) -&gt; float:
+    &quot;&quot;&quot;Return total cost including 7% tax.&quot;&quot;&quot;
+    subtotal = price * quantity
+    tax = subtotal * 0.07
+    return subtotal + tax
+
+def requires_review(amount: float) -&gt; bool:
+    &quot;&quot;&quot;Return True if amount exceeds the approval limit.&quot;&quot;&quot;
+    return amount &gt; 1000
+
+def get_approval_tier(amount: float) -&gt; str:
+    &quot;&quot;&quot;Return approval routing tier for a given amount.&quot;&quot;&quot;
+    if amount &lt;= 500:    return &quot;auto&quot;
+    elif amount &lt;= 2000: return &quot;manager&quot;
+    else:               return &quot;director&quot;
+
+# Calling functions
+total = calculate_total(450.00, 3)
+print(requires_review(1500))    # True
+print(get_approval_tier(750))   # &quot;manager&quot;</code></pre><aside class="notes">def calculate_total(price: float, quantity: int) -> float:
+    """Return total cost including 7% tax."""
+    subtotal = price * quantity
+    tax = subtotal * 0.07
+    return subtotal + tax
+
+def requires_review(amount: float) -> bool:
+    """Return True if amount exceeds the approval limit."""
+    re</aside><aside class="notes">“A function definition is the blueprint. A function call is the execution. A return value is the output. These three concepts are the entire function model. Everything else is detail.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Defining, Calling, Returning</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–35 min &nbsp;Define, call, return</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Functions are the unit of testability</h2><div class="concept-card">Variables defined inside a function are local — they do not exist outside it. This prevents functions from accidentally overwriting each other&#x27;s state. Always pass data in via parameters and get it back via return . Module-level constants (ALL_CAPS) are the exception. Scope…</div><aside class="notes">“Notice that none of these functions contain a print(). They return values. main.py calls them and prints the results. This separation — logic in functions, display in main — is how professional code is structured and how tests work.”</aside></section>
+<section class="s-concept"><h2>&#x1F9E9; Local vs module-level scope</h2><div class="concept-card">When a file contains functions, other files can use them with import . This is how professional Python projects separate concerns: business rules in business_rules.py , database code in database.py , the main entry point in main.py . Tests always import from the module they…</div><aside class="notes">“A variable defined inside a function is local — it does not exist outside that function. This is a feature, not a limitation. It means functions cannot accidentally overwrite each other&#x27;s data. Always pass data in via parameters and get it back via return.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">APPROVAL_LIMIT = 1000   # module-level — accessible everywhere
+
+def check_limit(amount):
+    result = amount &gt; APPROVAL_LIMIT   # local to this function
+    return result
+
+# print(result)  → NameError: name &#x27;result&#x27; is not defined
+print(check_limit(1500))   # True — the return value is accessible</code></pre><aside class="notes">APPROVAL_LIMIT = 1000   # module-level — accessible everywhere
+
+def check_limit(amount):
+    result = amount > APPROVAL_LIMIT   # local to this function
+    return result
+
+# print(result)  → NameError: name 'result' is not defined
+print(check_limit(1500))   # True — the return value is accessible</aside><aside class="notes">“A module is any .py file you import from. When business_rules.py contains your functions, main.py can use them with from business_rules import calculate_total . Tests do the same thing. This is how every professional Python project is organised.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Scope</h2><span class='badge badge-yellow' style='margin-top:.3em;'>35–55 min &nbsp;Parameters + scope</span></section>
+<section class="s-concept"><h2>&#x1F9E9; A module is any .py file you import from</h2><div class="concept-card"></div></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">module05_functions/
+  README.md
+  main.py              # imports business_rules, calls functions with real data
+  business_rules.py    # all business logic lives here
+  requirements.txt
+  .gitignore
+  tests/
+    __init__.py        # empty file — makes tests/ a package
+    test_business_rules.py</code></pre><aside class="notes">module05_functions/
+  README.md
+  main.py              # imports business_rules, calls functions with real data
+  business_rules.py    # all business logic lives here
+  requirements.txt
+  .gitignore
+  tests/
+    __init__.py        # empty file — makes tests/ a package
+    test_business_rules.py</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Modules and Required Project Structure</h2><span class='badge badge-yellow' style='margin-top:.3em;'>55–70 min &nbsp;Modules + pytest</span></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from business_rules import calculate_total, requires_review, get_approval_tier
+
+def test_calculate_total_basic():
+    assert calculate_total(100.00, 2) == 214.00   # 200 * 1.07
+
+def test_requires_review_true():
+    assert requires_review(1500) is True
+
+def test_requires_review_false():
+    assert requires_review(500) is False
+
+def test_approval_tier_boundary():
+    assert get_approval_tier(500) == &quot;auto&quot;   # exactly at boundary
+
+def test_approval_tier_director():
+    assert get_approval_tier(5000) == &quot;director&quot;</code></pre><aside class="notes">from business_rules import calculate_total, requires_review, get_approval_tier
+
+def test_calculate_total_basic():
+    assert calculate_total(100.00, 2) == 214.00   # 200 * 1.07
+
+def test_requires_review_true():
+    assert requires_review(1500) is True
+
+def test_requires_review_false():
+    assert re</aside></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 7</div><div class="assign-title">Assignment 7</div><div class="assign-items"><ul><li>File: business_rules.py — at least 4 functions, each with a docstring and a return value. No print() at module level.</li><li>File: main.py — imports from business_rules and calls all functions with realistic business data.</li><li>File: tests/test_business_rules.py — at least 4 tests including at least one boundary/edge-case test.</li><li>Screenshot: Full pre-submission ritual passing before push.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 7</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 7 &nbsp;·&nbsp; Modules and Required Project Structure</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

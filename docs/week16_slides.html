@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 16</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 16</h1><h2>Students integrate a controlled GenAI capability into their Streamlit application, then present their complete business application prototype in the final demo session.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — GenAI feature types + controls</span><span class="t-chip">15–45 min — Build ai_feature.py + wire to Streamlit</span><span class="t-chip">45–60 min — Repo polish + submission checklist</span><span class="t-chip">60–80 min — Final demo presentations</span><span class="t-chip">End of session — Portfolio submission</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;GenAI feature types + controls</li><li><code style="color:var(--blue);font-size:.85em;">15–45 min</code>&nbsp;&nbsp;Build ai_feature.py + wire to Streamlit</li><li><code style="color:var(--blue);font-size:.85em;">45–60 min</code>&nbsp;&nbsp;Repo polish + submission checklist</li><li><code style="color:var(--blue);font-size:.85em;">60–80 min</code>&nbsp;&nbsp;Final demo presentations</li><li><code style="color:var(--blue);font-size:.85em;">End of session</code>&nbsp;&nbsp;Portfolio submission</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; 16-week term — Weeks 16 and 17 combined</h2><div class="concept-card">This session covers two things: the first half introduces and wires in the GenAI feature; the second half is the final demonstration and portfolio submission. Students should have the GenAI feature substantially built before class so that in-session time goes to integration, polish, and presentations.</div><aside class="notes">“The GenAI feature is a required part of your application — not just a development tool. It does something useful for the business user: summarising a request, classifying urgency, drafting a response. The AI output appears in the Streamlit interface with disclosure and human review.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; GenAI is a required application feature, not just a dev tool</h2><div class="concept-card">Students integrate a controlled AI capability into their Streamlit application. The AI does something useful for the business user — summarising a request, classifying urgency, drafting a response — with required disclosure and human review controls built in.</div><aside class="notes">“Do not send names, IDs, dollar amounts, or any personally identifiable information to the AI API. Send only the category and a generic description. Your prompt should be constructable without any specific record data.”</aside></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; All six controls are required — missing any one fails the feature</h2><div class="warn-card">A GenAI feature without disclosure, human review, and a limitations statement is not a professional implementation. These are graded on the capstone rubric.</div><aside class="notes">“Before presentations begin: run through the final submission checklist on the lecture page. Every item must be checked. I will verify GitHub access as part of grading.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Second half of session: live demos</h2><div class="concept-card">Each student presents their complete business application. The presentation covers 8 required topics. Aim for 8–10 minutes per student. Peer feedback encouraged between presentations.</div><aside class="notes">“Each presentation covers 8 topics. I will stop you if you skip one. You have 8–10 minutes. Show the running application. Explain the code. Tell me what you would improve.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Automation bonus (+5%)</h2><div class="concept-card">Students who complete all required features may add one automation feature for bonus credit: CSV export, Excel report with openpyxl, scheduled summary, or similar. Submit automation.py with documentation.</div></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Part A — GenAI-Supported Business Feature</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;GenAI feature types + controls</span></section>
+<section class="s-concept"><h2>&#x1F9E9; The six required controls</h2><div class="concept-card">1. Disclosure in the UI: AI-generated content must be clearly labelled in the Streamlit interface. 2. Human review before save: AI output is displayed for the user to review before it is written to the database. Never auto-save AI output. 3. No sensitive data sent to the API: Do…</div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">import anthropic
+
+def summarise_request(category: str, description: str) -&gt; str:
+    &quot;&quot;&quot;
+    Return a one-sentence AI summary of a business request.
+    Only category and description are sent — no names or amounts.
+    &quot;&quot;&quot;
+    client = anthropic.Anthropic()
+    prompt = f&quot;Summarise this {category} business request in one sentence:\n{description}&quot;
+    message = client.messages.create(
+        model=&quot;claude-haiku-4-5-20251001&quot;,
+        max_tokens=150,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}]
+    )
+    return message.content[0].text</code></pre><aside class="notes">import anthropic
+
+def summarise_request(category: str, description: str) -> str:
+    """
+    Return a one-sentence AI summary of a business request.
+    Only category and description are sent — no names or amounts.
+    """
+    client = anthropic.Anthropic()
+    prompt = f"Summarise this {category} b</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Approved GenAI Feature Types</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–45 min &nbsp;Build ai_feature.py + wire to Streamlit</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Run this before the demo session</h2><div class="concept-card">☐ All 5 database.py functions pass their tests. ☐ All 5 Streamlit features work end-to-end in a browser. ☐ GenAI feature shows disclosure label and human review button. ☐ README includes: project description, setup instructions, AI feature section with limitations, AI use…</div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from ai_feature import summarise_request
+
+description = st.text_area(&quot;Request description&quot;)
+
+if st.button(&quot;🤖 Generate AI Summary&quot;):
+    with st.spinner(&quot;Generating summary...&quot;):
+        ai_summary = summarise_request(category, description)
+    st.info(f&quot;🤖 AI-generated summary (review before saving):\n\n{ai_summary}&quot;)
+    if st.button(&quot;✅ Looks good — save this summary&quot;):
+        add_record(requester, category, amount, notes=ai_summary)
+        st.success(&quot;Record saved with AI summary.&quot;)</code></pre><aside class="notes">from ai_feature import summarise_request
+
+description = st.text_area("Request description")
+
+if st.button("🤖 Generate AI Summary"):
+    with st.spinner("Generating summary..."):
+        ai_summary = summarise_request(category, description)
+    st.info(f"🤖 AI-generated summary (review before saving):</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Required GenAI Controls</h2><span class='badge badge-yellow' style='margin-top:.3em;'>45–60 min &nbsp;Repo polish + submission checklist</span></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">## AI Feature
+
+**What it does:** [One sentence]
+
+**How it works:** [Which API, what prompt, what model]
+
+**Controls:**
+- AI content is labelled in the UI
+- Human review required before saving
+- No PII sent to the API
+
+**Limitations:**
+- [e.g., may produce generic summaries for unusual requests]
+
+**AI use during development:** [List any AI tools used and how]</code></pre><aside class="notes">## AI Feature
+
+**What it does:** [One sentence]
+
+**How it works:** [Which API, what prompt, what model]
+
+**Controls:**
+- AI content is labelled in the UI
+- Human review required before saving
+- No PII sent to the API
+
+**Limitations:**
+- [e.g., may produce generic summaries for unusual requests]
+
+**A</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Part B — Final Demonstrations and Portfolio Submission</h2><span class='badge badge-yellow' style='margin-top:.3em;'>60–80 min &nbsp;Final demo presentations</span></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">final-project/
+  README.md
+  app.py             # Streamlit application
+  models.py          # OOP classes
+  database.py        # all five database functions
+  ai_feature.py      # GenAI feature
+  requirements.txt
+  .gitignore         # .venv/ __pycache__/ *.db .env
+  data/
+  screenshots/
+  tests/
+    test_models.py
+    test_database.py
+    test_ai_feature.py</code></pre><aside class="notes">final-project/
+  README.md
+  app.py             # Streamlit application
+  models.py          # OOP classes
+  database.py        # all five database functions
+  ai_feature.py      # GenAI feature
+  requirements.txt
+  .gitignore         # .venv/ __pycache__/ *.db .env
+  data/
+  screenshots/
+  tests/
+ </aside></section>
+<section class="s-section"><span class="badge badge-blue">05</span><h2 style="margin-top:.4em;">Required Repository Structure</h2><span class='badge badge-yellow' style='margin-top:.3em;'>End of session &nbsp;Portfolio submission</span></section>
+<section class="s-section"><span class="badge badge-blue">06</span><h2 style="margin-top:.4em;">Required Presentation Topics</h2></section>
+<section class="s-section"><span class="badge badge-blue">07</span><h2 style="margin-top:.4em;">Capstone Grading Rubric</h2></section>
+<section class="s-section"><span class="badge badge-blue">08</span><h2 style="margin-top:.4em;">Final Submission Checklist</h2></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 16</div><div class="assign-title">Final Submission</div><div class="assign-items"><ul><li>Files: app.py , models.py , database.py , ai_feature.py — all implemented and committed.</li><li>Tests: tests/test_models.py , tests/test_database.py , tests/test_ai_feature.py — all passing.</li><li>File: README.md — complete with AI feature section, limitations, and AI use statement.</li><li>Screenshots: At least two images of the running Streamlit application in the screenshots/ folder.</li><li>Screenshot: Full pre-submission ritual passing (ruff, pytest, git push) before the demo session.</li><li>Link: GitHub repository URL submitted to Canvas.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 16</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 16 &nbsp;·&nbsp; Final Submission Checklist</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

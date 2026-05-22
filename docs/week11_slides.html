@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 11</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 11</h1><h2>Students build a manager class that composes entity objects, explore light inheritance for business hierarchies, and map OOP designs to SQL tables.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–20 min — Composition: RequestManager class</span><span class="t-chip">20–40 min — Manager + entity working together</span><span class="t-chip">40–55 min — Light inheritance</span><span class="t-chip">55–70 min — OOP → SQL mapping</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–20 min</code>&nbsp;&nbsp;Composition: RequestManager class</li><li><code style="color:var(--blue);font-size:.85em;">20–40 min</code>&nbsp;&nbsp;Manager + entity working together</li><li><code style="color:var(--blue);font-size:.85em;">40–55 min</code>&nbsp;&nbsp;Light inheritance</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;OOP → SQL mapping</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Composition: Classes That Contain Other Classes</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–20 min &nbsp;Composition: RequestManager class</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Composition: the manager class pattern</h2><div class="concept-card">In most business systems, one object holds a collection of other objects. A RequestManager holds many BusinessRequest instances. This is composition — building complex objects from simpler ones by having one class contain instances of another. Composition is more common than…</div><aside class="notes">“In most business systems, one object holds a collection of other objects. A RequestManager holds many BusinessRequest instances. This is composition — building complex objects from simpler ones. It is more common in business applications than inheritance.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">class RequestManager:
+    &quot;&quot;&quot;Manages a collection of business requests.&quot;&quot;&quot;
+
+    def __init__(self):
+        self.requests = []   # starts empty — instances added later
+
+    def add_request(self, request):
+        &quot;&quot;&quot;Add a BusinessRequest instance to the manager.&quot;&quot;&quot;
+        self.requests.append(request)
+
+    def list_pending(self):
+        &quot;&quot;&quot;Return a list of all requests with status Pending.&quot;&quot;&quot;
+        return [r for r in self.requests if r.status == &quot;Pending&quot;]
+
+    def total_amount(self):
+        &quot;&quot;&quot;Return the total value of all requests.&quot;&quot;&quot;
+        return sum(r.amount for r in self.requests)
+
+    def get_by_status(self, status):
+        &quot;&quot;&quot;Return all requests matching the given status.&quot;&quot;&quot;
+        return [r for r in self.requests if r.status == status]
+
+    def summary_report(self):
+        &quot;&quot;&quot;Print a formatted summary of all requests by status.&quot;&quot;&quot;
+# ⋯ continues</code></pre><aside class="notes">class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []   # starts empty — instances added later
+
+    def add_request(self, request):
+        """Add a BusinessRequest instance to the manager."""
+        self.requests.append(reque</aside><aside class="notes">“Notice that RequestManager does not know how to approve a request — that is BusinessRequest&#x27;s job. RequestManager knows how to hold, filter, and summarise requests. Each class has one clear responsibility.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Inheritance: When to Use It</h2><span class='badge badge-yellow' style='margin-top:.3em;'>20–40 min &nbsp;Manager + entity working together</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Inheritance in business applications: use sparingly</h2><div class="concept-card">Inheritance lets one class inherit attributes and methods from a parent class. In business systems it is useful for modelling hierarchical relationships — a TravelRequest and an EquipmentRequest are both types of BusinessRequest , sharing core attributes but adding their own. Do…</div><aside class="notes">“Use inheritance when there is a genuine is-a relationship. A TravelRequest is a BusinessRequest. An EquipmentRequest is a BusinessRequest. They share core attributes but add their own. Do not use inheritance just to avoid repeating code — that is what composition is for.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from models import BusinessRequest, RequestManager
+
+manager = RequestManager()
+manager.add_request(BusinessRequest(101, &quot;Taylor&quot;, &quot;Travel&quot;, 1200))
+manager.add_request(BusinessRequest(102, &quot;Jordan&quot;, &quot;Equipment&quot;, 450))
+manager.add_request(BusinessRequest(103, &quot;Morgan&quot;, &quot;Software&quot;, 3500))
+
+manager.requests[0].approve()   # approve request 101 directly
+
+manager.summary_report()
+pending = manager.list_pending()
+for r in pending:
+    print(f&quot;  {r.requester}: ${r.amount:,.2f} — review: {r.requires_review()}&quot;)</code></pre><aside class="notes">from models import BusinessRequest, RequestManager
+
+manager = RequestManager()
+manager.add_request(BusinessRequest(101, "Taylor", "Travel", 1200))
+manager.add_request(BusinessRequest(102, "Jordan", "Equipment", 450))
+manager.add_request(BusinessRequest(103, "Morgan", "Software", 3500))
+
+manager.requ</aside><aside class="notes">“In Week 13 you will design your capstone SQL schema. Students who understand that a class maps to a table, an attribute maps to a column, and an instance maps to a row will find SQL design intuitive. Students who do not will struggle to connect the two layers.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">OOP to SQL Mapping</h2><span class='badge badge-yellow' style='margin-top:.3em;'>40–55 min &nbsp;Light inheritance</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Classes, attributes, and instances map directly to SQL tables</h2><div class="concept-card">Understanding this mapping makes SQL design intuitive. When students design their capstone database schema in Week 13, they will translate their class designs directly into SQL CREATE TABLE statements. OOP concept SQL equivalent Example class table BusinessRequest → requests…</div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">class TravelRequest(BusinessRequest):  # inherits from BusinessRequest
+    &quot;&quot;&quot;A business request specifically for travel.&quot;&quot;&quot;
+
+    def __init__(self, request_id, requester, amount, destination):
+        super().__init__(request_id, requester, &quot;Travel&quot;, amount)
+        self.destination = destination   # extra attribute
+
+    def requires_review(self):
+        &quot;&quot;&quot;Travel requests over $500 require review (lower threshold).&quot;&quot;&quot;
+        return self.amount &gt; 500   # overrides parent method
+
+trip = TravelRequest(201, &quot;Morgan&quot;, 850, &quot;Atlanta&quot;)
+print(trip.destination)        # Atlanta
+print(trip.requires_review())  # True (850 &gt; 500, travel threshold)
+trip.approve()                 # inherited from BusinessRequest
+print(trip.status)             # Approved</code></pre><aside class="notes">class TravelRequest(BusinessRequest):  # inherits from BusinessRequest
+    """A business request specifically for travel."""
+
+    def __init__(self, request_id, requester, amount, destination):
+        super().__init__(request_id, requester, "Travel", amount)
+        self.destination = destination  </aside></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>OOP concept</th><th>SQL equivalent</th><th>Example</th></tr></thead><tbody><tr><td>class</td><td>table</td><td>BusinessRequest → requests table</td></tr><tr><td>instance (one object)</td><td>row (one record)</td><td>req_101 → one row in the requests table</td></tr><tr><td>attribute (instance variable)</td><td>column</td><td>request_id, requester, amount, status</td></tr><tr><td>manager class list</td><td>all rows in the table</td><td>manager.requests → SELECT * FROM requests</td></tr><tr><td>list_pending() method</td><td>WHERE clause</td><td>SELECT * FROM requests WHERE status = &quot;Pending&quot;</td></tr><tr><td>total_amount() method</td><td>aggregate query</td><td>SELECT SUM(amount) FROM requests</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 11</div><div class="assign-title">Assignment 11</div><div class="assign-items"><ul><li>File: models.py — updated with both the entity class and a manager class. Manager must have at least: add,…</li><li>File: main.py — creates a manager, adds at least 4 instances, calls manager methods, and prints a formatted summary…</li><li>File: tests/test_models.py — at least 5 tests covering both the entity class and the manager class.</li><li>File: README.md — includes a class diagram or written description of the OOP design.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 11</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 11 &nbsp;·&nbsp; OOP to SQL Mapping</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

@@ -26,6 +26,7 @@
   --u3:  #fb7185; --u3d: rgba(251,113,133,.12); --u3g: rgba(251,113,133,.3);
   --u4:  #fbbf24; --u4d: rgba(251,191,36,.12);  --u4g: rgba(251,191,36,.3);
   --pre: #94e2d5; --pred:rgba(148,226,213,.12);
+  --slides: #c084fc; --slidesd:rgba(192,132,252,.12);
 
   --mono: 'DM Mono', monospace;
   --disp: 'Syne', sans-serif;
@@ -218,6 +219,8 @@ body { min-height: 100vh; }
 .wk-link.l-read:hover  { background:var(--u2d); color:var(--u2); border-color:rgba(129,140,248,.3); }
 .wk-link.l-lect:hover  { background:var(--pred); color:var(--pre); border-color:rgba(148,226,213,.3); }
 .wk-link.l-lab:hover   { background:var(--u1d); color:var(--u1); border-color:rgba(0,201,167,.3); }
+.wk-link.l-slides:hover { background:rgba(192,132,252,.12); color:#c084fc; border-color:rgba(192,132,252,.3); }
+.wk-link .dot.slides  { background:#c084fc; }
 .wk-link .dot.read  { background:var(--u2); }
 .wk-link .dot.lect  { background:var(--pre); }
 .wk-link .dot.lab   { background:var(--u1); }
@@ -275,6 +278,7 @@ footer a:hover { color: var(--text); }
 <nav class="topnav">
   <a class="nav-logo" href="#">ISM3232</a>
   <div class="nav-links">
+    <a class="nav-link" href="docs/course_map.html">Course Map</a>
     <a class="nav-link" href="#precourse">Pre-Course</a>
     <a class="nav-link u1" href="#unit1">Unit 1</a>
     <a class="nav-link u2" href="#unit2">Unit 2</a>
@@ -303,6 +307,28 @@ footer a:hover { color: var(--text); }
   </div>
 </div>
 
+
+  <!-- ══ COURSE MAP CTA ════════════════════════════════════════════════════════ -->
+  <div style="max-width:680px;margin:0 auto 16px;padding:0 24px;">
+    <a href="docs/course_map.html" style="
+      display:flex;align-items:center;gap:20px;
+      background:linear-gradient(135deg,rgba(129,140,248,.13) 0%,rgba(251,191,36,.08) 100%);
+      border:1px solid rgba(129,140,248,.25);border-radius:14px;
+      padding:20px 28px;text-decoration:none;
+      transition:transform .2s,box-shadow .2s;
+    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(129,140,248,.2)'"
+       onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <span style="font-size:36px;flex-shrink:0;">🗺</span>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#e2e2ec;margin-bottom:4px;">Interactive Course Map</div>
+        <div style="font-size:13px;color:#7a7a95;line-height:1.5;">
+          Four units · click any unit to expand topics · keyboard shortcuts 1–4
+        </div>
+      </div>
+      <span style="margin-left:auto;color:#818cf8;font-size:20px;opacity:.7;">→</span>
+    </a>
+  </div>
+
 <main class="main">
 
   <!-- ── Legend ── -->
@@ -310,6 +336,7 @@ footer a:hover { color: var(--text); }
     <span class="leg-item"><span class="leg-dot" style="background:var(--u2)"></span>Reading</span>
     <span class="leg-item"><span class="leg-dot" style="background:var(--pre)"></span>Lecture</span>
     <span class="leg-item"><span class="leg-dot" style="background:var(--u1)"></span>Lab</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#c084fc"></span>Slides</span>
   </div>
 
   <!-- ══ PRE-COURSE ════════════════════════════════════════════════════════════ -->
@@ -381,6 +408,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week01_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week01_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week01_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week01_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week01_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -393,6 +422,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week02_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week02_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week02_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week02_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week02_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -405,6 +436,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week03_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week03_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week03_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week03_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week03_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -417,6 +450,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week04_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week04_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week04_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week04_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week04_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -441,6 +476,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week05_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week05_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week05_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week05_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week05_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -453,6 +490,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week06_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week06_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week06_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week06_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week06_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -465,6 +504,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week07_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week07_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week07_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week07_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week07_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -477,6 +518,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week08_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week08_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week08_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week08_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week08_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -487,6 +530,7 @@ footer a:hover { color: var(--text); }
           <div class="mid-sub">Open notes · Weeks 1–8 · ~60 minutes · No new content</div>
         </div>
         <a class="wk-link l-read" href="docs/week09_reading.html" style="flex-shrink:0;"><span class="dot read"></span>Exam Guide</a>
+        <a class="wk-link l-slides" href="docs/week09_slides.html" style="flex-shrink:0;"><span class="dot slides"></span>Slides</a>
       </div>
 
     </div>
@@ -510,6 +554,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week10_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week10_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week10_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week10_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week10_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -522,6 +568,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week11_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week11_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week11_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week11_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week11_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -534,6 +582,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week12_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week12_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week12_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week12_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week12_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -558,6 +608,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week13_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week13_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week13_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week13_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week13_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -570,6 +622,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week14_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week14_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week14_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week14_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week14_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -582,6 +636,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week15_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week15_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week15_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week15_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week15_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 
@@ -594,6 +650,8 @@ footer a:hover { color: var(--text); }
           <a class="wk-link l-read" href="docs/week16_reading.html"><span class="dot read"></span>Reading</a>
           <a class="wk-link l-lect" href="docs/week16_lecture.html"><span class="dot lect"></span>Lecture</a>
           <a class="wk-link l-lab"  href="docs/week16_lab.html"><span class="dot lab"></span>Lab</a>
+          <a class="wk-link l-slides" href="docs/week16_slides.html"><span class="dot slides"></span>Slides</a>
+          <a class="wk-link l-slides" href="docs/week16_script_slides.html" style="opacity:.6;" title="Instructor video script slides"><span class="dot slides"></span>Script Slides</a>
         </div>
       </div>
 

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 12</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 12</h1><h2>Students design and build a standalone multi-class business simulation from scratch and write comprehensive pytest tests before beginning the capstone.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Design-first approach</span><span class="t-chip">15–40 min — Build own multi-class system</span><span class="t-chip">40–60 min — Write 5+ pytest tests</span><span class="t-chip">60–70 min — Common mistakes review</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Design-first approach</li><li><code style="color:var(--blue);font-size:.85em;">15–40 min</code>&nbsp;&nbsp;Build own multi-class system</li><li><code style="color:var(--blue);font-size:.85em;">40–60 min</code>&nbsp;&nbsp;Write 5+ pytest tests</li><li><code style="color:var(--blue);font-size:.85em;">60–70 min</code>&nbsp;&nbsp;Common mistakes review</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; OOP Checkpoint before the capstone</h2><div class="concept-card">Week 12 is the OOP applied practice week. Students build a standalone multi-class simulation — no database, no Streamlit — and write comprehensive pytest tests. This is the last chance to confirm OOP fluency before SQL and Streamlit are introduced on top of it in Unit 4.</div><aside class="notes">“This week you design and build your own multi-class system from scratch. Before you type a single line of code, you are going to write your class design in comments. A class design written in five minutes saves an hour of refactoring.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">What Applied OOP Practice Means</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Design-first approach</span></section>
+<section class="s-concept"><h2>&#x1F9E9; The goal this week: build without a net</h2><div class="concept-card">Weeks 10 and 11 introduced the concepts with guided examples. This week students design and build their own multi-class system from a prompt — choosing their own class names, attributes, and methods — and test every piece of business logic with pytest. The deliverable is a…</div><aside class="notes">“You cannot start coding until you have written the design. Show me your design before I will answer any code questions. If you cannot write the design, you do not yet know what you are building.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python"># CLASS DESIGN — Week 12 Applied Practice
+#
+# Entity class 1: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all methods with brief description]
+#
+# Entity class 2: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all methods with brief description]
+#
+# Manager class: [ClassName]
+#   Holds: list of [entity class 1]
+#   Methods: add, list_by_status, total, summary_report
+#
+# Business rules (will become methods and test cases):
+#   [rule 1]
+#   [rule 2]
+#   [rule 3]</code></pre><aside class="notes"># CLASS DESIGN — Week 12 Applied Practice
+#
+# Entity class 1: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all methods with brief description]
+#
+# Entity class 2: [ClassName]
+#   Attributes: [list all attributes and their types]
+#   Methods:    [list all me</aside><aside class="notes">“Build your system now. Two entity classes, one manager class. Every class needs a docstring. Every business logic method needs a return value, not a print(). I will circulate and review designs first, then code.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Design-First Approach</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–40 min &nbsp;Build own multi-class system</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Always design before you type</h2><div class="concept-card">Before writing any code this week, students should write down: What are my two entity classes? What attributes does each one have? What methods does each one need? What does the manager class hold and what can it do? A class design written in comments or a README takes five…</div><aside class="notes">“Five tests minimum. At least one must test a boundary or edge case — where the business rule changes. If your approval threshold is $1,000, test with exactly $1,000.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">class Employee:
+    def __init__(self, emp_id, name, department, salary):
+        self.emp_id     = emp_id
+        self.name       = name
+        self.department = department
+        self.salary     = salary
+        self.active     = True
+
+    def give_raise(self, percent):
+        self.salary *= (1 + percent / 100)
+
+    def deactivate(self):
+        self.active = False
+
+    def is_senior(self):
+        return self.salary &gt; 80000
+
+class Department:
+    def __init__(self, name, budget):
+        self.name       = name
+        self.budget     = budget
+        self.employees  = []
+
+    def hire(self, employee):
+# ⋯ continues</code></pre><aside class="notes">class Employee:
+    def __init__(self, emp_id, name, department, salary):
+        self.emp_id     = emp_id
+        self.name       = name
+        self.department = department
+        self.salary     = salary
+        self.active     = True
+
+    def give_raise(self, percent):
+        self.salary *= (1</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Reference: The Complete Pattern</h2><span class='badge badge-yellow' style='margin-top:.3em;'>40–60 min &nbsp;Write 5+ pytest tests</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Full example: Employee + Department + DepartmentManager</h2><div class="concept-card">Use this as a model if students are stuck on what to build. They should NOT copy it — they must design their own domain — but they can reference the structure. models.py — two entity classes + one manager class Employee: def __init__(self, emp_id, name, department, salary): …</div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from models import Employee, Department
+
+def test_give_raise_increases_salary():
+    e = Employee(1, &quot;Alex&quot;, &quot;Eng&quot;, 70000)
+    e.give_raise(10)
+    assert e.salary == 77000
+
+def test_deactivate_removes_from_headcount():
+    dept = Department(&quot;Eng&quot;, 300000)
+    e = Employee(2, &quot;Sam&quot;, &quot;Eng&quot;, 60000)
+    dept.hire(e)
+    e.deactivate()
+    assert dept.headcount() == 0
+
+def test_payroll_excludes_inactive():
+    dept = Department(&quot;Eng&quot;, 300000)
+    e1 = Employee(3, &quot;Jo&quot;, &quot;Eng&quot;, 50000)
+    e2 = Employee(4, &quot;Pat&quot;, &quot;Eng&quot;, 55000)
+    dept.hire(e1); dept.hire(e2)
+    e2.deactivate()
+    assert dept.payroll_total() == 50000
+
+def test_over_budget_true():
+    dept = Department(&quot;Mktg&quot;, 100000)
+# ⋯ continues</code></pre><aside class="notes">from models import Employee, Department
+
+def test_give_raise_increases_salary():
+    e = Employee(1, "Alex", "Eng", 70000)
+    e.give_raise(10)
+    assert e.salary == 77000
+
+def test_deactivate_removes_from_headcount():
+    dept = Department("Eng", 300000)
+    e = Employee(2, "Sam", "Eng", 60000)
+  </aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Common OOP Mistakes to Catch This Week</h2><span class='badge badge-yellow' style='margin-top:.3em;'>60–70 min &nbsp;Common mistakes review</span></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Mistake</th><th>What it looks like</th><th>Fix</th></tr></thead><tbody><tr><td>Forgetting self in method signature</td><td>def approve(): instead of def approve(self):</td><td>Every method must have self as first parameter</td></tr><tr><td>Forgetting self when accessing attributes</td><td>status = &quot;Approved&quot; instead of self.status = &quot;Approved&quot;</td><td>Always use self.attribute_name inside methods</td></tr><tr><td>Putting print() in methods</td><td>methods that print instead of return</td><td>Methods should return data; main.py prints it</td></tr><tr><td>Not calling super().__init__() in subclass</td><td>Inherited attributes missing in subclass</td><td>Always call super().__init__() in the child constructor</td></tr><tr><td>Testing print output instead of return values</td><td>No return in method, tests assert nothing</td><td>Every business logic method should return a value</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 12</div><div class="assign-title">Assignment 12</div><div class="assign-items"><ul><li>File: models.py — at least 2 entity classes and 1 manager class, each with docstrings and meaningful business logic…</li><li>File: main.py — a simulation that creates instances, calls methods, and prints a formatted report demonstrating all…</li><li>File: tests/test_models.py — at least 5 pytest tests covering business logic. Must include at least one…</li><li>File: README.md — class design written out before coding: class names, attributes, methods, and business rules.</li><li>Screenshot: Full pre-submission ritual passing before push.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 12</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 12 &nbsp;·&nbsp; Common OOP Mistakes to Catch This Week</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

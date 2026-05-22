@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 15</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 15</h1><h2>Students build a five-feature Streamlit interface wired to their SQLite database, then attend a concept lecture on FastAPI and REST APIs.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Why Streamlit? Setup</span><span class="t-chip">15–45 min — Build Streamlit app together</span><span class="t-chip">45–60 min — All 5 required features</span><span class="t-chip">60–75 min — FastAPI concept lecture</span><span class="t-chip">75–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Why Streamlit? Setup</li><li><code style="color:var(--blue);font-size:.85em;">15–45 min</code>&nbsp;&nbsp;Build Streamlit app together</li><li><code style="color:var(--blue);font-size:.85em;">45–60 min</code>&nbsp;&nbsp;All 5 required features</li><li><code style="color:var(--blue);font-size:.85em;">60–75 min</code>&nbsp;&nbsp;FastAPI concept lecture</li><li><code style="color:var(--blue);font-size:.85em;">75–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; FastAPI is a concept introduction — no deliverable required</h2><div class="concept-card">This 60–90 minute lecture covers what an API is, how routes and requests work, and how FastAPI structures a Python web service. Students run one minimal demo route. There is no FastAPI assignment or capstone requirement.</div><aside class="notes">“Streamlit turns Python scripts into browser-based business tools without writing any HTML, CSS, or JavaScript. Every widget — text inputs, buttons, dropdowns, tables — is a Python function call. The interface re-runs the entire script top to bottom whenever the user interacts with it.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Why Streamlit?</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Why Streamlit? Setup</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Streamlit turns Python scripts into browser-based business tools</h2><div class="concept-card">Streamlit lets you build an interactive web interface for your Python application without writing HTML, CSS, or JavaScript. Every widget — text inputs, buttons, dropdowns, tables — is a Python function call. The interface re-runs the entire script top to bottom whenever the user…</div><aside class="notes">“Because the entire script reruns on every interaction, anything you compute at the top of the script is recomputed every time. This is why database calls go inside tab blocks or conditional blocks — not at the top level.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># Activate venv first
+source .venv/bin/activate
+pip install streamlit
+pip freeze &gt; requirements.txt
+
+# Run your app
+streamlit run app.py
+# Opens in browser at http://localhost:8501
+# Ctrl+C to stop</code></pre><aside class="notes"># Activate venv first
+source .venv/bin/activate
+pip install streamlit
+pip freeze > requirements.txt
+
+# Run your app
+streamlit run app.py
+# Opens in browser at http://localhost:8501
+# Ctrl+C to stop</aside><aside class="notes">“We are building the complete app skeleton together. Every widget I type, you type. We will add all five required features and wire each one to the database functions from Week 14.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Core Streamlit Components</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–45 min &nbsp;Build Streamlit app together</span></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">import streamlit as st
+
+# Page setup (call once, at the top)
+st.set_page_config(page_title=&quot;Request Tracker&quot;, layout=&quot;wide&quot;)
+
+# Text display
+st.title(&quot;Business Request Tracker&quot;)
+st.header(&quot;Submit a New Request&quot;)
+st.write(&quot;Any text, markdown, or value — very flexible&quot;)
+
+# Input widgets — each returns a Python value
+requester = st.text_input(&quot;Your name&quot;)
+category  = st.selectbox(&quot;Category&quot;, [&quot;Travel&quot;, &quot;Equipment&quot;, &quot;Software&quot;])
+amount    = st.number_input(&quot;Amount ($)&quot;, min_value=0.0, step=10.0)
+notes     = st.text_area(&quot;Notes (optional)&quot;)
+
+# Button — returns True only on the click that triggered the rerun
+if st.button(&quot;Submit Request&quot;):
+    if requester and amount &gt; 0:
+        add_record(requester, category, amount, notes)
+        st.success(f&quot;Request submitted for {requester}&quot;)
+    else:
+        st.error(&quot;Name and amount are required.&quot;)
+
+# ⋯ continues</code></pre><aside class="notes">import streamlit as st
+
+# Page setup (call once, at the top)
+st.set_page_config(page_title="Request Tracker", layout="wide")
+
+# Text display
+st.title("Business Request Tracker")
+st.header("Submit a New Request")
+st.write("Any text, markdown, or value — very flexible")
+
+# Input widgets — each returns</aside><aside class="notes">“An API is a contract between a client and a server. The client sends a request to a specific URL with a specific HTTP method. The server returns data, usually as JSON. This is how every web service in the world communicates.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Required Five Streamlit Features</h2><span class='badge badge-yellow' style='margin-top:.3em;'>45–60 min &nbsp;All 5 required features</span></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">import streamlit as st
+from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+create_table()   # idempotent — safe to call on every run
+
+st.set_page_config(page_title=&quot;Request Tracker&quot;, layout=&quot;wide&quot;)
+st.title(&quot;📋 Business Request Tracker&quot;)
+
+tab1, tab2, tab3 = st.tabs([&quot;Submit&quot;, &quot;View &amp; Filter&quot;, &quot;Report&quot;])
+
+with tab1:
+    st.header(&quot;Submit a New Request&quot;)
+    requester = st.text_input(&quot;Your name&quot;)
+    category  = st.selectbox(&quot;Category&quot;, [&quot;Travel&quot;, &quot;Equipment&quot;, &quot;Software&quot;])
+    amount    = st.number_input(&quot;Amount ($)&quot;, min_value=0.0, step=10.0)
+    if st.button(&quot;Submit&quot;):
+        add_record(requester, category, amount)
+        st.success(&quot;Submitted!&quot;)
+
+with tab2:
+    records = get_all_records()
+    st.dataframe(records)
+
+with tab3:
+# ⋯ continues</code></pre><aside class="notes">import streamlit as st
+from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+create_table()   # idempotent — safe to call on every run
+
+st.set_page_config(page_title="Request Tracker", layout="wide")
+st.title("📋 Business Request Tracker")
+
+tab1, tab2, tab3</aside><aside class="notes">“Your Streamlit app is a client. If your business logic lived behind a FastAPI service, Streamlit would call the API instead of importing database.py directly. That is the architecture for production systems. For this course, we import directly — simpler and sufficient.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">FastAPI: Concept Lecture Only</h2><span class='badge badge-yellow' style='margin-top:.3em;'>60–75 min &nbsp;FastAPI concept lecture</span></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get(&quot;/&quot;)
+def home():
+    return {&quot;message&quot;: &quot;Business API is running&quot;}
+
+@app.get(&quot;/requests&quot;)
+def get_requests():
+    return {&quot;requests&quot;: []}
+
+# Visit http://127.0.0.1:8000/docs for auto-generated API documentation</code></pre><aside class="notes">from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "Business API is running"}
+
+@app.get("/requests")
+def get_requests():
+    return {"requests": []}
+
+# Visit http://127.0.0.1:8000/docs for auto-generated API documentation</aside></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 15</div><div class="assign-title">Assignment 15</div><div class="assign-items"><ul><li>File: app.py — a working Streamlit application with all 5 required features: add, view, filter, update status, report.</li><li>Screenshot 1: The Streamlit app running in a browser showing the Add Record form and a successful submission.</li><li>Screenshot 2: The View / Filter tab showing records in a table with at least one filter applied.</li><li>Screenshot 3: The Report tab showing the operational status report.</li><li>Link: GitHub repository URL with app.py committed.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 15</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; FastAPI: Concept Lecture Only</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

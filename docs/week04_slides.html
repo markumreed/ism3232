@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 4</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 4</h1><h2>Students learn ripgrep, fzf, zoxide, the mandatory pre-submission ritual, and Git/GitHub fundamentals for professional project submission.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Search tools — rg, find, grep</span><span class="t-chip">15–30 min — fzf + zoxide demo</span><span class="t-chip">30–50 min — Pre-submission ritual</span><span class="t-chip">50–70 min — Git + GitHub first push</span><span class="t-chip">70–80 min — Assignment walkthrough</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Search tools — rg, find, grep</li><li><code style="color:var(--blue);font-size:.85em;">15–30 min</code>&nbsp;&nbsp;fzf + zoxide demo</li><li><code style="color:var(--blue);font-size:.85em;">30–50 min</code>&nbsp;&nbsp;Pre-submission ritual</li><li><code style="color:var(--blue);font-size:.85em;">50–70 min</code>&nbsp;&nbsp;Git + GitHub first push</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment walkthrough</li></ul></section>
+<section class="s-concept"><h2>&#x1F4CC; Install ripgrep</h2><div class="concept-card">Mac: brew install ripgrep · Ubuntu/WSL: sudo apt install ripgrep . It is dramatically faster than grep and ignores .venv/ and .git/ automatically because it respects .gitignore .</div><aside class="notes">“As your projects grow, you will need to find where a function is defined, where a variable is used, or which file contains a specific error message. Clicking through VS Code is slow. Knowing rg means answering these questions in seconds from anywhere.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Required for every major assignment</h2><div class="concept-card">Students must run this exact sequence before every submission. It catches formatting errors, linting issues, failing tests, and uncommitted changes before they reach the grader. Instructors check Git logs and Ruff output as part of grading.</div><aside class="notes">“These two tools are not required for the midterm but they are genuinely useful and worth five minutes. Once you use them you will not go back.”</aside></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; Do not submit if pytest fails</h2><div class="warn-card">If pytest returns failures, fix the code before committing. Committing a broken state and submitting it is not acceptable. The ritual is not complete until all steps pass cleanly.</div><aside class="notes">“A professional does not just push code. They verify, test, format, and commit in a specific order. This sequence catches errors before they become grading problems. I check your Git logs — I can see whether you ran ruff and pytest before pushing.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Search Tools</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Search tools — rg, find, grep</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Why developers need codebase search</h2><div class="concept-card">As projects grow, you need to find where a function is defined, where a variable is used, or which file contains a specific error. Clicking through VS Code is slow. Knowing rg means answering these questions in seconds from anywhere. Required search commands — ripgrep, find,…</div><aside class="notes">“Git tracks every change to your code. GitHub is where your repositories live and how you submit every major assignment. I see your commit history. A single commit called &#x27;final&#x27; tells me nothing about your process. Meaningful commits at logical checkpoints tell me you understand your own work.”</aside></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># ripgrep (rg) — fast, respects .gitignore
+rg &#x27;def &#x27;              # find every function definition in the project
+rg &#x27;class &#x27;            # find every class definition
+rg &#x27;TODO&#x27;              # find all TODO comments
+rg -l &#x27;import&#x27;         # list only filenames containing a match
+rg &#x27;approve&#x27; --type py # search only Python files
+
+# find — locate files by name or type
+find . -name &#x27;*.py&#x27;    # all Python files in current tree
+find . -name &#x27;*.txt&#x27;   # all text files
+find . -type d         # all directories
+
+# grep — universal, slower than rg
+grep -R &#x27;TODO&#x27; .       # recursive search (rg is preferred)
+
+# tree — visual structure
+tree -L 3              # directory tree 3 levels deep</code></pre><aside class="notes"># ripgrep (rg) — fast, respects .gitignore
+rg 'def '              # find every function definition in the project
+rg 'class '            # find every class definition
+rg 'TODO'              # find all TODO comments
+rg -l 'import'         # list only filenames containing a match
+rg 'approve' --type p</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">fzf and zoxide</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–30 min &nbsp;fzf + zoxide demo</span></section>
+<section class="s-concept"><h2>&#x1F9E9; fzf — fuzzy finder</h2><div class="concept-card">Interactive fuzzy search for files. Run fzf and type part of a filename — the list narrows in real time. Press Enter to select. Integrate with your shell to fuzzy-search command history with Ctrl+R . Install: brew install fzf or apt install fzf Remembers directories you…</div></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># 1. Confirm location and structure
+pwd
+tree -L 3
+
+# 2. Activate the virtual environment
+source .venv/bin/activate
+
+# 3. Format and lint with Ruff
+ruff format .        # auto-formats all Python files in place
+ruff check .         # reports style and logic issues — fix any errors
+
+# 4. Run all tests
+pytest               # all tests must pass — fix failures before proceeding
+
+# 5. Commit and push
+git status
+git add .
+git commit -m &#x27;complete assignment 4&#x27;
+git push</code></pre><aside class="notes"># 1. Confirm location and structure
+pwd
+tree -L 3
+
+# 2. Activate the virtual environment
+source .venv/bin/activate
+
+# 3. Format and lint with Ruff
+ruff format .        # auto-formats all Python files in place
+ruff check .         # reports style and logic issues — fix any errors
+
+# 4. Run all tests
+</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">The Professional Pre-Submission Ritual</h2><span class='badge badge-yellow' style='margin-top:.3em;'>30–50 min &nbsp;Pre-submission ritual</span></section>
+<section class="s-concept"><h2>&#x1F9E9; zoxide — smarter cd</h2><div class="concept-card">Git tracks every change to your code — what changed, when, and why. GitHub is where your repositories live and how you submit every major assignment in this course. Instructors see your commit history. A single commit called &quot;final&quot; tells us nothing about your process. Git…</div></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash"># One-time identity setup (if not done in Week 1)
+git config --global user.name &#x27;Your Name&#x27;
+git config --global user.email &#x27;you@email.com&#x27;
+
+# Initialize a repository in the current folder
+git init
+git status                   # see all untracked files
+
+# Create .gitignore before first commit
+echo &#x27;.venv/&#x27; &gt; .gitignore
+echo &#x27;__pycache__/&#x27; &gt;&gt; .gitignore
+
+# Stage and make first commit
+git add .
+git commit -m &#x27;initial commit: week 4 zsh and workflow module&#x27;
+
+# Connect to GitHub repository (create repo on github.com first)
+git remote add origin https://github.com/YOURUSERNAME/ism3232-module02.git
+git branch -M main
+git push -u origin main
+
+# Verify success
+git log --oneline    # see commit history
+git status           # should say nothing to commit</code></pre><aside class="notes"># One-time identity setup (if not done in Week 1)
+git config --global user.name 'Your Name'
+git config --global user.email 'you@email.com'
+
+# Initialize a repository in the current folder
+git init
+git status                   # see all untracked files
+
+# Create .gitignore before first commit
+echo '.</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Git and GitHub Fundamentals</h2><span class='badge badge-yellow' style='margin-top:.3em;'>50–70 min &nbsp;Git + GitHub first push</span></section>
+<section class="s-concept"><h2>&#x1F9E9; What Git is and why it matters for grading</h2><div class="concept-card"></div></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Command</th><th>What it does</th><th>When to run it</th></tr></thead><tbody><tr><td>git init</td><td>Initializes a new local repository</td><td>Once per project, in the project root</td></tr><tr><td>git status</td><td>Shows what has changed and what is staged</td><td>Before every git add</td></tr><tr><td>git add .</td><td>Stages all modified and new files</td><td>After reviewing git status</td></tr><tr><td>git commit -m</td><td>Saves a snapshot with a message</td><td>At meaningful checkpoints, not just at submission</td></tr><tr><td>git log --oneline</td><td>Shows compact commit history</td><td>To verify your commits were recorded</td></tr><tr><td>git push</td><td>Sends commits to GitHub</td><td>Final step of the pre-submission ritual</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 4</div><div class="assign-title">Assignment 4</div><div class="assign-items"><ul><li>Screenshot 1: rg &#x27;def &#x27; and find . -name &#x27;*.py&#x27; run inside ~/ism3232/ .</li><li>Screenshot 2: The complete pre-submission ritual — all steps in one terminal session, all passing.</li><li>Screenshot 3: GitHub repository page showing committed files and commit history.</li><li>File: module02_zsh/.gitignore committed to the repository.</li><li>File: module02_zsh/README.md with all Week 2–4 commands documented.</li><li>Link: GitHub repository URL submitted to Canvas.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 4</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 4 &nbsp;·&nbsp; Git and GitHub Fundamentals</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>

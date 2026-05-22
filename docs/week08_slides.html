@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM3232 — Week 8</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root {
+  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
+  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
+  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
+  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
+}
+.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
+.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
+.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
+.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
+.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
+.reveal ul { list-style:none; padding:0; margin:.3em 0; }
+.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
+.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
+.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
+.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
+.reveal strong { color:var(--yellow); }
+.reveal em { color:var(--subtext); }
+
+/* ── Slide backgrounds ── */
+.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
+.s-section { background:var(--mantle); }
+.s-concept { background:#12121f; }
+.s-code    { background:#0e0e1a; }
+.s-live    { background:#091209; }
+.s-warn    { background:#1a0e0e; }
+.s-ok      { background:#0a150a; }
+.s-tip     { background:#130e1a; }
+.s-discuss { background:#0e0e1a; }
+.s-step    { background:#12121f; }
+.s-assign  { background:#1a1208; }
+.s-check   { background:#0a1008; }
+
+/* ── Content cards ── */
+.concept-card {
+  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
+  border-left:4px solid var(--blue); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.warn-card {
+  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
+  border-left:4px solid var(--red); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.ok-card {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-left:4px solid var(--green); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.tip-card {
+  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
+  border-left:4px solid var(--purple); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+.key-card {
+  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
+  border-left:4px solid var(--yellow); border-radius:8px;
+  padding:.55em .9em; margin:.3em 0; text-align:left;
+  font-size:.77em; color:var(--text); line-height:1.65;
+}
+
+/* ── Step list ── */
+.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
+.step-row  { display:flex; gap:.6em; align-items:flex-start; }
+.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
+              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
+              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
+.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
+.step-body strong { color:var(--blue); }
+
+/* ── Two-column layout ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
+.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
+.two-col .col p  { font-size:.7em; }
+
+/* ── Live code-along slide ── */
+.live-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; height:100%; gap:.5em;
+}
+.live-icon  { font-size:2.5em; }
+.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
+.live-sub   { font-size:.75em; color:var(--subtext); }
+.live-rules {
+  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
+  border-radius:10px; padding:.6em 1.2em; text-align:left;
+  font-size:.7em; width:75%; margin-top:.3em;
+}
+.live-rules li::before { color:var(--green); }
+.live-rules li { padding:.18em 0; }
+
+/* ── Checklist slide ── */
+.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
+.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
+.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+
+/* ── Assignment slide ── */
+.assign-header {
+  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
+  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
+}
+.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
+               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
+.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
+.assign-items { font-size:.72em; color:var(--text); }
+.assign-items li::before { color:var(--orange); }
+
+/* ── Badge ── */
+.badge {
+  display:inline-block; padding:.15em .6em; border-radius:20px;
+  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
+  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
+}
+.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
+.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
+.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
+.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
+.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+
+/* ── Timing chip ── */
+.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
+.t-chip {
+  font-size:.42em; font-family:'Courier New',monospace;
+  padding:.2em .75em; border-radius:20px;
+  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
+}
+
+/* ── Table ── */
+.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
+.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
+                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
+                text-transform:uppercase; text-align:left; }
+.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
+                color:var(--text); vertical-align:top; }
+.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
+.cs-table tr:last-child td { border-bottom:none; }
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title"><h1>Week 8</h1><h2>Students learn systematic debugging with tracebacks and print(), complete the formal AI literacy activity, and review all Unit 1 and 2 material.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — Reading tracebacks</span><span class="t-chip">15–35 min — print() debugging</span><span class="t-chip">35–55 min — AI literacy activity</span><span class="t-chip">55–70 min — Midterm review</span><span class="t-chip">70–80 min — Assignment</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
+<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;Reading tracebacks</li><li><code style="color:var(--blue);font-size:.85em;">15–35 min</code>&nbsp;&nbsp;print() debugging</li><li><code style="color:var(--blue);font-size:.85em;">35–55 min</code>&nbsp;&nbsp;AI literacy activity</li><li><code style="color:var(--blue);font-size:.85em;">55–70 min</code>&nbsp;&nbsp;Midterm review</li><li><code style="color:var(--blue);font-size:.85em;">70–80 min</code>&nbsp;&nbsp;Assignment</li></ul></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; Midterm next week — everything from Units 1 and 2 is tested</h2><div class="warn-card">OOP and SQL are NOT tested. All zsh workflow, venv, ruff, pytest, git, Python basics, functions, debugging, and AI use policy are fair game.</div><aside class="notes">“A traceback is not failure — it is information. Python is telling you the file, the line, and exactly what went wrong. Students who read tracebacks carefully fix bugs in minutes. Students who ignore them and immediately ask AI spend hours on the same bugs.”</aside></section>
+<section class="s-concept"><h2>&#x1F4CC; Graded on process, not just the fixed code</h2><div class="concept-card">Students who submit only the corrected file with no reflection receive no credit for the activity portion. The six-step written reflection is the assignment.</div><aside class="notes">Write a short script with a deliberate KeyError (typo in a dictionary key). Run it. Show the traceback. Walk through it bottom-up out loud before fixing it.</aside></section>
+<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; The prohibited prompt this week</h2><div class="warn-card">&quot;Fix this code for me.&quot; This bypasses the entire learning process and produces code the student cannot explain. It will be obvious on the midterm and capstone presentation.</div><aside class="notes">“Debugging is finding the gap between what you think the program contains and what it actually contains. print() lets you inspect values at specific execution points. Start at the error line and work backwards, printing variables until you find where the data became wrong.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Reading Tracebacks</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;Reading tracebacks</span></section>
+<section class="s-concept"><h2>&#x1F9E9; A traceback is not failure — it is information</h2><div class="concept-card">Read tracebacks bottom-up : the last line is the error type and message. The lines above show how the program reached that point. Students who read tracebacks carefully fix bugs in minutes. Students who ignore them and immediately ask AI spend hours on the same bugs. Traceback…</div><aside class="notes">“This activity teaches you to use AI as a tool for understanding, not as a replacement for thinking. The sequence matters: attempt first, document what you tried, then ask AI to explain the error — not to fix the code.”</aside></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">Traceback (most recent call last):
+  File &quot;main.py&quot;, line 14, in &lt;module&gt;
+    result = process_request(req)           # called here
+  File &quot;business_rules.py&quot;, line 8, in process_request
+    total = req[&quot;amount&quot;] * req[&quot;quantty&quot;]  # error on this line
+KeyError: &#x27;quantty&#x27;                         # THE ACTUAL ERROR: typo in key name
+
+# Reading order:
+# 1. KeyError: &#x27;quantty&#x27;         — what went wrong
+# 2. business_rules.py line 8   — where it happened
+# 3. main.py line 14            — what triggered the broken code</code></pre><aside class="notes">Traceback (most recent call last):
+  File "main.py", line 14, in <module>
+    result = process_request(req)           # called here
+  File "business_rules.py", line 8, in process_request
+    total = req["amount"] * req["quantty"]  # error on this line
+KeyError: 'quantty'                         # TH</aside><aside class="notes">“OOP is not on the midterm. SQL is not on the midterm. Everything from Units 1 and 2 is: zsh workflow, venv, ruff, pytest, git, all Python basics, functions, modules, tracebacks, and AI use policy.”</aside></section>
+<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Debugging with print()</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–35 min &nbsp;print() debugging</span></section>
+<section class="s-concept"><h2>&#x1F9E9; Strategic print() statements reveal the gap between expectation and reality</h2><div class="concept-card">Debugging is finding where the program stops doing what you expect. print() lets you inspect values at specific execution points. Start from the error line and work backwards, printing variables until you find where the data became wrong. Debugging workflow — add prints, run,…</div></section>
+<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">def process_requests(requests):
+    total = 0
+    for req in requests:
+        print(f&quot;DEBUG: req = {req}&quot;)                        # see each record
+        amount = req[&quot;amount&quot;]
+        print(f&quot;DEBUG: amount = {amount} ({type(amount).__name__})&quot;) # check type
+        total += amount
+    print(f&quot;DEBUG: total = {total}&quot;)                    # verify accumulation
+    return total
+# After the bug is fixed, remove all DEBUG lines before ruff + commit</code></pre><aside class="notes">def process_requests(requests):
+    total = 0
+    for req in requests:
+        print(f"DEBUG: req = {req}")                        # see each record
+        amount = req["amount"]
+        print(f"DEBUG: amount = {amount} ({type(amount).__name__})") # check type
+        total += amount
+    print(f"DE</aside></section>
+<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Required AI Literacy Activity: Debug First, Then Ask</h2><span class='badge badge-yellow' style='margin-top:.3em;'>35–55 min &nbsp;AI literacy activity</span></section>
+<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">Step 1: Read the traceback. Write what you think is wrong in your own words.
+Step 2: Try to fix it yourself using print() statements.
+        Document what you tried and what you observed.
+Step 3: If still stuck, ask AI to explain the error message ONLY.
+        Prompt: &quot;Explain this Python error without giving me corrected code.&quot;
+        Do NOT ask AI to fix the code.
+Step 4: Fix the code yourself based on the AI explanation.
+Step 5: Run pytest — all tests must pass before continuing.
+Step 6: Write reflection.md covering:
+        — What was the bug?
+        — What did AI explain (paste the AI response)?
+        — What did you change and why?
+        — How did you verify the fix?
+        — Can you explain every line of the fixed code without AI help?</code></pre><aside class="notes">Step 1: Read the traceback. Write what you think is wrong in your own words.
+Step 2: Try to fix it yourself using print() statements.
+        Document what you tried and what you observed.
+Step 3: If still stuck, ask AI to explain the error message ONLY.
+        Prompt: "Explain this Python error wi</aside></section>
+<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Midterm Review: All Units 1 and 2</h2><span class='badge badge-yellow' style='margin-top:.3em;'>55–70 min &nbsp;Midterm review</span></section>
+<section class="s-concept"><h2>Reference</h2><table class="cs-table" style="margin-top:.4em;"><thead><tr><th>Error type</th><th>What it means</th><th>Common cause</th><th>Topic area</th><th>Key items to review</th></tr></thead><tbody><tr><td>SyntaxError</td><td>Python cannot parse the code at all</td><td>Missing colon, unclosed parenthesis, bad indentation</td><td>NameError</td><td>A name is used before it is defined</td></tr><tr><td>Typo in variable name, variable used outside its scope</td><td>TypeError</td><td>Wrong type used in an operation</td><td>Adding str and int, calling a non-callable</td><td>KeyError</td></tr><tr><td>Dictionary key does not exist</td><td>Typo in key name, wrong capitalisation</td><td>IndexError</td><td>List index out of range</td><td>Off-by-one error, accessing an empty list</td></tr><tr><td>ValueError</td><td>Right type but wrong value</td><td>int(&quot;hello&quot;), float(&quot;abc&quot;)</td><td>zsh workflow</td><td>pwd, ls, cd, mkdir, rm safety ritual, tree, clear, code .</td></tr><tr><td>venv + pip</td><td>python3 -m venv, source activate, pip install, pip freeze, deactivate</td><td>.zshrc</td><td>alias syntax, mkcd function, source ~/.zshrc, testing aliases</td><td>Search tools</td></tr><tr><td>rg, find, grep, fzf, zoxide — purpose and basic usage of each</td><td>Submission ritual</td><td>All 9 steps in order: pwd, tree, activate, ruff format, ruff check, pytest, git status, add, commit, push</td><td>Git / GitHub</td><td>init, status, add, commit, log --oneline, remote add, push, .gitignore</td></tr><tr><td>Python types</td><td>str, int, float, bool — type(), conversion, input() always returns str</td><td>Operators</td><td>arithmetic, comparison (returns bool), logical and/or/not</td><td>Conditionals</td></tr><tr><td>if/elif/else, nested conditions, combined with and/or</td><td>Lists</td><td>indexing, append, len, sorted, list-of-dicts pattern, for loop</td><td>Dictionaries</td><td>key access, update, .items() iteration</td></tr></tbody></table></section>
+<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 8</div><div class="assign-title">Assignment 8</div><div class="assign-items"><ul><li>File: The fixed business_rules.py — broken version provided by instructor, corrected by student.</li><li>File: tests/test_business_rules.py — all tests passing after the fix.</li><li>File: reflection.md — the required six-part AI debugging reflection.</li><li>Screenshot: Full pre-submission ritual passing before push.</li><li>Link: GitHub repository URL.</li></ul></div></div></section>
+<section class="s-section"><h2>&#x1F3C1; That's Week 8</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 8 &nbsp;·&nbsp; Midterm Review: All Units 1 and 2</p></section></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true, slideNumber:'c/t', transition:'slide',
+  transitionSpeed:'fast', controls:true, progress:true,
+  center:true, width:1200, height:700, margin:0.06,
+});
+</script></body></html>
