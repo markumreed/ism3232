@@ -274,321 +274,299 @@ footer a:hover { color: var(--text); }
 
 <style id="ism-site-css">
 /* ═══════════════════════════════════════════════════════════════════════════
-   ISM3232 Site-wide CSS
-   Injected into every content page (not slides).
-   Provides: nav bar, dark/light toggle, skip link, accessibility, focus styles.
-   Appended after the page's own <style> block so it wins specificity.
+   ISM3232 site.css  –  nav · theme · font-scale · accessibility
+   data-theme is set on <html>, so all selectors must be:
+     html[data-theme="dark"]   NOT  [data-theme="dark"] html
+     html[data-theme="light"]  NOT  [data-theme="light"] html
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Skip link (accessibility) ────────────────────────────────────────────── */
+/* ── Skip link ─────────────────────────────────────────────────────────── */
 .skip-link {
-  position: absolute;
-  top: -100%;
-  left: 16px;
-  z-index: 9999;
-  background: #1e40af;
-  color: #fff;
-  padding: 8px 16px;
+  position: absolute; top: -100%; left: 16px; z-index: 9999;
+  background: #1e40af; color: #fff; padding: 8px 16px;
   border-radius: 0 0 8px 8px;
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: top .15s;
+  font-family: system-ui, sans-serif; font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: top .15s;
 }
 .skip-link:focus { top: 0; }
 
-/* ── Site nav ─────────────────────────────────────────────────────────────── */
+/* ── Nav colour tokens (light default) ─────────────────────────────────── */
+:root {
+  --sn-bg:       rgba(245,244,240,0.94);
+  --sn-border:   rgba(0,0,0,0.10);
+  --sn-text:     #1a1a1a;
+  --sn-muted:    #666;
+  --sn-hover:    rgba(0,0,0,0.06);
+  --sn-active:   #1e40af;
+  --sn-pill:     #d0d0d8;
+  --sn-knob:     #fff;
+  --sn-focus:    #1e40af;
+}
+
+/* ── Nav colour tokens (dark) ──────────────────────────────────────────── */
+html[data-theme="dark"] {
+  --sn-bg:       rgba(14,14,20,0.94);
+  --sn-border:   rgba(255,255,255,0.08);
+  --sn-text:     #e2e2ec;
+  --sn-muted:    #7a7a95;
+  --sn-hover:    rgba(255,255,255,0.07);
+  --sn-active:   #818cf8;
+  --sn-pill:     #3a3a50;
+  --sn-knob:     #e2e2ec;
+  --sn-focus:    #818cf8;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE — override every page type's colour vars.
+   All rules on html[data-theme="dark"] so they beat :root specificity.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Lecture / lab / overview / cheatsheet / precourse — use --bg-page family */
+html[data-theme="dark"] {
+  --bg-page:      #0f0f0f !important;
+  --bg-card:      #1a1a1a !important;
+  --bg-card-alt:  #222222 !important;
+  --bg-code:      #1e1e2e !important;
+  --border:       #2e2e2e !important;
+  --border-light: #272727 !important;
+  --text-primary: #f0f0f0 !important;
+  --text-secondary:#aaaaaa !important;
+  --text-muted:   #888888 !important;
+  --text-faint:   #555555 !important;
+  --text-body:    #cccccc !important;
+  --text-code:    #cdd6f4 !important;
+  --divider:      #333333 !important;
+  --accent:       #7eb8ff !important;
+  --accent-bg:    #1e2d47 !important;
+  --accent-bdr:   #2a3f60 !important;
+  --green:        #6ee7b7 !important;
+  --green-bg:     #14291e !important;
+  --green-bdr:    #1a3828 !important;
+  --amber:        #fcd34d !important;
+  --amber-bg:     #2a1f08 !important;
+  --amber-bdr:    #3d2e0d !important;
+  --red:          #f87171 !important;
+  --red-bg:       #2a1010 !important;
+  --red-bdr:      #4a1818 !important;
+  --purple:       #c4b5fd !important;
+  --purple-bg:    #1e1433 !important;
+  --purple-bdr:   #2d1f4a !important;
+  --warn-bg:      #2a1f08 !important;
+  --warn-bdr:     #3d2e0d !important;
+  --ok-bg:        #14291e !important;
+  --ok-bdr:       #1a3828 !important;
+  --tip-bg:       #1e2d47 !important;
+  --tip-bdr:      #2a3f60 !important;
+  --step-bg:      #1a1a1a !important;
+  --step-bdr:     #2e2e2e !important;
+}
+
+/* Reading / index pages use --bg family (different naming convention) */
+html[data-theme="dark"] body {
+  background: #0f0f13 !important;
+  color:      #e2e2ec !important;
+  --bg:       #0f0f13 !important;
+  --bg2:      #16161d !important;
+  --bg3:      #1e1e28 !important;
+  --border:   rgba(255,255,255,.07) !important;
+  --border2:  rgba(255,255,255,.13) !important;
+  --text:     #e2e2ec !important;
+  --muted:    #7a7a95 !important;
+  --dim:      #3e3e52 !important;
+  --blue:     #7eb8ff !important;
+  --blue-dim: rgba(126,184,255,.12) !important;
+  --green-dim:rgba(110,231,183,.10) !important;
+  --amber-dim:rgba(252,211,77,.10)  !important;
+  --red-dim:  rgba(248,113,113,.10) !important;
+  --purple-dim:rgba(196,181,253,.10) !important;
+}
+
+/* Also force html element background in dark */
+html[data-theme="dark"] {
+  background: #0f0f13 !important;
+}
+
+/* Lecture/lab body background in dark */
+html[data-theme="dark"] body {
+  background-color: #0f0f0f !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — override reading page hardcoded dark defaults.
+   Reading pages have :root { --bg:#0f0f13 } — we beat it with html[data-theme].
+   ═══════════════════════════════════════════════════════════════════════════ */
+html[data-theme="light"] {
+  background: #f5f4f0 !important;
+  --bg-page:      #f5f4f0 !important;
+  --bg-card:      #ffffff !important;
+  --bg-card-alt:  #f7f7f5 !important;
+  --bg-code:      #1e1e2e !important;
+  --border:       #e0e0de !important;
+  --text-primary: #1a1a1a !important;
+  --text-secondary:#555555 !important;
+  --text-muted:   #888888 !important;
+  --text-body:    #444444 !important;
+  --accent:       #1e40af !important;
+  --accent-bg:    #dbeafe !important;
+}
+
+html[data-theme="light"] body {
+  background: #f5f4f0 !important;
+  color:      #1a1a1a !important;
+  --bg:       #f5f4f0 !important;
+  --bg2:      #ffffff !important;
+  --bg3:      #f0eef0 !important;
+  --border:   rgba(0,0,0,.09) !important;
+  --border2:  rgba(0,0,0,.15) !important;
+  --text:     #1a1a1a !important;
+  --muted:    #555555 !important;
+  --dim:      #999999 !important;
+  --blue:     #1e40af !important;
+  --blue-dim: rgba(30,64,175,.10) !important;
+  --green:    #166534 !important;
+  --green-dim:rgba(22,101,52,.10) !important;
+  --amber:    #92400e !important;
+  --amber-dim:rgba(146,64,14,.10) !important;
+  --red:      #991b1b !important;
+  --red-dim:  rgba(153,27,27,.10) !important;
+  --purple:   #4c1d95 !important;
+  --purple-dim:rgba(76,29,149,.10) !important;
+}
+
+/* ── Nav bar ───────────────────────────────────────────────────────────── */
 #site-nav {
-  position: sticky;
-  top: 0;
-  z-index: 500;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 0 20px;
+  position: sticky; top: 0; z-index: 500;
+  height: 52px; display: flex; align-items: center;
+  padding: 0 16px; gap: 0;
   border-bottom: 1px solid var(--sn-border);
   background: var(--sn-bg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  font-family: 'DM Mono', 'Fira Mono', 'Courier New', monospace;
+  font-family: 'DM Mono','Fira Mono','Courier New',monospace;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
 }
 
-/* Nav colours — defined on :root so dark/light toggle works */
-:root {
-  --sn-bg:       rgba(245,244,240,0.92);
-  --sn-border:   rgba(0,0,0,0.10);
-  --sn-text:     #222;
-  --sn-muted:    #666;
-  --sn-hover-bg: rgba(0,0,0,0.06);
-  --sn-active:   #1e40af;
-  --sn-toggle-bg:#e0e0e0;
-  --sn-toggle-knob:#fff;
-  --sn-focus:    #1e40af;
-}
-[data-theme="dark"] {
-  --sn-bg:       rgba(14,14,20,0.92);
-  --sn-border:   rgba(255,255,255,0.08);
-  --sn-text:     #e2e2ec;
-  --sn-muted:    #7a7a95;
-  --sn-hover-bg: rgba(255,255,255,0.07);
-  --sn-active:   #818cf8;
-  --sn-toggle-bg:#3a3a50;
-  --sn-toggle-knob:#e2e2ec;
-  --sn-focus:    #818cf8;
-}
-
-/* Nav logo */
 .sn-logo {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--sn-text);
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  margin-right: 4px;
-  flex-shrink: 0;
-  transition: background .15s;
+  font-size: 12px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--sn-text);
+  text-decoration: none; padding: 6px 10px; border-radius: 6px;
+  margin-right: 4px; flex-shrink: 0; transition: background .15s;
 }
-.sn-logo:hover { background: var(--sn-hover-bg); }
+.sn-logo:hover { background: var(--sn-hover); }
 
-/* Nav divider */
 .sn-div {
-  width: 1px;
-  height: 20px;
-  background: var(--sn-border);
-  margin: 0 6px;
-  flex-shrink: 0;
+  width: 1px; height: 20px;
+  background: var(--sn-border); margin: 0 6px; flex-shrink: 0;
 }
 
-/* Nav link group — scrollable on small screens */
 .sn-links {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex: 1;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  display: flex; align-items: center; flex: 1;
+  overflow-x: auto; scrollbar-width: none; min-width: 0;
 }
 .sn-links::-webkit-scrollbar { display: none; }
 
-/* Unit group label */
-.sn-unit {
-  font-size: 9px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--sn-muted);
-  padding: 0 8px 0 12px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-/* Nav link */
 .sn-link {
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--sn-muted);
-  text-decoration: none;
-  padding: 0 10px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-size: 11px; letter-spacing: .04em;
+  color: var(--sn-muted); text-decoration: none;
+  padding: 0 10px; height: 52px;
+  display: flex; align-items: center;
+  white-space: nowrap; flex-shrink: 0;
   border-bottom: 2px solid transparent;
   transition: color .15s, border-color .15s, background .15s;
-  position: relative;
 }
-.sn-link:hover {
-  color: var(--sn-text);
-  background: var(--sn-hover-bg);
-}
-.sn-link.active {
-  color: var(--sn-active);
-  border-bottom-color: var(--sn-active);
-  font-weight: 600;
-}
+.sn-link:hover  { color: var(--sn-text); background: var(--sn-hover); }
+.sn-link.active { color: var(--sn-active); border-bottom-color: var(--sn-active); font-weight: 600; }
 
-/* Week dropdown trigger */
 .sn-week-group { position: relative; }
+
 .sn-week-btn {
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--sn-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0 10px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-size: 11px; letter-spacing: .04em;
+  color: var(--sn-muted); background: none; border: none; cursor: pointer;
+  padding: 0 10px; height: 52px;
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap; flex-shrink: 0;
   border-bottom: 2px solid transparent;
   font-family: inherit;
   transition: color .15s, background .15s;
 }
-.sn-week-btn:hover { color: var(--sn-text); background: var(--sn-hover-bg); }
-.sn-week-btn.active { color: var(--sn-active); border-bottom-color: var(--sn-active); }
-.sn-week-btn svg { width: 10px; height: 10px; opacity: .5; transition: transform .2s; }
+.sn-week-btn:hover { color: var(--sn-text); background: var(--sn-hover); }
+.sn-week-btn.active { border-bottom-color: currentColor; }
+.sn-week-btn svg { transition: transform .2s; flex-shrink: 0; }
 .sn-week-group.open .sn-week-btn svg { transform: rotate(180deg); }
 
-/* Week dropdown panel */
 .sn-week-dropdown {
-  display: none;
-  position: absolute;
-  top: 52px;
-  left: 0;
-  min-width: 220px;
+  display: none; position: absolute; top: 52px; left: 0;
+  min-width: 240px;
   background: var(--sn-bg);
-  border: 1px solid var(--sn-border);
-  border-top: none;
+  border: 1px solid var(--sn-border); border-top: none;
   border-radius: 0 0 10px 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
-  padding: 6px 0;
-  z-index: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  padding: 6px 0; z-index: 600;
 }
 .sn-week-group.open .sn-week-dropdown { display: block; }
+
 .sn-dd-item {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
-  font-size: 11px;
-  color: var(--sn-muted);
-  text-decoration: none;
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 8px; padding: 6px 16px; font-size: 11px;
+  color: var(--sn-muted); text-decoration: none;
   transition: background .12s, color .12s;
 }
-.sn-dd-item:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
+.sn-dd-item:hover  { background: var(--sn-hover); color: var(--sn-text); }
 .sn-dd-item.active { color: var(--sn-active); font-weight: 600; }
-.sn-dd-num { font-weight: 700; color: var(--sn-text); font-size: 10px; }
-.sn-dd-sep {
-  height: 1px;
-  background: var(--sn-border);
-  margin: 4px 12px;
-}
+.sn-dd-num  { font-weight: 700; color: var(--sn-text); font-size: 10px; }
+.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 12px; }
 
-/* Right side of nav */
 .sn-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 8px;
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+  margin-left: 8px; flex-shrink: 0;
 }
 
-/* Theme toggle */
 .sn-theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: none;
-  background: none;
-  color: var(--sn-muted);
-  font-size: 11px;
-  font-family: inherit;
-  letter-spacing: .04em;
-  transition: background .15s, color .15s;
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; padding: 5px 8px; border-radius: 6px;
+  border: none; background: none;
+  color: var(--sn-muted); font-size: 11px;
+  font-family: inherit; letter-spacing: .04em;
+  transition: background .15s, color .15s; white-space: nowrap;
 }
-.sn-theme-toggle:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
-.sn-theme-toggle:focus-visible {
-  outline: 2px solid var(--sn-focus);
-  outline-offset: 2px;
-}
+.sn-theme-toggle:hover { background: var(--sn-hover); color: var(--sn-text); }
 
-/* Toggle pill */
 .sn-pill {
-  width: 34px;
-  height: 18px;
-  border-radius: 9px;
-  background: var(--sn-toggle-bg);
-  position: relative;
-  transition: background .25s;
-  flex-shrink: 0;
+  width: 34px; height: 18px; border-radius: 9px;
+  background: var(--sn-pill); position: relative;
+  transition: background .25s; flex-shrink: 0;
 }
 .sn-pill::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--sn-toggle-knob);
-  transition: transform .25s, background .25s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  content: ''; position: absolute;
+  top: 2px; left: 2px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--sn-knob);
+  transition: transform .25s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
 }
-[data-theme="dark"] .sn-pill { background: #4c4c70; }
-[data-theme="dark"] .sn-pill::after { transform: translateX(16px); }
+html[data-theme="dark"] .sn-pill           { background: #4c4c70; }
+html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
 
-/* ── Focus styles — keyboard navigation ───────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--sn-focus);
-  outline-offset: 3px;
-  border-radius: 3px;
-}
-
-/* ── Font size control ────────────────────────────────────────────────────── */
-.sn-font-btns {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
+.sn-font-btns { display: flex; align-items: center; gap: 2px; }
 .sn-font-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 5px;
-  border: 1px solid var(--sn-border);
-  background: none;
-  color: var(--sn-muted);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 26px; height: 26px; border-radius: 5px;
+  border: 1px solid var(--sn-border); background: none;
+  color: var(--sn-muted); cursor: pointer; font-family: inherit; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
   transition: background .12s, color .12s;
 }
-.sn-font-btn:hover { background: var(--sn-hover-bg); color: var(--sn-text); }
+.sn-font-btn:hover { background: var(--sn-hover); color: var(--sn-text); }
 
-/* ── Dark mode overrides for reading pages (dark-only pages) ──────────────── */
-/* Reading pages have hardcoded dark colours — swap on light mode */
-[data-theme="light"] body {
-  --bg:    #f5f4f0;
-  --bg2:   #ffffff;
-  --bg3:   #f0eef0;
-  --border:rgba(0,0,0,.08);
-  --border2:rgba(0,0,0,.14);
-  --text:  #1a1a1a;
-  --muted: #555555;
-  --dim:   #999;
-  --blue:  #1e40af;
-  --blue-dim:rgba(30,64,175,.10);
-  --blue-glow:rgba(30,64,175,.20);
-  --green: #166534;
-  --green-dim:rgba(22,101,52,.10);
-  --amber: #92400e;
-  --amber-dim:rgba(146,64,14,.10);
-  --red:   #991b1b;
-  --red-dim:rgba(153,27,27,.10);
-  --purple:#4c1d95;
-  --purple-dim:rgba(76,29,149,.10);
+/* ── Focus ─────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--sn-focus);
+  outline-offset: 3px; border-radius: 3px;
 }
 
-/* ── Responsive nav ───────────────────────────────────────────────────────── */
+/* ── Responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .sn-unit { display: none; }
   .sn-font-btns { display: none; }
-  #site-nav { padding: 0 12px; }
+  #site-nav     { padding: 0 10px; }
+  .sn-link      { padding: 0 7px; font-size: 10px; }
+  .sn-week-btn  { padding: 0 7px; font-size: 10px; }
 }
 
 </style>
@@ -1066,287 +1044,280 @@ footer a:hover { color: var(--text); }
   'use strict';
 
   /* ── 1. Theme ──────────────────────────────────────────────────────────── */
-  const THEME_KEY = 'ism3232-theme';
-  const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var THEME_KEY = 'ism3232-theme';
+
+  function prefersDark() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
 
   function getTheme() {
-    return localStorage.getItem(THEME_KEY) ||
-           (prefersDark() ? 'dark' : 'light');
+    return localStorage.getItem(THEME_KEY) || (prefersDark() ? 'dark' : 'light');
   }
 
   function applyTheme(t) {
+    /* Set on <html> so all CSS selectors can target it */
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem(THEME_KEY, t);
-    const btn = document.getElementById('sn-theme-btn');
+
+    var btn = document.getElementById('sn-theme-btn');
     if (btn) {
       btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       btn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
-      const label = btn.querySelector('.sn-theme-label');
-      if (label) label.textContent = t === 'dark' ? 'Light' : 'Dark';
+      var label = btn.querySelector('.sn-theme-label');
+      if (label) { label.textContent = t === 'dark' ? 'Light' : 'Dark'; }
     }
   }
 
-  /* Apply immediately (before paint) to avoid flash */
+  /* Apply immediately — before paint — to prevent flash */
   applyTheme(getTheme());
 
   /* ── 2. Font size ──────────────────────────────────────────────────────── */
-  const FONT_KEY = 'ism3232-fontsize';
-  const FONT_SIZES = [14, 16, 18, 20];
-  let fontIdx = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
+  var FONT_KEY  = 'ism3232-fontsize';
+  var FONT_SCALE = [0.85, 1, 1.15, 1.3];   /* multipliers applied to root */
+  var fontIdx   = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
+  var fontStyleEl = null;
 
   function applyFont(idx) {
-    fontIdx = Math.max(0, Math.min(FONT_SIZES.length - 1, idx));
-    document.documentElement.style.fontSize = FONT_SIZES[fontIdx] + 'px';
-    localStorage.setItem(FONT_KEY, fontIdx);
+    fontIdx = Math.max(0, Math.min(FONT_SCALE.length - 1, idx));
+    localStorage.setItem(FONT_KEY, String(fontIdx));
+
+    /* Inject a <style> block that scales all common text sizes */
+    if (!fontStyleEl) {
+      fontStyleEl = document.createElement('style');
+      fontStyleEl.id = 'ism-font-scale';
+      document.head.appendChild(fontStyleEl);
+    }
+
+    var s = FONT_SCALE[fontIdx];
+    /* Scale the key text sizes used across all page types */
+    fontStyleEl.textContent = [
+      'body, .wrapper { font-size: ' + Math.round(16 * s) + 'px !important; }',
+      'p, li, .term-def, .cs-def, .rub-req { font-size: ' + Math.round(15 * s) + 'px !important; }',
+      'pre code, .sb-code { font-size: ' + Math.round(13 * s) + 'px !important; }',
+      'h1 { font-size: ' + Math.round(28 * s) + 'px !important; }',
+      'h2 { font-size: ' + Math.round(20 * s) + 'px !important; }',
+      'h3 { font-size: ' + Math.round(16 * s) + 'px !important; }',
+      '.section-title { font-size: ' + Math.round(20 * s) + 'px !important; }',
+      '.concept p, .warn p, .ok p { font-size: ' + Math.round(14 * s) + 'px !important; }',
+    ].join('\n');
   }
 
   applyFont(fontIdx);
 
-  /* ── 3. Build nav ──────────────────────────────────────────────────────── */
-  const WEEKS = [
-    [1,  'Developer Mindset & Setup',          1],
-    [2,  'zsh Navigation & File Ops',           1],
-    [3,  'Virtual Environments & .zshrc',       1],
-    [4,  'Search Tools, Ritual & Git',          1],
-    [5,  'Variables, Data Types & Operators',   2],
-    [6,  'Conditionals, Loops & Dicts',         2],
-    [7,  'Functions, Modules & pytest',         2],
-    [8,  'Debugging, AI Literacy & Review',     2],
-    [9,  'Midterm',                             2],
-    [10, 'OOP I — Classes & Objects',           3],
-    [11, 'OOP II — Composition & Inheritance',  3],
-    [12, 'OOP III — Design & Practice',         3],
-    [13, 'Capstone Design & SQL',               4],
-    [14, 'Python + SQL Integration',            4],
-    [15, 'Streamlit Interface',                 4],
-    [16, 'GenAI Feature & Final Demo',          4],
+  /* ── 3. Nav data ───────────────────────────────────────────────────────── */
+  var WEEKS = [
+    [1,  'Developer Mindset & Setup',         1],
+    [2,  'zsh Navigation & File Ops',          1],
+    [3,  'Virtual Environments & .zshrc',      1],
+    [4,  'Search Tools, Ritual & Git',         1],
+    [5,  'Variables, Data Types & Operators',  2],
+    [6,  'Conditionals, Loops & Dicts',        2],
+    [7,  'Functions, Modules & pytest',        2],
+    [8,  'Debugging, AI Literacy & Review',    2],
+    [9,  'Midterm',                            2],
+    [10, 'OOP I — Classes & Objects',          3],
+    [11, 'OOP II — Composition & Inheritance', 3],
+    [12, 'OOP III — Design & Practice',        3],
+    [13, 'Capstone Design & SQL',              4],
+    [14, 'Python + SQL Integration',           4],
+    [15, 'Streamlit Interface',                4],
+    [16, 'GenAI Feature & Final Demo',         4],
   ];
 
-  const UNIT_LABELS = {1:'Unit 1', 2:'Unit 2', 3:'Unit 3', 4:'Unit 4'};
-  const UNIT_COLORS = {1:'#00c9a7', 2:'#818cf8', 3:'#fb7185', 4:'#fbbf24'};
+  var UNIT_COLORS = {1:'#00c9a7', 2:'#818cf8', 3:'#fb7185', 4:'#fbbf24'};
+  var UNIT_NAMES  = {1:'Foundations', 2:'Python', 3:'OOP', 4:'Capstone'};
 
-  /* Detect current page */
-  const path = window.location.pathname;
-  const fname = path.split('/').pop().replace('.html','');
+  /* ── 4. Path detection ─────────────────────────────────────────────────── */
+  var path   = window.location.pathname;
+  var fname  = path.split('/').pop().replace('.html', '') || 'index';
+  var inDocs = path.indexOf('/docs/') !== -1;
+  var root   = inDocs ? '../' : './';
+  var docs   = inDocs ? './'  : './docs/';
 
-  /* Which week is this? */
-  const wkMatch = fname.match(/week(\d+)/);
-  const currentWeek = wkMatch ? parseInt(wkMatch[1], 10) : 0;
+  var wkMatch      = fname.match(/week(\d+)/);
+  var currentWeek  = wkMatch ? parseInt(wkMatch[1], 10) : 0;
 
-  /* Which type? */
-  const isReading  = fname.includes('reading');
-  const isLecture  = fname.includes('lecture');
-  const isLab      = fname.includes('lab');
-  const isSlides   = fname.includes('_slides') && !fname.includes('script');
-  const isOverview = fname.includes('overview');
-  const isCheat    = fname.includes('cheatsheet');
-  const isPre      = fname.includes('precourse');
-  const isMap      = fname.includes('course_map');
-  const isIndex    = fname === '' || fname === 'index';
-
-  /* Root path relative to current file */
-  const inDocs = path.includes('/docs/');
-  const root   = inDocs ? '../' : './';
-  const docs   = inDocs ? './'  : './docs/';
-
-  function wkLink(wn, suffix, label, extraClass='') {
-    const href = `${docs}week${String(wn).padStart(2,'0')}_${suffix}.html`;
-    const active = (currentWeek === wn && fname.includes(suffix)) ? ' active' : '';
-    return `<a class="sn-dd-item${active}${extraClass ? ' '+extraClass : ''}" href="${href}">
-      <span class="sn-dd-num">W${wn} ${label}</span>
-      <span>${WEEKS.find(w=>w[0]===wn)?.[1]||''}</span>
-    </a>`;
+  function inUnit(u) {
+    for (var i = 0; i < WEEKS.length; i++) {
+      if (WEEKS[i][2] === u && WEEKS[i][0] === currentWeek) return true;
+    }
+    return false;
   }
 
-  /* Build week dropdown for each unit */
-  function buildUnitDD(unitNum) {
-    const wks = WEEKS.filter(w => w[2] === unitNum);
-    let html = '';
-    wks.forEach(([wn]) => {
-      html += `<div style="padding:4px 16px 2px;font-size:9px;letter-spacing:.1em;
-        text-transform:uppercase;color:${UNIT_COLORS[unitNum]};opacity:.8;">W${wn}</div>`;
-      html += wkLink(wn, 'reading',  '· Reading');
-      html += wkLink(wn, 'lecture',  '· Lecture');
-      if (wn !== 9) html += wkLink(wn, 'lab', '· Lab');
-      html += wkLink(wn, 'slides',   '· Slides');
-      html += `<div class="sn-dd-sep"></div>`;
-    });
+  function isActive(testFname) {
+    return fname.indexOf(testFname) !== -1;
+  }
+
+  /* ── 5. Build nav HTML ─────────────────────────────────────────────────── */
+  function ddItem(wn, suffix, label) {
+    var href    = docs + 'week' + (wn < 10 ? '0' : '') + wn + '_' + suffix + '.html';
+    var active  = (currentWeek === wn && fname.indexOf(suffix) !== -1) ? ' active' : '';
+    var title   = '';
+    for (var i = 0; i < WEEKS.length; i++) {
+      if (WEEKS[i][0] === wn) { title = WEEKS[i][1]; break; }
+    }
+    return '<a class="sn-dd-item' + active + '" href="' + href + '">'
+         + '<span class="sn-dd-num">W' + wn + ' ' + label + '</span>'
+         + '<span>' + title + '</span></a>';
+  }
+
+  function buildDD(unitNum) {
+    var html = '';
+    var color = UNIT_COLORS[unitNum];
+    for (var i = 0; i < WEEKS.length; i++) {
+      var w = WEEKS[i];
+      if (w[2] !== unitNum) continue;
+      var wn = w[0];
+      html += '<div style="padding:4px 16px 2px;font-size:9px;letter-spacing:.1em;'
+            + 'text-transform:uppercase;color:' + color + ';opacity:.8;">W' + wn + '</div>';
+      html += ddItem(wn, 'reading', '· Reading');
+      html += ddItem(wn, 'lecture', '· Lecture');
+      if (wn !== 9) html += ddItem(wn, 'lab', '· Lab');
+      html += ddItem(wn, 'slides', '· Slides');
+      html += '<div class="sn-dd-sep"></div>';
+    }
     return html;
   }
 
-  /* Active check helpers */
-  function a(cond) { return cond ? ' active' : ''; }
-  const inUnit = (u) => WEEKS.filter(w=>w[2]===u).some(w=>w[0]===currentWeek);
+  function unitBtn(u) {
+    var active  = inUnit(u);
+    var color   = UNIT_COLORS[u];
+    var style   = active ? 'color:' + color + ';border-bottom-color:' + color + ';' : '';
+    var cls     = 'sn-week-btn' + (active ? ' active' : '');
+    return '<div class="sn-week-group" id="dd-u' + u + '">'
+         + '<button class="' + cls + '" style="' + style + '"'
+         + ' aria-haspopup="true" aria-expanded="false"'
+         + ' aria-controls="dd-u' + u + '-panel"'
+         + ' onclick="ISM.toggleDD(\'dd-u' + u + '\')">'
+         + '<span style="color:' + color + '">U' + u + '</span>&nbsp;' + UNIT_NAMES[u]
+         + '<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"'
+         + ' aria-hidden="true" style="width:10px;height:10px;margin-left:4px;">'
+         + '<path d="M1 1l4 4 4-4"/></svg></button>'
+         + '<div class="sn-week-dropdown" id="dd-u' + u + '-panel" role="menu">'
+         + buildDD(u) + '</div></div>';
+  }
 
-  const nav = document.createElement('nav');
+  function navLink(href, label, activeTest) {
+    var active = isActive(activeTest) ? ' active' : '';
+    return '<a class="sn-link' + active + '" href="' + href + '">' + label + '</a>';
+  }
+
+  var navHTML = ''
+    + '<a class="sn-logo" href="' + root + 'index.html" aria-label="ISM3232 Home">ISM3232</a>'
+    + '<div class="sn-div" aria-hidden="true"></div>'
+    + '<div class="sn-links" role="menubar">'
+    + navLink(docs + 'course_map.html',    'Map',          'course_map')
+    + navLink(docs + 'precourse.html',     'Pre-Course',   'precourse')
+    + '<div class="sn-div" aria-hidden="true"></div>'
+    + unitBtn(1)
+    + unitBtn(2)
+    + unitBtn(3)
+    + unitBtn(4)
+    + '<div class="sn-div" aria-hidden="true"></div>'
+    + navLink(docs + 'unit_1_cheatsheet.html',  'Cheat Sheets',   'cheatsheet')
+    + navLink(docs + 'unit_all_overview.html',   'Overviews',      'overview')
+    + navLink(docs + 'glossary.html',            'Glossary',       'glossary')
+    + navLink(docs + 'troubleshooting.html',     'Help',           'troubleshooting')
+    + navLink(docs + 'capstone_rubric.html',     'Rubric',         'capstone_rubric')
+    + navLink(docs + 'expectations.html',        'Expectations',   'expectations')
+    + '</div>'
+    + '<div class="sn-right" aria-label="Display controls">'
+    + '<div class="sn-font-btns" role="group" aria-label="Font size">'
+    + '<button class="sn-font-btn" onclick="ISM.fontDown()" aria-label="Decrease font size" title="Smaller text">A-</button>'
+    + '<button class="sn-font-btn" onclick="ISM.fontUp()"   aria-label="Increase font size" title="Larger text">A+</button>'
+    + '</div>'
+    + '<button class="sn-theme-toggle" id="sn-theme-btn"'
+    + ' onclick="ISM.toggleTheme()"'
+    + ' aria-label="Switch to dark mode" aria-pressed="false">'
+    + '<span class="sn-pill" aria-hidden="true"></span>'
+    + '<span class="sn-theme-label">Dark</span>'
+    + '</button>'
+    + '</div>';
+
+  /* ── 6. Insert nav ─────────────────────────────────────────────────────── */
+  var nav = document.createElement('nav');
   nav.id = 'site-nav';
   nav.setAttribute('aria-label', 'Site navigation');
-  nav.innerHTML = `
-    <a class="sn-logo" href="${root}index.html" aria-label="ISM3232 Home">ISM3232</a>
-    <div class="sn-div" aria-hidden="true"></div>
+  nav.innerHTML = navHTML;
 
-    <div class="sn-links" role="menubar">
+  var skip = document.createElement('a');
+  skip.className = 'skip-link';
+  skip.href = '#main-content';
+  skip.textContent = 'Skip to main content';
 
-      <a class="sn-link${a(isMap||isPre)}" href="${docs}course_map.html">Map</a>
-      <a class="sn-link${a(isPre)}"        href="${docs}precourse.html">Pre-Course</a>
-
-      <div class="sn-div" aria-hidden="true"></div>
-
-      <!-- Unit 1 -->
-      <div class="sn-week-group" id="dd-u1">
-        <button class="sn-week-btn${a(inUnit(1))}"
-                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u1-panel"
-                style="${inUnit(1)?'color:'+UNIT_COLORS[1]+';border-bottom-color:'+UNIT_COLORS[1]:''}"
-                onclick="ISM.toggleDD('dd-u1')">
-          <span style="color:${UNIT_COLORS[1]}">U1</span>&nbsp;Foundations
-          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M1 1l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="sn-week-dropdown" id="dd-u1-panel" role="menu">${buildUnitDD(1)}</div>
-      </div>
-
-      <!-- Unit 2 -->
-      <div class="sn-week-group" id="dd-u2">
-        <button class="sn-week-btn${a(inUnit(2))}"
-                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u2-panel"
-                style="${inUnit(2)?'color:'+UNIT_COLORS[2]+';border-bottom-color:'+UNIT_COLORS[2]:''}"
-                onclick="ISM.toggleDD('dd-u2')">
-          <span style="color:${UNIT_COLORS[2]}">U2</span>&nbsp;Python
-          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M1 1l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="sn-week-dropdown" id="dd-u2-panel" role="menu">${buildUnitDD(2)}</div>
-      </div>
-
-      <!-- Unit 3 -->
-      <div class="sn-week-group" id="dd-u3">
-        <button class="sn-week-btn${a(inUnit(3))}"
-                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u3-panel"
-                style="${inUnit(3)?'color:'+UNIT_COLORS[3]+';border-bottom-color:'+UNIT_COLORS[3]:''}"
-                onclick="ISM.toggleDD('dd-u3')">
-          <span style="color:${UNIT_COLORS[3]}">U3</span>&nbsp;OOP
-          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M1 1l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="sn-week-dropdown" id="dd-u3-panel" role="menu">${buildUnitDD(3)}</div>
-      </div>
-
-      <!-- Unit 4 -->
-      <div class="sn-week-group" id="dd-u4">
-        <button class="sn-week-btn${a(inUnit(4))}"
-                aria-haspopup="true" aria-expanded="false" aria-controls="dd-u4-panel"
-                style="${inUnit(4)?'color:'+UNIT_COLORS[4]+';border-bottom-color:'+UNIT_COLORS[4]:''}"
-                onclick="ISM.toggleDD('dd-u4')">
-          <span style="color:${UNIT_COLORS[4]}">U4</span>&nbsp;Capstone
-          <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M1 1l4 4 4-4"/>
-          </svg>
-        </button>
-        <div class="sn-week-dropdown" id="dd-u4-panel" role="menu">${buildUnitDD(4)}</div>
-      </div>
-
-      <div class="sn-div" aria-hidden="true"></div>
-
-      <a class="sn-link${a(isCheat)}" href="${docs}unit_1_cheatsheet.html">Cheat Sheets</a>
-      <a class="sn-link${a(isOverview)}" href="${docs}unit_all_overview.html">Overviews</a>
-
-      <div class="sn-div" aria-hidden="true"></div>
-
-      <a class="sn-link" href="${docs}glossary.html" style="${fname==='glossary'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Glossary</a>
-      <a class="sn-link" href="${docs}troubleshooting.html" style="${fname==='troubleshooting'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Help</a>
-      <a class="sn-link" href="${docs}capstone_rubric.html">Rubric</a>
-      <a class="sn-link" href="${docs}expectations.html" style="${fname==='expectations'?'color:var(--sn-active);border-bottom-color:var(--sn-active)':''}">Expectations</a>
-    </div>
-
-    <!-- Right controls -->
-    <div class="sn-right" aria-label="Display controls">
-      <!-- Font size -->
-      <div class="sn-font-btns" role="group" aria-label="Font size">
-        <button class="sn-font-btn" onclick="ISM.fontDown()" aria-label="Decrease font size" title="Smaller text">A-</button>
-        <button class="sn-font-btn" onclick="ISM.fontUp()"   aria-label="Increase font size" title="Larger text">A+</button>
-      </div>
-      <!-- Theme toggle -->
-      <button class="sn-theme-toggle" id="sn-theme-btn"
-              onclick="ISM.toggleTheme()"
-              aria-label="Switch to dark mode"
-              aria-pressed="false">
-        <span class="sn-pill" aria-hidden="true"></span>
-        <span class="sn-theme-label">Dark</span>
-      </button>
-    </div>
-  `;
-
-  /* Insert nav after body opens — before skip link if present */
-  const skipLink = document.querySelector('.skip-link');
-  if (skipLink) {
-    skipLink.after(nav);
+  /* Insert at the very top of body */
+  if (document.body.firstChild) {
+    document.body.insertBefore(nav,  document.body.firstChild);
+    document.body.insertBefore(skip, document.body.firstChild);
   } else {
-    /* Add skip link + nav */
-    const skip = document.createElement('a');
-    skip.className = 'skip-link';
-    skip.href = '#main-content';
-    skip.textContent = 'Skip to main content';
-    document.body.prepend(nav);
-    document.body.prepend(skip);
+    document.body.appendChild(skip);
+    document.body.appendChild(nav);
   }
 
-  /* Tag main content for skip link */
-  const wrapper = document.querySelector('.wrapper, main, article, .main');
-  if (wrapper && !wrapper.id) wrapper.id = 'main-content';
+  /* Tag main content region */
+  var wrapper = document.querySelector('.wrapper, main, article, #content');
+  if (wrapper && !wrapper.id) { wrapper.id = 'main-content'; }
 
-  /* ── 4. Dropdown logic ─────────────────────────────────────────────────── */
+  /* ── 7. Dropdown logic ─────────────────────────────────────────────────── */
   function toggleDD(id) {
-    const group = document.getElementById(id);
-    const wasOpen = group.classList.contains('open');
+    var group  = document.getElementById(id);
+    if (!group) return;
+    var wasOpen = group.classList.contains('open');
+
     /* Close all */
-    document.querySelectorAll('.sn-week-group.open').forEach(g => {
-      g.classList.remove('open');
-      g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
-    });
+    var allGroups = document.querySelectorAll('.sn-week-group.open');
+    for (var i = 0; i < allGroups.length; i++) {
+      allGroups[i].classList.remove('open');
+      var btn = allGroups[i].querySelector('.sn-week-btn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+
     if (!wasOpen) {
       group.classList.add('open');
-      group.querySelector('.sn-week-btn').setAttribute('aria-expanded','true');
+      var btn = group.querySelector('.sn-week-btn');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
 
-  /* Close dropdowns on outside click */
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.sn-week-group')) {
-      document.querySelectorAll('.sn-week-group.open').forEach(g => {
-        g.classList.remove('open');
-        g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
-      });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('.sn-week-group')) {
+      var open = document.querySelectorAll('.sn-week-group.open');
+      for (var i = 0; i < open.length; i++) {
+        open[i].classList.remove('open');
+        var btn = open[i].querySelector('.sn-week-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
     }
   });
 
-  /* Keyboard: Escape closes dropdowns */
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.sn-week-group.open').forEach(g => {
-        g.classList.remove('open');
-        g.querySelector('.sn-week-btn').setAttribute('aria-expanded','false');
-        g.querySelector('.sn-week-btn').focus();
-      });
+      var open = document.querySelectorAll('.sn-week-group.open');
+      for (var i = 0; i < open.length; i++) {
+        open[i].classList.remove('open');
+        var btn = open[i].querySelector('.sn-week-btn');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.focus();
+        }
+      }
     }
   });
 
-  /* ── 5. Public API ─────────────────────────────────────────────────────── */
+  /* ── 8. Public API ─────────────────────────────────────────────────────── */
   window.ISM = {
-    toggleTheme() {
-      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+    toggleTheme: function () {
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
       applyTheme(cur === 'dark' ? 'light' : 'dark');
     },
-    fontUp()   { applyFont(fontIdx + 1); },
-    fontDown() { applyFont(fontIdx - 1); },
-    toggleDD,
+    fontUp:   function () { applyFont(fontIdx + 1); },
+    fontDown: function () { applyFont(fontIdx - 1); },
+    toggleDD: toggleDD,
   };
 
-  /* Apply saved font on load */
-  applyFont(fontIdx);
+  /* Ensure state is applied after nav is in DOM */
   applyTheme(getTheme());
+  applyFont(fontIdx);
 
 })();
 
