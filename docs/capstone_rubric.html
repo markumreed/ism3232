@@ -520,74 +520,64 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
 <div class="wrapper" id="main-content" role="main"><div style="margin-bottom:32px;"><p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Unit 4 · Weeks 13–16</p><h1 style="font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;">Capstone Rubric</h1><p>Detailed scoring criteria for all five graded components of the capstone project. Read this in Week 13 when you receive your proposal form. Check each component against your work before the final submission.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;"><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--blue-dim);color:var(--blue);border:1px solid rgba(126,184,255,.25);">Capstone = 30% of final grade</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);">Weeks 13–16</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:20px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);">Live demo required</span></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">1. Proposal &amp; Design Document</span><span class="rub-weight">15 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">15</td><td class="rub-req"><strong>All ten fields present and specific.</strong> Business rules name a threshold and a consequence. Out of Scope has at least two items. OOP classes list attributes with types and all required methods. SQL schema has correct column types (REAL for money, not TEXT). GenAI feature describes what is sent and what is not.<div class="exemplar"><strong>✓ Full marks looks like</strong>Business rule: &#x27;Leave requests exceeding 10 days require director approval.&#x27; Schema: amount REAL NOT NULL. GenAI: &#x27;Only category and description sent — no employee name or ID.&#x27;</div><div class="concern"><strong>⚠ Common issue</strong>Business rule: &#x27;Validate the data.&#x27; Schema: amount TEXT. GenAI: &#x27;AI summarises the request.&#x27; — these fail the specificity test.</div></td></tr><tr><td class="rub-pts-part">10</td><td class="rub-req"><strong>Most fields complete but one or two are vague or missing.</strong> One business rule is non-testable ('validate input'). Schema uses TEXT for money. Out of Scope is absent.</td></tr><tr><td class="rub-pts-part">5</td><td class="rub-req"><strong>Proposal submitted but significantly incomplete.</strong> Fewer than seven fields. Business rules absent or entirely vague.</td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>Not submitted, or submitted without instructor sign-off before Week 14 coding began.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">2. OOP Design (models.py)</span><span class="rub-weight">25 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">25</td><td class="rub-req"><strong>Two classes present: an entity class and a manager class.</strong> Entity has __init__ with default status, at least three methods returning values, and __repr__. Manager has self.requests = [] inside __init__ (not class-level). All five required manager methods implemented. All six test types present and passing. design.md committed before models.py (verifiable via git log).<div class="exemplar"><strong>✓ Full marks looks like</strong>22 tests passing. Instance independence test present. Boundary test at exact limit. Manager list is instance-level confirmed by two-manager independence test.</div><div class="concern"><strong>⚠ Common issue</strong>Class-level list (requests = [] outside __init__). Methods use print() instead of return. design.md committed after models.py. Fewer than six test types.</div></td></tr><tr><td class="rub-pts-part">18</td><td class="rub-req"><strong>Both classes present and mostly correct.</strong> Missing one required method, or fewer than six test types, or design.md timing issue.</td></tr><tr><td class="rub-pts-part">12</td><td class="rub-req"><strong>One class implemented, second class missing or non-functional.</strong> Tests present but incomplete.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>Attempt made but major structural errors.</strong> Class-level list, no tests, or missing __init__.</td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>models.py absent or contains no working class definition.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">3. Database Layer (database.py)</span><span class="rub-weight">20 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">20</td><td class="rub-req"><strong>All five required functions present and working.</strong> Every SQL statement uses ? placeholders — no f-strings in any conn.execute() call. row_factory = sqlite3.Row used in get_all_records(). All database tests use tmp_path. Tests pass without touching the development database.<div class="exemplar"><strong>✓ Full marks looks like</strong>get_all_records() returns list of dicts. Five database tests all using tmp_path and passing independently.</div><div class="concern"><strong>⚠ Common issue</strong>f-string in SQL (even one instance). Missing row_factory. Tests that write to the real DB_FILE. Missing update_status or get_status_report.</div></td></tr><tr><td class="rub-pts-part">14</td><td class="rub-req"><strong>Four of five functions working.</strong> Minor issue: one function missing, or row_factory absent, or one test not using tmp_path.</td></tr><tr><td class="rub-pts-part">8</td><td class="rub-req"><strong>Three functions working.</strong> SQL placeholder issue present, or tests absent entirely.</td></tr><tr><td class="rub-pts-part">4</td><td class="rub-req"><strong>Database file exists but functions are incomplete or non-functional.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>No database.py, or all functions raise errors.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">4. Streamlit Interface (app.py)</span><span class="rub-weight">25 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">25</td><td class="rub-req"><strong>All five features working against live data.</strong> create_table() called at top before any widget. Submit validates name and amount > 0. Filter applied in Python before st.dataframe(). Update Status selectbox built from get_all_records() — not hardcoded IDs. Report shows status count and total. App runs with streamlit run app.py from the project root.<div class="exemplar"><strong>✓ Full marks looks like</strong>Five tabs visible and functional. Submitting a record immediately visible in View All. Filter count label updates. Status update triggers st.rerun().</div><div class="concern"><strong>⚠ Common issue</strong>create_table() inside a tab. Hardcoded IDs in Update tab. Filter not applied (all records shown regardless of selectbox). App crashes on startup.</div></td></tr><tr><td class="rub-pts-part">18</td><td class="rub-req"><strong>Four features working.</strong> One tab non-functional or missing. Minor UX issue (no empty state, no count label).</td></tr><tr><td class="rub-pts-part">12</td><td class="rub-req"><strong>Three features working.</strong> Two tabs absent or broken.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>App runs but fewer than three features functional.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>App does not run, or no Streamlit code present.</strong></td></tr></tbody></table></div></div><div class="rub-section"><div class="rub-head"><span class="rub-title">5. GenAI Feature (ai_feature.py)</span><span class="rub-weight">15 points</span></div><div class="rub-body"><table class="rub-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td class="rub-pts-full">15</td><td class="rub-req"><strong>All six controls implemented and demonstrable.</strong> (1) Disclosure label visible in UI. (2) Second button required before saving. (3) No names, IDs, or amounts in the API prompt — only category + description. (4) All AI tests use unittest.mock.patch — pass without API key. (5) At least two specific limitations in README. (6) Student walks through every line during presentation.<div class="exemplar"><strong>✓ Full marks looks like</strong>Two buttons visible in UI. Prompt contains only category and description. pytest passes with no ANTHROPIC_API_KEY set. README limitations are specific (&#x27;may be inaccurate for technical equipment descriptions&#x27;), not generic (&#x27;AI can make mistakes&#x27;).</div><div class="concern"><strong>⚠ Common issue</strong>Auto-saving AI output without a second button (Control 2). Sending requester name in prompt (Control 3). AI tests calling the real API (Control 4). Generic limitations (&#x27;AI is not perfect&#x27;) in README (Control 5).</div></td></tr><tr><td class="rub-pts-part">10</td><td class="rub-req"><strong>Feature works but one or two controls missing.</strong> Most common: no second button (auto-save), or AI tests not mocked.</td></tr><tr><td class="rub-pts-part">6</td><td class="rub-req"><strong>AI function exists and calls the API but three or more controls absent.</strong></td></tr><tr><td class="rub-pts-none">0</td><td class="rub-req"><strong>No AI feature, or all six controls absent, or tests call the real API.</strong></td></tr></tbody></table></div></div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px;"><div style="padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);">Score Summary</div><table style="width:100%;border-collapse:collapse;font-size:13px;"><tbody><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Proposal &amp; Design Document</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">15 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">OOP Design (models.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">25 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Database Layer (database.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">20 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">Streamlit Interface (app.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">25 pts</td></tr><tr><td style="padding:9px 20px;border-bottom:1px solid var(--border);color:var(--text);">GenAI Feature (ai_feature.py)</td><td style="padding:9px 20px;border-bottom:1px solid var(--border);font-family:var(--mono);color:var(--blue);text-align:right;">15 pts</td></tr><tr style="background:var(--bg3);"><td style="padding:10px 20px;font-weight:700;color:var(--text);">Total</td><td style="padding:10px 20px;font-family:var(--mono);font-weight:700;color:var(--blue);text-align:right;">100 pts</td></tr></tbody></table></div><div class="page-footer">ISM3232 · Capstone Rubric · Unit 4</div></div>
 <script id="ism-site-js">
 /* ═══════════════════════════════════════════════════════════════════════════
-   ISM3232 Site-wide JS — nav, theme toggle, font size, dropdown, state
+   ISM3232 Site-wide JS
    ═══════════════════════════════════════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
-  /* ── 1. Theme ──────────────────────────────────────────────────────────── */
+  /* ── Theme ─────────────────────────────────────────────────────────────── */
   var THEME_KEY = 'ism3232-theme';
 
-  function prefersDark() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
+  function prefersDark() { return window.matchMedia('(prefers-color-scheme: dark)').matches; }
 
   function getTheme() {
     return localStorage.getItem(THEME_KEY) || (prefersDark() ? 'dark' : 'light');
   }
 
   function applyTheme(t) {
-    /* Set on <html> so all CSS selectors can target it */
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem(THEME_KEY, t);
-
     var btn = document.getElementById('sn-theme-btn');
     if (btn) {
       btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       btn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
-      var label = btn.querySelector('.sn-theme-label');
-      if (label) { label.textContent = t === 'dark' ? 'Light' : 'Dark'; }
+      var lbl = btn.querySelector('.sn-theme-label');
+      if (lbl) lbl.textContent = t === 'dark' ? 'Light' : 'Dark';
     }
   }
 
-  /* Apply immediately — before paint — to prevent flash */
   applyTheme(getTheme());
 
-  /* ── 2. Font size ──────────────────────────────────────────────────────── */
-  var FONT_KEY  = 'ism3232-fontsize';
-  var FONT_SCALE = [0.85, 1, 1.15, 1.3];   /* multipliers applied to root */
-  var fontIdx   = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
+  /* ── Font size ─────────────────────────────────────────────────────────── */
+  var FONT_KEY   = 'ism3232-fontsize';
+  var FONT_SCALE = [0.85, 1, 1.15, 1.3];
+  var fontIdx    = parseInt(localStorage.getItem(FONT_KEY) || '1', 10);
   var fontStyleEl = null;
 
   function applyFont(idx) {
     fontIdx = Math.max(0, Math.min(FONT_SCALE.length - 1, idx));
     localStorage.setItem(FONT_KEY, String(fontIdx));
-
-    /* Inject a <style> block that scales all common text sizes */
     if (!fontStyleEl) {
       fontStyleEl = document.createElement('style');
       fontStyleEl.id = 'ism-font-scale';
       document.head.appendChild(fontStyleEl);
     }
-
     var s = FONT_SCALE[fontIdx];
-    /* Scale the key text sizes used across all page types */
     fontStyleEl.textContent = [
       'body, .wrapper { font-size: ' + Math.round(16 * s) + 'px !important; }',
       'p, li, .term-def, .cs-def, .rub-req { font-size: ' + Math.round(15 * s) + 'px !important; }',
-      'pre code, .sb-code { font-size: ' + Math.round(13 * s) + 'px !important; }',
+      'pre code { font-size: ' + Math.round(13 * s) + 'px !important; }',
       'h1 { font-size: ' + Math.round(28 * s) + 'px !important; }',
       'h2 { font-size: ' + Math.round(20 * s) + 'px !important; }',
       'h3 { font-size: ' + Math.round(16 * s) + 'px !important; }',
-      '.section-title { font-size: ' + Math.round(20 * s) + 'px !important; }',
       '.concept p, .warn p, .ok p { font-size: ' + Math.round(14 * s) + 'px !important; }',
     ].join('\n');
   }
 
   applyFont(fontIdx);
 
-  /* ── 3. Nav data ───────────────────────────────────────────────────────── */
+  /* ── Nav data ──────────────────────────────────────────────────────────── */
   var WEEKS = [
     [1,  'Developer Mindset & Setup',         1],
     [2,  'zsh Navigation & File Ops',          1],
@@ -606,19 +596,17 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
     [15, 'Streamlit Interface',                4],
     [16, 'GenAI Feature & Final Demo',         4],
   ];
-
   var UNIT_COLORS = {1:'#00c9a7', 2:'#818cf8', 3:'#fb7185', 4:'#fbbf24'};
   var UNIT_NAMES  = {1:'Foundations', 2:'Python', 3:'OOP', 4:'Capstone'};
 
-  /* ── 4. Path detection ─────────────────────────────────────────────────── */
-  var path   = window.location.pathname;
-  var fname  = path.split('/').pop().replace('.html', '') || 'index';
-  var inDocs = path.indexOf('/docs/') !== -1;
-  var root   = inDocs ? '../' : './';
-  var docs   = inDocs ? './'  : './docs/';
-
-  var wkMatch      = fname.match(/week(\d+)/);
-  var currentWeek  = wkMatch ? parseInt(wkMatch[1], 10) : 0;
+  /* ── Path detection ────────────────────────────────────────────────────── */
+  var path        = window.location.pathname;
+  var fname       = path.split('/').pop().replace('.html', '') || 'index';
+  var inDocs      = path.indexOf('/docs/') !== -1;
+  var root        = inDocs ? '../' : './';
+  var docs        = inDocs ? './'  : './docs/';
+  var wkMatch     = fname.match(/week(\d+)/);
+  var currentWeek = wkMatch ? parseInt(wkMatch[1], 10) : 0;
 
   function inUnit(u) {
     for (var i = 0; i < WEEKS.length; i++) {
@@ -627,15 +615,11 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
     return false;
   }
 
-  function isActive(testFname) {
-    return fname.indexOf(testFname) !== -1;
-  }
-
-  /* ── 5. Build nav HTML ─────────────────────────────────────────────────── */
+  /* ── Build dropdown HTML ───────────────────────────────────────────────── */
   function ddItem(wn, suffix, label) {
-    var href    = docs + 'week' + (wn < 10 ? '0' : '') + wn + '_' + suffix + '.html';
-    var active  = (currentWeek === wn && fname.indexOf(suffix) !== -1) ? ' active' : '';
-    var title   = '';
+    var href   = docs + 'week' + (wn < 10 ? '0' : '') + wn + '_' + suffix + '.html';
+    var active = (currentWeek === wn && fname.indexOf(suffix) !== -1) ? ' active' : '';
+    var title  = '';
     for (var i = 0; i < WEEKS.length; i++) {
       if (WEEKS[i][0] === wn) { title = WEEKS[i][1]; break; }
     }
@@ -645,7 +629,7 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
   }
 
   function buildDD(unitNum) {
-    var html = '';
+    var html  = '';
     var color = UNIT_COLORS[unitNum];
     for (var i = 0; i < WEEKS.length; i++) {
       var w = WEEKS[i];
@@ -653,82 +637,138 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
       var wn = w[0];
       html += '<div style="padding:4px 16px 2px;font-size:9px;letter-spacing:.1em;'
             + 'text-transform:uppercase;color:' + color + ';opacity:.8;">W' + wn + '</div>';
-      html += ddItem(wn, 'reading', '· Reading');
-      html += ddItem(wn, 'lecture', '· Lecture');
-      if (wn !== 9) html += ddItem(wn, 'lab', '· Lab');
-      html += ddItem(wn, 'slides', '· Slides');
+      html += ddItem(wn, 'reading', 'Reading');
+      html += ddItem(wn, 'lecture', 'Lecture');
+      if (wn !== 9) html += ddItem(wn, 'lab', 'Lab');
+      html += ddItem(wn, 'slides',  'Slides');
       html += '<div class="sn-dd-sep"></div>';
     }
     return html;
   }
 
-  function unitBtn(u) {
-    var active  = inUnit(u);
-    var color   = UNIT_COLORS[u];
-    var style   = active ? 'color:' + color + ';border-bottom-color:' + color + ';' : '';
-    var cls     = 'sn-week-btn' + (active ? ' active' : '');
-    return '<div class="sn-week-group" id="dd-u' + u + '">'
-         + '<button class="' + cls + '" style="' + style + '"'
-         + ' aria-haspopup="true" aria-expanded="false"'
-         + ' aria-controls="dd-u' + u + '-panel"'
-         + ' onclick="ISM.toggleDD(\'dd-u' + u + '\')">'
-         + '<span style="color:' + color + '">U' + u + '</span>&nbsp;' + UNIT_NAMES[u]
-         + '<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"'
-         + ' aria-hidden="true" style="width:10px;height:10px;margin-left:4px;">'
-         + '<path d="M1 1l4 4 4-4"/></svg></button>'
-         + '<div class="sn-week-dropdown" id="dd-u' + u + '-panel" role="menu">'
-         + buildDD(u) + '</div></div>';
+  /* ── Build nav HTML (NO inline onclick — uses data-dd + delegated listener) */
+  function buildNav() {
+    var nav = document.createElement('nav');
+    nav.id  = 'site-nav';
+    nav.setAttribute('aria-label', 'Site navigation');
+
+    /* Logo */
+    var logo = document.createElement('a');
+    logo.className = 'sn-logo';
+    logo.href = root + 'index.html';
+    logo.setAttribute('aria-label', 'ISM3232 Home');
+    logo.textContent = 'ISM3232';
+    nav.appendChild(logo);
+
+    /* Link area */
+    var links = document.createElement('div');
+    links.className = 'sn-links';
+    links.setAttribute('role', 'menubar');
+    nav.appendChild(links);
+
+    /* Helper: plain link */
+    function addLink(href, label, activeTest) {
+      var a = document.createElement('a');
+      a.className = 'sn-link' + (fname.indexOf(activeTest) !== -1 ? ' active' : '');
+      a.href = href;
+      a.textContent = label;
+      links.appendChild(a);
+    }
+
+    /* Helper: divider */
+    function addDiv() {
+      var d = document.createElement('div');
+      d.className = 'sn-div';
+      d.setAttribute('aria-hidden', 'true');
+      links.appendChild(d);
+    }
+
+    /* Helper: unit dropdown — button uses data-dd, NO onclick attribute */
+    function addUnit(u) {
+      var active = inUnit(u);
+      var color  = UNIT_COLORS[u];
+
+      var group = document.createElement('div');
+      group.className = 'sn-week-group';
+      group.id = 'dd-u' + u;
+
+      var btn = document.createElement('button');
+      btn.className = 'sn-week-btn' + (active ? ' active' : '');
+      btn.setAttribute('aria-haspopup', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', 'dd-u' + u + '-panel');
+      btn.setAttribute('data-dd', 'dd-u' + u);  /* ← no onclick needed */
+      if (active) btn.style.cssText = 'color:' + color + ';border-bottom-color:' + color + ';';
+
+      var uSpan = document.createElement('span');
+      uSpan.style.color = color;
+      uSpan.textContent = 'U' + u;
+      btn.appendChild(uSpan);
+
+      btn.appendChild(document.createTextNode('\u00a0' + UNIT_NAMES[u]));
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 10 6');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '1.5');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.cssText = 'width:10px;height:10px;margin-left:4px;';
+      var path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path2.setAttribute('d', 'M1 1l4 4 4-4');
+      svg.appendChild(path2);
+      btn.appendChild(svg);
+
+      var panel = document.createElement('div');
+      panel.className = 'sn-week-dropdown';
+      panel.id = 'dd-u' + u + '-panel';
+      panel.setAttribute('role', 'menu');
+      panel.innerHTML = buildDD(u);
+
+      group.appendChild(btn);
+      group.appendChild(panel);
+      links.appendChild(group);
+    }
+
+    addLink(docs + 'course_map.html',         'Map',          'course_map');
+    addLink(docs + 'precourse.html',           'Pre-Course',   'precourse');
+    addDiv();
+    addUnit(1); addUnit(2); addUnit(3); addUnit(4);
+    addDiv();
+    addLink(docs + 'unit_1_cheatsheet.html',   'Cheat Sheets', 'cheatsheet');
+    addLink(docs + 'unit_all_overview.html',   'Overviews',    'overview');
+    addLink(docs + 'glossary.html',            'Glossary',     'glossary');
+    addLink(docs + 'troubleshooting.html',     'Help',         'troubleshooting');
+    addLink(docs + 'capstone_rubric.html',     'Rubric',       'capstone_rubric');
+    addLink(docs + 'expectations.html',        'Expectations', 'expectations');
+
+    /* Right controls */
+    var right = document.createElement('div');
+    right.className = 'sn-right';
+    right.setAttribute('aria-label', 'Display controls');
+
+    right.innerHTML = '<div class="sn-font-btns" role="group" aria-label="Font size">'
+      + '<button class="sn-font-btn" id="sn-font-down" aria-label="Decrease font size" title="Smaller text">A-</button>'
+      + '<button class="sn-font-btn" id="sn-font-up"   aria-label="Increase font size" title="Larger text">A+</button>'
+      + '</div>'
+      + '<button class="sn-theme-toggle" id="sn-theme-btn"'
+      + ' aria-label="Switch to dark mode" aria-pressed="false">'
+      + '<span class="sn-pill" aria-hidden="true"></span>'
+      + '<span class="sn-theme-label">Dark</span>'
+      + '</button>';
+    nav.appendChild(right);
+
+    return nav;
   }
 
-  function navLink(href, label, activeTest) {
-    var active = isActive(activeTest) ? ' active' : '';
-    return '<a class="sn-link' + active + '" href="' + href + '">' + label + '</a>';
-  }
-
-  var navHTML = ''
-    + '<a class="sn-logo" href="' + root + 'index.html" aria-label="ISM3232 Home">ISM3232</a>'
-    + '<div class="sn-div" aria-hidden="true"></div>'
-    + '<div class="sn-links" role="menubar">'
-    + navLink(docs + 'course_map.html',    'Map',          'course_map')
-    + navLink(docs + 'precourse.html',     'Pre-Course',   'precourse')
-    + '<div class="sn-div" aria-hidden="true"></div>'
-    + unitBtn(1)
-    + unitBtn(2)
-    + unitBtn(3)
-    + unitBtn(4)
-    + '<div class="sn-div" aria-hidden="true"></div>'
-    + navLink(docs + 'unit_1_cheatsheet.html',  'Cheat Sheets',   'cheatsheet')
-    + navLink(docs + 'unit_all_overview.html',   'Overviews',      'overview')
-    + navLink(docs + 'glossary.html',            'Glossary',       'glossary')
-    + navLink(docs + 'troubleshooting.html',     'Help',           'troubleshooting')
-    + navLink(docs + 'capstone_rubric.html',     'Rubric',         'capstone_rubric')
-    + navLink(docs + 'expectations.html',        'Expectations',   'expectations')
-    + '</div>'
-    + '<div class="sn-right" aria-label="Display controls">'
-    + '<div class="sn-font-btns" role="group" aria-label="Font size">'
-    + '<button class="sn-font-btn" onclick="ISM.fontDown()" aria-label="Decrease font size" title="Smaller text">A-</button>'
-    + '<button class="sn-font-btn" onclick="ISM.fontUp()"   aria-label="Increase font size" title="Larger text">A+</button>'
-    + '</div>'
-    + '<button class="sn-theme-toggle" id="sn-theme-btn"'
-    + ' onclick="ISM.toggleTheme()"'
-    + ' aria-label="Switch to dark mode" aria-pressed="false">'
-    + '<span class="sn-pill" aria-hidden="true"></span>'
-    + '<span class="sn-theme-label">Dark</span>'
-    + '</button>'
-    + '</div>';
-
-  /* ── 6. Insert nav ─────────────────────────────────────────────────────── */
-  var nav = document.createElement('nav');
-  nav.id = 'site-nav';
-  nav.setAttribute('aria-label', 'Site navigation');
-  nav.innerHTML = navHTML;
+  /* ── Insert nav ────────────────────────────────────────────────────────── */
+  var nav = buildNav();
 
   var skip = document.createElement('a');
-  skip.className = 'skip-link';
-  skip.href = '#main-content';
+  skip.className   = 'skip-link';
+  skip.href        = '#main-content';
   skip.textContent = 'Skip to main content';
 
-  /* Insert at the very top of body */
   if (document.body.firstChild) {
     document.body.insertBefore(nav,  document.body.firstChild);
     document.body.insertBefore(skip, document.body.firstChild);
@@ -737,57 +777,68 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
     document.body.appendChild(nav);
   }
 
-  /* Tag main content region */
-  var wrapper = document.querySelector('.wrapper, main, article, #content');
-  if (wrapper && !wrapper.id) { wrapper.id = 'main-content'; }
+  /* Tag main content region for skip link */
+  var wrapper = document.querySelector('.wrapper, main, article');
+  if (wrapper && !wrapper.id) wrapper.id = 'main-content';
 
-  /* ── 7. Dropdown logic ─────────────────────────────────────────────────── */
+  /* ── Delegated click handler ───────────────────────────────────────────── */
   function toggleDD(id) {
-    var group  = document.getElementById(id);
+    var group = document.getElementById(id);
     if (!group) return;
     var wasOpen = group.classList.contains('open');
-
     /* Close all */
-    var allGroups = document.querySelectorAll('.sn-week-group.open');
-    for (var i = 0; i < allGroups.length; i++) {
-      allGroups[i].classList.remove('open');
-      var btn = allGroups[i].querySelector('.sn-week-btn');
-      if (btn) btn.setAttribute('aria-expanded', 'false');
+    var allOpen = document.querySelectorAll('.sn-week-group.open');
+    for (var i = 0; i < allOpen.length; i++) {
+      allOpen[i].classList.remove('open');
+      var b = allOpen[i].querySelector('[data-dd]');
+      if (b) b.setAttribute('aria-expanded', 'false');
     }
-
     if (!wasOpen) {
       group.classList.add('open');
-      var btn = group.querySelector('.sn-week-btn');
+      var btn = group.querySelector('[data-dd]');
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
 
   document.addEventListener('click', function (e) {
+    var ddBtn = e.target.closest ? e.target.closest('[data-dd]') : null;
+    if (ddBtn) {
+      e.stopPropagation();
+      toggleDD(ddBtn.getAttribute('data-dd'));
+      return;
+    }
     if (!e.target.closest || !e.target.closest('.sn-week-group')) {
-      var open = document.querySelectorAll('.sn-week-group.open');
-      for (var i = 0; i < open.length; i++) {
-        open[i].classList.remove('open');
-        var btn = open[i].querySelector('.sn-week-btn');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
+      var allOpen = document.querySelectorAll('.sn-week-group.open');
+      for (var i = 0; i < allOpen.length; i++) {
+        allOpen[i].classList.remove('open');
+        var b = allOpen[i].querySelector('[data-dd]');
+        if (b) b.setAttribute('aria-expanded', 'false');
       }
     }
   });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      var open = document.querySelectorAll('.sn-week-group.open');
-      for (var i = 0; i < open.length; i++) {
-        open[i].classList.remove('open');
-        var btn = open[i].querySelector('.sn-week-btn');
-        if (btn) {
-          btn.setAttribute('aria-expanded', 'false');
-          btn.focus();
-        }
+      var allOpen = document.querySelectorAll('.sn-week-group.open');
+      for (var i = 0; i < allOpen.length; i++) {
+        allOpen[i].classList.remove('open');
+        var b = allOpen[i].querySelector('[data-dd]');
+        if (b) { b.setAttribute('aria-expanded', 'false'); b.focus(); }
       }
     }
   });
 
-  /* ── 8. Public API ─────────────────────────────────────────────────────── */
+  /* ── Wire font + theme buttons (added to DOM above, wire here) ─────────── */
+  document.addEventListener('click', function (e) {
+    if (e.target.id === 'sn-font-down') { applyFont(fontIdx - 1); return; }
+    if (e.target.id === 'sn-font-up')   { applyFont(fontIdx + 1); return; }
+    if (e.target.id === 'sn-theme-btn' || e.target.closest('#sn-theme-btn')) {
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+  });
+
+  /* ── Public API ────────────────────────────────────────────────────────── */
   window.ISM = {
     toggleTheme: function () {
       var cur = document.documentElement.getAttribute('data-theme') || 'light';
@@ -798,7 +849,7 @@ html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
     toggleDD: toggleDD,
   };
 
-  /* Ensure state is applied after nav is in DOM */
+  /* Final state application */
   applyTheme(getTheme());
   applyFont(fontIdx);
 
