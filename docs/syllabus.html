@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="ISM3232 Business Application Development — full course syllabus">
+<title>Course Syllabus — ISM3232</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+
+/* ── Syllabus page extras ── */
+.syl-section {
+  margin-bottom: 48px;
+}
+.syl-anchor {
+  display: block;
+  position: relative;
+  top: -70px;   /* offset for sticky nav */
+  visibility: hidden;
+}
+.syl-toc {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 36px;
+}
+.syl-toc-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.syl-toc a {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin: 2px 3px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  transition: background .15s, color .15s;
+}
+.syl-toc a:hover {
+  background: var(--blue-dim);
+  color: var(--blue);
+  border-color: var(--border2);
+}
+.syl-h {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+.syl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.syl-table th {
+  text-align: left;
+  padding: 9px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.syl-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.syl-table tr:last-child td {
+  border-bottom: none;
+}
+.syl-table tr:nth-child(even) td {
+  background: var(--bg3);
+}
+.syl-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.syl-card-head {
+  padding: 11px 16px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.syl-card-body {
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text);
+}
+.syl-card-body p { margin: 0 0 8px; }
+.syl-card-body p:last-child { margin: 0; }
+.syl-warn {
+  background: rgba(251,191,36,.08);
+  border: 1px solid rgba(251,191,36,.25);
+  border-left: 4px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.syl-warn strong { color: var(--amber); }
+.syl-policy {
+  background: rgba(248,113,113,.07);
+  border: 1px solid rgba(248,113,113,.2);
+  border-left: 4px solid var(--red);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.syl-policy strong { color: var(--red); }
+.syl-ok {
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,.2);
+  border-left: 4px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.wk-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: #fff;
+}
+</style>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main">
+<div style="margin-bottom:28px;">
+  <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:6px;">ISM3232</p>
+  <h1 style="font-size:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;">
+    Course Syllabus</h1>
+  <p style="color:var(--muted);">Business Application Development &nbsp;·&nbsp;
+    USF Muma College of Business</p>
+</div>
+<div class="syl-toc"><div class="syl-toc-title">Jump to section</div><a href="#course-info">1. Course Information</a><a href="#description">2. Course Description</a><a href="#slos">3. Student Learning Outcomes</a><a href="#tech-stack">4. Technology Stack</a><a href="#grading">5. Grading</a><a href="#workflow">6. Developer Workflow &amp; Submission Ritual</a><a href="#ai-policy">7. AI Use Policy</a><a href="#schedule">8. Course Schedule</a><a href="#resources">9. Required Resources</a><a href="#communication">10. Communication Policy</a><a href="#continuity">11. Academic Continuity</a><a href="#policies">12. Course Policies</a></div><div class="syl-section"><a class="syl-anchor" id="course-info"></a><div class="syl-h">Section 1</div><h2>Course Information</h2>
+<div class="syl-card">
+  <div class="syl-card-body">
+    <table class="syl-table">
+      <tbody>
+        <tr><td style="width:160px;font-weight:700;color:var(--muted);">Course</td>
+            <td>ISM3232 — Business Application Development</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">Credits</td>
+            <td>3 credit hours</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">Prerequisites</td>
+            <td>ISM 2411 or equivalent introduction to programming</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">Format</td>
+            <td>In-person / Hybrid</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">Duration</td>
+            <td>16 weeks</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">Level</td>
+            <td>Undergraduate — Sophomore+</td></tr>
+        <tr><td style="font-weight:700;color:var(--muted);">College</td>
+            <td>USF Muma College of Business</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div><div class="syl-section"><a class="syl-anchor" id="description"></a><div class="syl-h">Section 2</div><h2>Course Description</h2>
+<div class="syl-card">
+  <div class="syl-card-head">📋 Official Description <span style="font-family:var(--mono);font-size:10px;
+    color:var(--muted);font-weight:400;">(cannot be changed)</span></div>
+  <div class="syl-card-body" style="font-style:italic;color:var(--muted);">
+    <p>Presentation of business application development using an object-oriented programming language.
+    Good program design techniques are emphasized. Business applications are developed.</p>
+    <p>Study of software development methodologies, including data structures, indexing, file processing
+    and user interfaces. Good program design techniques are emphasized, and illustrative business
+    software is developed using a modern programming language.</p>
+  </div>
+</div>
+<p style="font-size:14px;line-height:1.75;margin-top:14px;">
+  Students learn to build complete, deployable business applications using Python — from the command
+  line through OOP design, SQL integration, Streamlit interfaces, and a controlled GenAI feature.
+  Emphasis throughout is on professional developer workflow: virtual environments, automated linting,
+  testing, version control, and iterative design.</p>
+</div><div class="syl-section"><a class="syl-anchor" id="slos"></a><div class="syl-h">Section 3</div><h2>Student Learning Outcomes</h2>
+<p style="font-size:14px;margin-bottom:16px;">Three course-level SLOs map to four unit objectives
+  and fifteen weekly objectives.
+  <a href="slos.html" style="color:var(--blue);">View full SLO table →</a> &nbsp;
+  <a href="slo_mindmap.html" style="color:var(--blue);">View mind map →</a></p>
+<div class="syl-card" style="margin-bottom:12px;">
+  <table class="syl-table">
+    <thead><tr><th style="width:90px;">SLO</th><th>Statement</th><th style="width:120px;">Covers</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span style="font-family:var(--mono);font-weight:700;color:#2dd4bf;">SLO-1</span></td>
+        <td>To develop the skills needed to develop software.</td>
+        <td><span style="font-family:var(--mono);font-size:12px;">Unit 1, Wks 1–4</span></td>
+      </tr>
+      <tr>
+        <td><span style="font-family:var(--mono);font-weight:700;color:#818cf8;">SLO-2</span></td>
+        <td>To understand necessary techniques for effective software development.</td>
+        <td><span style="font-family:var(--mono);font-size:12px;">Units 2–3, Wks 5–12</span></td>
+      </tr>
+      <tr>
+        <td><span style="font-family:var(--mono);font-weight:700;color:#fbbf24;">SLO-3</span></td>
+        <td>To examine various programming methodologies using a modern programming language.
+          <span style="display:block;font-size:12px;color:var(--muted);margin-top:4px;">
+            SLO-3a Software development methodologies &nbsp;·&nbsp;
+            SLO-3b Programming techniques &nbsp;·&nbsp;
+            SLO-3c Programming using a modern language</span></td>
+        <td><span style="font-family:var(--mono);font-size:12px;">Unit 4, Wks 13–16</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div><div class="syl-section"><a class="syl-anchor" id="tech-stack"></a><div class="syl-h">Section 4</div><h2>Technology Stack</h2><p style="font-size:14px;margin-bottom:14px;">All tools are free and open-source. Full installation instructions are on the <a href="precourse.html" style="color:var(--blue);">Pre-Course Setup</a> page.</p><div class="syl-card"><table class="syl-table"><thead><tr><th>Tool</th><th>Source</th><th>Purpose</th></tr></thead><tbody><tr><td><strong style="font-family:var(--mono);font-size:13px;">zsh</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">macOS built-in / WSL</td><td>Shell — all terminal work. Windows students must use WSL, not PowerShell.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">VS Code</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">code.visualstudio.com</td><td>Editor with integrated terminal, Python extension, and Git integration.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">Python 3.10+</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">python.org</td><td>Primary programming language for all four units.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">venv + pip</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">Built-in</td><td>Dependency isolation. Every project gets its own virtual environment.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">ruff</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">pip install ruff</td><td>Linting and auto-formatting. Must pass before every submission.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">pytest</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">pip install pytest</td><td>Automated testing. Must be green before every submission.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">Git + GitHub</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">git-scm.com / github.com</td><td>Version control and submission. All deliverables submitted as GitHub URLs.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">SQLite</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">Built-in (sqlite3)</td><td>Relational database for the capstone data layer.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">Streamlit</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">pip install streamlit</td><td>Browser-based UI framework for the capstone application.</td></tr><tr><td><strong style="font-family:var(--mono);font-size:13px;">Anthropic API</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">pip install anthropic</td><td>Controlled GenAI feature in the capstone. API key required for Week 16.</td></tr></tbody></table></div></div><div class="syl-section"><a class="syl-anchor" id="grading"></a><div class="syl-h">Section 5</div><h2>Grading</h2><div class="syl-card" style="margin-bottom:14px;"><table class="syl-table"><thead><tr><th>Component</th><th style="width:80px;">Weight</th><th>Notes</th></tr></thead><tbody><tr>
+      <td style="font-weight:400">Developer Workflow</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">15%</span></td>
+      <td style="color:var(--muted);font-size:13px;">Ritual adherence, ruff, pytest, Git commit quality — assessed across all submissions.</td>
+    </tr><tr>
+      <td style="font-weight:400">Weekly Assignments &amp; Quizzes</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">25%</span></td>
+      <td style="color:var(--muted);font-size:13px;">One per active week. Submitted as GitHub URL. Lowest grade dropped.</td>
+    </tr><tr>
+      <td style="font-weight:400">Midterm Practical</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">20%</span></td>
+      <td style="color:var(--muted);font-size:13px;">Week 9. Open notes. Covers Units 1–2 (Weeks 1–8).</td>
+    </tr><tr>
+      <td style="font-weight:400">Capstone Project</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">30%</span></td>
+      <td style="color:var(--muted);font-size:13px;">Weeks 13–16. Proposal + OOP + Database + Streamlit + GenAI + live demo.</td>
+    </tr><tr>
+      <td style="font-weight:400">Portfolio</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">5%</span></td>
+      <td style="color:var(--muted);font-size:13px;">GitHub profile reflecting 16 weeks of iterative, committed work.</td>
+    </tr><tr>
+      <td style="font-weight:400">Participation</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--blue);">5%</span></td>
+      <td style="color:var(--muted);font-size:13px;">In-class engagement, discussion board contributions, peer feedback.</td>
+    </tr><tr>
+      <td style="font-weight:700">Automation Bonus</td>
+      <td><span style="font-family:var(--mono);font-weight:700;
+        color:var(--green);">+5%</span></td>
+      <td style="color:var(--muted);font-size:13px;">Optional. Automate a meaningful part of your development workflow.</td>
+    </tr></tbody></table></div><h3 style="font-size:15px;font-weight:700;margin:18px 0 10px;">Grade Scale</h3><div style="display:flex;flex-wrap:wrap;gap:6px;"><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--green);">A</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">93–100</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--green);">A−</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">90–92</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--blue);">B+</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">87–89</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--blue);">B</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">83–86</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--blue);">B−</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">80–82</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--muted);">C+</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">77–79</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--muted);">C</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">73–76</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--muted);">C−</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">70–72</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--amber);">D</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">60–69</div>
+    </div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+      padding:8px 14px;text-align:center;min-width:60px;">
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--red);">F</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">&lt;60</div>
+    </div></div></div><div class="syl-section"><a class="syl-anchor" id="workflow"></a><div class="syl-h">Section 6</div><h2>Developer Workflow &amp; Submission Ritual</h2><p style="font-size:14px;margin-bottom:14px;">
+  From Week 2 onwards, every assignment requires the complete nine-step pre-submission ritual.
+  The instructor reviews your Git log. A single "final" commit at midnight tells a story.</p>
+<div class="syl-card">
+  <div class="syl-card-head">🔁 The Nine Steps — Required Before Every Major Push</div>
+  <div class="syl-card-body" style="padding:0;">
+    <table class="syl-table">
+      <thead><tr><th style="width:36px;">#</th><th style="width:260px;">Command</th><th>Purpose</th></tr></thead>
+      <tbody><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">1</td>
+      <td><code style="font-size:12px;">pwd</code></td>
+      <td style="color:var(--muted);font-size:13px;">Confirm your terminal is in the correct project directory.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">2</td>
+      <td><code style="font-size:12px;">tree -L 3</code></td>
+      <td style="color:var(--muted);font-size:13px;">Confirm the project folder structure looks correct.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">3</td>
+      <td><code style="font-size:12px;">source .venv/bin/activate</code></td>
+      <td style="color:var(--muted);font-size:13px;">Activate the virtual environment. Prompt must show (.venv).</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">4</td>
+      <td><code style="font-size:12px;">ruff format .</code></td>
+      <td style="color:var(--muted);font-size:13px;">Auto-format all Python files.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">5</td>
+      <td><code style="font-size:12px;">ruff check .</code></td>
+      <td style="color:var(--muted);font-size:13px;">Lint check. Must return 0 errors before continuing.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">6</td>
+      <td><code style="font-size:12px;">pytest</code></td>
+      <td style="color:var(--muted);font-size:13px;">Run all tests. Must be green before continuing.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">7</td>
+      <td><code style="font-size:12px;">git status</code></td>
+      <td style="color:var(--muted);font-size:13px;">Review what has changed since the last commit.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">8</td>
+      <td><code style="font-size:12px;">git add .</code></td>
+      <td style="color:var(--muted);font-size:13px;">Stage all changes.</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--blue);text-align:center;">9</td>
+      <td><code style="font-size:12px;">git commit -m &quot;descriptive message&quot;  +  git push</code></td>
+      <td style="color:var(--muted);font-size:13px;">Commit with a meaningful message and push.</td>
+    </tr>      </tbody>
+    </table>
+  </div>
+</div>
+<div class="syl-warn"><strong>⚠ Rule:</strong> If ruff check or pytest fail — stop.
+  Fix errors before continuing. Never push broken code.</div>
+</div><div class="syl-section"><a class="syl-anchor" id="ai-policy"></a><div class="syl-h">Section 7</div><h2>AI Use Policy</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+  <div class="syl-ok">
+    <strong>✓ Permitted</strong><br>
+    <ul style="margin:8px 0 0 18px;padding:0;font-size:13px;line-height:1.9;">
+      <li>Ask AI to explain what a traceback error means</li>
+      <li>Ask AI to explain what a piece of code does in plain English</li>
+      <li>Ask AI to suggest test cases for code you already wrote</li>
+      <li>Use AI to understand a concept after attempting it yourself</li>
+      <li>Week 16 only: use the Anthropic API as a controlled application feature</li>
+    </ul>
+  </div>
+  <div class="syl-policy">
+    <strong>✗ Prohibited</strong><br>
+    <ul style="margin:8px 0 0 18px;padding:0;font-size:13px;line-height:1.9;">
+      <li>Generating any submitted code</li>
+      <li>Asking AI to fix bugs (you must attempt first)</li>
+      <li>Any AI use during the midterm exam</li>
+      <li>Submitting AI-generated work without disclosure</li>
+      <li>Using AI to write the AI literacy reflection (Assignment 8)</li>
+    </ul>
+  </div>
+</div>
+<div class="syl-card">
+  <div class="syl-card-head">🔍 The Debug-First, Then-Ask Workflow (Assignment 8)</div>
+  <div class="syl-card-body">
+    <ol style="margin:0 0 0 18px;padding:0;line-height:2;font-size:14px;">
+      <li>Read the traceback bottom-up. Write the error type and line number.</li>
+      <li>Write your hypothesis before touching any code.</li>
+      <li>Add strategic print() statements and run the script.</li>
+      <li>If stuck after 10 minutes — ask AI to explain the error only, not to fix it.</li>
+      <li>Fix the code yourself.</li>
+      <li>Write the required reflection. This is 30 of 70 points and is not optional.</li>
+    </ol>
+  </div>
+</div>
+</div><div class="syl-section"><a class="syl-anchor" id="schedule"></a><div class="syl-h">Section 8</div><h2>Course Schedule</h2><div class="syl-card"><table class="syl-table"><thead><tr><th style="width:42px;">Wk</th><th style="width:40px;">Unit</th><th>Topic</th><th>Key Content</th><th>Deliverable</th></tr></thead><tbody><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#0D7377;text-align:center;">
+        1</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#0D7377;">U1</span></td>
+      <td style="font-weight:600;">Developer Mindset &amp; Setup</td>
+      <td style="font-size:12px;color:var(--muted);">VS Code · zsh · Python verify · first script · AI policy</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 1: Setup screenshots</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#0D7377;text-align:center;">
+        2</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#0D7377;">U1</span></td>
+      <td style="font-weight:600;">zsh Navigation &amp; File Ops</td>
+      <td style="font-size:12px;color:var(--muted);">pwd · ls · cd · tree · cp · mv · rm ritual</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 2: Terminal screenshots</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#0D7377;text-align:center;">
+        3</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#0D7377;">U1</span></td>
+      <td style="font-weight:600;">Virtual Environments &amp; .zshrc</td>
+      <td style="font-size:12px;color:var(--muted);">venv · pip · requirements.txt · .gitignore · aliases</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 3: venv + .zshrc</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#0D7377;text-align:center;">
+        4</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#0D7377;">U1</span></td>
+      <td style="font-weight:600;">Search, Ritual &amp; Git</td>
+      <td style="font-size:12px;color:var(--muted);">ripgrep · nine-step ritual · git init/commit/push</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 4: Ritual + GitHub URL</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#4338CA;text-align:center;">
+        5</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#4338CA;">U2</span></td>
+      <td style="font-weight:600;">Variables, Data Types &amp; Ops</td>
+      <td style="font-size:12px;color:var(--muted);">str · int · float · bool · operators · input() · f-strings</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 5: business_data.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#4338CA;text-align:center;">
+        6</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#4338CA;">U2</span></td>
+      <td style="font-weight:600;">Conditionals, Loops &amp; Dicts</td>
+      <td style="font-size:12px;color:var(--muted);">if/elif/else · for loops · accumulator · list-of-dicts</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 6: record_processor.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#4338CA;text-align:center;">
+        7</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#4338CA;">U2</span></td>
+      <td style="font-weight:600;">Functions, Modules &amp; pytest</td>
+      <td style="font-size:12px;color:var(--muted);">def · return · type hints · scope · modules · 6 test types</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 7: business_rules.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#4338CA;text-align:center;">
+        8</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#4338CA;">U2</span></td>
+      <td style="font-weight:600;">Debugging &amp; AI Literacy</td>
+      <td style="font-size:12px;color:var(--muted);">Tracebacks · print() debug · Debug-First workflow</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 8: Fixed code + reflection</td>
+    </tr><tr  style='background:rgba(251,191,36,.06);'>
+      <td style="font-family:var(--mono);font-weight:700;color:#4338CA;text-align:center;">
+        ★ 9</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#4338CA;">U2</span></td>
+      <td style="font-weight:600;">Midterm Practical Exam ★</td>
+      <td style="font-size:12px;color:var(--muted);">Open notes · Weeks 1–8 · Tracing + Fix bug + Coding</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Midterm exam</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#9D174D;text-align:center;">
+        10</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#9D174D;">U3</span></td>
+      <td style="font-weight:600;">OOP I — Classes &amp; Objects</td>
+      <td style="font-size:12px;color:var(--muted);">class · __init__ · self · methods · __repr__</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 10: models.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#9D174D;text-align:center;">
+        11</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#9D174D;">U3</span></td>
+      <td style="font-weight:600;">OOP II — Composition</td>
+      <td style="font-size:12px;color:var(--muted);">Composition · manager class · inheritance · OOP→SQL</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 11: entity + manager</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#9D174D;text-align:center;">
+        12</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#9D174D;">U3</span></td>
+      <td style="font-weight:600;">OOP III — Design &amp; Practice</td>
+      <td style="font-size:12px;color:var(--muted);">design.md first · 2 entities · 1 manager · 6 tests</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Assignment 12: design.md + models</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#92400E;text-align:center;">
+        13</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#92400E;">U4</span></td>
+      <td style="font-weight:600;">Capstone Design &amp; SQL</td>
+      <td style="font-size:12px;color:var(--muted);">PROPOSAL.md · CREATE · INSERT · SELECT · UPDATE</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Capstone: proposal + schema.sql</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#92400E;text-align:center;">
+        14</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#92400E;">U4</span></td>
+      <td style="font-weight:600;">Python + SQL Integration</td>
+      <td style="font-size:12px;color:var(--muted);">sqlite3 · ? placeholders · row_factory · tmp_path</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Capstone: database.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#92400E;text-align:center;">
+        15</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#92400E;">U4</span></td>
+      <td style="font-weight:600;">Streamlit Interface</td>
+      <td style="font-size:12px;color:var(--muted);">Rerun model · 5 tabs · Submit/View/Filter/Update/Report</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Capstone: app.py</td>
+    </tr><tr>
+      <td style="font-family:var(--mono);font-weight:700;color:#92400E;text-align:center;">
+        16</td>
+      <td style="text-align:center;">
+        <span class="wk-badge" style="background:#92400E;">U4</span></td>
+      <td style="font-weight:600;">GenAI Feature &amp; Final Demo</td>
+      <td style="font-size:12px;color:var(--muted);">6 controls · ai_feature.py · repo polish · live demo</td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--muted);">Capstone: full repo + demo</td>
+    </tr></tbody></table></div><p style="font-size:13px;color:var(--muted);margin-top:8px;">★ Week 9 Midterm: open notes (own materials only). No internet, no AI, no classmates.</p></div><div class="syl-section"><a class="syl-anchor" id="resources"></a><div class="syl-h">Section 9</div><h2>Required Resources</h2><p style="font-size:14px;margin-bottom:14px;font-style:italic;color:var(--muted);">All resources are free. No textbook purchase required.</p><div class="syl-card"><table class="syl-table"><thead><tr><th>Resource</th><th>Access</th><th>How Used</th></tr></thead><tbody><tr><td><strong>Course Website (GitHub Pages)</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">URL in Canvas</td><td style="font-size:13px;color:var(--muted);">Primary reference — readings, lectures, labs, slides, cheat sheets, glossary, troubleshooting.</td></tr><tr><td><strong>Pre-Course Setup Guide</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">Course website → Pre-Course</td><td style="font-size:13px;color:var(--muted);">Complete before Week 1. Covers all tool installation and verification.</td></tr><tr><td><strong>Think Python (3rd ed.)</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">allendowney.github.io/ThinkPython</td><td style="font-size:13px;color:var(--muted);">Recommended companion for Units 1–2. Free online.</td></tr><tr><td><strong>Python Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">docs.python.org</td><td style="font-size:13px;color:var(--muted);">Authoritative language reference for built-in functions and modules.</td></tr><tr><td><strong>Anthropic API Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">docs.anthropic.com</td><td style="font-size:13px;color:var(--muted);">Required for Week 16. Review the Messages API section.</td></tr><tr><td><strong>Streamlit Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">docs.streamlit.io</td><td style="font-size:13px;color:var(--muted);">Required for Week 15. Widget reference and execution model.</td></tr><tr><td><strong>SQLite Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">sqlite.org/docs.html</td><td style="font-size:13px;color:var(--muted);">SQL syntax reference. All five required operations are documented here.</td></tr><tr><td><strong>ruff Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">docs.astral.sh/ruff</td><td style="font-size:13px;color:var(--muted);">Linting rules reference for when ruff flags unfamiliar code.</td></tr><tr><td><strong>GitHub Docs</strong></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">docs.github.com</td><td style="font-size:13px;color:var(--muted);">Git and GitHub reference for version control questions.</td></tr></tbody></table></div></div><div class="syl-section"><a class="syl-anchor" id="communication"></a><div class="syl-h">Section 10</div><h2>Communication Policy</h2>
+<p style="font-size:14px;margin-bottom:14px;">Use Canvas, email, or office hours for all communications.
+  The instructor will respond within <strong>48 hours on business days</strong>
+  (Monday–Friday). Messages received after 5 PM Friday receive a response by end of business Monday.</p>
+
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">📋 Required in Every Message</div>
+  <div class="syl-card-body">
+    <ul style="margin:0 0 0 18px;padding:0;line-height:2;font-size:14px;">
+      <li><strong>Your full name and U Number</strong> (e.g., Jane Smith · U12345678)</li>
+      <li><strong>Course and section number</strong> (ISM3232 + your section)</li>
+      <li><strong>The specific reason for your message</strong> stated in the first sentence</li>
+    </ul>
+  </div>
+</div>
+
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">💻 For Coding Issues — Also Include</div>
+  <div class="syl-card-body">
+    <ul style="margin:0 0 0 18px;padding:0;line-height:2;font-size:14px;">
+      <li>Your <strong>GitHub link</strong> to the repository with the updated code</li>
+      <li>A <strong>clear screenshot of the complete error</strong> — full traceback from
+        "Traceback (most recent call last)" to the final error line</li>
+      <li>Confirmation that your repository contains all files needed to reproduce the error
+        (requirements.txt, all .py files, tests/)</li>
+    </ul>
+    <div class="syl-warn" style="margin-top:12px;">
+      <strong>⚠ Incomplete submissions</strong> — those missing a GitHub link, missing the full
+      traceback, or with an empty/outdated repository — will be returned without diagnosis.
+      Include all required materials in your first message.</div>
+  </div>
+</div>
+
+<div class="syl-card">
+  <div class="syl-card-head">🤝 Professionalism Standards</div>
+  <div class="syl-card-body">
+    <table class="syl-table">
+      <thead><tr><th>Standard</th><th>✓ Correct</th><th>✗ Incorrect</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;">Greeting</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">
+            Dear Dr. [Last Name],<br>Dear Professor [Last Name],</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--red);">
+            Hey,<br>Hi,<br>(no greeting)</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">Sign-off</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">
+            Sincerely, [Full Name]<br>U Number: U12345678</td>
+          <td style="font-family:var(--mono);font-size:12px;color:var(--red);">
+            Thanks<br>-[First name only]</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">Tone</td>
+          <td style="font-size:13px;color:var(--muted);">Respectful, specific, professional.</td>
+          <td style="font-size:13px;color:var(--red);">Demanding, vague, or casual.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div><div class="syl-section"><a class="syl-anchor" id="continuity"></a><div class="syl-h">Section 11</div><h2>Academic Continuity</h2>
+<p style="font-size:14px;margin-bottom:14px;">
+  In the event of unforeseen circumstances — including public health emergencies, extreme weather,
+  natural disasters, or extended facility closures — the following continuity plan takes effect.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+<div class="syl-card">
+      <div class="syl-card-head">📢 Communication</div>
+      <div class="syl-card-body"><p>All updates distributed through Canvas announcements. Check Canvas daily. The course website remains accessible throughout any disruption.</p></div>
+    </div><div class="syl-card">
+      <div class="syl-card-head">🎓 Instruction</div>
+      <div class="syl-card-body"><p>In-person sessions transition to synchronous online delivery via the university&#x27;s designated platform (link in Canvas). Recordings posted within 24 hours.</p></div>
+    </div><div class="syl-card">
+      <div class="syl-card-head">📝 Assignments</div>
+      <div class="syl-card-body"><p>Deadlines extended by a minimum of 72 hours for any week directly affected. All submissions continue via GitHub — the submission method does not change.</p></div>
+    </div><div class="syl-card">
+      <div class="syl-card-head">📋 Exams</div>
+      <div class="syl-card-body"><p>The Midterm transitions to online format if in-person is not possible. Format (open notes, individual, same coverage) remains unchanged. 72-hour notice minimum.</p></div>
+    </div><div class="syl-card">
+      <div class="syl-card-head">🎯 Capstone</div>
+      <div class="syl-card-body"><p>Final demonstrations via video conferencing if in-person is not possible. Requirements (live working application, eight topics) remain unchanged.</p></div>
+    </div><div class="syl-card">
+      <div class="syl-card-head">⚠ Student Responsibility</div>
+      <div class="syl-card-body"><p>Students are responsible for monitoring Canvas announcements. Failure to check Canvas is not grounds for a deadline extension or grade appeal.</p></div>
+    </div></div></div><div class="syl-section"><a class="syl-anchor" id="policies"></a><div class="syl-h">Section 12</div><h2>Course Policies</h2>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.1</span>
+    Grade Dispute Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">If you wish to discuss the grading of an assignment, you must contact your professor
+   <strong>within one (1) week</strong> of receiving your grade on Canvas.
+   After this one-week window has passed, it will be assumed that you accept the grade as recorded.
+   No further discussions regarding the grading of that assignment will be possible.</p>
+    <div class="syl-warn"><strong>⚠ Note:</strong> Grade disputes submitted after the one-week deadline will not be considered under any circumstances.</div>
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.2</span>
+    Late Work Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">There are no opportunities to make up missed assignments, labs, quizzes, or exams.
+   There are also no opportunities to redo any assignments, labs, quizzes, or exams for a revised grade.</p>
+    <div class="syl-warn"><strong>⚠ Note:</strong> All work is due at the stated deadline. Missed or incomplete work will receive a grade of zero with no exceptions outside of the Medical Excuse Policy below.</div>
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.3</span>
+    Medical Excuse Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">Students should not attend class if they are ill, particularly with: fever, gastrointestinal symptoms,
+   or respiratory symptoms (sneezing, runny nose, sore throat, coughing).
+   <br><br>
+   Contact campus health immediately:<br>
+   &bull; <strong>Tampa &amp; Sarasota-Manatee:</strong> Student Health Services — (813) 974-2331<br>
+   &bull; <strong>St. Petersburg:</strong> Wellness Center — (727) 873-4422
+   <br><br>
+   <strong>Required:</strong> A verification of care letter must be presented to the instructor
+   upon the student's return to class.</p>
+    
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.4</span>
+    Extra Credit Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">There are no extra credit opportunities in this course. The optional Automation Bonus (+5%) is the only additional credit available and supplements — it does not replace — primary coursework.</p>
+    
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.5</span>
+    Group Work Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">There is no group work of any kind in this course. All assignments and assessments are to be completed individually. Sharing code or submitting another student's work constitutes academic dishonesty and will be reported to the Office of Student Conduct.</p>
+    
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.6</span>
+    First Day Attendance Policy
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">Students must complete the First Day Attendance Quiz by the stated due date. This quiz serves as confirmation of your enrollment and active participation in the course.</p>
+    <div class="syl-warn"><strong>⚠ Note:</strong> Students who do not complete the First Day Attendance Quiz by the deadline are subject to being dropped from the course.</div>
+  </div>
+</div>
+<div class="syl-card" style="margin-bottom:12px;">
+  <div class="syl-card-head">
+    <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">12.7</span>
+    Grades of Incomplete
+  </div>
+  <div class="syl-card-body">
+    <p style="font-size:14px;">The current university policy concerning incomplete grades will be followed. An "I" grade may be awarded only when a small portion of the student's work is incomplete and only when the student is otherwise earning a passing grade. For undergraduate students, the time limit may not exceed two academic semesters and/or graduation, whichever comes first. "I" grades not removed by the end of the time limit will be changed to "IF" or "IU."</p>
+    
+  </div>
+</div></div><div class="page-footer">ISM3232 · Course Syllabus · USF Muma College of Business</div></div>
+<script src="../site.js"></script>
+</body>
+</html>

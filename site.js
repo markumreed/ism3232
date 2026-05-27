@@ -185,6 +185,7 @@
   ch(linksWrap, scroll);
 
   ch(scroll,
+    mkLink(docs+'syllabus.html',         'Syllabus',     'syllabus'),
     mkLink(docs+'course_map.html',       'Map',          'course_map'),
     mkLink(docs+'precourse.html',        'Pre-Course',   'precourse'),
     mkDiv(),
@@ -193,7 +194,10 @@
     mkLink(docs+'glossary.html',         'Glossary',     'glossary'),
     mkLink(docs+'troubleshooting.html',  'Help',         'troubleshooting'),
     mkLink(docs+'capstone_rubric.html',  'Rubric',       'capstone_rubric'),
-    mkLink(docs+'expectations.html',     'Expectations', 'expectations')
+    mkLink(docs+'expectations.html',     'Expectations', 'expectations'),
+    mkDiv(),
+    mkLink(docs+'slos.html',             'SLOs',         'slos'),
+    mkLink(docs+'slo_mindmap.html',      'Mind Map',     'slo_mindmap')
   );
 
   ch(nav, linksWrap, mkDiv());
@@ -306,8 +310,5 @@
     fontDown: function() { applyFont(fontIdx-1); },
     toggleDD: toggleDD,
   };
-
-  applyTheme(getTheme());
-  applyFont(fontIdx);
 
 })();

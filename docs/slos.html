@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="ISM3232 course, unit, and weekly learning outcomes">
+<title>Student Learning Outcomes — ISM3232</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Nav bar ── */
+.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);}
+.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);padding:3px 10px;
+  border:1px solid var(--border2);border-radius:4px;}
+.nav-title{font-size:14px;font-weight:600;color:var(--text);}
+.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+
+/* ── Week header ── */
+.wk-header{margin-bottom:36px;}
+.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
+.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
+.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Concept cards ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
+  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.ok .concept-label{color:var(--green);}
+.ok p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Checklist ── */
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px solid var(--border);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{content:'☐';color:var(--green);font-size:16px;
+  flex-shrink:0;line-height:1.4;}
+
+/* ── Topics grid ── */
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.topic-item{background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;}
+.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
+  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
+.topic-text{font-size:13px;color:var(--text);font-weight:600;}
+.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* ── Key terms ── */
+.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
+  align-items:baseline;}
+.term:last-child{border-bottom:none;}
+.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
+  color:var(--blue);min-width:180px;flex-shrink:0;}
+.term-def{font-size:14px;color:var(--muted);}
+
+/* ── Before you start / self-check ── */
+.check-block{background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:20px;margin:20px 0;}
+.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+
+</style>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main">
+<div style="margin-bottom:32px;">
+  <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:8px;">ISM3232</p>
+  <h1 style="font-size:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;">
+    Student Learning Outcomes</h1>
+  <p>Three course-level SLOs map to four unit objectives and fifteen weekly objectives.
+    Each weekly objective describes exactly what you will be able to do by the end of that week.</p>
+  <p style="margin-top:8px;">
+    <a href="slo_mindmap.html" style="font-family:var(--mono);font-size:11px;
+      padding:5px 12px;border-radius:6px;background:var(--blue-dim);color:var(--blue);
+      text-decoration:none;border:1px solid var(--border2);">
+      🗺 View as Mind Map →</a></p>
+</div>
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;margin-bottom:32px;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;">
+<thead><tr style="background:var(--bg3);">
+  <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);">SLO</th>
+  <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);">Statement</th>
+  <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);">Units</th>
+  <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);">Weeks</th>
+</tr></thead>
+<tbody><tr>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-weight:700;color:#2dd4bf;">SLO-1</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);">To develop the skills needed to develop software.</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">Unit 1</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">1–4</td>
+</tr><tr>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-weight:700;color:#818cf8;">SLO-2</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);">To understand necessary techniques for effective software development.</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">Unit 2 + Unit 3</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">5–8, 10–12</td>
+</tr><tr>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-weight:700;color:#fbbf24;">SLO-3</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);">To examine various programming methodologies using a modern programming language.</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">Unit 4</td>
+  <td style="padding:9px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);
+    font-size:11px;">13–16</td>
+</tr></tbody></table></div>
+<div style="margin-bottom:48px;">
+  <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;
+    padding-bottom:10px;border-bottom:2px solid #2dd4bf;">
+    <span style="font-family:var(--mono);font-size:22px;font-weight:800;color:#2dd4bf;">SLO-1</span>
+    <span style="font-size:16px;font-weight:600;color:var(--text);">To develop the skills needed to develop software.</span>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;margin-bottom:20px;">
+    <div style="padding:14px 18px;background:#2dd4bf18;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 10px;
+        border-radius:20px;background:#2dd4bf;color:#fff;">Unit 1</span>
+      <span style="font-weight:700;color:var(--text);">Developer Foundations</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">Weeks 1–4</span>
+    </div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);
+      border-left:4px solid #2dd4bf;background:#2dd4bf0d;">
+      <p style="font-size:13px;margin:0;"><strong style="color:#2dd4bf;">Unit Objective:</strong> &nbsp;Build and maintain a complete professional developer environment — shell, editor, virtual environments, linter, test runner, and version control — and execute the nine-step submission ritual without reference.</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--bg3);">
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:60px;">Week</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:200px;">Topic</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);">Weekly Objective — By the end of this week you will be able to:</th>
+    </tr></thead>
+    <tbody><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#2dd4bf;vertical-align:top;">
+        <a href="week01_reading.html"
+           style="color:#2dd4bf;text-decoration:none;">W1</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Developer Mindset &amp; Setup</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Set up VS Code, verify Python/zsh/Git installation, create the course folder structure from the terminal, and run the first Python script — completing the full edit→save→run loop for the first time.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#2dd4bf;vertical-align:top;">
+        <a href="week02_reading.html"
+           style="color:#2dd4bf;text-decoration:none;">W2</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">zsh Navigation &amp; File Operations</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Navigate the file system without a GUI using pwd, ls, cd, mkdir, touch, tree, cp, mv, and rm; execute the three-step rm safety ritual from memory.</td>
+    </tr><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#2dd4bf;vertical-align:top;">
+        <a href="week03_reading.html"
+           style="color:#2dd4bf;text-decoration:none;">W3</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Virtual Environments &amp; .zshrc</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Create, activate, and verify a virtual environment; install packages and freeze requirements; configure ten required shell aliases and the mkcd function in .zshrc.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#2dd4bf;vertical-align:top;">
+        <a href="week04_reading.html"
+           style="color:#2dd4bf;text-decoration:none;">W4</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Search Tools, Ritual &amp; Git</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Search codebases with ripgrep and find; execute all nine steps of the pre-submission ritual in order; initialise a Git repository, make meaningful commits, and push to GitHub.</td>
+    </tr></tbody></table></div></div></div>
+<div style="margin-bottom:48px;">
+  <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;
+    padding-bottom:10px;border-bottom:2px solid #818cf8;">
+    <span style="font-family:var(--mono);font-size:22px;font-weight:800;color:#818cf8;">SLO-2</span>
+    <span style="font-size:16px;font-weight:600;color:var(--text);">To understand necessary techniques for effective software development.</span>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;margin-bottom:20px;">
+    <div style="padding:14px 18px;background:#818cf818;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 10px;
+        border-radius:20px;background:#818cf8;color:#fff;">Unit 2</span>
+      <span style="font-weight:700;color:var(--text);">Python Foundations</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">Weeks 5–8</span>
+    </div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);
+      border-left:4px solid #818cf8;background:#818cf80d;">
+      <p style="font-size:13px;margin:0;"><strong style="color:#818cf8;">Unit Objective:</strong> &nbsp;Write correct, tested Python programs using all four core data types, control flow, functions with type hints, modules, and pytest — diagnosing errors from tracebacks without assistance.</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--bg3);">
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:60px;">Week</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:200px;">Topic</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);">Weekly Objective — By the end of this week you will be able to:</th>
+    </tr></thead>
+    <tbody><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#818cf8;vertical-align:top;">
+        <a href="week05_reading.html"
+           style="color:#818cf8;text-decoration:none;">W5</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Variables, Data Types &amp; Operators</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Declare variables of all four types; apply arithmetic, comparison, and logical operators; read user input with input() and wrap it correctly; format business output with f-string specifiers.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#818cf8;vertical-align:top;">
+        <a href="week06_reading.html"
+           style="color:#818cf8;text-decoration:none;">W6</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Conditionals, Loops &amp; Dictionaries</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Implement multi-tier business rules with if/elif/else; write for loops with the accumulator pattern initialised outside the loop; model business records as a list of dicts and perform CRUD operations.</td>
+    </tr><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#818cf8;vertical-align:top;">
+        <a href="week07_reading.html"
+           style="color:#818cf8;text-decoration:none;">W7</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Functions, Modules &amp; pytest</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Write functions with type hints, docstrings, and return values (never print); understand local scope; organise code into separate modules; write all six required pytest test types including boundary tests.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#818cf8;vertical-align:top;">
+        <a href="week08_reading.html"
+           style="color:#818cf8;text-decoration:none;">W8</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Debugging &amp; AI Literacy</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Read any Python traceback bottom-up and identify error type, file, and line; debug with strategic print() statements; complete the six-step Debug-First workflow; write the AI literacy reflection.</td>
+    </tr></tbody></table></div></div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;margin-bottom:20px;">
+    <div style="padding:14px 18px;background:#fb718518;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 10px;
+        border-radius:20px;background:#fb7185;color:#fff;">Unit 3</span>
+      <span style="font-weight:700;color:var(--text);">Object-Oriented Design</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">Weeks 10–12</span>
+    </div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);
+      border-left:4px solid #fb7185;background:#fb71850d;">
+      <p style="font-size:13px;margin:0;"><strong style="color:#fb7185;">Unit Objective:</strong> &nbsp;Design and implement a two-class OOP system (entity + manager) using the design-first approach — writing design.md before any code, with all six required pytest test types passing.</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--bg3);">
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:60px;">Week</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:200px;">Topic</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);">Weekly Objective — By the end of this week you will be able to:</th>
+    </tr></thead>
+    <tbody><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fb7185;vertical-align:top;">
+        <a href="week10_reading.html"
+           style="color:#fb7185;text-decoration:none;">W10</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">OOP I — Classes &amp; Objects</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Explain the class/instance mental model; write a complete entity class with __init__, default status attribute, at least three methods returning values, and __repr__; demonstrate instance independence.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fb7185;vertical-align:top;">
+        <a href="week11_reading.html"
+           style="color:#fb7185;text-decoration:none;">W11</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">OOP II — Composition &amp; Inheritance</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Implement a manager class using composition (instance-level list in __init__); apply light inheritance with super().__init__(); demonstrate the OOP→SQL mapping (class→table, instance→row, attribute→column).</td>
+    </tr><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fb7185;vertical-align:top;">
+        <a href="week12_reading.html"
+           style="color:#fb7185;text-decoration:none;">W12</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">OOP III — Applied Practice</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Write design.md before any class code and commit it first; implement two entity classes and one manager; pass all six required test types including the instance independence test; identify all four common OOP mistakes.</td>
+    </tr></tbody></table></div></div></div>
+<div style="margin-bottom:48px;">
+  <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;
+    padding-bottom:10px;border-bottom:2px solid #fbbf24;">
+    <span style="font-family:var(--mono);font-size:22px;font-weight:800;color:#fbbf24;">SLO-3</span>
+    <span style="font-size:16px;font-weight:600;color:var(--text);">To examine various programming methodologies using a modern programming language.</span>
+  </div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;"><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;
+              border-radius:20px;background:rgba(251,191,36,.08);color:#fbbf24;
+              border:1px solid rgba(251,191,36,.3);">
+              <strong>SLO-3a</strong> &nbsp;Software development methodologies</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;
+              border-radius:20px;background:rgba(251,191,36,.08);color:#fbbf24;
+              border:1px solid rgba(251,191,36,.3);">
+              <strong>SLO-3b</strong> &nbsp;Programming techniques</span><span style="font-family:var(--mono);font-size:11px;padding:4px 12px;
+              border-radius:20px;background:rgba(251,191,36,.08);color:#fbbf24;
+              border:1px solid rgba(251,191,36,.3);">
+              <strong>SLO-3c</strong> &nbsp;Programming using a modern programming language</span></div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;margin-bottom:20px;">
+    <div style="padding:14px 18px;background:#fbbf2418;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:12px;">
+      <span style="font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 10px;
+        border-radius:20px;background:#fbbf24;color:#fff;">Unit 4</span>
+      <span style="font-weight:700;color:var(--text);">Capstone Build</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">Weeks 13–16</span>
+    </div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);
+      border-left:4px solid #fbbf24;background:#fbbf240d;">
+      <p style="font-size:13px;margin:0;"><strong style="color:#fbbf24;">Unit Objective:</strong> &nbsp;Design, build, test, and publicly demonstrate a complete deployable business application — incorporating SQL persistence, a Streamlit UI, and a responsible GenAI feature with all six required controls.</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--bg3);">
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:60px;">Week</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);width:200px;">Topic</th>
+      <th style="text-align:left;padding:8px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted);">Weekly Objective — By the end of this week you will be able to:</th>
+    </tr></thead>
+    <tbody><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fbbf24;vertical-align:top;">
+        <a href="week13_reading.html"
+           style="color:#fbbf24;text-decoration:none;">W13</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Capstone Design &amp; SQL Foundations</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Complete a ten-field PROPOSAL.md with specific business rules (threshold + consequence); write all five required SQL operations in the sqlite3 shell; design a schema with correct column types; commit schema.sql.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fbbf24;vertical-align:top;">
+        <a href="week14_reading.html"
+           style="color:#fbbf24;text-decoration:none;">W14</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Python + SQL Integration</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Implement all five database functions using the context manager pattern and ? placeholders exclusively; apply row_factory for dict-based results; write all database tests using tmp_path for isolation.</td>
+    </tr><tr style="background:var(--bg3);">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fbbf24;vertical-align:top;">
+        <a href="week15_reading.html"
+           style="color:#fbbf24;text-decoration:none;">W15</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">Streamlit Interface</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Explain Streamlit&#x27;s rerun execution model; implement all five required tabs (Submit, View All, Filter, Update Status, Report) wired to the live database; call create_table() before any widget.</td>
+    </tr><tr style="">
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-family:var(--mono);font-weight:700;color:#fbbf24;vertical-align:top;">
+        <a href="week16_reading.html"
+           style="color:#fbbf24;text-decoration:none;">W16</a></td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        font-weight:600;color:var(--text);vertical-align:top;">GenAI Feature &amp; Final Demo</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--border);
+        color:var(--muted);vertical-align:top;line-height:1.6;">Implement all six GenAI controls (disclosure, review gate, no PII, mocked tests, specific limitations, can explain); deliver the eight required presentation topics with a live working demo.</td>
+    </tr></tbody></table></div></div></div><div class="page-footer">ISM3232 · Student Learning Outcomes</div></div>
+<script src="../site.js"></script>
+</body>
+</html>

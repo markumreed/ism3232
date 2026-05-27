@@ -2,165 +2,121 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISM3232 — Week 16</title>
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Week 16 — GenAI Feature & Final Demo</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 <style>
-:root {
-  --blue:#89b4fa; --green:#a6e3a1; --yellow:#f9e2af;
-  --red:#f38ba8; --purple:#cba6f7; --teal:#94e2d5;
-  --orange:#fab387; --surface0:#313244; --surface1:#45475a;
-  --text:#cdd6f4; --subtext:#a6adc8; --base:#1e1e2e; --mantle:#181825;
-}
-.reveal { font-family:'Segoe UI',system-ui,sans-serif; font-size:36px; }
-.reveal h1 { font-size:1.9em; color:var(--blue); margin-bottom:.25em; line-height:1.15; }
-.reveal h2 { font-size:1.25em; color:var(--blue); margin-bottom:.2em; line-height:1.3; }
-.reveal h3 { font-size:.85em; color:var(--subtext); font-weight:400; margin-bottom:.35em; }
-.reveal p  { font-size:.78em; color:var(--text); line-height:1.65; margin:.2em 0; }
-.reveal ul { list-style:none; padding:0; margin:.3em 0; }
-.reveal ul li { padding:.2em 0; color:var(--text); font-size:.78em; line-height:1.55; }
-.reveal ul li::before { content:"▸ "; color:var(--blue); font-size:.9em; }
-.reveal pre { font-size:.52em; margin:.35em 0; border-radius:8px; }
-.reveal code { font-family:'Courier New',monospace; font-size:.9em; }
-.reveal strong { color:var(--yellow); }
-.reveal em { color:var(--subtext); }
+:root{--T:#2dd4bf;--I:#818cf8;--A:#fbbf24;--G:#4ade80;--R:#fb7185;--S:#38bdf8;
+  --bg:#0d1117;--bg2:#161b22;--bd:#30363d;--tx:#e6edf3;--mu:#8b949e;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;}
+.reveal h1{font-size:1.65em;color:var(--T);font-weight:800;letter-spacing:-.02em;line-height:1.15;}
+.reveal h2{font-size:1.15em;color:var(--I);font-weight:700;margin-bottom:.4em;}
+.reveal h3{font-size:.62em;color:var(--mu);font-weight:500;text-transform:uppercase;
+  letter-spacing:.14em;margin-bottom:.35em;}
+.reveal p{font-size:.82em;color:var(--tx);line-height:1.75;margin:.25em 0;}
+.reveal ul{list-style:none;padding:0;margin:.4em 0;}
+.reveal ul li{font-size:.8em;color:var(--tx);padding:.22em 0;line-height:1.6;}
+.reveal ul li::before{content:"▸ ";color:var(--T);font-weight:700;}
+.reveal strong{color:var(--A);}
+.reveal em{color:var(--mu);}
+.reveal code{font-family:"Fira Code","Courier New",monospace;color:var(--S);
+  background:rgba(56,189,248,.12);padding:2px 7px;border-radius:4px;font-size:.87em;}
+.reveal pre{font-size:.5em;margin:.3em 0;border-radius:8px;border:1px solid var(--bd);}
 
-/* ── Slide backgrounds ── */
-.s-title   { background:linear-gradient(135deg,#11111b 0%,#1e1e2e 100%); }
-.s-section { background:var(--mantle); }
-.s-concept { background:#12121f; }
-.s-code    { background:#0e0e1a; }
-.s-live    { background:#091209; }
-.s-warn    { background:#1a0e0e; }
-.s-ok      { background:#0a150a; }
-.s-tip     { background:#130e1a; }
-.s-discuss { background:#0e0e1a; }
-.s-step    { background:#12121f; }
-.s-assign  { background:#1a1208; }
-.s-check   { background:#0a1008; }
+/* Slide types */
+.s-title  {background:linear-gradient(135deg,#060c14 0%,#0d1117 100%);}
+.s-sec    {background:linear-gradient(135deg,#080e18,#0d1117);}
+.s-point  {background:#0d1117;}
+.s-code   {background:#0a0a18;}
+.s-demo   {background:linear-gradient(135deg,#081208,#0d1117);
+  outline:2px solid rgba(74,222,128,.3);outline-offset:-4px;}
+.s-warn   {background:#140a0a;}
+.s-chalk  {background:#111100;outline:2px solid rgba(251,191,36,.3);outline-offset:-4px;}
 
-/* ── Content cards ── */
-.concept-card {
-  background:rgba(137,180,250,.08); border:1px solid rgba(137,180,250,.2);
-  border-left:4px solid var(--blue); border-radius:8px;
-  padding:.55em .9em; margin:.3em 0; text-align:left;
-  font-size:.77em; color:var(--text); line-height:1.65;
-}
-.warn-card {
-  background:rgba(243,139,168,.1); border:1px solid rgba(243,139,168,.25);
-  border-left:4px solid var(--red); border-radius:8px;
-  padding:.55em .9em; margin:.3em 0; text-align:left;
-  font-size:.77em; color:var(--text); line-height:1.65;
-}
-.ok-card {
-  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
-  border-left:4px solid var(--green); border-radius:8px;
-  padding:.55em .9em; margin:.3em 0; text-align:left;
-  font-size:.77em; color:var(--text); line-height:1.65;
-}
-.tip-card {
-  background:rgba(203,166,247,.1); border:1px solid rgba(203,166,247,.25);
-  border-left:4px solid var(--purple); border-radius:8px;
-  padding:.55em .9em; margin:.3em 0; text-align:left;
-  font-size:.77em; color:var(--text); line-height:1.65;
-}
-.key-card {
-  background:rgba(249,226,175,.08); border:1px solid rgba(249,226,175,.2);
-  border-left:4px solid var(--yellow); border-radius:8px;
-  padding:.55em .9em; margin:.3em 0; text-align:left;
-  font-size:.77em; color:var(--text); line-height:1.65;
-}
+/* Timing bar */
+.t-bar{display:flex;gap:.4em;flex-wrap:wrap;justify-content:center;margin-top:.55em;}
+.t-item{font-family:monospace;font-size:.42em;padding:.28em .75em;border-radius:4px;
+  background:rgba(255,255,255,.06);color:var(--mu);border:1px solid var(--bd);}
+.t-item strong{color:var(--tx);}
 
-/* ── Step list ── */
-.step-list { display:flex; flex-direction:column; gap:.25em; margin:.3em 0; text-align:left; }
-.step-row  { display:flex; gap:.6em; align-items:flex-start; }
-.step-n    { min-width:1.5em; height:1.5em; border-radius:50%; background:var(--blue);
-              color:var(--base); font-weight:bold; font-size:.7em; flex-shrink:0;
-              display:flex; align-items:center; justify-content:center; margin-top:.15em; }
-.step-body { font-size:.75em; color:var(--text); line-height:1.55; }
-.step-body strong { color:var(--blue); }
+/* Section chip */
+.sec-n{font-family:monospace;font-size:.5em;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--I);opacity:.7;margin-bottom:.25em;}
 
-/* ── Two-column layout ── */
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1em; margin:.3em 0; text-align:left; }
-.two-col .col h4 { font-size:.72em; color:var(--blue); margin-bottom:.2em; font-weight:bold; }
-.two-col .col p  { font-size:.7em; }
+/* Concept card */
+.concept{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);
+  border-left:4px solid var(--I);border-radius:0 8px 8px 0;
+  padding:.6em 1em;text-align:left;margin:.4em 0;}
+.concept-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--I);margin-bottom:.25em;}
 
-/* ── Live code-along slide ── */
-.live-wrap {
-  display:flex; flex-direction:column; align-items:center;
-  justify-content:center; height:100%; gap:.5em;
-}
-.live-icon  { font-size:2.5em; }
-.live-title { font-size:1.45em; font-weight:bold; color:var(--green); }
-.live-sub   { font-size:.75em; color:var(--subtext); }
-.live-rules {
-  background:rgba(166,227,161,.1); border:1px solid rgba(166,227,161,.25);
-  border-radius:10px; padding:.6em 1.2em; text-align:left;
-  font-size:.7em; width:75%; margin-top:.3em;
-}
-.live-rules li::before { color:var(--green); }
-.live-rules li { padding:.18em 0; }
+/* Warn card */
+.warn-card{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);
+  border-left:4px solid var(--A);border-radius:0 8px 8px 0;
+  padding:.6em 1em;text-align:left;margin:.4em 0;}
+.warn-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--A);margin-bottom:.25em;}
 
-/* ── Checklist slide ── */
-.check-list { display:flex; flex-direction:column; gap:.35em; margin:.3em 0; text-align:left; }
-.check-item { display:flex; gap:.7em; align-items:flex-start; font-size:.77em; color:var(--text); }
-.check-box  { font-size:1.1em; color:var(--green); flex-shrink:0; }
+/* Demo card */
+.demo-card{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.25);
+  border-radius:10px;padding:.7em 1.2em;text-align:center;max-width:640px;margin:0 auto;}
+.demo-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--G);margin-bottom:.3em;}
+.demo-app{font-size:1.25em;font-weight:700;color:#fff;letter-spacing:.01em;}
+.demo-sub{font-size:.65em;color:var(--mu);margin-top:.3em;}
 
-/* ── Assignment slide ── */
-.assign-header {
-  background:rgba(250,179,135,.1); border:1px solid rgba(250,179,135,.3);
-  border-radius:10px; padding:.6em 1em; margin:.3em 0; text-align:left;
-}
-.assign-due { font-size:.65em; color:var(--orange); font-family:'Courier New',monospace;
-               letter-spacing:.06em; text-transform:uppercase; margin-bottom:.2em; }
-.assign-title { font-size:.9em; font-weight:bold; color:var(--text); margin-bottom:.3em; }
-.assign-items { font-size:.72em; color:var(--text); }
-.assign-items li::before { color:var(--orange); }
+/* Two-column */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2em;text-align:left;
+  max-width:920px;margin:0 auto;}
 
-/* ── Badge ── */
-.badge {
-  display:inline-block; padding:.15em .6em; border-radius:20px;
-  font-size:.5em; font-family:'Courier New',monospace; font-weight:bold;
-  letter-spacing:.08em; text-transform:uppercase; vertical-align:middle;
-}
-.badge-blue   { background:rgba(137,180,250,.2); color:var(--blue); border:1px solid rgba(137,180,250,.4); }
-.badge-green  { background:rgba(166,227,161,.2); color:var(--green); border:1px solid rgba(166,227,161,.4); }
-.badge-yellow { background:rgba(249,226,175,.2); color:var(--yellow); border:1px solid rgba(249,226,175,.4); }
-.badge-orange { background:rgba(250,179,135,.2); color:var(--orange); border:1px solid rgba(250,179,135,.4); }
-.badge-purple { background:rgba(203,166,247,.2); color:var(--purple); border:1px solid rgba(203,166,247,.4); }
+/* Chalkboard */
+.chalk-board{width:100%;min-height:340px;background:#131a13;
+  border:2px solid #3a5a1a;border-radius:8px;display:block;cursor:crosshair;}
+.chalk-ctrl{display:flex;gap:.35em;justify-content:center;margin-top:.35em;flex-wrap:wrap;}
+.chalk-btn{font-family:monospace;font-size:.42em;padding:.26em .72em;border-radius:4px;
+  background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--mu);cursor:pointer;}
+.chalk-btn:hover,.chalk-btn.on{background:rgba(255,255,255,.18);color:var(--tx);}
+.cdot{width:16px;height:16px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;display:inline-block;}
+.cdot.on{border-color:#fff;}
 
-/* ── Timing chip ── */
-.timing-bar { display:flex; gap:.4em; flex-wrap:wrap; justify-content:center; margin:.4em 0; }
-.t-chip {
-  font-size:.42em; font-family:'Courier New',monospace;
-  padding:.2em .75em; border-radius:20px;
-  background:var(--surface0); color:var(--subtext); border:1px solid var(--surface1);
-}
 
-/* ── Table ── */
-.cs-table { width:100%; border-collapse:collapse; font-size:.72em; }
-.cs-table th { background:var(--surface0); color:var(--subtext); padding:.4em .7em;
-                font-family:'Courier New',monospace; font-size:.85em; letter-spacing:.06em;
-                text-transform:uppercase; text-align:left; }
-.cs-table td { padding:.4em .7em; border-bottom:1px solid var(--surface1);
-                color:var(--text); vertical-align:top; }
-.cs-table td:first-child { color:var(--blue); font-family:'Courier New',monospace; font-weight:bold; }
-.cs-table tr:last-child td { border-bottom:none; }
+/* Draw overlay */
+#dc { image-rendering: pixelated; }
+#dtb { user-select: none; }
 </style>
 </head><body><div class="reveal"><div class="slides">
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 16</p><h1>GenAI Feature &amp; Final Demo</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> GenAI feature types + controls</span><span class="t-item"><strong>15–45 min</strong> Build ai_feature.py + wire to Streamlit</span><span class="t-item"><strong>45–60 min</strong> Repo polish + submission checklist</span><span class="t-item"><strong>60–80 min</strong> Final demo presentations</span><span class="t-item"><strong>End of session</strong> Portfolio submission</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 16: Week 16 — Module 7E &amp; 7F — GenAI Feature + Final Demo (Combined)
 
-<section class="s-title"><h1>Week 16</h1><h2>Students integrate a controlled GenAI capability into their Streamlit application, then present their complete business application prototype in the final demo session.</h2><h3></h3><div class="timing-bar" style="margin-top:.6em;"><span class="t-chip">0–15 min — GenAI feature types + controls</span><span class="t-chip">15–45 min — Build ai_feature.py + wire to Streamlit</span><span class="t-chip">45–60 min — Repo polish + submission checklist</span><span class="t-chip">60–80 min — Final demo presentations</span><span class="t-chip">End of session — Portfolio submission</span></div><p style="margin-top:.7em;font-size:.45em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; ISM3232 &nbsp;·&nbsp; Use arrow keys to navigate</p></section>
-<section class="s-section"><h2>Today's Session</h2><ul style="margin-top:.5em;"><li><code style="color:var(--blue);font-size:.85em;">0–15 min</code>&nbsp;&nbsp;GenAI feature types + controls</li><li><code style="color:var(--blue);font-size:.85em;">15–45 min</code>&nbsp;&nbsp;Build ai_feature.py + wire to Streamlit</li><li><code style="color:var(--blue);font-size:.85em;">45–60 min</code>&nbsp;&nbsp;Repo polish + submission checklist</li><li><code style="color:var(--blue);font-size:.85em;">60–80 min</code>&nbsp;&nbsp;Final demo presentations</li><li><code style="color:var(--blue);font-size:.85em;">End of session</code>&nbsp;&nbsp;Portfolio submission</li></ul></section>
-<section class="s-concept"><h2>&#x1F4CC; 16-week term — Weeks 16 and 17 combined</h2><div class="concept-card">This session covers two things: the first half introduces and wires in the GenAI feature; the second half is the final demonstration and portfolio submission. Students should have the GenAI feature substantially built before class so that in-session time goes to integration, polish, and presentations.</div><aside class="notes">“The GenAI feature is a required part of your application — not just a development tool. It does something useful for the business user: summarising a request, classifying urgency, drafting a response. The AI output appears in the Streamlit interface with disclosure and human review.”</aside></section>
-<section class="s-concept"><h2>&#x1F4CC; GenAI is a required application feature, not just a dev tool</h2><div class="concept-card">Students integrate a controlled AI capability into their Streamlit application. The AI does something useful for the business user — summarising a request, classifying urgency, drafting a response — with required disclosure and human review controls built in.</div><aside class="notes">“Do not send names, IDs, dollar amounts, or any personally identifiable information to the AI API. Send only the category and a generic description. Your prompt should be constructable without any specific record data.”</aside></section>
-<section class="s-warn"><h2 style="color:var(--red);">&#x26A0; All six controls are required — missing any one fails the feature</h2><div class="warn-card">A GenAI feature without disclosure, human review, and a limitations statement is not a professional implementation. These are graded on the capstone rubric.</div><aside class="notes">“Before presentations begin: run through the final submission checklist on the lecture page. Every item must be checked. I will verify GitHub access as part of grading.”</aside></section>
-<section class="s-concept"><h2>&#x1F4CC; Second half of session: live demos</h2><div class="concept-card">Each student presents their complete business application. The presentation covers 8 required topics. Aim for 8–10 minutes per student. Peer feedback encouraged between presentations.</div><aside class="notes">“Each presentation covers 8 topics. I will stop you if you skip one. You have 8–10 minutes. Show the running application. Explain the code. Tell me what you would improve.”</aside></section>
-<section class="s-concept"><h2>&#x1F4CC; Automation bonus (+5%)</h2><div class="concept-card">Students who complete all required features may add one automation feature for bonus credit: CSV export, Excel report with openpyxl, scheduled summary, or similar. Submit automation.py with documentation.</div></section>
-<section class="s-section"><span class="badge badge-blue">01</span><h2 style="margin-top:.4em;">Part A — GenAI-Supported Business Feature</h2><span class='badge badge-yellow' style='margin-top:.3em;'>0–15 min &nbsp;GenAI feature types + controls</span></section>
-<section class="s-concept"><h2>&#x1F9E9; The six required controls</h2><div class="concept-card">1. Disclosure in the UI: AI-generated content must be clearly labelled in the Streamlit interface. 2. Human review before save: AI output is displayed for the user to review before it is written to the database. Never auto-save AI output. 3. No sensitive data sent to the API: Do…</div></section>
-<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">import anthropic
+Today&#x27;s plan:
+  0–15 min — GenAI feature types + controls
+  15–45 min — Build ai_feature.py + wire to Streamlit
+  45–60 min — Repo polish + submission checklist
+  60–80 min — Final demo presentations
+  End of session — Portfolio submission</aside></section>
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Part A — GenAI-Supported Business Feature</h1><aside class="notes">Students integrate a controlled AI capability into their Streamlit application. The AI does something useful for the business user — summarising a request, classifying urgency, drafting a response — with required disclosure and human review controls built in.</aside></section>
+<section class="s-warn"><div class="warn-card" style="max-width:800px;margin:0 auto;"><div class="warn-lbl">⚠ GenAI is a required application feature, not just a dev tool</div><p style="font-size:.84em;line-height:1.8;">Students integrate a controlled AI capability into their Streamlit application. The AI does something useful for the business user — summarising a request, classifying urgency, drafting a response — w</p></div><aside class="notes">EMPHASISE: GenAI is a required application feature, not just a dev tool
+
+Students integrate a controlled AI capability into their Streamlit application. The AI does something useful for the business user — summarising a request, classifying urgency, drafting a response — with required disclosure and human review controls built in.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Approved GenAI Feature Types</h1></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Required GenAI Controls</h1><aside class="notes">A GenAI feature without disclosure, human review, and a limitations statement is not a professional implementation. These are graded on the capstone rubric.</aside></section>
+<section class="s-point"><h2>Required GenAI Controls</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>1.</li><li>2.</li><li>3.</li><li>4.</li><li>5.</li></ul><aside class="notes">1. Disclosure in the UI: AI-generated content must be clearly labelled in the Streamlit interface.
+
+2. Human review before save: AI output is displayed for the user to review before it is written to the database. Never auto-save AI output.
+
+3. No sensitive data sent to the API: Do not send names, IDs, dollar amounts, or PII. Send only anonymised or generic descriptions.
+
+4. Test cases for the feature: At least one pytest test for the AI feature logic, with a mocked API response.
+
+5. Limitations statement in README: What the feature does, what it does not do, and when it might produce incorrect output.
+
+6. Student can explain the feature: During the presentation, the student must explain what the AI does, how it is called, and why the controls are there.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ ai_feature.py — minimal summarisation implementation</h3><pre><code class="language-python">import anthropic
 
 def summarise_request(category: str, description: str) -&gt; str:
     &quot;&quot;&quot;
@@ -174,18 +130,10 @@ def summarise_request(category: str, description: str) -&gt; str:
         max_tokens=150,
         messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}]
     )
-    return message.content[0].text</code></pre><aside class="notes">import anthropic
+    return message.content[0].text</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
 
-def summarise_request(category: str, description: str) -> str:
-    """
-    Return a one-sentence AI summary of a business request.
-    Only category and description are sent — no names or amounts.
-    """
-    client = anthropic.Anthropic()
-    prompt = f"Summarise this {category} b</aside></section>
-<section class="s-section"><span class="badge badge-blue">02</span><h2 style="margin-top:.4em;">Approved GenAI Feature Types</h2><span class='badge badge-yellow' style='margin-top:.3em;'>15–45 min &nbsp;Build ai_feature.py + wire to Streamlit</span></section>
-<section class="s-concept"><h2>&#x1F9E9; Run this before the demo session</h2><div class="concept-card">☐ All 5 database.py functions pass their tests. ☐ All 5 Streamlit features work end-to-end in a browser. ☐ GenAI feature shows disclosure label and human review button. ☐ README includes: project description, setup instructions, AI feature section with limitations, AI use…</div></section>
-<section class="s-code"><h3 style="color:var(--blue);font-size:.65em;text-align:left;">&#x1F40D; Code</h3><pre><code class="language-python">from ai_feature import summarise_request
+Code label: ai_feature.py — minimal summarisation implementation</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ In app.py — disclosure label and human review gate</h3><pre><code class="language-python">from ai_feature import summarise_request
 
 description = st.text_area(&quot;Request description&quot;)
 
@@ -195,16 +143,10 @@ if st.button(&quot;🤖 Generate AI Summary&quot;):
     st.info(f&quot;🤖 AI-generated summary (review before saving):\n\n{ai_summary}&quot;)
     if st.button(&quot;✅ Looks good — save this summary&quot;):
         add_record(requester, category, amount, notes=ai_summary)
-        st.success(&quot;Record saved with AI summary.&quot;)</code></pre><aside class="notes">from ai_feature import summarise_request
+        st.success(&quot;Record saved with AI summary.&quot;)</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
 
-description = st.text_area("Request description")
-
-if st.button("🤖 Generate AI Summary"):
-    with st.spinner("Generating summary..."):
-        ai_summary = summarise_request(category, description)
-    st.info(f"🤖 AI-generated summary (review before saving):</aside></section>
-<section class="s-section"><span class="badge badge-blue">03</span><h2 style="margin-top:.4em;">Required GenAI Controls</h2><span class='badge badge-yellow' style='margin-top:.3em;'>45–60 min &nbsp;Repo polish + submission checklist</span></section>
-<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">## AI Feature
+Code label: In app.py — disclosure label and human review gate</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ README.md — required AI feature section</h3><pre><code class="language-bash">## AI Feature
 
 **What it does:** [One sentence]
 
@@ -218,23 +160,16 @@ if st.button("🤖 Generate AI Summary"):
 **Limitations:**
 - [e.g., may produce generic summaries for unusual requests]
 
-**AI use during development:** [List any AI tools used and how]</code></pre><aside class="notes">## AI Feature
+**AI use during development:** [List any AI tools used and how]</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
 
-**What it does:** [One sentence]
+Code label: README.md — required AI feature section</aside></section>
+<section class="s-warn"><div class="warn-card" style="max-width:800px;margin:0 auto;"><div class="warn-lbl">⚠ All six controls are required — missing any one fails the feature</div><p style="font-size:.84em;line-height:1.8;">A GenAI feature without disclosure, human review, and a limitations statement is not a professional implementation. These are graded on the capstone rubric.</p></div><aside class="notes">EMPHASISE: All six controls are required — missing any one fails the feature
 
-**How it works:** [Which API, what prompt, what model]
-
-**Controls:**
-- AI content is labelled in the UI
-- Human review required before saving
-- No PII sent to the API
-
-**Limitations:**
-- [e.g., may produce generic summaries for unusual requests]
-
-**A</aside></section>
-<section class="s-section"><span class="badge badge-blue">04</span><h2 style="margin-top:.4em;">Part B — Final Demonstrations and Portfolio Submission</h2><span class='badge badge-yellow' style='margin-top:.3em;'>60–80 min &nbsp;Final demo presentations</span></section>
-<section class="s-code"><h3 style="color:var(--teal);font-size:.65em;text-align:left;">&#x1F5A5; Terminal</h3><pre><code class="language-bash">final-project/
+A GenAI feature without disclosure, human review, and a limitations statement is not a professional implementation. These are graded on the capstone rubric.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Part B — Final Demonstrations and Portfolio Submission</h1><aside class="notes">Each student presents their complete business application. The presentation covers 8 required topics. Aim for 8–10 minutes per student. Peer feedback encouraged between presentations.</aside></section>
+<section class="s-point"><div class="concept" style="max-width:800px;margin:0 auto;"><div class="concept-lbl">Key point</div><h2 style="font-size:1.05em;margin-bottom:.3em;">Second half of session: live demos</h2><p style="font-size:.82em;color:#ccc;">Each student presents their complete business application. The presentation covers 8 required topics. Aim for 8–10 minutes per student. Peer feedback encouraged between presentatio</p></div><aside class="notes">Each student presents their complete business application. The presentation covers 8 required topics. Aim for 8–10 minutes per student. Peer feedback encouraged between presentations.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">Required Repository Structure</h1></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Complete capstone repo — every file must be committed</h3><pre><code class="language-bash">final-project/
   README.md
   app.py             # Streamlit application
   models.py          # OOP classes
@@ -247,65 +182,399 @@ if st.button("🤖 Generate AI Summary"):
   tests/
     test_models.py
     test_database.py
-    test_ai_feature.py</code></pre><aside class="notes">final-project/
-  README.md
-  app.py             # Streamlit application
-  models.py          # OOP classes
-  database.py        # all five database functions
-  ai_feature.py      # GenAI feature
-  requirements.txt
-  .gitignore         # .venv/ __pycache__/ *.db .env
-  data/
-  screenshots/
-  tests/
- </aside></section>
-<section class="s-section"><span class="badge badge-blue">05</span><h2 style="margin-top:.4em;">Required Repository Structure</h2><span class='badge badge-yellow' style='margin-top:.3em;'>End of session &nbsp;Portfolio submission</span></section>
-<section class="s-section"><span class="badge badge-blue">06</span><h2 style="margin-top:.4em;">Required Presentation Topics</h2></section>
-<section class="s-section"><span class="badge badge-blue">07</span><h2 style="margin-top:.4em;">Capstone Grading Rubric</h2></section>
-<section class="s-section"><span class="badge badge-blue">08</span><h2 style="margin-top:.4em;">Final Submission Checklist</h2></section>
-<section class="s-assign"><h2 style="color:var(--orange);">&#x1F4DD; Assignment</h2><div class="assign-header"><div class="assign-due">Due: Due end of Week 16</div><div class="assign-title">Final Submission</div><div class="assign-items"><ul><li>Files: app.py , models.py , database.py , ai_feature.py — all implemented and committed.</li><li>Tests: tests/test_models.py , tests/test_database.py , tests/test_ai_feature.py — all passing.</li><li>File: README.md — complete with AI feature section, limitations, and AI use statement.</li><li>Screenshots: At least two images of the running Streamlit application in the screenshots/ folder.</li><li>Screenshot: Full pre-submission ritual passing (ruff, pytest, git push) before the demo session.</li><li>Link: GitHub repository URL submitted to Canvas.</li></ul></div></div></section>
-<section class="s-section"><h2>&#x1F3C1; That's Week 16</h2><h3 style="margin-top:.5em;">Check Canvas for the assignment details and submission instructions.</h3><p style="margin-top:.8em;font-size:.55em;color:var(--subtext);">ISM3232 &nbsp;·&nbsp; Week 16 &nbsp;·&nbsp; Final Submission Checklist</p></section></div></div>
+    test_ai_feature.py</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+
+Code label: Complete capstone repo — every file must be committed</aside></section>
+<section class="s-sec"><div class="sec-n">Section 6</div><h1 style="font-size:1.4em;">Required Presentation Topics</h1></section>
+<section class="s-sec"><div class="sec-n">Section 7</div><h1 style="font-size:1.4em;">Capstone Grading Rubric</h1></section>
+<section class="s-sec"><div class="sec-n">Section 8</div><h1 style="font-size:1.4em;">Final Submission Checklist</h1><aside class="notes">Students who complete all required features may add one automation feature for bonus credit: CSV export, Excel report with openpyxl, scheduled summary, or similar. Submit automation.py with documentation.</aside></section>
+<section class="s-point"><h2>Final Submission Checklist</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>☐ All 5 database.</li><li>☐ All 5 Streamlit features work end-to-end in a browser.</li><li>☐ GenAI feature shows disclosure label and human review button.</li><li>☐ README includes: project description, setup instructions, AI feature section with limitations, AI use statem…</li><li>☐ requirements.</li></ul><aside class="notes">☐ All 5 database.py functions pass their tests.
+
+☐ All 5 Streamlit features work end-to-end in a browser.
+
+☐ GenAI feature shows disclosure label and human review button.
+
+☐ README includes: project description, setup instructions, AI feature section with limitations, AI use statement.
+
+☐ requirements.txt is current from pip freeze inside the active venv.
+
+☐ .gitignore includes .venv/ , __pycache__/ , *.db , .env .
+
+☐ Full pre-submission ritual passes: ruff format, ruff check, pytest, git push.
+
+☐ GitHub repository is accessible to the instructor.
+
+☐ Screenshots folder has at least two images of the running application.
+
+☐ You can explain every file and every function without reading notes.</aside></section>
+<section class="s-point"><div class="concept" style="max-width:800px;margin:0 auto;"><div class="concept-lbl">Key point</div><h2 style="font-size:1.05em;margin-bottom:.3em;">Automation bonus (+5%)</h2><p style="font-size:.82em;color:#ccc;">Students who complete all required features may add one automation feature for bonus credit: CSV export, Excel report with openpyxl, scheduled summary, or similar. Submit automatio</p></div><aside class="notes">Students who complete all required features may add one automation feature for bonus credit: CSV export, Excel report with openpyxl, scheduled summary, or similar. Submit automation.py with documentation.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
 <script>
 Reveal.initialize({
   plugins:[RevealHighlight,RevealNotes],
-  hash:true, slideNumber:'c/t', transition:'slide',
-  transitionSpeed:'fast', controls:true, progress:true,
-  center:true, width:1200, height:700, margin:0.06,
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
 });
-</script>
-<div id="slides-help" style="position:fixed;bottom:60px;right:16px;z-index:999;
-  background:rgba(14,14,20,.95);border:1px solid rgba(255,255,255,.15);
-  border-radius:10px;padding:14px 18px;font-family:Courier New,monospace;
-  font-size:12px;color:#a6adc8;backdrop-filter:blur(10px);display:none;line-height:1.8;">
-  <div style="color:#89b4fa;font-weight:700;margin-bottom:8px;">Keyboard shortcuts</div>
-  <div>← → &nbsp; Navigate slides</div>
-  <div>Space &nbsp; Next slide</div>
-  <div>F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fullscreen</div>
-  <div>S &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Speaker notes</div>
-  <div>O &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Slide overview</div>
-  <div>Esc &nbsp;&nbsp;&nbsp; Exit fullscreen</div>
-  <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);">
-    <a href="../index.html" style="color:#6c6c80;text-decoration:none;font-size:11px;">← back to course site</a>
-  </div>
-</div>
-<button id="slides-help-btn"
-  onclick="var h=document.getElementById('slides-help');h.style.display=h.style.display==='none'?'block':'none'"
-  style="position:fixed;bottom:16px;right:16px;z-index:1000;width:34px;height:34px;
-    border-radius:50%;background:rgba(14,14,20,.85);border:1px solid rgba(255,255,255,.2);
-    color:#6c6c80;font-size:18px;cursor:pointer;backdrop-filter:blur(8px);
-    display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;"
-  aria-label="Show keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
-<script>
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){document.getElementById('slides-help').style.display='none';}
-  if(e.key==='?'&&!e.shiftKey){
-    var h=document.getElementById('slides-help');
-    h.style.display=h.style.display==='none'?'block':'none';
+(function(){
+  var ck=false,lx=0,ly=0,col='#fff',sz=4;
+  Reveal.on('slidechanged',init);Reveal.on('ready',init);
+  function init(){
+    var c=document.querySelector('.chalk-board');
+    if(!c)return;
+    var ctx=c.getContext('2d');
+    if(!c._ok){c._ok=true;c.width=c.offsetWidth||900;c.height=c.offsetHeight||340;
+      ctx.fillStyle='#131a13';ctx.fillRect(0,0,c.width,c.height);}
+    function pt(e,t){var r=c.getBoundingClientRect();
+      return[(((t||e).clientX)-r.left)*(c.width/r.width),
+             (((t||e).clientY)-r.top)*(c.height/r.height)];}
+    function draw(x,y){ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);
+      ctx.strokeStyle=col;ctx.lineWidth=sz;ctx.lineCap='round';ctx.lineJoin='round';
+      ctx.stroke();lx=x;ly=y;}
+    c.onmousedown=function(ev){ck=true;[lx,ly]=pt(ev);};
+    c.onmouseup=c.onmouseleave=function(){ck=false;};
+    c.onmousemove=function(ev){if(ck){var[x,y]=pt(ev);draw(x,y);}};
+    c.ontouchstart=function(ev){ev.preventDefault();ck=true;[lx,ly]=pt(ev,ev.touches[0]);};
+    c.ontouchmove=function(ev){ev.preventDefault();if(ck){var[x,y]=pt(ev,ev.touches[0]);draw(x,y);}};
+    c.ontouchend=function(){ck=false;};
   }
-});
-</script>
+  function tog(sel,cls,on){document.querySelectorAll(sel).forEach(function(el){el.classList[on?'add':'remove'](cls);});}
+  window.CC=function(c,el){col=c;tog('.cdot','on',false);if(el)el.classList.add('on');};
+  window.CS=function(s,el){sz=s;tog('[data-sz]','on',false);if(el)el.classList.add('on');};
+  window.CX=function(){var c=document.querySelector('.chalk-board');if(!c)return;
+    var ctx=c.getContext('2d');ctx.fillStyle='#131a13';ctx.fillRect(0,0,c.width,c.height);};
+  window.CE=function(el){col='#131a13';tog('.cdot','on',false);if(el)el.classList.add('on');};
+})();
 
-</body></html>
+
+
+/* Draw overlay v3 */
+/*
+ * ISM3232 Drawing Overlay v3
+ *
+ * Uses BroadcastChannel to sync strokes between ALL same-origin windows
+ * (presentation window + notes popup). No window references needed.
+ *
+ * Also handles the Reveal.js notes plugin iframe pattern:
+ * the notes plugin opens /?controls=... as a popup containing an iframe
+ * of the presentation. BroadcastChannel crosses that boundary automatically.
+ */
+(function () {
+  'use strict';
+
+  var CHANNEL  = 'ism3232_draw_v3';
+  var bc       = null;
+
+  /* BroadcastChannel — supported in all modern browsers */
+  try { bc = new BroadcastChannel(CHANNEL); } catch (e) { bc = null; }
+
+  /* ── State ── */
+  var drawMode = false;
+  var erasing  = false;
+  var col      = '#ffff00';
+  var sz       = 5;
+  var active   = false;   /* pointer currently down */
+  var lx = 0, ly = 0;
+  var strokes  = {};      /* slideKey → array of stroke segments */
+
+  /* ── Canvas — full-viewport fixed overlay ── */
+  var canvas      = document.createElement('canvas');
+  canvas.id       = 'dc';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;' +
+                          'pointer-events:none;z-index:799;';
+  document.body.appendChild(canvas);
+
+  function fit() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    redraw(key());
+  }
+  window.addEventListener('resize', fit);
+
+  /* ── Slide key ── */
+  function key() {
+    try {
+      var s = Reveal.getState();
+      return s.indexh + ',' + s.indexv;
+    } catch (e) { return '0,0'; }
+  }
+
+  /* ── Normalised coords (survive resize & window-size differences) ── */
+  function toNorm(x, y) {
+    return [x / window.innerWidth, y / window.innerHeight];
+  }
+  function fromNorm(nx, ny) {
+    return [nx * window.innerWidth, ny * window.innerHeight];
+  }
+
+  /* ── Rendering ── */
+  function renderSeg(seg) {
+    var ctx = canvas.getContext('2d');
+    var p0 = fromNorm(seg[0], seg[1]);
+    var p1 = fromNorm(seg[2], seg[3]);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(p0[0], p0[1]);
+    ctx.lineTo(p1[0], p1[1]);
+    if (seg[6]) {                         /* erasing */
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+      ctx.lineWidth   = seg[5] * 4;
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = seg[4];           /* colour */
+      ctx.lineWidth   = seg[5];           /* size */
+    }
+    ctx.lineCap  = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function redraw(k) {
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var segs = strokes[k];
+    if (segs) segs.forEach(renderSeg);
+  }
+
+  /* ── Add + broadcast a segment ── */
+  function addSeg(k, seg) {
+    if (!strokes[k]) strokes[k] = [];
+    strokes[k].push(seg);
+  }
+
+  function broadcastSeg(k, seg) {
+    if (!bc) return;
+    try { bc.postMessage({ t: 'seg', k: k, seg: seg }); } catch (e) {}
+  }
+
+  function broadcastClear(k) {
+    if (!bc) return;
+    try { bc.postMessage({ t: 'clear', k: k }); } catch (e) {}
+  }
+
+  function broadcastClearAll() {
+    if (!bc) return;
+    try { bc.postMessage({ t: 'clearAll' }); } catch (e) {}
+  }
+
+  /* ── Receive from other windows ── */
+  if (bc) {
+    bc.onmessage = function (ev) {
+      var d = ev.data;
+      if (!d) return;
+      if (d.t === 'seg') {
+        addSeg(d.k, d.seg);
+        if (d.k === key()) renderSeg(d.seg);
+      } else if (d.t === 'clear') {
+        strokes[d.k] = [];
+        if (d.k === key()) redraw(d.k);
+      } else if (d.t === 'clearAll') {
+        strokes = {};
+        redraw(key());
+      }
+    };
+  }
+
+  /* ── Pointer events ── */
+  function getXY(e) {
+    if (e.touches && e.touches.length) {
+      return [e.touches[0].clientX, e.touches[0].clientY];
+    }
+    return [e.clientX, e.clientY];
+  }
+
+  function down(e) {
+    if (!drawMode) return;
+    e.preventDefault();
+    active = true;
+    var xy = getXY(e);
+    var n  = toNorm(xy[0], xy[1]);
+    lx = n[0]; ly = n[1];
+  }
+
+  function move(e) {
+    if (!active || !drawMode) return;
+    e.preventDefault();
+    var xy = getXY(e);
+    var n  = toNorm(xy[0], xy[1]);
+    var seg = [lx, ly, n[0], n[1], col, sz, erasing];
+    lx = n[0]; ly = n[1];
+    var k = key();
+    addSeg(k, seg);
+    renderSeg(seg);
+    broadcastSeg(k, seg);
+  }
+
+  function up() { active = false; }
+
+  canvas.addEventListener('mousedown',  down);
+  canvas.addEventListener('mousemove',  move);
+  canvas.addEventListener('mouseup',    up);
+  canvas.addEventListener('mouseleave', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove',  move, { passive: false });
+  canvas.addEventListener('touchend',   up);
+
+  /* ── Toggle draw mode ── */
+  function setMode(on) {
+    drawMode = on;
+    canvas.style.pointerEvents = on ? 'all' : 'none';
+    canvas.style.cursor        = on ? 'crosshair' : 'default';
+    var tb = document.getElementById('dtb');
+    if (tb) tb.style.outline = on ? '2px solid rgba(45,212,191,.5)' : 'none';
+    var tog = document.getElementById('dtog');
+    if (tog) {
+      tog.style.background  = on ? 'rgba(45,212,191,.35)' : 'rgba(255,255,255,.08)';
+      tog.style.color       = on ? '#2dd4bf' : '#ccc';
+    }
+    /* Hide reveal controls while drawing so clicks don't navigate */
+    var ctrl = document.querySelector('.reveal > .controls');
+    if (ctrl) ctrl.style.display = on ? 'none' : '';
+  }
+
+  /* ── Keyboard: D ── */
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'd' || e.key === 'D') setMode(!drawMode);
+  });
+
+  /* ── Slide change ── */
+  Reveal.on('slidechanged', function () {
+    active = false;
+    redraw(key());
+  });
+
+  /* ── Toolbar ── */
+  var tb = document.createElement('div');
+  tb.id  = 'dtb';
+  tb.style.cssText = [
+    'position:fixed', 'bottom:10px', 'right:10px', 'z-index:900',
+    'display:flex', 'align-items:center', 'gap:5px', 'flex-wrap:wrap',
+    'background:rgba(8,10,20,.92)', 'border:1px solid rgba(255,255,255,.13)',
+    'border-radius:10px', 'padding:6px 9px',
+    'backdrop-filter:blur(14px)', '-webkit-backdrop-filter:blur(14px)',
+    'box-shadow:0 4px 24px rgba(0,0,0,.55)',
+    'font-family:monospace', 'font-size:11px',
+    'opacity:.5', 'transition:opacity .2s',
+    'user-select:none', '-webkit-user-select:none',
+  ].join(';');
+  tb.onmouseenter = function () { this.style.opacity = '1'; };
+  tb.onmouseleave = function () { this.style.opacity = drawMode ? '1' : '.5'; };
+  document.body.appendChild(tb);
+
+  /* ── Toolbar helpers ── */
+  function btn(txt, cb, title, id) {
+    var b = document.createElement('button');
+    b.textContent = txt;
+    if (title) b.title = title;
+    if (id)    b.id    = id;
+    b.style.cssText = [
+      'font-family:monospace', 'font-size:11px', 'cursor:pointer',
+      'padding:4px 9px', 'border-radius:5px',
+      'border:1px solid rgba(255,255,255,.14)',
+      'background:rgba(255,255,255,.08)', 'color:#ccc',
+      'transition:.15s', 'white-space:nowrap',
+    ].join(';');
+    b.onmouseover = function () { b.style.background='rgba(255,255,255,.22)'; b.style.color='#fff'; };
+    b.onmouseout  = function () {
+      b.style.background = b._on ? 'rgba(255,255,255,.25)' : 'rgba(255,255,255,.08)';
+      b.style.color      = b._on ? '#fff' : '#ccc';
+    };
+    b.onclick = cb;
+    return b;
+  }
+
+  function dot(c, lbl, first) {
+    var d = document.createElement('span');
+    d.className = 'dcdot';
+    d.title     = lbl;
+    d.style.cssText = 'width:15px;height:15px;border-radius:50%;' +
+      'background:' + c + ';cursor:pointer;display:inline-block;' +
+      'border:2px solid ' + (first ? '#fff' : 'transparent') + ';' +
+      'flex-shrink:0;transition:border-color .15s;';
+    d.onclick = function () {
+      col = c; erasing = false;
+      document.querySelectorAll('.dcdot').forEach(function (x) { x.style.borderColor = 'transparent'; });
+      d.style.borderColor = '#fff';
+      if (eraserB) { eraserB._on = false; eraserB.style.background='rgba(255,255,255,.08)'; eraserB.style.color='#ccc'; }
+    };
+    return d;
+  }
+
+  function sep() {
+    var s = document.createElement('span');
+    s.style.cssText = 'width:1px;height:18px;background:rgba(255,255,255,.15);flex-shrink:0;';
+    return s;
+  }
+
+  /* Toggle */
+  var togB = btn('✏ Draw', function () { setMode(!drawMode); }, 'Toggle drawing  [D]', 'dtog');
+
+  /* Colours */
+  var palette = [
+    ['#ffff00','Yellow', true],
+    ['#ffffff','White',  false],
+    ['#ff6b6b','Red',    false],
+    ['#4ade80','Green',  false],
+    ['#38bdf8','Blue',   false],
+    ['#f97316','Orange', false],
+    ['#c084fc','Purple', false],
+  ];
+  var colDots = palette.map(function (p) { return dot(p[0], p[1], p[2]); });
+
+  /* Sizes */
+  var sizes = [[3,'S'],[5,'M'],[10,'L'],[18,'XL']];
+  var szBtns = sizes.map(function (p) {
+    var b = btn(p[1], null, 'Brush ' + p[1]);
+    b.onclick = function () {
+      sz = p[0]; erasing = false;
+      szBtns.forEach(function (x) { x._on=false; x.style.background='rgba(255,255,255,.08)'; x.style.color='#ccc'; });
+      if (eraserB) { eraserB._on=false; eraserB.style.background='rgba(255,255,255,.08)'; eraserB.style.color='#ccc'; }
+      b._on=true; b.style.background='rgba(255,255,255,.25)'; b.style.color='#fff';
+    };
+    if (p[0]===5) { b._on=true; b.style.background='rgba(255,255,255,.25)'; b.style.color='#fff'; }
+    return b;
+  });
+
+  /* Eraser */
+  var eraserB = btn('⌫', null, 'Eraser');
+  eraserB.onclick = function () {
+    erasing = !erasing;
+    eraserB._on = erasing;
+    eraserB.style.background = erasing ? 'rgba(251,191,36,.4)' : 'rgba(255,255,255,.08)';
+    eraserB.style.color      = erasing ? '#fbbf24' : '#ccc';
+    if (erasing) { colDots.forEach(function(d){d.style.borderColor='transparent';}); }
+  };
+
+  /* Clear */
+  var clearB = btn('🗑', function () {
+    var k = key();
+    strokes[k] = [];
+    redraw(k);
+    broadcastClear(k);
+  }, 'Clear this slide');
+
+  var clearAllB = btn('🗑 All', function () {
+    strokes = {};
+    redraw(key());
+    broadcastClearAll();
+  }, 'Clear all');
+
+  /* Assemble */
+  [togB, sep()]
+    .concat(colDots)
+    .concat([sep()])
+    .concat(szBtns)
+    .concat([sep(), eraserB, sep(), clearB, clearAllB])
+    .forEach(function (el) { tb.appendChild(el); });
+
+  /* ── Init ── */
+  fit();
+
+})();
+
+</script></body></html>
