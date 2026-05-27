@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code
+.claude/settings.local.json
+
+# Node (if ever used)
+node_modules/
+npm-debug.log*
+
+# Temp / build artifacts
+*.tmp
+*.bak
+dist/
