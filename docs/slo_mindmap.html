@@ -374,7 +374,7 @@ var TREE = {
               tooltip_body:'Implement all five database functions using ? placeholders; apply row_factory; write tmp_path tests.'},
             {id:'w15',label:'W15',sublabel:'Streamlit',color:'#4b5563',textColor:'#e2e2ec',r:24,type:'week',wn:15,
               tooltip_title:'Week 15 — Streamlit Interface',
-              tooltip_body:'Explain Streamlit's rerun model; implement all five required tabs wired to the live database.'},
+              tooltip_body:'Explain Streamlit\'s rerun model; implement all five required tabs wired to the live database.'},
             {id:'w16',label:'W16',sublabel:'GenAI',color:'#4b5563',textColor:'#e2e2ec',r:24,type:'week',wn:16,
               tooltip_title:'Week 16 — GenAI Feature & Final Demo',
               tooltip_body:'Implement all six GenAI controls; deliver the eight required presentation topics with a live working demo.'},
@@ -670,6 +670,9 @@ canvas.addEventListener('touchend', function() {
 window.addEventListener('resize', function() { resize(); resetView(); });
 resize();
 setTimeout(resetView, 50);
+
+window.zoom = zoom;
+window.resetView = resetView;
 
 })();
 </script>
