@@ -278,22 +278,17 @@ li::marker{color:var(--dim);}
 
 // ── Node data ─────────────────────────────────────────────────────────────
 var TREE = {
-  id:'root', label:'ISM3232', sublabel:'Business Application
-Development',
+  id:'root', label:'ISM3232', sublabel:'Business Application\nDevelopment',
   color:'#e2e2ec', textColor:'#0d1117', r:60, type:'root',
   children:[
     {
-      id:'slo1', label:'SLO-1', sublabel:'Develop the skills
-needed to develop
-software',
+      id:'slo1', label:'SLO-1', sublabel:'Develop the skills\nneeded to develop\nsoftware',
       color:'#2dd4bf', textColor:'#0d1117', r:46, type:'slo',
       tooltip_title:'SLO-1',
       tooltip_body:'To develop the skills needed to develop software.',
       children:[
         {
-          id:'u1', label:'Unit 1', sublabel:'Developer
-Foundations
-Wks 1–4',
+          id:'u1', label:'Unit 1', sublabel:'Developer\nFoundations\nWks 1–4',
           color:'#2dd4bf', textColor:'#0d1117', r:40, type:'unit',
           tooltip_title:'Unit 1 — Developer Foundations',
           tooltip_body:'Build and maintain a complete professional developer environment and execute the nine-step submission ritual without reference.',
@@ -315,17 +310,13 @@ Wks 1–4',
       ]
     },
     {
-      id:'slo2', label:'SLO-2', sublabel:'Understand techniques
-for effective software
-development',
+      id:'slo2', label:'SLO-2', sublabel:'Understand techniques\nfor effective software\ndevelopment',
       color:'#818cf8', textColor:'#fff', r:46, type:'slo',
       tooltip_title:'SLO-2',
       tooltip_body:'To understand necessary techniques for effective software development.',
       children:[
         {
-          id:'u2', label:'Unit 2', sublabel:'Python
-Foundations
-Wks 5–8',
+          id:'u2', label:'Unit 2', sublabel:'Python\nFoundations\nWks 5–8',
           color:'#818cf8', textColor:'#fff', r:40, type:'unit',
           tooltip_title:'Unit 2 — Python Foundations',
           tooltip_body:'Write correct, tested Python programs using all four core data types, control flow, functions with type hints, modules, and pytest.',
@@ -345,8 +336,7 @@ Wks 5–8',
           ]
         },
         {
-          id:'u3', label:'Unit 3', sublabel:'OOP Design
-Wks 10–12',
+          id:'u3', label:'Unit 3', sublabel:'OOP Design\nWks 10–12',
           color:'#fb7185', textColor:'#fff', r:40, type:'unit',
           tooltip_title:'Unit 3 — Object-Oriented Design',
           tooltip_body:'Design and implement a two-class OOP system using the design-first approach with all six pytest test types passing.',
@@ -365,21 +355,13 @@ Wks 10–12',
       ]
     },
     {
-      id:'slo3', label:'SLO-3', sublabel:'Examine programming
-methodologies using
-a modern language',
+      id:'slo3', label:'SLO-3', sublabel:'Examine programming\nmethodologies using\na modern language',
       color:'#fbbf24', textColor:'#0d1117', r:46, type:'slo',
       tooltip_title:'SLO-3',
-      tooltip_body:'To examine various programming methodologies using a modern programming language.
-
-SLO-3a: Software development methodologies
-SLO-3b: Programming techniques
-SLO-3c: Programming using a modern programming language',
+      tooltip_body:'To examine various programming methodologies using a modern programming language.\n\nSLO-3a: Software development methodologies\nSLO-3b: Programming techniques\nSLO-3c: Programming using a modern programming language',
       children:[
         {
-          id:'u4', label:'Unit 4', sublabel:'Capstone
-Build
-Wks 13–16',
+          id:'u4', label:'Unit 4', sublabel:'Capstone\nBuild\nWks 13–16',
           color:'#fbbf24', textColor:'#0d1117', r:40, type:'unit',
           tooltip_title:'Unit 4 — Capstone Build',
           tooltip_body:'Design, build, test, and demonstrate a complete deployable business application with SQL, Streamlit UI, and a responsible GenAI feature.',
@@ -502,9 +484,7 @@ function drawNode(node) {
   }
 
   // Text
-  var lines = (node.label + '
-' + (node.sublabel||'')).split('
-').filter(Boolean);
+  var lines = (node.label + '\n' + (node.sublabel||'')).split('\n').filter(Boolean);
   var labelLine = lines[0];
   var subLines  = lines.slice(1);
 
@@ -613,8 +593,7 @@ canvas.addEventListener('mousemove', function(e) {
          hit.type === 'unit' ? 'Unit Objective' : 'Course SLO') +
       '</div>' +
       '<div class="tt-title">' + hit.tooltip_title + '</div>' +
-      '<div class="tt-body">' + hit.tooltip_body.replace(/
-/g,'<br>') + '</div>' +
+      '<div class="tt-body">' + hit.tooltip_body.replace(/\n/g,'<br>') + '</div>' +
       (hit.type === 'week' ? '<div style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--muted);">Double-click to open reading page</div>' : '');
     canvas.style.cursor = 'pointer';
   } else {
