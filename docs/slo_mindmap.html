@@ -433,6 +433,7 @@ var TIP    = document.getElementById('mm-tooltip');
 var W, H;
 var offsetX = 0, offsetY = 0, scale = 1;
 var panning = false, panStartX, panStartY, panOX, panOY;
+var initialized = false;
 
 function resize() {
   W = wrap.clientWidth;
@@ -440,6 +441,7 @@ function resize() {
   canvas.width  = W;
   canvas.height = H;
   wrap.style.height = H + 'px';
+  if (!initialized && W > 0) { offsetX = W/2; offsetY = H/2; initialized = true; }
   draw();
 }
 
