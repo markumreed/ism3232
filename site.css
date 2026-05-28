@@ -220,3 +220,51 @@ html[data-theme="light"] body {
 
 /* ── Scroll padding so anchor links clear the sticky nav ──────────────── */
 html { scroll-padding-top: 64px; }
+
+/* ── Page eyebrow ────────────────────────────────────────────────────────── */
+.page-eyebrow {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .22em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* ── Meta bar (chip row) ─────────────────────────────────────────────────── */
+.meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 8px 0 28px; padding: 14px 18px;
+  background: var(--bg2,#15151f); border: 1px solid var(--border,rgba(255,255,255,.08));
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px;
+}
+.meta .chip {
+  padding: 4px 10px; border: 1px solid var(--border2,rgba(255,255,255,.14));
+  border-radius: 999px; color: var(--muted,#9a9aab);
+}
+.meta .chip.accent {
+  color: #fbbf24; border-color: rgba(251,191,36,.4);
+  background: rgba(251,191,36,.07);
+}
+
+/* ── Module jump bar ─────────────────────────────────────────────────────── */
+.weekjump {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 32px; padding: 10px 14px;
+  background: var(--bg2,#15151f); border: 1px solid var(--border,rgba(255,255,255,.08));
+  border-radius: 10px;
+}
+.weekjump-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: .12em;
+  color: var(--dim,#6a6a7c); text-transform: uppercase; margin-right: 4px;
+}
+.weekjump-link {
+  padding: 5px 12px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; color: var(--muted,#9a9aab);
+  border: 1px solid var(--border2,rgba(255,255,255,.14));
+  transition: background .12s, color .12s, border-color .12s;
+}
+.weekjump-link:hover { color: var(--text,#e8e8f0); border-color: #fbbf24; }
+.weekjump-link.current {
+  background: rgba(251,191,36,.12); color: #fbbf24;
+  border-color: rgba(251,191,36,.4);
+}
