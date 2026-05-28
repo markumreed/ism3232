@@ -1,42 +1,20 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   ISM3232 site.css
+   ISM3232 site.css — Business Application Development
    Note: data-theme is set on <html>, so all theme selectors must be
          html[data-theme="dark"]  — NOT  [data-theme="dark"] html
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Skip link ─────────────────────────────────────────────────────────── */
 .skip-link {
-  position: absolute; top: -100%; left: 16px; z-index: 9999;
-  background: #1e40af; color: #fff; padding: 8px 16px;
-  border-radius: 0 0 8px 8px;
-  font-family: system-ui, sans-serif; font-size: 14px; font-weight: 600;
-  text-decoration: none; transition: top .15s;
+  position: absolute; left: 8px; top: -40px;
+  background: #fbbf24; color: #1a1a2e;
+  padding: 8px 14px; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 700;
+  text-decoration: none; z-index: 9999;
+  transition: top .2s;
 }
-.skip-link:focus { top: 0; }
-
-/* ── Nav colour tokens (light default) ─────────────────────────────────── */
-:root {
-  --sn-bg:     rgba(245,244,240,0.96);
-  --sn-border: rgba(0,0,0,0.10);
-  --sn-text:   #1a1a1a;
-  --sn-muted:  #666;
-  --sn-hover:  rgba(0,0,0,0.06);
-  --sn-active: #1e40af;
-  --sn-pill:   #d0d0d8;
-  --sn-knob:   #fff;
-  --sn-focus:  #1e40af;
-}
-html[data-theme="dark"] {
-  --sn-bg:     rgba(14,14,20,0.96);
-  --sn-border: rgba(255,255,255,0.08);
-  --sn-text:   #e2e2ec;
-  --sn-muted:  #7a7a95;
-  --sn-hover:  rgba(255,255,255,0.07);
-  --sn-active: #818cf8;
-  --sn-pill:   #3a3a50;
-  --sn-knob:   #e2e2ec;
-  --sn-focus:  #818cf8;
-}
+.skip-link:focus { top: 8px; }
 
 /* ── Dark mode page vars ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
@@ -103,7 +81,7 @@ html[data-theme="dark"] body {
   --purple-dim:rgba(196,181,253,.10) !important;
 }
 
-/* ── Light mode overrides (for pages that default dark) ───────────────── */
+/* ── Light mode overrides ──────────────────────────────────────────────── */
 html[data-theme="light"] {
   background: #fbfbf7 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
@@ -141,189 +119,104 @@ html[data-theme="light"] body {
   --purple-dim:rgba(76,29,149,.10) !important;
 }
 
-/* ── Nav bar ───────────────────────────────────────────────────────────── */
-#site-nav {
-  position: sticky;
-  top: 0;
-  z-index: 500;
-  height: 52px;
-  display: flex;
-  align-items: stretch;
-  padding: 0;
-  border-bottom: 1px solid var(--sn-border);
-  background: var(--sn-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  font-family: 'JetBrains Mono','IBM Plex Mono','Fira Mono','Courier New',monospace;
-  box-shadow: 0 1px 4px rgba(0,0,0,.07);
-  /* CRITICAL: overflow must be visible so dropdowns can extend below */
-  overflow: visible;
-}
-
-.sn-logo {
-  font-size: 12px; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--sn-text);
-  text-decoration: none; padding: 0 12px;
+/* ── Site nav bar ─────────────────────────────────────────────────────── */
+.ism-nav {
+  position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center;
-  flex-shrink: 0;
-  border-right: 1px solid var(--sn-border);
+  gap: 8px; padding: 10px 24px;
+  background: rgba(20, 20, 30, .85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px;
+}
+[data-theme="light"] .ism-nav {
+  background: rgba(252, 252, 248, .9);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.ism-nav .nav-home {
+  color: #fbbf24; text-decoration: none;
+  font-weight: 700; letter-spacing: .04em;
+  padding: 6px 12px; border-radius: 6px;
   transition: background .15s;
 }
-.sn-logo:hover { background: var(--sn-hover); }
+.ism-nav .nav-home:hover { background: rgba(251,191,36,.12); }
 
-/* ── Scrollable plain-links area ───────────────────────────────────────── */
-/* IMPORTANT: this div must NOT contain dropdown groups.
-   overflow-x:auto would clip the dropdown panels.
-   Dropdown groups (.sn-week-group) are siblings to this div, not children. */
-.sn-links {
-  display: flex;
-  align-items: stretch;
-  flex: 1;
-  min-width: 0;
-  /* NO overflow here — dropdowns are siblings, not children */
-  overflow: visible;
+.ism-nav .nav-spacer { flex: 1; }
+
+.ism-nav .nav-dd { position: relative; }
+
+.ism-nav .nav-dd-btn {
+  background: none; border: 1px solid rgba(255,255,255,.12);
+  color: #cfcfd9; cursor: pointer;
+  padding: 6px 12px; border-radius: 6px;
+  font: inherit; letter-spacing: .04em;
+  transition: background .15s, border-color .15s;
 }
+[data-theme="light"] .ism-nav .nav-dd-btn { color: #2a2a35; border-color: rgba(0,0,0,.12); }
+.ism-nav .nav-dd-btn:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.25); }
+[data-theme="light"] .ism-nav .nav-dd-btn:hover { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.25); }
 
-/* Horizontal scrolling handled by inner scroll wrapper */
-.sn-links-scroll {
-  display: flex;
-  align-items: stretch;
-  flex: 1;
-  overflow-x: auto;
-  overflow-y: visible;
-  scrollbar-width: none;
-  min-width: 0;
-}
-.sn-links-scroll::-webkit-scrollbar { display: none; }
-
-.sn-div {
-  width: 1px;
-  background: var(--sn-border);
-  margin: 8px 4px;
-  flex-shrink: 0;
-  align-self: stretch;
-}
-
-.sn-link {
-  font-size: 11px; letter-spacing: .04em;
-  color: var(--sn-muted); text-decoration: none;
-  padding: 0 10px; height: 52px;
-  display: flex; align-items: center;
-  white-space: nowrap; flex-shrink: 0;
-  border-bottom: 2px solid transparent;
-  transition: color .15s, border-color .15s, background .15s;
-}
-.sn-link:hover  { color: var(--sn-text); background: var(--sn-hover); }
-.sn-link.active { color: var(--sn-active); border-bottom-color: var(--sn-active); font-weight: 600; }
-
-/* ── Unit dropdown groups — in nav directly, NOT in .sn-links-scroll ───── */
-.sn-week-group {
-  position: relative;  /* dropdown positioned relative to this */
-  flex-shrink: 0;
-  display: flex;
-  align-items: stretch;
-}
-
-.sn-week-btn {
-  font-size: 11px; letter-spacing: .04em;
-  color: var(--sn-muted); background: none; border: none; cursor: pointer;
-  padding: 0 10px; height: 52px;
-  display: flex; align-items: center; gap: 4px;
-  white-space: nowrap; flex-shrink: 0;
-  border-bottom: 2px solid transparent;
-  font-family: inherit;
-  transition: color .15s, background .15s;
-}
-.sn-week-btn:hover { color: var(--sn-text); background: var(--sn-hover); }
-.sn-week-btn.active { border-bottom-color: currentColor; }
-.sn-week-btn svg { transition: transform .2s; flex-shrink: 0; }
-.sn-week-group.open .sn-week-btn svg { transform: rotate(180deg); }
-
-/* ── Dropdown panel ────────────────────────────────────────────────────── */
-.sn-week-dropdown {
+.ism-nav .nav-dd-menu {
   display: none;
-  position: absolute;
-  top: 52px;   /* exactly below the 52px nav */
-  left: 0;
+  position: absolute; top: calc(100% + 6px); right: 0;
   min-width: 240px;
-  background: var(--sn-bg);
-  border: 1px solid var(--sn-border);
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.20);
-  padding: 6px 0;
-  z-index: 600;  /* above nav z-index:500 */
+  background: #1a1a26; border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px; padding: 6px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  z-index: 200;
 }
-.sn-week-group.open .sn-week-dropdown { display: block; }
-
-.sn-dd-item {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 6px; padding: 6px 14px;
-  font-size: 11px; color: var(--sn-muted);
-  text-decoration: none;
-  transition: background .12s, color .12s;
+[data-theme="light"] .ism-nav .nav-dd-menu {
+  background: #fff; border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,.15);
 }
-.sn-dd-item:hover  { background: var(--sn-hover); color: var(--sn-text); }
-.sn-dd-item.active { color: var(--sn-active); font-weight: 600; }
-.sn-dd-num  { font-weight: 700; color: var(--sn-text); font-size: 10px; }
-.sn-dd-sep  { height: 1px; background: var(--sn-border); margin: 4px 10px; }
+.ism-nav .nav-dd-menu.open { display: block; }
+.ism-nav .nav-dd-menu a {
+  display: block; padding: 7px 12px;
+  color: #cfcfd9; text-decoration: none;
+  border-radius: 5px; font-size: 12px;
+  transition: background .12s;
+}
+[data-theme="light"] .ism-nav .nav-dd-menu a { color: #2a2a35; }
+.ism-nav .nav-dd-menu a:hover { background: rgba(255,255,255,.07); }
+[data-theme="light"] .ism-nav .nav-dd-menu a:hover { background: rgba(0,0,0,.05); }
+.ism-nav .nav-dd-menu .dd-section {
+  font-size: 10px; letter-spacing: .12em;
+  color: #6e6e80; padding: 8px 12px 4px;
+  text-transform: uppercase;
+}
 
-/* ── Right controls ────────────────────────────────────────────────────── */
-.sn-right {
+.ism-nav .nav-tools {
   display: flex; align-items: center; gap: 4px;
-  padding: 0 10px; flex-shrink: 0;
-  border-left: 1px solid var(--sn-border);
+  margin-left: 8px; padding-left: 12px;
+  border-left: 1px solid rgba(255,255,255,.1);
+}
+[data-theme="light"] .ism-nav .nav-tools { border-left-color: rgba(0,0,0,.1); }
+.ism-nav .tool-btn {
+  background: none; border: 1px solid rgba(255,255,255,.12);
+  color: #cfcfd9; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 6px;
+  font: inherit; font-size: 13px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+[data-theme="light"] .ism-nav .tool-btn { color: #2a2a35; border-color: rgba(0,0,0,.12); }
+.ism-nav .tool-btn:hover { background: rgba(255,255,255,.08); }
+[data-theme="light"] .ism-nav .tool-btn:hover { background: rgba(0,0,0,.05); }
+
+@media (max-width: 720px) {
+  .ism-nav { padding: 8px 12px; gap: 4px; }
+  .ism-nav .nav-dd-btn { padding: 6px 8px; font-size: 11px; }
+  .ism-nav .nav-tools { margin-left: 4px; padding-left: 6px; }
 }
 
-.sn-theme-toggle {
-  display: flex; align-items: center; gap: 6px;
-  cursor: pointer; padding: 5px 8px; border-radius: 6px;
-  border: none; background: none;
-  color: var(--sn-muted); font-size: 11px;
-  font-family: inherit; letter-spacing: .04em;
-  transition: background .15s, color .15s; white-space: nowrap;
-}
-.sn-theme-toggle:hover { background: var(--sn-hover); color: var(--sn-text); }
-
-.sn-pill {
-  width: 34px; height: 18px; border-radius: 9px;
-  background: var(--sn-pill); position: relative;
-  transition: background .25s; flex-shrink: 0;
-}
-.sn-pill::after {
-  content: ''; position: absolute;
-  top: 2px; left: 2px; width: 14px; height: 14px;
-  border-radius: 50%; background: var(--sn-knob);
-  transition: transform .25s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
-}
-html[data-theme="dark"] .sn-pill           { background: #4c4c70; }
-html[data-theme="dark"] .sn-pill::after    { transform: translateX(16px); }
-
-.sn-font-btns { display: flex; align-items: center; gap: 2px; }
-.sn-font-btn {
-  width: 28px; height: 28px; border-radius: 5px;
-  border: 1px solid var(--sn-border); background: none;
-  color: var(--sn-muted); cursor: pointer; font-family: inherit; font-size: 12px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .12s, color .12s;
-}
-.sn-font-btn:hover { background: var(--sn-hover); color: var(--sn-text); }
-
-/* ── Focus ─────────────────────────────────────────────────────────────── */
+/* ── Focus ring (accessibility) ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--sn-focus);
-  outline-offset: 3px; border-radius: 3px;
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* ── Scroll padding so anchor links land below sticky nav ──────────────── */
+/* ── Scroll padding so anchor links clear the sticky nav ──────────────── */
 html { scroll-padding-top: 64px; }
-
-/* ── Responsive ────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .sn-font-btns     { display: none; }
-  .sn-theme-label   { display: none; }
-  #site-nav         { padding: 0; }
-  .sn-link          { padding: 0 7px; font-size: 10px; }
-  .sn-week-btn      { padding: 0 7px; font-size: 10px; }
-}
