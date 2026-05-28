@@ -180,6 +180,32 @@ body{min-height:100vh;width:100%;}
 <a href="week08_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week08_lab.html" class="weekjump-link">Lab</a>
 </div>
+<div class="video-embed" style="margin:28px 0 32px;">
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+    <iframe
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      src="https://www.youtube.com/embed/PLACEHOLDER_V08"
+      title="Python Debugging — How to Read Tracebacks & Fix Errors"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<div class="video-embed" style="margin:28px 0 32px;">
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+    <iframe
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      src="https://www.youtube.com/embed/PLACEHOLDER_V12"
+      title="AI Literacy for Programmers"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
 <div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;15 min</div><div class="t-label">Reading tracebacks</div></div><div class="timing-block green"><div class="t-time">15&ndash;35 min</div><div class="t-label">print() debugging</div></div><div class="timing-block amber"><div class="t-time">35&ndash;55 min</div><div class="t-label">AI literacy activity</div></div><div class="timing-block purple"><div class="t-time">55&ndash;70 min</div><div class="t-label">Midterm review</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Midterm next week &mdash; everything from Units 1 and 2 is tested</div><div class="callout-body">OOP and SQL are NOT tested. All zsh workflow, venv, ruff, pytest, git, Python basics, functions, debugging, and AI use policy are fair game.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Reading Tracebacks</div><div class="line"></div></div><div class="card"><div class="card-title">A traceback is not failure &mdash; it is information</div><p>Read tracebacks <strong>bottom-up</strong>: the last line is the error type and message. The lines above show how the program reached that point. Students who read tracebacks carefully fix bugs in minutes. Students who ignore them and immediately ask AI spend hours on the same bugs.</p></div><div class="cb"><div class="cb-label">Traceback anatomy &mdash; read from bottom to top</div><pre>Traceback (most recent call last):
   File "main.py", line 14, in &lt;module&gt;
     result = process_request(req)           <span class="cm"># called here</span>

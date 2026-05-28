@@ -179,6 +179,19 @@ body{min-height:100vh;width:100%;}
 <a href="week14_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week14_lab.html" class="weekjump-link">Lab</a>
 </div>
+<div class="video-embed" style="margin:28px 0 32px;">
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+    <iframe
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      src="https://www.youtube.com/embed/PLACEHOLDER_V31"
+      title="Python + SQLite Integration — sqlite3, database.py & pytest"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
 <div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div><div class="timing-bar"><div class="timing-block blue"><div class="t-time">0&ndash;15 min</div><div class="t-label">sqlite3 connection pattern</div></div><div class="timing-block green"><div class="t-time">15&ndash;40 min</div><div class="t-label">Build database.py together</div></div><div class="timing-block amber"><div class="t-time">40&ndash;55 min</div><div class="t-label">row_factory + dict conversion</div></div><div class="timing-block purple"><div class="t-time">55&ndash;70 min</div><div class="t-label">Testing with tmp_path</div></div><div class="timing-block red"><div class="t-time">70&ndash;80 min</div><div class="t-label">Assignment</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Connecting Python to SQLite</div><div class="line"></div></div><div class="card"><div class="card-title">Why Python drives the database</div><p>SQL is powerful for querying and storing data, but a business application needs Python to provide the logic layer: validate inputs, apply business rules, call the right SQL at the right time, and format output for users. The <code>sqlite3</code> module is Python's built-in SQLite driver &mdash; no installation required.</p><p>The pattern: Python opens a connection, creates a cursor, executes SQL, fetches results, closes the connection. Every database function in your capstone follows this exact pattern.</p></div><div class="cb"><div class="cb-label">The sqlite3 connection pattern &mdash; memorise this</div><pre><span class="kw">import</span> sqlite3
 
 <span class="cm"># Always use a context manager (with) &mdash; auto-commits and closes</span>
