@@ -73,10 +73,10 @@
         <div class="dd-section">Unit 1 · Developer Foundations</div>
         <a href="${pg}unit_1_overview.html">Overview</a>
         <a href="${pg}unit_1_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week01_reading.html">Week 1 · Developer Mindset &amp; Setup</a>
-        <a href="${pg}week02_reading.html">Week 2 · zsh Navigation &amp; File Ops</a>
-        <a href="${pg}week03_reading.html">Week 3 · Virtual Environments &amp; .zshrc</a>
-        <a href="${pg}week04_reading.html">Week 4 · Search Tools, Ritual &amp; Git</a>
+        <a href="${pg}week01_reading.html">Module 1 · Developer Mindset &amp; Setup</a>
+        <a href="${pg}week02_reading.html">Module 2 · zsh Navigation &amp; File Ops</a>
+        <a href="${pg}week03_reading.html">Module 3 · Virtual Environments &amp; .zshrc</a>
+        <a href="${pg}week04_reading.html">Module 4 · Search Tools, Ritual &amp; Git</a>
       </div>
     </div>
 
@@ -86,11 +86,11 @@
         <div class="dd-section">Unit 2 · Python Foundations</div>
         <a href="${pg}unit_2_overview.html">Overview</a>
         <a href="${pg}unit_2_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week05_reading.html">Week 5 · Variables, Types &amp; Operators</a>
-        <a href="${pg}week06_reading.html">Week 6 · Conditionals, Loops &amp; Dicts</a>
-        <a href="${pg}week07_reading.html">Week 7 · Functions, Modules &amp; pytest</a>
-        <a href="${pg}week08_reading.html">Week 8 · Debugging &amp; AI Literacy</a>
-        <a href="${pg}week09_reading.html">Week 9 · Midterm Review</a>
+        <a href="${pg}week05_reading.html">Module 5 · Variables, Types &amp; Operators</a>
+        <a href="${pg}week06_reading.html">Module 6 · Conditionals, Loops &amp; Dicts</a>
+        <a href="${pg}week07_reading.html">Module 7 · Functions, Modules &amp; pytest</a>
+        <a href="${pg}week08_reading.html">Module 8 · Debugging &amp; AI Literacy</a>
+        <a href="${pg}week09_reading.html">Module 9 · Midterm Review</a>
       </div>
     </div>
 
@@ -100,9 +100,9 @@
         <div class="dd-section">Unit 3 · Object-Oriented Design</div>
         <a href="${pg}unit_3_overview.html">Overview</a>
         <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week10_reading.html">Week 10 · OOP I — Classes &amp; Objects</a>
-        <a href="${pg}week11_reading.html">Week 11 · OOP II — Composition &amp; Inheritance</a>
-        <a href="${pg}week12_reading.html">Week 12 · OOP III — Design &amp; Practice</a>
+        <a href="${pg}week10_reading.html">Module 10 · OOP I — Classes &amp; Objects</a>
+        <a href="${pg}week11_reading.html">Module 11 · OOP II — Composition &amp; Inheritance</a>
+        <a href="${pg}week12_reading.html">Module 12 · OOP III — Design &amp; Practice</a>
       </div>
     </div>
 
@@ -112,10 +112,10 @@
         <div class="dd-section">Unit 4 · Capstone Build</div>
         <a href="${pg}unit_4_overview.html">Overview</a>
         <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week13_reading.html">Week 13 · Capstone Design &amp; SQL</a>
-        <a href="${pg}week14_reading.html">Week 14 · Python + SQL Integration</a>
-        <a href="${pg}week15_reading.html">Week 15 · Streamlit Interface</a>
-        <a href="${pg}week16_reading.html">Week 16 · GenAI Feature &amp; Final Demo</a>
+        <a href="${pg}week13_reading.html">Module 13 · Capstone Design &amp; SQL</a>
+        <a href="${pg}week14_reading.html">Module 14 · Python + SQL Integration</a>
+        <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
+        <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
       </div>
     </div>
 
