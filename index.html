@@ -5,38 +5,46 @@
 <script>(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ISM3232 — Business Application Development</title>
+<link rel="stylesheet" id="ism-site-css" href="site.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:      #0a0a0f;
-  --bg2:     #111119;
-  --bg3:     #18181f;
-  --border:  rgba(255,255,255,.07);
-  --border2: rgba(255,255,255,.13);
-  --text:    #e2e2ec;
-  --muted:   #7a7a95;
-  --dim:     #3a3a50;
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --u1:  #00c9a7; --u1d: rgba(0,201,167,.12);  --u1g: rgba(0,201,167,.3);
   --u2:  #818cf8; --u2d: rgba(129,140,248,.12); --u2g: rgba(129,140,248,.3);
   --u3:  #fb7185; --u3d: rgba(251,113,133,.12); --u3g: rgba(251,113,133,.3);
   --u4:  #fbbf24; --u4d: rgba(251,191,36,.12);  --u4g: rgba(251,191,36,.3);
-  --pre: #94e2d5; --pred:rgba(148,226,213,.12);
+  --pre: #94e2d5; --pred: rgba(148,226,213,.12);
   --slides: #c084fc;
-
-  --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
-  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
-
-html { background: var(--bg); color: var(--text); font-family: var(--sans); scroll-behavior: smooth; }
-body { min-height: 100vh; }
+[data-theme="light"] {
+  --bg:      #fbfbf7;
+  --bg2:     #f5f5ee;
+  --bg3:     #ffffff;
+  --text:    #1a1a26;
+  --muted:   #555566;
+  --dim:     #8a8a9c;
+  --border:  rgba(0,0,0,.08);
+  --border2: rgba(0,0,0,.14);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { min-height: 100vh; line-height: 1.6; }
 a { color: inherit; }
 
 /* ── Hero ── */
 .hero {
-  padding: 80px 32px 64px;
-  max-width: 900px; margin: 0 auto;
+  padding: clamp(40px, 8vw, 100px) clamp(20px, 5vw, 60px) clamp(36px, 6vw, 72px);
+  max-width: 1100px; margin: 0 auto;
   text-align: center;
 }
 .hero-eyebrow {
@@ -44,7 +52,7 @@ a { color: inherit; }
   color: var(--dim); text-transform: uppercase; margin-bottom: 20px;
 }
 .hero h1 {
-  font-size: clamp(40px, 7vw, 72px); font-weight: 800;
+  font-size: clamp(40px, 7vw, 76px); font-weight: 800;
   letter-spacing: -.03em; line-height: 1.05; margin: 0 0 18px;
   background: linear-gradient(135deg, var(--text) 0%, var(--u2) 100%);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
@@ -259,7 +267,6 @@ footer a:hover { color: var(--text); }
 }
 </style>
 
-<link rel="stylesheet" href="site.css">
 <meta name="description" content="ISM3232 Business Application Development — course hub.">
 </head>
 <body>

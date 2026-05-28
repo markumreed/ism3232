@@ -40,21 +40,21 @@ html[data-theme="dark"] {
 
 /* ── Dark mode page vars ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
-  background: #0f0f13 !important;
+  background: #0f0f17 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-  --bg-page:      #0f0f0f !important;
-  --bg-card:      #1a1a1a !important;
-  --bg-card-alt:  #222222 !important;
+  --bg-page:      #0f0f17 !important;
+  --bg-card:      #15151f !important;
+  --bg-card-alt:  #1a1a26 !important;
   --bg-code:      #1e1e2e !important;
-  --border:       #2e2e2e !important;
-  --border-light: #272727 !important;
-  --text-primary: #f0f0f0 !important;
-  --text-secondary:#aaaaaa !important;
-  --text-muted:   #888888 !important;
-  --text-faint:   #555555 !important;
-  --text-body:    #cccccc !important;
+  --border:       rgba(255,255,255,.08) !important;
+  --border-light: rgba(255,255,255,.06) !important;
+  --text-primary: #e8e8f0 !important;
+  --text-secondary:#9a9aab !important;
+  --text-muted:   #6a6a7c !important;
+  --text-faint:   #555566 !important;
+  --text-body:    #e8e8f0 !important;
   --text-code:    #cdd6f4 !important;
-  --divider:      #333333 !important;
+  --divider:      rgba(255,255,255,.08) !important;
   --accent:       #7eb8ff !important;
   --accent-bg:    #1e2d47 !important;
   --accent-bdr:   #2a3f60 !important;
@@ -76,21 +76,21 @@ html[data-theme="dark"] {
   --ok-bdr:       #1a3828 !important;
   --tip-bg:       #1e2d47 !important;
   --tip-bdr:      #2a3f60 !important;
-  --step-bg:      #1a1a1a !important;
-  --step-bdr:     #2e2e2e !important;
+  --step-bg:      #15151f !important;
+  --step-bdr:     rgba(255,255,255,.08) !important;
 }
 html[data-theme="dark"] body {
-  background: #0f0f13 !important;
-  color:      #e2e2ec !important;
+  background: #0f0f17 !important;
+  color:      #e8e8f0 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-  --bg:        #0f0f13 !important;
-  --bg2:       #16161d !important;
-  --bg3:       #1e1e28 !important;
-  --border:    rgba(255,255,255,.07) !important;
-  --border2:   rgba(255,255,255,.13) !important;
-  --text:      #e2e2ec !important;
-  --muted:     #7a7a95 !important;
-  --dim:       #3e3e52 !important;
+  --bg:        #0f0f17 !important;
+  --bg2:       #15151f !important;
+  --bg3:       #1a1a26 !important;
+  --border:    rgba(255,255,255,.08) !important;
+  --border2:   rgba(255,255,255,.14) !important;
+  --text:      #e8e8f0 !important;
+  --muted:     #9a9aab !important;
+  --dim:       #6a6a7c !important;
   --blue:      #7eb8ff !important;
   --blue-dim:  rgba(126,184,255,.12) !important;
   --green:     #6ee7b7 !important;
@@ -105,30 +105,30 @@ html[data-theme="dark"] body {
 
 /* ── Light mode overrides (for pages that default dark) ───────────────── */
 html[data-theme="light"] {
-  background: #f5f4f0 !important;
+  background: #fbfbf7 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-  --bg-page:      #f5f4f0 !important;
-  --bg-card:      #ffffff !important;
-  --bg-card-alt:  #f7f7f5 !important;
-  --border:       #e0e0de !important;
-  --text-primary: #1a1a1a !important;
-  --text-secondary:#555555 !important;
-  --text-body:    #444444 !important;
+  --bg-page:      #fbfbf7 !important;
+  --bg-card:      #f5f5ee !important;
+  --bg-card-alt:  #ffffff !important;
+  --border:       rgba(0,0,0,.08) !important;
+  --text-primary: #1a1a26 !important;
+  --text-secondary:#4a4a5a !important;
+  --text-body:    #1a1a26 !important;
   --accent:       #1e40af !important;
   --accent-bg:    #dbeafe !important;
 }
 html[data-theme="light"] body {
-  background: #f5f4f0 !important;
-  color:      #1a1a1a !important;
+  background: #fbfbf7 !important;
+  color:      #1a1a26 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif !important;
-  --bg:        #f5f4f0 !important;
-  --bg2:       #ffffff !important;
-  --bg3:       #f0eef0 !important;
-  --border:    rgba(0,0,0,.09) !important;
-  --border2:   rgba(0,0,0,.15) !important;
-  --text:      #1a1a1a !important;
-  --muted:     #555555 !important;
-  --dim:       #999999 !important;
+  --bg:        #fbfbf7 !important;
+  --bg2:       #f5f5ee !important;
+  --bg3:       #ffffff !important;
+  --border:    rgba(0,0,0,.08) !important;
+  --border2:   rgba(0,0,0,.14) !important;
+  --text:      #1a1a26 !important;
+  --muted:     #555566 !important;
+  --dim:       #8a8a9c !important;
   --blue:      #1e40af !important;
   --blue-dim:  rgba(30,64,175,.10) !important;
   --green:     #166534 !important;
