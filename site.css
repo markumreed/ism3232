@@ -279,3 +279,15 @@ html { scroll-padding-top: 64px; }
   line-height: 1.55; margin-bottom: 16px;
   padding-left: 14px; border-left: 2px solid var(--dim,#6a6a7c);
 }
+
+/* ── Page content wrap (max-width, centred) ─────────────────────────────── */
+.wrap {
+  max-width: 920px; margin: 0 auto;
+  padding: clamp(20px, 5vw, 56px) clamp(16px, 4vw, 40px) 80px;
+}
+
+/* ── Lede (intro paragraph under h1) ────────────────────────────────────── */
+.lede {
+  font-size: 17px; color: var(--muted,#9a9aab);
+  line-height: 1.6; margin: 0 0 28px; max-width: 720px;
+}
