@@ -268,3 +268,14 @@ html { scroll-padding-top: 64px; }
   background: rgba(251,191,36,.12); color: #fbbf24;
   border-color: rgba(251,191,36,.4);
 }
+
+/* ── Shared page header classes (used by reading + lecture pages) ─────── */
+.wk-title {
+  font-size: clamp(24px, 4vw, 36px); font-weight: 800;
+  letter-spacing: -.02em; line-height: 1.15; margin: 0 0 10px;
+}
+.wk-deck {
+  font-size: 15px; color: var(--muted,#9a9aab); font-style: italic;
+  line-height: 1.55; margin-bottom: 16px;
+  padding-left: 14px; border-left: 2px solid var(--dim,#6a6a7c);
+}
