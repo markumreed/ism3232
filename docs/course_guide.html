@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Course Assembly Guide — ISM3232</title>
+<link rel="stylesheet" id="ism-site-css" href="../site.css">
+<style>
+:root {
+  --bg:        #0f0f17;
+  --bg2:       #15151f;
+  --bg3:       #1a1a26;
+  --text:      #e8e8f0;
+  --muted:     #9a9aab;
+  --dim:       #6a6a7c;
+  --border:    rgba(255,255,255,.08);
+  --border2:   rgba(255,255,255,.14);
+  --accent:    #fbbf24;
+  --code-bg:   #0a0a12;
+  --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --u1: #00c9a7; --u2: #818cf8; --u3: #fb7185; --u4: #fbbf24;
+}
+[data-theme="light"] {
+  --bg: #fbfbf7; --bg2: #f5f5ee; --bg3: #ffffff;
+  --text: #1a1a26; --muted: #4a4a5a; --dim: #7a7a8c;
+  --border: rgba(0,0,0,.08); --border2: rgba(0,0,0,.14);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { line-height: 1.65; min-height: 100vh; font-size: 16px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 40px clamp(20px, 5vw, 56px) 96px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 700; margin: 48px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -.01em; }
+h3 { font-size: 17px; font-weight: 700; margin: 30px 0 10px; letter-spacing: -.005em; }
+h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; font-family: var(--mono); color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+p, ul, ol { color: var(--text); font-size: 15.5px; }
+ul, ol { padding-left: 22px; }
+li { margin: 6px 0; }
+.lede { font-size: 17.5px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
+a { color: var(--accent); }
+a:hover { color: #fcd34d; }
+code { font-family: var(--mono); font-size: .92em; background: var(--bg2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* callout boxes */
+.callout { margin: 22px 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; }
+.callout-title { font-family: var(--mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.callout p:last-child { margin-bottom: 0; }
+.callout.teal   { border-left-color: #00c9a7; }
+.callout.teal .callout-title { color: #00c9a7; }
+.callout.indigo { border-left-color: #818cf8; }
+.callout.indigo .callout-title { color: #818cf8; }
+.callout.rose   { border-left-color: #fb7185; }
+.callout.rose .callout-title   { color: #fb7185; }
+.callout.red    { border-left-color: #f87171; }
+.callout.red .callout-title    { color: #f87171; }
+
+/* module catalog table */
+.mod-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+.mod-table th { background: var(--bg2); color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border2); }
+.mod-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.mod-table tr:last-child td { border-bottom: 0; }
+.mod-table tr:hover td { background: var(--bg2); }
+.mod-num   { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+.mod-title { font-weight: 600; }
+.mod-topics { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; border: 1px solid; margin: 2px 2px 0 0; }
+.tag.req  { color: #00c9a7; border-color: rgba(0,201,167,.35); background: rgba(0,201,167,.08); }
+.tag.opt  { color: var(--muted); border-color: var(--border2); }
+.tag.exam { color: #f87171; border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.08); }
+.tag.cap  { color: #fbbf24; border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.08); }
+
+/* course plan cards */
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+.plan-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.plan-card-head { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.plan-card-head h3 { margin: 0 0 4px; font-size: 18px; }
+.plan-card-head p { margin: 0; font-size: 13px; color: var(--muted); }
+.plan-card-body { padding: 16px 20px; }
+.week-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; font-size: 14px; }
+.week-item:last-child { margin-bottom: 0; }
+.week-badge { flex-shrink: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; padding: 3px 8px; border-radius: 999px; background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); white-space: nowrap; }
+.week-content .mod-ref  { font-weight: 600; color: var(--text); display: block; margin-bottom: 2px; }
+.week-content .mod-note { font-size: 12px; color: var(--muted); }
+.skip-note { font-size: 12px; font-family: var(--mono); color: var(--dim); margin: 12px 0 0; padding-top: 12px; border-top: 1px dashed var(--border); }
+
+/* full-width plan */
+.plan-full { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 24px 0; }
+.plan-full-head { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.plan-full-head h3 { margin: 0 0 4px; }
+.plan-full-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.unit-block { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+.unit-block:last-child { border-bottom: 0; }
+.unit-label { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 10px; }
+.mod-row { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+.mod-row:last-child { border-bottom: 0; }
+.mod-row .mn { font-family: var(--mono); font-size: 11px; color: var(--dim); flex-shrink: 0; width: 72px; }
+.mod-row .mt { font-weight: 600; flex: 1; }
+.mod-row .ms { font-size: 12px; color: var(--muted); }
+
+/* combining guide */
+.combine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+@media (max-width: 600px) { .combine-grid { grid-template-columns: 1fr; } }
+.combine-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.combine-card h4 { margin: 0 0 8px; font-size: 12px; }
+.combine-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* assessment table */
+.assess-row { display: grid; grid-template-columns: 120px 1fr 1fr 1fr; gap: 0; }
+.assess-head { background: var(--bg2); font-family: var(--mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; }
+.assess-cell { padding: 10px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); font-size: 13.5px; }
+.assess-cell:last-child { border-right: 0; }
+.assess-cell strong { display: block; font-size: 13px; margin-bottom: 4px; }
+.assess-cell span { font-size: 12px; color: var(--muted); }
+@media (max-width: 680px) { .assess-row { grid-template-columns: 1fr 1fr; } .assess-head:nth-child(3), .assess-head:nth-child(4), .assess-cell:nth-child(3), .assess-cell:nth-child(4) { display: none; } }
+
+/* dependency chain */
+.dep-chain { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 16px 0; }
+.dep-node { font-family: var(--mono); font-size: 12px; padding: 5px 12px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 6px; }
+.dep-arrow { color: var(--dim); font-size: 14px; }
+.dep-node.core      { border-color: #00c9a7; color: #00c9a7; background: rgba(0,201,167,.08); }
+.dep-node.important { border-color: #818cf8; color: #818cf8; background: rgba(129,140,248,.08); }
+.dep-node.optional  { color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow">INSTRUCTOR RESOURCE · COURSE DESIGN</div>
+<h1>Course Assembly Guide</h1>
+<p class="lede">ISM3232 is built as a library of 14 teaching weeks plus a midterm and a capstone week, for 16 weeks total. Professors can assemble any subset into a 6-week, 9-week, or full 16-week course without rewriting anything — choose your weeks and assign them in order.</p>
+
+<div class="callout teal">
+<div class="callout-title">How this works</div>
+<p>Each week contains four components: a <strong>Reading</strong> page (concepts and quiz), a <strong>Lecture</strong> page (worked examples and in-class activities), a <strong>Lab</strong> page (hands-on exercises), and <strong>Slides</strong> (for in-person sessions). You can assign all four or only what your format supports. An async course might rely on Reading and Lab only; a hybrid session might use Lecture and Lab in class with Slides projected.</p>
+</div>
+
+<!-- ── WEEK CATALOG ─────────────────────────────────────────────────────────── -->
+<h2>Week Catalog</h2>
+<p>There are 14 teaching weeks plus one midterm week and one capstone week, for 16 weeks total. Each week is a complete, self-contained lesson. The table below shows every week, its key topics, approximate time, and which weeks should come before it.</p>
+
+<table class="mod-table">
+<thead>
+<tr>
+<th>Week</th>
+<th>Title</th>
+<th>Core Topics</th>
+<th>Prereqs</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">W01</span></td>
+<td><span class="mod-title">Developer Mindset &amp; First Setup</span></td>
+<td class="mod-topics">Terminal, VS Code, Python 3, zsh. The 9-step developer ritual. Navigate a project directory. Run first Python script.</td>
+<td><span class="tag opt">None</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">W02</span></td>
+<td><span class="mod-title">zsh Navigation &amp; File Operations</span></td>
+<td class="mod-topics">cd, ls, mkdir, mv, cp, rm, wildcards. Absolute vs. relative paths. Piping and redirection.</td>
+<td><span class="tag req">W01</span></td>
+<td>3–5 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">W03</span></td>
+<td><span class="mod-title">Virtual Environments &amp; .zshrc</span></td>
+<td class="mod-topics">python3 -m venv, pip install, requirements.txt, .gitignore. Customize .zshrc with aliases and prompt.</td>
+<td><span class="tag req">W02</span></td>
+<td>4–5 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u1);">W04</span></td>
+<td><span class="mod-title">Search Tools, Ritual &amp; Git</span></td>
+<td class="mod-topics">grep, find, ripgrep for codebase search. 9-step ritual codified. git init/add/commit/push. All future work on GitHub.</td>
+<td><span class="tag req">W03</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">W05</span></td>
+<td><span class="mod-title">Variables, Data Types &amp; Operators</span></td>
+<td class="mod-topics">int/float/str/bool. Arithmetic, comparison, logical operators. Type coercion, common bugs. Business formulas: revenue = price × qty.</td>
+<td><span class="tag req">W04</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">W06</span></td>
+<td><span class="mod-title">Conditionals, Loops &amp; Dictionaries</span></td>
+<td class="mod-topics">if/elif/else. for and while loops. Dictionaries for key-value data. Customer lookup tables and discount tiers.</td>
+<td><span class="tag req">W05</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">W07</span></td>
+<td><span class="mod-title">Functions, Modules &amp; pytest</span></td>
+<td class="mod-topics">def/return. Importing modules and packages. Write and run pytest tests. Build reusable, testable code.</td>
+<td><span class="tag req">W06</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u2);">W08</span></td>
+<td><span class="mod-title">Debugging, AI Literacy &amp; Midterm Review</span></td>
+<td class="mod-topics">Read tracebacks, use the debugger. Three modes of AI assistance and the disclosure rule. Practice exam problems.</td>
+<td><span class="tag req">W07</span></td>
+<td>3–5 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:#f87171;">W09</span></td>
+<td><span class="mod-title">Midterm Exam</span></td>
+<td class="mod-topics">Covers W01–W08; open-note cheatsheet; code trace, multiple choice, bug-fix problems; ~60 min</td>
+<td><span class="tag exam">W01–W08</span></td>
+<td>60 min exam</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">W10</span></td>
+<td><span class="mod-title">OOP I — Classes &amp; Objects</span></td>
+<td class="mod-topics">Classes and instances. __init__, self, attributes. Methods. Model a business entity (Product, Order, Customer) as a Python class.</td>
+<td><span class="tag req">W07</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">W11</span></td>
+<td><span class="mod-title">OOP II — Composition &amp; Inheritance</span></td>
+<td class="mod-topics">Composition: objects that own other objects. Inheritance: extend a base class. Override __str__, __repr__.</td>
+<td><span class="tag req">W10</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u3);">W12</span></td>
+<td><span class="mod-title">OOP III — Applied Practice &amp; Design</span></td>
+<td class="mod-topics">Design patterns in practice. A complete OOP mini-project: model a business domain end-to-end. Code review and capstone planning.</td>
+<td><span class="tag req">W11</span></td>
+<td>4–6 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">W13</span></td>
+<td><span class="mod-title">Capstone Design &amp; SQL Foundations</span></td>
+<td class="mod-topics">Entity-Relationship diagrams. CREATE TABLE, INSERT, SELECT. SQLite from Python's sqlite3 module. Design the capstone database schema.</td>
+<td><span class="tag req">W12</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">W14</span></td>
+<td><span class="mod-title">Python + SQL Integration</span></td>
+<td class="mod-topics">sqlite3 module. Parameterized queries. SELECT with JOINs. CRUD operations wrapped in Python functions.</td>
+<td><span class="tag req">W13</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">W15</span></td>
+<td><span class="mod-title">Streamlit Business Interface</span></td>
+<td class="mod-topics">Streamlit widgets, layout, session state. Connect to SQLite. Build an interactive business dashboard in a browser.</td>
+<td><span class="tag req">W14</span></td>
+<td>5–7 hr</td>
+</tr>
+<tr>
+<td><span class="mod-num" style="color:var(--u4);">W16</span></td>
+<td><span class="mod-title">GenAI Feature &amp; Final Demo</span></td>
+<td class="mod-topics">Anthropic API integration. Controlled AI feature in your app. Final demo day: 5-minute live presentations and course retrospective.</td>
+<td><span class="tag cap">W15</span></td>
+<td>8–12 hr</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ── DEPENDENCY MAP ─────────────────────────────────────────────────────── -->
+<h2>Learning Dependencies</h2>
+<p>Weeks build on each other. The course has a single primary chain — unlike pure data courses, a full-stack app requires every layer before you can build the next. The only genuine fork is OOP: it can start after W07 (Functions) without waiting for W08 (Debugging Review), useful in compressed formats.</p>
+
+<h4>Developer environment chain</h4>
+<div class="dep-chain">
+  <div class="dep-node core">W01 Setup</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W02 zsh</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W03 venv</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W04 Git</div>
+</div>
+
+<h4>Python foundations chain</h4>
+<div class="dep-chain">
+  <div class="dep-node core">W04 Git</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W05 Types</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W06 Control Flow</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W07 Functions</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node optional">W08 Debug Review</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node optional">W09 Midterm</div>
+</div>
+
+<h4>OOP → database → app chain</h4>
+<div class="dep-chain">
+  <div class="dep-node core">W07 Functions</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W10 Classes</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W11 Composition</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W12 OOP Design</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W13 SQL</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W14 SQL+Python</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node important">W15 Streamlit</div>
+  <div class="dep-arrow">→</div>
+  <div class="dep-node core">W16 Demo</div>
+</div>
+
+<div class="callout indigo">
+<div class="callout-title">Can OOP start earlier?</div>
+<p>Yes. In compressed formats, you can begin W10 (Classes) immediately after W07 (Functions), skipping W08's debugging review and replacing W09's formal midterm with an informal progress check. OOP only requires that students can write and call functions — the debugging and AI literacy material in W08 can follow OOP rather than precede it.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     6-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>6-Week Course — Intensive / Workshop Format</h2>
+<p>Designed for boot-camp sessions, corporate training, or an accelerated summer intensive. Each "week" is a full day (6–8 hours) or two 3-hour sessions. Six blocks cover all essential skills; the demo is a focused presentation on the final day.</p>
+
+<div class="callout">
+<div class="callout-title">Format assumptions</div>
+<p>Students meet for full-day sessions (6–8 hours) or twice-weekly for 3 hours per session. The formal midterm is replaced with an ungraded progress check. Git is taught in Block 1 rather than isolated — students commit every day from the start.</p>
+</div>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>6-Week Module Map</h3>
+<p>14 teaching weeks compressed into 6 intensive blocks. W08 (midterm review) and W09 (formal midterm) are replaced with a progress check.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Block 1 — Developer Environment (W01 + W02 + W03 + W04)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W01</span><span class="mt">Developer Mindset &amp; First Setup</span><span class="ms">Morning — terminal, VS Code, Python, zsh, 9-step ritual</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W02</span><span class="mt">zsh Navigation &amp; File Operations</span><span class="ms">Late morning — file commands, piping, absolute vs. relative paths</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W03</span><span class="mt">Virtual Environments &amp; .zshrc</span><span class="ms">Afternoon — venv, pip, requirements.txt, zshrc aliases</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W04</span><span class="mt">Search Tools, Ritual &amp; Git</span><span class="ms">Late afternoon — grep, ripgrep, git init/add/commit/push</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Block 2 — Python Basics (W05 + W06)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W05</span><span class="mt">Variables, Data Types &amp; Operators</span><span class="ms">Morning — types, arithmetic, business formulas</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W06</span><span class="mt">Conditionals, Loops &amp; Dictionaries</span><span class="ms">Afternoon — if/elif/else, for/while, dicts, discount tiers</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Block 3 — Functions &amp; Testable Code (W07)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W07</span><span class="mt">Functions, Modules &amp; pytest</span><span class="ms">Full day — def/return, imports, write and run pytest tests</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--dim);">W08★</span><span class="mt" style="color:var(--muted);">Progress Check</span><span class="ms" style="color:var(--dim);">Replace W08 debugging review with a 30-min ungraded code trace quiz</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Block 4 — Object-Oriented Design (W10 + W11 + W12)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">Morning — __init__, self, attributes, methods; model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Afternoon — compose objects, extend base classes, __str__/__repr__</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice</span><span class="ms">Evening or next morning — end-to-end mini-project, capstone schema design</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Block 5 — Database Layer (W13 + W14)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Capstone Design &amp; SQL Foundations</span><span class="ms">Morning — ER diagrams, CREATE TABLE, INSERT, SELECT, sqlite3</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Afternoon — parameterized queries, JOINs, CRUD Python functions</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Block 6 — App Interface &amp; Demo (W15 + W16)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W15</span><span class="mt">Streamlit Business Interface</span><span class="ms">Morning — widgets, layout, session state, connect to SQLite</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W16</span><span class="mt">GenAI Feature &amp; Final Demo</span><span class="ms">Afternoon — Anthropic API integration; 3-min presentations at end of day</span></div>
+</div>
+</div>
+
+<h3>Assessment — 6-Week Format</h3>
+<ul>
+<li><strong>Block quizzes (2× informal)</strong> — 5-question ungraded checks at end of Blocks 2 and 4. Used for pacing, not graded.</li>
+<li><strong>Lab submissions (each block)</strong> — students submit the lab from each block. Graded on completion + correctness (does the code run, does it produce expected output).</li>
+<li><strong>Mini Demo (Block 6)</strong> — 3-minute live presentation using the <a href="capstone_rubric.html">capstone rubric</a> compressed to: one user story, one database table, one Streamlit page, one AI interaction.</li>
+</ul>
+
+<div class="callout rose">
+<div class="callout-title">What to skip and why</div>
+<p><strong>W08 Debugging Review</strong>: replace with a 30-minute code trace quiz — you get diagnostic data without losing a full session.<br>
+<strong>W09 Formal Midterm</strong>: skip entirely. An informal check at the end of Block 3 achieves the same diagnostic goal.<br>
+<strong>Full OOP design patterns</strong>: compress W12 to an afternoon lab rather than a full day. Students get the practice without all the theory.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     9-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>9-Week Course — Trimester / Accelerated Semester</h2>
+<p>Designed for university trimesters, 10-week quarters (with finals week off), or half-semester intensive electives. Each "week" is one standard class week (2–3 class sessions, 4–6 total hours). All core concepts are covered; the formal midterm is replaced with a formative assessment.</p>
+
+<div class="callout">
+<div class="callout-title">Format assumptions</div>
+<p>Two or three class sessions per week, each 75–90 minutes. Labs are completed in class or assigned as take-home (1–2 hours). Students should have their developer environment working by the end of Week 1 — do not let environment issues linger into Week 2.</p>
+</div>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>9-Week Module Map</h3>
+<p>14 teaching weeks grouped into 8 instructional weeks plus one demo week.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Week 1 — Developer Environment (W01 + W02)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W01</span><span class="mt">Developer Mindset &amp; First Setup</span><span class="ms">Session 1 — terminal, VS Code, Python, zsh</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W02</span><span class="mt">zsh Navigation &amp; File Operations</span><span class="ms">Sessions 2–3 — file commands, piping, paths lab</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Week 2 — Environment &amp; Git (W03 + W04)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W03</span><span class="mt">Virtual Environments &amp; .zshrc</span><span class="ms">Session 1 — venv, pip, .gitignore, zshrc aliases</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W04</span><span class="mt">Search Tools, Ritual &amp; Git</span><span class="ms">Sessions 2–3 — grep, ripgrep, git init/add/commit/push lab</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Week 3 — Python Basics (W05 + W06)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W05</span><span class="mt">Variables, Data Types &amp; Operators</span><span class="ms">Sessions 1–2 — types, arithmetic, business formulas</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W06</span><span class="mt">Conditionals, Loops &amp; Dictionaries</span><span class="ms">Session 3 — if/elif/else, for/while, dicts</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Week 4 — Functions &amp; Testing (W07 + W08)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W07</span><span class="mt">Functions, Modules &amp; pytest</span><span class="ms">Sessions 1–2 — def/return, imports, pytest</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W08★</span><span class="mt">Debugging &amp; Progress Check</span><span class="ms">Session 3 — tracebacks, AI literacy; 30-min code trace check (replaces formal midterm)</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Week 5 — OOP I (W10 + W11)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">Sessions 1–2 — __init__, self, methods, model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Session 3 — compose objects, inheritance, __str__</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Week 6 — OOP Applied (W12)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice &amp; Design</span><span class="ms">Full week — end-to-end OOP mini-project + capstone database schema planning</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Week 7 — Database Layer (W13 + W14)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Capstone Design &amp; SQL Foundations</span><span class="ms">Sessions 1–2 — ER diagrams, CREATE TABLE, INSERT, SELECT, sqlite3</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Session 3 — parameterized queries, JOINs, CRUD functions</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Week 8 — Streamlit Interface (W15)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W15</span><span class="mt">Streamlit Business Interface</span><span class="ms">Full week — widgets, layout, session state, connect SQLite to Streamlit</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Week 9 — GenAI Feature &amp; Demo (W16)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W16</span><span class="mt">GenAI Feature &amp; Final Demo</span><span class="ms">Mon–Wed: Anthropic API integration; Thu–Fri: 5-minute presentations (or async video)</span></div>
+</div>
+</div>
+
+<h3>Assessment — 9-Week Format</h3>
+<ul>
+<li><strong>Weekly labs (8×)</strong> — each submitted via GitHub. Graded on the standard lab rubric. Collectively 40% of grade.</li>
+<li><strong>Formative midpoint check (Week 4)</strong> — 30-minute ungraded in-class code trace quiz covering W01–W07. Replaces the formal midterm; gives the instructor a read on student readiness before OOP. Not counted toward final grade but students must attempt it.</li>
+<li><strong>Capstone demo (Week 9)</strong> — 5-minute live presentation using the <a href="capstone_rubric.html">full capstone rubric</a>. Minimum requirements: one user story implemented end-to-end, one database table, one Streamlit page, one working AI interaction.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     16-WEEK COURSE
+═══════════════════════════════════════════════════════════════════════════ -->
+<h2>16-Week Course — Full Semester</h2>
+<p>The original design. One week per topic, with a midterm exam at Week 9. Each week has three class sessions: Reading (assigned before Tuesday), Lecture (Tuesday), Lab (Thursday), and Slides available for in-person sessions. The course ends with a full demo-day presentation in Week 16.</p>
+
+<div class="plan-full">
+<div class="plan-full-head">
+<h3>16-Week Module Map</h3>
+<p>One week per topic. The midterm falls at Week 9 (no new content). The capstone occupies all of Week 16.</p>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u1);">Unit 1 · Developer Foundations (W01–W04)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W01</span><span class="mt">Developer Mindset &amp; First Setup</span><span class="ms">Terminal, VS Code, Python, zsh, 9-step ritual</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W02</span><span class="mt">zsh Navigation &amp; File Operations</span><span class="ms">cd, ls, mkdir, mv, cp, rm, piping, paths</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W03</span><span class="mt">Virtual Environments &amp; .zshrc</span><span class="ms">venv, pip, requirements.txt, .gitignore, zshrc</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u1);">W04</span><span class="mt">Search Tools, Ritual &amp; Git</span><span class="ms">grep, find, ripgrep, git — all work on GitHub from here</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u2);">Unit 2 · Python Foundations (W05–W08 + Midterm)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W05</span><span class="mt">Variables, Data Types &amp; Operators</span><span class="ms">int/float/str/bool; arithmetic, comparison, logical; business formulas</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W06</span><span class="mt">Conditionals, Loops &amp; Dictionaries</span><span class="ms">if/elif/else; for/while; dicts; discount tiers</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W07</span><span class="mt">Functions, Modules &amp; pytest</span><span class="ms">def/return; imports; pytest test writing</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u2);">W08</span><span class="mt">Debugging, AI Literacy &amp; Midterm Review</span><span class="ms">Tracebacks; debugger; AI modes; practice exam</span></div>
+<div class="mod-row"><span class="mn" style="color:#f87171;">W09</span><span class="mt">Midterm Exam</span><span class="ms">Covers W01–W08 · open cheatsheet · ~60 min · no new content</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u3);">Unit 3 · Object-Oriented Design (W10–W12)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">__init__, self, attributes, methods; model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Compose objects; inherit from base class; __str__, __repr__</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice &amp; Design</span><span class="ms">End-to-end OOP mini-project; code review; capstone planning</span></div>
+</div>
+
+<div class="unit-block">
+<div class="unit-label" style="color:var(--u4);">Unit 4 · Capstone Build (W13–W16)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Capstone Design &amp; SQL Foundations</span><span class="ms">ER diagrams; CREATE TABLE, INSERT, SELECT; sqlite3 module</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Parameterized queries; JOINs; CRUD wrapped in Python functions</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W15</span><span class="mt">Streamlit Business Interface</span><span class="ms">Widgets, layout, session state; connect SQLite to Streamlit</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W16</span><span class="mt">GenAI Feature &amp; Final Demo</span><span class="ms">Anthropic API; controlled AI feature; 5-min presentations; course retrospective</span></div>
+</div>
+</div>
+
+<h3>Assessment — 16-Week Format</h3>
+<ul>
+<li><strong>Weekly labs (15×)</strong> — submitted via GitHub. Graded weekly on correctness and completion. Collectively 40% of grade.</li>
+<li><strong>Midterm exam (W09)</strong> — ~60-minute in-class exam, open cheatsheet. 20% of grade. Covers W01–W08.</li>
+<li><strong>Capstone project (W16)</strong> — end-to-end business application: SQLite database, Streamlit interface, one working AI feature, live demo. 40% of grade. Full rubric at <a href="capstone_rubric.html">capstone_rubric.html</a>.</li>
+</ul>
+
+<!-- ── TIPS FOR COMBINING ────────────────────────────────────────────────── -->
+<h2>Tips for Combining Weeks</h2>
+<p>When you merge two weeks into one class session, these pairings work best:</p>
+
+<div class="combine-grid">
+<div class="combine-card">
+<h4>W01 + W02 (Setup + zsh)</h4>
+<p>First session: install everything, run first script. Second session: file commands and navigation lab. Share the 9-step ritual across both — it reinforces the "this is how you start every work session" habit from day one.</p>
+</div>
+<div class="combine-card">
+<h4>W03 + W04 (venv + Git)</h4>
+<p>Morning: create a venv, install packages, write requirements.txt. Afternoon: git init the project, add everything, push to GitHub. Students see the full environment setup workflow as one continuous process.</p>
+</div>
+<div class="combine-card">
+<h4>W05 + W06 (Types + Control Flow)</h4>
+<p>Types give you data to work with; control flow gives you ways to make decisions with it. Teach variables and operators in the morning, then conditionals, loops, and dictionaries in the afternoon on the same business dataset (a product catalog).</p>
+</div>
+<div class="combine-card">
+<h4>W10 + W11 (Classes + Composition)</h4>
+<p>Define a class in the morning; in the afternoon, build a second class that owns an instance of the first. Students see exactly why composition exists — not as a concept, but as a solution to a real problem they just hit.</p>
+</div>
+<div class="combine-card">
+<h4>W13 + W14 (SQL + Python SQL)</h4>
+<p>Design the schema and write raw SQL in the morning; wrap it in Python functions in the afternoon. Students stay on the same database, so there's no context switch — just a cleaner interface layer appearing around their existing SQL.</p>
+</div>
+<div class="combine-card">
+<h4>W15 + W16 (Streamlit + Demo)</h4>
+<p>Build the interface Monday through Wednesday; integrate the AI feature Thursday; demo Friday. The compressed timeline forces scope decisions that teach real project management — "what's the minimum that makes this feel like an app?"</p>
+</div>
+</div>
+
+<!-- ── WHAT TO SKIP ────────────────────────────────────────────────────── -->
+<h2>What to Skip (and What to Replace It With)</h2>
+
+<div class="callout red">
+<div class="callout-title">Skipping the Formal Midterm (W09)</div>
+<p><strong>What you lose:</strong> A summative checkpoint halfway through the semester.<br>
+<strong>What to do instead:</strong> Replace with a 30-minute in-class code trace exercise at the end of W08. Students trace three short functions and explain two bugs. Grade it pass/fail. You keep the diagnostic value without the prep overhead.</p>
+</div>
+
+<div class="callout">
+<div class="callout-title">Skipping W08 (Debugging Review)</div>
+<p><strong>What you lose:</strong> Dedicated time on tracebacks, the debugger, and AI literacy discussion.<br>
+<strong>What to do instead:</strong> Integrate the AI literacy section into W07 (Functions) as a 20-minute discussion. Cover tracebacks as they arise in W10–W12 labs — students encounter real errors during OOP and that's the best moment to teach debugging.</p>
+</div>
+
+<div class="callout indigo">
+<div class="callout-title">Skipping W12 (OOP Applied)</div>
+<p><strong>What you lose:</strong> The end-to-end OOP mini-project and capstone planning session.<br>
+<strong>What to do instead:</strong> Move the capstone schema design into W13's first session. Skip the OOP mini-project; students will get applied OOP practice in W13–W14 as they model their database entities. The compressed version loses some design iteration but gains a week of build time.</p>
+</div>
+
+<!-- ── CHOOSING THE FORMAT ──────────────────────────────────────────────── -->
+<h2>Choosing the Right Format</h2>
+<p>If you're uncertain which format to use:</p>
+<ul>
+<li><strong>Corporate training or professional development</strong> → 6-week intensive. Skip the formal midterm. Focus on the database + Streamlit stack — that's what practitioners want to take back to work.</li>
+<li><strong>10-week quarter or trimester</strong> → 9-week course. Every concept is covered at a pace that allows students to actually build something. The week of buffer before finals is your overflow/catch-up session.</li>
+<li><strong>16-week semester with general business students</strong> → Full course as designed. The pacing allows time for environment confusion in W01–W02, which is when most non-technical students get stuck.</li>
+<li><strong>Graduate elective or MBA module</strong> → Start at W05 (skip developer foundations), move quickly through W05–W08, spend full time on W10–W16. Graduate students often already have a working environment; the value is in OOP, SQL, Streamlit, and the AI integration.</li>
+</ul>
+
+<div class="callout teal">
+<div class="callout-title">Building your own sequence</div>
+<p>The hard constraint is: environment before Python (W01–W04 before W05+), Python functions before OOP (W07 before W10), OOP before database (W12 before W13), database before Streamlit (W14 before W15), Streamlit before GenAI (W15 before W16). Everything else is flexible. W08 (debugging review) and W09 (midterm) are the easiest to compress or drop. W03 (venv) and W04 (Git) can be combined into a single session in compressed formats.</p>
+</div>
+
+<div class="pn" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:60px;">
+<a href="../index.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;">
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">← Home</div>
+  <div style="font-weight:600;font-size:14px;">Full Course Index</div>
+</a>
+<a href="unit_all_overview.html" style="display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s;text-align:right;">
+  <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-bottom:4px;">Next →</div>
+  <div style="font-weight:600;font-size:14px;">All Units Overview</div>
+</a>
+</div>
+</div>
+
+<footer>ISM3232 · BUSINESS APPLICATION DEVELOPMENT · USF MUMA COLLEGE OF BUSINESS</footer>
+<script id="ism-site-js" src="../site.js"></script>
+</body>
+</html>
