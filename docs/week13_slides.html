@@ -89,6 +89,16 @@
 /* Draw overlay */
 #dc { image-rendering: pixelated; }
 #dtb { user-select: none; }
+/* ism-mobile */
+@media(max-width:600px){
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 </head><body><div class="reveal"><div class="slides">
 <section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 13</p><h1>Capstone Design &amp; SQL</h1><div class="t-bar"><span class="t-item"><strong>0–20 min</strong> Project proposal: all 10 fields</span><span class="t-item"><strong>20–45 min</strong> SQL fundamentals — live demo</span><span class="t-item"><strong>45–60 min</strong> sqlite3 shell exploration</span><span class="t-item"><strong>60–70 min</strong> Schema design for own project</span><span class="t-item"><strong>70–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 13: Week 13 — Module 7A &amp; 7B — Capstone Requirements, Project Design, and SQL Foundations

@@ -125,6 +125,16 @@ code { font-family: var(--mono); font-size: .92em; background: var(--bg2); paddi
 .dep-node.optional  { color: var(--muted); }
 
 footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
+/* ism-mobile */
+@media(max-width:600px){
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 </head>
 <body>

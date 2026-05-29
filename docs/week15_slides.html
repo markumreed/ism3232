@@ -89,6 +89,16 @@
 /* Draw overlay */
 #dc { image-rendering: pixelated; }
 #dtb { user-select: none; }
+/* ism-mobile */
+@media(max-width:600px){
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 </head><body><div class="reveal"><div class="slides">
 <section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 15</p><h1>Streamlit Interface</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> Why Streamlit? Setup</span><span class="t-item"><strong>15–45 min</strong> Build Streamlit app together</span><span class="t-item"><strong>45–60 min</strong> All 5 required features</span><span class="t-item"><strong>60–75 min</strong> FastAPI concept lecture</span><span class="t-item"><strong>75–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 15: Week 15 — Module 7D — Streamlit Business Interface + FastAPI Concept Lecture

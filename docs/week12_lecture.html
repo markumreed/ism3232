@@ -154,6 +154,18 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* ism-mobile */
+@media(max-width:600px){
+  body{padding:16px 14px 48px!important}
+  .wrapper{padding-left:14px!important;padding-right:14px!important}
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 <link rel="stylesheet" href="../site.css">
 <meta name="description" content="ISM3232 W12 — ISM3232 Business Application Development course material.">

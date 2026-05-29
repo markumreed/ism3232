@@ -130,6 +130,18 @@ li::marker{color:var(--dim);}
 .page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10px;color:var(--dim);
   letter-spacing:.08em;text-align:center;}
+/* ism-mobile */
+@media(max-width:600px){
+  body{padding:16px 14px 48px!important}
+  .wrapper{padding-left:14px!important;padding-right:14px!important}
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 <link rel="stylesheet" href="../site.css">
 <meta name="description" content="ISM3232 Week 11 — OOP II — Composition, Inheritance &amp; SQL Mapping — ISM3232 Business Application Development course material.">

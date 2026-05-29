@@ -89,6 +89,16 @@
 /* Draw overlay */
 #dc { image-rendering: pixelated; }
 #dtb { user-select: none; }
+/* ism-mobile */
+@media(max-width:600px){
+  .two-col{grid-template-columns:1fr!important}
+  .concept-table{display:block;overflow-x:auto}
+  .timing-bar{grid-template-columns:1fr 1fr}
+  .pn{grid-template-columns:1fr}
+  .vpl-tile{min-width:unset;flex:1 1 100%}
+  pre,code{font-size:12px}
+  .two-pane{flex-direction:column}
+}
 </style>
 </head><body><div class="reveal"><div class="slides">
 <section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 14</p><h1>Python + SQL Integration</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> sqlite3 connection pattern</span><span class="t-item"><strong>15–40 min</strong> Build database.py together</span><span class="t-item"><strong>40–55 min</strong> row_factory + dict conversion</span><span class="t-item"><strong>55–70 min</strong> Testing with tmp_path</span><span class="t-item"><strong>70–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 14: Week 14 — Module 7C — Python + SQL Integration
