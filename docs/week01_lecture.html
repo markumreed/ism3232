@@ -132,15 +132,6 @@
     .prompt .p-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
 
     /* ── Timing bar ── */
-    .timing-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-bottom:24px;}
-    .timing-block{border-radius:7px;padding:10px 12px;text-align:center;}
-    .timing-block .t-time{font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:bold;color:var(--text-primary);margin-bottom:2px;}
-    .timing-block .t-label{font-size:10px;color:var(--text-body);}
-    .timing-block.blue{background:var(--accent-bg);border:1px solid var(--accent-bdr);}
-    .timing-block.green{background:var(--green-bg);border:1px solid var(--green-bdr);}
-    .timing-block.amber{background:var(--amber-bg);border:1px solid var(--amber-bdr);}
-    .timing-block.purple{background:var(--purple-bg);border:1px solid var(--purple-bdr);}
-    .timing-block.red{background:var(--red-bg);border:1px solid var(--red-bdr);}
 
     /* ── Pills ── */
     .pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
@@ -166,7 +157,6 @@ body{min-height:100vh;width:100%;}
   .wrapper{padding-left:14px!important;padding-right:14px!important}
   .two-col{grid-template-columns:1fr!important}
   .concept-table{display:block;overflow-x:auto}
-  .timing-bar{grid-template-columns:1fr 1fr}
   .pn{grid-template-columns:1fr}
   .vpl-tile{min-width:unset;flex:1 1 100%}
   pre,code{font-size:12px}
@@ -223,15 +213,6 @@ body{min-height:100vh;width:100%;}
   <!-- ── Course map ── -->
   <div class="course-map"><span class="map-item current">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
 
-  <!-- ── Timing ── -->
-  <div class="section-divider"><div class="line"></div><div class="label">Suggested class timing</div><div class="line"></div></div>
-  <div class="timing-bar">
-    <div class="timing-block blue"><div class="t-time">0–15 min</div><div class="t-label">Course intro &amp; developer mindset</div></div>
-    <div class="timing-block green"><div class="t-time">15–35 min</div><div class="t-label">Files, folders, paths — concepts</div></div>
-    <div class="timing-block amber"><div class="t-time">35–55 min</div><div class="t-label">Live setup: VS Code, Python, zsh verification</div></div>
-    <div class="timing-block purple"><div class="t-time">55–70 min</div><div class="t-label">First Python script — live code-along</div></div>
-    <div class="timing-block red"><div class="t-time">70–80 min</div><div class="t-label">Assignment 1 walkthrough + Q&amp;A</div></div>
-  </div>
 
   <div class="callout warn">
     <div class="callout-icon">⚠</div>
