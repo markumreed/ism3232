@@ -17,8 +17,11 @@
   function setTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem('ism3232-theme', t);
+    const icon = t === 'dark' ? '☀' : '☾';
     const btn = document.getElementById('ism-theme-btn');
-    if (btn) btn.textContent = t === 'dark' ? '☀' : '☾';
+    if (btn) btn.textContent = icon;
+    const mobBtn = document.getElementById('ism-mob-theme-btn');
+    if (mobBtn) mobBtn.textContent = icon;
   }
 
   // ── font size ────────────────────────────────────────────────────────────
@@ -126,6 +129,7 @@
       <button id="ism-font-up"   class="tool-btn" aria-label="Increase font size" title="Larger text">A+</button>
       <button id="ism-theme-btn" class="tool-btn" aria-label="Toggle theme" title="Light / dark">${initialTheme === 'dark' ? '☀' : '☾'}</button>
     </div>
+    <button class="nav-hamburger" id="ism-hamburger" aria-label="Open navigation" aria-expanded="false">☰</button>
   `;
 
   // ── insert skip link + nav ───────────────────────────────────────────────
@@ -134,8 +138,74 @@
   skip.className = 'skip-link';
   skip.textContent = 'Skip to main content';
 
+  // ── mobile nav panel ──────────────────────────────────────────────────
+  const panel = document.createElement('div');
+  panel.className = 'nav-mobile-panel';
+  panel.id = 'nav-mobile-panel';
+  panel.innerHTML = `
+    <div class="mob-section">
+      <div class="mob-section-label">Start Here</div>
+      <a href="${pg}precourse.html">Pre-Course Setup</a>
+      <a href="${pg}syllabus.html">Syllabus</a>
+      <a href="${pg}course_map.html">Course Map</a>
+      <a href="${pg}unit_all_overview.html">All Units Overview</a>
+    </div>
+    <div class="mob-section">
+      <div class="mob-section-label">Reference</div>
+      <a href="${pg}unit_1_cheatsheet.html">Cheat Sheets</a>
+      <a href="${pg}glossary.html">Glossary</a>
+      <a href="${pg}troubleshooting.html">Help / Troubleshooting</a>
+      <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
+      <a href="${pg}expectations.html">Expectations</a>
+      <a href="${pg}slos.html">SLOs</a>
+      <a href="${pg}slo_mindmap.html">SLO Mind Map</a>
+    </div>
+    <div class="mob-section">
+      <div class="mob-section-label">Unit 1 · Developer Foundations</div>
+      <a href="${pg}unit_1_overview.html">Overview</a>
+      <a href="${pg}unit_1_cheatsheet.html">Cheat Sheet</a>
+      <a href="${pg}week01_reading.html">Module 1 · Developer Mindset &amp; Setup</a>
+      <a href="${pg}week02_reading.html">Module 2 · zsh Navigation &amp; File Ops</a>
+      <a href="${pg}week03_reading.html">Module 3 · Virtual Environments &amp; .zshrc</a>
+      <a href="${pg}week04_reading.html">Module 4 · Search Tools, Ritual &amp; Git</a>
+    </div>
+    <div class="mob-section">
+      <div class="mob-section-label">Unit 2 · Python Foundations</div>
+      <a href="${pg}unit_2_overview.html">Overview</a>
+      <a href="${pg}unit_2_cheatsheet.html">Cheat Sheet</a>
+      <a href="${pg}week05_reading.html">Module 5 · Variables, Types &amp; Operators</a>
+      <a href="${pg}week06_reading.html">Module 6 · Conditionals, Loops &amp; Dicts</a>
+      <a href="${pg}week07_reading.html">Module 7 · Functions, Modules &amp; pytest</a>
+      <a href="${pg}week08_reading.html">Module 8 · Debugging &amp; AI Literacy</a>
+      <a href="${pg}week09_reading.html">Module 9 · Midterm Review</a>
+    </div>
+    <div class="mob-section">
+      <div class="mob-section-label">Unit 3 · Object-Oriented Design</div>
+      <a href="${pg}unit_3_overview.html">Overview</a>
+      <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
+      <a href="${pg}week10_reading.html">Module 10 · OOP I — Classes &amp; Objects</a>
+      <a href="${pg}week11_reading.html">Module 11 · OOP II — Composition &amp; Inheritance</a>
+      <a href="${pg}week12_reading.html">Module 12 · OOP III — Design &amp; Practice</a>
+    </div>
+    <div class="mob-section">
+      <div class="mob-section-label">Unit 4 · Capstone Build</div>
+      <a href="${pg}unit_4_overview.html">Overview</a>
+      <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
+      <a href="${pg}week13_reading.html">Module 13 · Capstone Design &amp; SQL</a>
+      <a href="${pg}week14_reading.html">Module 14 · Python + SQL Integration</a>
+      <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
+      <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
+    </div>
+    <div class="mob-tools">
+      <button id="ism-mob-font-down" class="tool-btn" aria-label="Decrease font size" title="Smaller text">A−</button>
+      <button id="ism-mob-font-up"   class="tool-btn" aria-label="Increase font size" title="Larger text">A+</button>
+      <button id="ism-mob-theme-btn" class="tool-btn" aria-label="Toggle theme" title="Light / dark">${initialTheme === 'dark' ? '☀' : '☾'}</button>
+    </div>
+  `;
+
   document.body.prepend(nav);
   document.body.prepend(skip);
+  nav.after(panel);
 
   // ── dropdown behaviour ──────────────────────────────────────────────────
   document.querySelectorAll('.nav-dd-btn').forEach(btn => {
@@ -174,6 +244,51 @@
     if (fontIdx < fontSizes.length - 1) { fontIdx++; applyFont(); }
   });
   document.getElementById('ism-font-down').addEventListener('click', () => {
+    if (fontIdx > 0) { fontIdx--; applyFont(); }
+  });
+
+  // ── hamburger / mobile panel ─────────────────────────────────────────
+  const hamburger = document.getElementById('ism-hamburger');
+
+  function openPanel() {
+    panel.classList.add('open');
+    hamburger.textContent = '✕';
+    hamburger.setAttribute('aria-expanded', 'true');
+    hamburger.setAttribute('aria-label', 'Close navigation');
+  }
+  function closePanel() {
+    panel.classList.remove('open');
+    hamburger.textContent = '☰';
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open navigation');
+  }
+
+  hamburger.addEventListener('click', e => {
+    e.stopPropagation();
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  });
+  document.addEventListener('click', e => {
+    if (panel.classList.contains('open') && !nav.contains(e.target) && !panel.contains(e.target)) {
+      closePanel();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+  });
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', closePanel));
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && panel.classList.contains('open')) closePanel();
+  });
+
+  // ── mobile tool buttons ──────────────────────────────────────────────
+  document.getElementById('ism-mob-theme-btn').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  document.getElementById('ism-mob-font-up').addEventListener('click', () => {
+    if (fontIdx < fontSizes.length - 1) { fontIdx++; applyFont(); }
+  });
+  document.getElementById('ism-mob-font-down').addEventListener('click', () => {
     if (fontIdx > 0) { fontIdx--; applyFont(); }
   });
 })();

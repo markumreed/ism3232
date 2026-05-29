@@ -291,3 +291,76 @@ html { scroll-padding-top: 64px; }
   font-size: 17px; color: var(--muted,#9a9aab);
   line-height: 1.6; margin: 0 0 28px; max-width: 720px;
 }
+
+/* ── Hamburger button (hidden on desktop) ────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none; border: 1px solid rgba(255,255,255,.12);
+  color: #cfcfd9; cursor: pointer;
+  width: 34px; height: 34px; border-radius: 6px;
+  font-size: 18px; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+[data-theme="light"] .nav-hamburger { color: #2a2a35; border-color: rgba(0,0,0,.12); }
+.nav-hamburger:hover { background: rgba(255,255,255,.08); }
+[data-theme="light"] .nav-hamburger:hover { background: rgba(0,0,0,.05); }
+
+/* ── Mobile nav panel ────────────────────────────────────────────────── */
+.nav-mobile-panel {
+  display: none; position: fixed;
+  top: 49px; left: 0; right: 0;
+  background: #1a1a26;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  padding: 16px 20px 24px; z-index: 99;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  max-height: calc(100vh - 49px);
+  overflow-y: auto;
+}
+[data-theme="light"] .nav-mobile-panel {
+  background: #fff;
+  border-bottom-color: rgba(0,0,0,.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,.15);
+}
+.nav-mobile-panel.open { display: block; }
+
+.mob-section { margin-bottom: 16px; }
+.mob-section-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px; letter-spacing: .18em;
+  color: #6e6e80; text-transform: uppercase;
+  padding: 0 0 6px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+[data-theme="light"] .mob-section-label { color: #8a8a9c; border-bottom-color: rgba(0,0,0,.08); }
+.mob-section a {
+  display: block; padding: 7px 4px;
+  color: #cfcfd9; text-decoration: none;
+  font-size: 13px; border-radius: 4px;
+  transition: background .12s;
+}
+[data-theme="light"] .mob-section a { color: #2a2a35; }
+.mob-section a:hover { background: rgba(255,255,255,.06); }
+[data-theme="light"] .mob-section a:hover { background: rgba(0,0,0,.05); }
+
+.mob-tools {
+  display: flex; gap: 8px; align-items: center;
+  padding-top: 12px; margin-top: 4px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+[data-theme="light"] .mob-tools { border-top-color: rgba(0,0,0,.08); }
+.mob-tools .tool-btn { width: 36px; height: 36px; font-size: 14px; }
+
+/* ── ≤768px: show hamburger, hide desktop nav items ─────────────────── */
+@media (max-width: 768px) {
+  .nav-hamburger { display: inline-flex; }
+  .ism-nav .nav-dd,
+  .ism-nav .nav-tools { display: none; }
+}
+
+/* ── ≤768px: tablet layout rules ────────────────────────────────────── */
+@media (max-width: 768px) {
+  pre, code { overflow-x: auto; max-width: 100%; }
+  img { max-width: 100%; height: auto; }
+  .two-col { grid-template-columns: 1fr !important; }
+}
