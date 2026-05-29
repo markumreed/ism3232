@@ -1,0 +1,3 @@
+[submodule "assets/img/infographics"]
+	path = assets/img/infographics
+	url = https://github.com/markumreed/ism-assets.git
