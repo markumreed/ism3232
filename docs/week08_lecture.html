@@ -154,6 +154,17 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+
+/* video playlist */
+.vpl-stage{margin-bottom:12px}
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:var(--accent-bg)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent-bdr);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{border-color:var(--accent)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary);font-weight:500}
 </style>
 <link rel="stylesheet" href="../site.css">
 <meta name="description" content="ISM3232 W8 — ISM3232 Business Application Development course material.">
@@ -180,30 +191,29 @@ body{min-height:100vh;width:100%;}
 <a href="week08_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week08_lab.html" class="weekjump-link">Lab</a>
 </div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/PLACEHOLDER_V08"
-      title="Python Debugging — How to Read Tracebacks & Fix Errors"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
+<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Videos &middot; 2</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="vid-playlist" style="margin:28px 0 32px;">
+  <div class="vpl-stage">
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+      <iframe
+        style="position:absolute;top:0;left:0;width:100%;height:100%;"
+        src="https://www.youtube.com/embed/PLACEHOLDER_V08"
+        title="Python Debugging — How to Read Tracebacks & Fix Errors"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
-</div>
-
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/PLACEHOLDER_V12"
-      title="AI Literacy for Programmers"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
+  <div class="vpl-tiles">
+    <div class="vpl-tile vpl-active" onclick="vplSwitch(this,'https://www.youtube.com/embed/PLACEHOLDER_V08','Python Debugging — How to Read Tracebacks & Fix Errors')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Python Debugging — How to Read Tracebacks &amp; Fix Errors</span>
+    </div>
+    <div class="vpl-tile" onclick="vplSwitch(this,'https://www.youtube.com/embed/PLACEHOLDER_V12','AI Literacy for Programmers')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">AI Literacy for Programmers</span>
+    </div>
   </div>
 </div>
 
@@ -251,5 +261,14 @@ Step 6: Write reflection.md covering:
 <!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week07_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span></a><span></span><a href="week09_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &middot; Week 8 &middot; Module 5 &mdash; Debugging, Testing, AI Literacy, and Midterm Review</div></div>
+<script>
+function vplSwitch(tile,src,title){
+  var p=tile.closest(".vid-playlist");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var f=p.querySelector(".vpl-stage iframe");
+  f.src=src;f.title=title;
+}
+</script>
 <script src="../site.js"></script>
 </body></html>
