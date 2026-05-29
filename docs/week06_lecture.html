@@ -180,6 +180,7 @@ body{min-height:100vh;width:100%;}
 <a href="week06_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week06_lab.html" class="weekjump-link">Lab</a>
 </div>
+<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
 <div class="video-embed" style="margin:28px 0 32px;">
   <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
     <iframe
@@ -296,7 +297,16 @@ total, flagged = <span class="nm">0</span>, []
 print(<span class="st">f&quot;Total pending: ${total:,.2f}&quot;</span>)
 print(<span class="st">f&quot;Needing review: {len(flagged)}&quot;</span>)
 <span class="kw">with</span> open(<span class="st">&quot;output/summary.txt&quot;</span>, <span class="st">&quot;w&quot;</span>) <span class="kw">as</span> f:
-    f.write(<span class="st">f&quot;Total: ${total:,.2f}\nFlagged: {len(flagged)}\n&quot;</span>)</pre></div><div class="assignment"><div class="a-header">Assignment 6 &middot; Due end of Week 6 &middot; Full workflow required</div><h3>Business Record Processor</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Script:</strong> At least 5 records as a list of dicts, at least 2 conditional business rules, formatted summary output, results saved to a file.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>Tests:</strong> At least 2 pytest tests verifying business rule logic.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div><!-- prev-next -->
+    f.write(<span class="st">f&quot;Total: ${total:,.2f}\nFlagged: {len(flagged)}\n&quot;</span>)</pre></div><div class="assignment"><div class="a-header">Assignment 6 &middot; Due end of Week 6 &middot; Full workflow required</div><h3>Business Record Processor</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Script:</strong> At least 5 records as a list of dicts, at least 2 conditional business rules, formatted summary output, results saved to a file.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>Tests:</strong> At least 2 pytest tests verifying business rule logic.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div>
+<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
+<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
+  <img src="../assets/img/infographics/25_while_loops_infographic.png"
+       alt="While Loops & Accumulators — Module Infographic"
+       loading="lazy"
+       style="width:100%;height:auto;display:block;min-height:200px;">
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week05_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span></a><span></span><a href="week07_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &middot; Week 6 &middot; Module 4 &mdash; Conditionals, Loops, Lists, and Dictionaries</div></div>
 <script src="../site.js"></script>
