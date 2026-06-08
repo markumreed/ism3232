@@ -221,7 +221,94 @@ def test_summarise_returns_text():
         MockClient.return_value.messages.create.return_value = fake_message
         result = summarise_request(&#x27;Equipment&#x27;, &#x27;New standing desks.&#x27;)
 
-    assert result == &#x27;This is a one-sentence summary.&#x27;</code></pre><h2>Final repo checklist</h2><ul class="checklist"><li>.env file contains ANTHROPIC_API_KEY and is in .gitignore</li><li>pytest -v — all tests green (AI tests mocked, no API key needed)</li><li>ruff format . and ruff check . both pass cleanly</li><li>README.md has all four required sections including AI feature section and limitations</li><li>git log --oneline shows meaningful iterative commit history — not a single 'final' commit</li><li>GitHub URL pasted into Canvas before the deadline</li></ul><h2>The eight required presentation topics</h2><ol><li>Business problem — 60-second pitch: what breaks without this system?</li><li>Developer workflow demo — terminal live: (.venv) active, ruff clean, pytest green, git log visible.</li><li>OOP design — walk through models.py: class names, attributes, methods.</li><li>SQL schema — show schema.sql, run one query in the sqlite3 shell.</li><li>Streamlit live demo — all five features working against live data.</li><li>GenAI feature demo — show the AI tab, name the disclosure label and the review gate, explain what is and is not sent to the API.</li><li>Testing — show pytest -v green. Name one limitation of the system.</li><li>AI use during development — honest, specific statement of how you used AI tools (or did not).</li></ol><div class="warn"><div class="concept-label">⚠ Developer workflow demo must be live</div><p>Open your terminal. The venv must be active — (.venv) in the prompt. Run ruff check . — clean. Run pytest -v — green. Run git log --oneline — meaningful history. Then open the app. This sequence is the demonstration.</p></div><!-- prev-next -->
+    assert result == &#x27;This is a one-sentence summary.&#x27;</code></pre><h2>Final repo checklist</h2><ul class="checklist"><li>.env file contains ANTHROPIC_API_KEY and is in .gitignore</li><li>pytest -v — all tests green (AI tests mocked, no API key needed)</li><li>ruff format . and ruff check . both pass cleanly</li><li>README.md has all four required sections including AI feature section and limitations</li><li>git log --oneline shows meaningful iterative commit history — not a single 'final' commit</li><li>GitHub URL pasted into Canvas before the deadline</li></ul><h2>The eight required presentation topics</h2><ol><li>Business problem — 60-second pitch: what breaks without this system?</li><li>Developer workflow demo — terminal live: (.venv) active, ruff clean, pytest green, git log visible.</li><li>OOP design — walk through models.py: class names, attributes, methods.</li><li>SQL schema — show schema.sql, run one query in the sqlite3 shell.</li><li>Streamlit live demo — all five features working against live data.</li><li>GenAI feature demo — show the AI tab, name the disclosure label and the review gate, explain what is and is not sent to the API.</li><li>Testing — show pytest -v green. Name one limitation of the system.</li><li>AI use during development — honest, specific statement of how you used AI tools (or did not).</li></ol><div class="warn"><div class="concept-label">⚠ Developer workflow demo must be live</div><p>Open your terminal. The venv must be active — (.venv) in the prompt. Run ruff check . — clean. Run pytest -v — green. Run git log --oneline — meaningful history. Then open the app. This sequence is the demonstration.</p></div>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What is the primary privacy concern when passing data to an external AI API?</div>
+<ul class="quiz-options">
+<li>a) The API might be slow</li>
+<li>b) Sensitive or identifying data may be stored or logged by the provider</li>
+<li>c) The API might return incorrect JSON</li>
+<li>d) The API call increases the database file size</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">ISM3232 requires sending only non-identifying fields (category, description) to the API, never names, IDs, or financial totals.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does the ISM3232 AI disclosure control require?</div>
+<ul class="quiz-options">
+<li>a) A pop-up warning before the page loads</li>
+<li>b) A visible label or banner whenever AI-generated content is displayed</li>
+<li>c) A log file recording every API call</li>
+<li>d) An admin approval for each AI response</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Users must always know when they are reading AI-generated text. Use st.info() or an explicit &#x27;AI-generated summary&#x27; label.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">What is mocking in the context of testing an AI feature?</div>
+<ul class="quiz-options">
+<li>a) Writing fake test data for the database</li>
+<li>b) Replacing the real API call with a controlled fake that returns a predictable response</li>
+<li>c) Running the AI in offline mode</li>
+<li>d) Testing only the UI, not the function</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">unittest.mock.patch replaces the Anthropic client during tests so tests make no real API calls, incur no cost, and do not fail due to network issues.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Code Trace</div>
+<div class="quiz-question">What does this test verify?</div>
+<pre><code>def test_summarise_returns_text():
+    fake = MagicMock()
+    fake.text = &#x27;A one-sentence summary.&#x27;
+    with patch(&#x27;ai_feature.anthropic.Anthropic&#x27;) as mock_client:
+        mock_client.return_value.messages.create.return_value.content = [fake]
+        result = summarise_request(&#x27;Equipment&#x27;, &#x27;Laptop for dev work&#x27;)
+    assert isinstance(result, str)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">That summarise_request() returns a string <span style="color:var(--muted);">— The test mocks out the Anthropic client (no real API call), then asserts the return type is str. It does not test the content, only the return type.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">Which Anthropic API parameter caps the length of the AI response?</div>
+<ul class="quiz-options">
+<li>a) temperature</li>
+<li>b) max_tokens</li>
+<li>c) model</li>
+<li>d) top_p</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">max_tokens limits how many tokens the model generates. Setting it low (e.g., 100) for a one-sentence summary prevents runaway responses and controls cost.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What is the required input control before sending user data to the AI?</div>
+<ul class="quiz-options">
+<li>a) Strip whitespace only</li>
+<li>b) Validate and limit input: check non-empty, cap length, allow only expected values</li>
+<li>c) Encrypt the input</li>
+<li>d) Convert all text to uppercase</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Control 2 of the six required controls. Always validate before the API call: reject empty input, enforce length limits, restrict to expected categories.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">The Anthropic client should be created inside the function that calls the API, not at the module level.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True (by ISM3232 convention) <span style="color:var(--muted);">— Creating the client inside the function makes it easier to mock in tests. A module-level client requires more complex patching to replace during testing.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">AI-generated output may be displayed to users without any label or disclosure.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— ISM3232 requires an AI disclosure label whenever AI-generated content is shown. Users must always know what was written by a human and what was generated by AI.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What are the six required AI controls in the ISM3232 GenAI feature, and why does each matter?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">(1) Disclosure — users see a label on AI output (honesty); (2) Input validation — reject empty or too-long input before the call (safety); (3) Input scoping — send only non-identifying fields (privacy); (4) Output guardrail — validate or trim AI output before display (reliability); (5) max_tokens limit — prevent runaway responses (cost and UX); (6) Error handling — show a user-friendly message on API failure, not a traceback (resilience).</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week15_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span></a><span></span></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 16 &nbsp;·&nbsp; GenAI Feature &amp; Final Demo</div>
 <script src="../site.js"></script>

@@ -271,7 +271,101 @@ If you cannot say "A X IS A Y" with a straight face, use composition instead.</p
 # "A RequestManager IS A BusinessRequest."      ✗ (manages them, not IS one)
 # "A ShoppingCart IS A Product."                ✗ (contains them, not IS one)
 # "A Department IS AN Employee."                ✗ (has employees, not IS one)</code></pre>
-<h2>Before you leave this week</h2><ul class="checklist"><li>RequestManager uses self.requests = [] inside __init__</li><li>Can demonstrate the class-level list bug and explain why it occurs</li><li>super().__init__() called correctly in the child class</li><li>OOP → SQL mapping: can match each OOP concept to its SQL equivalent</li><li>Two-manager independence test passes</li><li>Assignment 11 submitted via GitHub URL</li></ul><!-- prev-next -->
+<h2>Before you leave this week</h2><ul class="checklist"><li>RequestManager uses self.requests = [] inside __init__</li><li>Can demonstrate the class-level list bug and explain why it occurs</li><li>super().__init__() called correctly in the child class</li><li>OOP → SQL mapping: can match each OOP concept to its SQL equivalent</li><li>Two-manager independence test passes</li><li>Assignment 11 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What is composition in OOP?</div>
+<ul class="quiz-options">
+<li>a) A class that inherits all methods from another class</li>
+<li>b) An object that contains another object as an attribute</li>
+<li>c) Combining two functions into one</li>
+<li>d) Storing class data in a database</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">In the manager pattern, RequestManager has a self.requests list of BusinessRequest objects <span style="color:var(--muted);">— it &#x27;has&#x27; requests, it doesn&#x27;t &#x27;is&#x27; one.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">When is inheritance the appropriate design choice?</div>
+<ul class="quiz-options">
+<li>a) When two classes share a name</li>
+<li>b) When one class IS a more specific version of another (is-a relationship)</li>
+<li>c) Whenever you want to reuse code</li>
+<li>d) When one class needs to call a method from another</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&#x27;A TravelRequest IS A BusinessRequest&#x27; is valid. If the is-a sentence sounds wrong, use composition instead.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        return &#x27;...&#x27;
+
+class Dog(Animal):
+    def speak(self):
+        return &#x27;Woof&#x27;
+
+d = Dog(&#x27;Rex&#x27;)
+print(d.name)
+print(d.speak())</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Rex
+Woof <span style="color:var(--muted);">— d.name comes from Animal.__init__ (inherited). d.speak() uses Dog&#x27;s override, not Animal&#x27;s.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">In OOP-to-SQL mapping, what does a class typically map to?</div>
+<ul class="quiz-options">
+<li>a) A SQL function</li>
+<li>b) A database table</li>
+<li>c) A database connection</li>
+<li>d) A SQL query</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The class defines the structure (attributes ↔ columns); each instance maps to one row.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">Why is self.requests = [] placed inside __init__ rather than at the class level in RequestManager?</div>
+<ul class="quiz-options">
+<li>a) Python requires it there</li>
+<li>b) It ensures each RequestManager instance has its own independent list</li>
+<li>c) It makes the list read-only</li>
+<li>d) Class-level lists don&#x27;t support append()</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If requests = [] were at the class level, all instances would share it. A bug in one manager would corrupt all others.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">Which sentence correctly describes the TravelRequest / BusinessRequest relationship?</div>
+<ul class="quiz-options">
+<li>a) TravelRequest has a BusinessRequest</li>
+<li>b) TravelRequest is a BusinessRequest</li>
+<li>c) BusinessRequest is a TravelRequest</li>
+<li>d) TravelRequest replaces BusinessRequest</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TravelRequest extends BusinessRequest with a lower approval limit; it is still a BusinessRequest, making inheritance appropriate.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">A subclass automatically inherits all methods from its parent class.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— A subclass inherits every method and attribute from its parent. It can override specific methods, but anything not overridden falls through to the parent.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">Composition and inheritance solve the same design problem and are interchangeable.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— Composition (&#x27;has-a&#x27;) and inheritance (&#x27;is-a&#x27;) solve different design problems. Composition is often preferred because it is more flexible and avoids tight coupling.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What are the three OOP-to-SQL mapping rules introduced this week?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">(1) Each class maps to a table. (2) Each instance maps to a row. (3) Each attribute maps to a column. This pattern is the foundation of every ORM and explains why SQL tables look like class definitions.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week10_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 10</span>OOP I — Classes &amp; Objects</span></a><span></span><a href="week12_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>OOP III — Design &amp; Practice</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 11 &nbsp;·&nbsp; OOP II — Composition, Inheritance &amp; SQL Mapping</div>
 <script src="../site.js"></script>

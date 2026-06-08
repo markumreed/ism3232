@@ -302,7 +302,90 @@ def get_approver(amount: float) -> str:
 Each condition only needs to handle its range because the earlier conditions 
 already ruled out smaller amounts. 
 This ordering is intentional and important — reversing it breaks the logic silently.</p>
-<h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul><!-- prev-next -->
+<h2>Before you leave this week</h2><ul class="checklist"><li>Can write a multi-tier if/elif/else without looking at notes</li><li>Understand why the accumulator must be initialised before the loop</li><li>Can access and update dict values with square brackets</li><li>Can filter a list-of-dicts with a for loop and condition</li><li>Assignment 6 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What does the accumulator pattern do?</div>
+<ul class="quiz-options">
+<li>a) Deletes items from a list one by one</li>
+<li>b) Builds up a result across loop iterations using += or .append()</li>
+<li>c) Counts backward from n to 0</li>
+<li>d) Exits a loop when a condition is met</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An accumulator starts at an empty/zero value, then grows with each iteration.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>amounts = [100, 250, 75, 400]
+total = 0
+for a in amounts:
+    total += a
+print(total)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">825 <span style="color:var(--muted);">— The accumulator adds each element: 0+100+250+75+400 = 825.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">Which expression accesses the value for key &quot;status&quot; in dict d?</div>
+<ul class="quiz-options">
+<li>a) d[&quot;status&quot;]</li>
+<li>b) d.status</li>
+<li>c) d-&gt;status</li>
+<li>d) d(status)</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Square bracket notation is the standard way to access dict values by key.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Code Trace</div>
+<div class="quiz-question">What is the output?</div>
+<pre><code>record = {&quot;name&quot;: &quot;Apex Laptop&quot;, &quot;price&quot;: 899.00, &quot;qty&quot;: 5}
+print(record[&quot;name&quot;])
+print(record[&quot;price&quot;] * record[&quot;qty&quot;])</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Apex Laptop
+4495.0 <span style="color:var(--muted);">— The first line accesses the &quot;name&quot; key; the second multiplies the two numeric values.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What happens if you access a dict key that doesn&#x27;t exist using square brackets?</div>
+<ul class="quiz-options">
+<li>a) Returns None</li>
+<li>b) Returns an empty string</li>
+<li>c) Raises a KeyError</li>
+<li>d) Creates the key with value None</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">d[&quot;missing_key&quot;] raises KeyError immediately. Use d.get(&quot;key&quot;) to get None instead of an error.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">In a list-of-dicts, what does each item in the list represent?</div>
+<ul class="quiz-options">
+<li>a) A column name</li>
+<li>b) One record (row) of data</li>
+<li>c) A table schema</li>
+<li>d) A database connection</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This is the standard pattern for tabular data: one list holding many records, each record a dict with the same keys.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">An elif branch runs even if the preceding if condition was True.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— elif is skipped entirely if the preceding if (or elif) was True. Only the first matching branch executes.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">list.append() modifies the list in place and returns None.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— append() modifies the list in place. It does not return the modified list — it returns None. A common mistake: my_list = my_list.append(x) sets my_list to None.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the difference between a while loop and a for loop, and when would you choose each?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A for loop iterates over a known sequence a fixed number of times. A while loop repeats as long as a condition is True, with no predetermined count. Use for when you know the iterable; use while when waiting for a condition to change (user input, retry logic, draining a queue).</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week05_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span></a><span></span><a href="week07_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Conditionals, Loops &amp; Dictionaries</div>
 <script src="../site.js"></script>

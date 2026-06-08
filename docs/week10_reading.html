@@ -292,7 +292,102 @@ def test_instance_independence():
     req2 = BusinessRequest(7, &#x27;B&#x27;, &#x27;Travel&#x27;,    500.00)
     req1.approve()
     assert req1.status == &#x27;Approved&#x27;
-    assert req2.status == &#x27;Pending&#x27;   # unchanged</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">class</span><span class="term-def">A blueprint that defines what objects of that type have (attributes) and can do (methods).</span></div><div class="term"><span class="term-word">instance / object</span><span class="term-def">One specific thing built from a class.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The constructor — runs once when an instance is created.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The specific instance the method is being called on.</span></div><div class="term"><span class="term-word">instance attribute</span><span class="term-def">A variable stored on a specific instance. Accessed with self.name.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Always takes self as the first parameter.</span></div><div class="term"><span class="term-word">__repr__</span><span class="term-def">Returns a readable string representation of the object. Used by print().</span></div><div class="term"><span class="term-word">encapsulation</span><span class="term-def">Bundling data and the methods that operate on it inside one class.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a class with __init__, three methods, and __repr__ without notes</li><li>Understand what self refers to and why every method needs it</li><li>Can demonstrate instance independence with a live example</li><li>All six test types present and passing (pytest -v)</li><li>Assignment 10 submitted via GitHub URL</li></ul><!-- prev-next -->
+    assert req2.status == &#x27;Pending&#x27;   # unchanged</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">class</span><span class="term-def">A blueprint that defines what objects of that type have (attributes) and can do (methods).</span></div><div class="term"><span class="term-word">instance / object</span><span class="term-def">One specific thing built from a class.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The constructor — runs once when an instance is created.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The specific instance the method is being called on.</span></div><div class="term"><span class="term-word">instance attribute</span><span class="term-def">A variable stored on a specific instance. Accessed with self.name.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Always takes self as the first parameter.</span></div><div class="term"><span class="term-word">__repr__</span><span class="term-def">Returns a readable string representation of the object. Used by print().</span></div><div class="term"><span class="term-word">encapsulation</span><span class="term-def">Bundling data and the methods that operate on it inside one class.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a class with __init__, three methods, and __repr__ without notes</li><li>Understand what self refers to and why every method needs it</li><li>Can demonstrate instance independence with a live example</li><li>All six test types present and passing (pytest -v)</li><li>Assignment 10 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What is the purpose of __init__ in a Python class?</div>
+<ul class="quiz-options">
+<li>a) It runs when the class is deleted</li>
+<li>b) It initialises a new instance&#x27;s attributes when the object is created</li>
+<li>c) It defines class-level constants</li>
+<li>d) It is called every time a method is invoked</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">__init__ is called automatically when you write obj = ClassName(…). Its job is to store the starting values for all instance attributes.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does self refer to inside a method?</div>
+<ul class="quiz-options">
+<li>a) The class itself</li>
+<li>b) The specific instance the method was called on</li>
+<li>c) The parent class</li>
+<li>d) The last argument passed to the method</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">self.status refers to the status of the particular object, not all objects of that class. Every instance method must have self as its first parameter.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>class Item:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+a = Item(&#x27;Pen&#x27;, 1.50)
+b = Item(&#x27;Notebook&#x27;, 4.99)
+print(a.name)
+print(b.price)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Pen
+4.99 <span style="color:var(--muted);">— a and b are independent instances. a.name is &#x27;Pen&#x27;; b.price is 4.99.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What is encapsulation?</div>
+<ul class="quiz-options">
+<li>a) Inheriting behaviour from a parent class</li>
+<li>b) Running tests automatically</li>
+<li>c) Bundling data (attributes) and the functions that operate on it (methods) into a single object</li>
+<li>d) Converting one data type to another</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Encapsulation keeps related data and behaviour together and hides implementation details from outside code.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What is the purpose of __repr__ in a class?</div>
+<ul class="quiz-options">
+<li>a) It defines how the object is compared with ==</li>
+<li>b) It initialises attributes</li>
+<li>c) It provides a readable string representation for debugging and the REPL</li>
+<li>d) It destroys the object when it goes out of scope</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Without __repr__, printing an object shows &lt;__main__.BusinessRequest object at 0x…&gt;. With it, you see a readable summary.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>class Counter:
+    def __init__(self):
+        self.count = 0
+
+    def increment(self):
+        self.count += 1
+
+c = Counter()
+c.increment()
+c.increment()
+print(c.count)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2 <span style="color:var(--muted);">— Each increment() call adds 1 to self.count. Starting at 0, after two calls count is 2.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">Two instances of the same class always share the same attribute values.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— Each instance has its own copy of instance attributes. req1.status and req2.status are independent; changing one has no effect on the other.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">A class can have multiple methods in addition to __init__.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Classes can have as many methods as needed. In ISM3232 you write approve(), reject(), __repr__, and others alongside __init__.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the difference between a class and an instance?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A class is the blueprint — it defines the attributes and methods. An instance is a specific object created from that blueprint. BusinessRequest is the class; req1 = BusinessRequest(1, &#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00) is one instance. Many independent instances can be created from the same class.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; OOP I — Classes &amp; Objects</div>
 <script src="../site.js"></script>

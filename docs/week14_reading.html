@@ -316,7 +316,91 @@ print("All integration checks passed.")</code></pre>
      A broken database function under a working Streamlit tab is very difficult to debug.
      Always verify the data layer in isolation first.</p>
 </div>
-<h2>Before you leave this week</h2><ul class="checklist"><li>All five database functions implemented and working</li><li>Every SQL statement uses ? placeholders — no f-strings anywhere</li><li>row_factory used in get_all_records — returns list of dicts</li><li>All database tests use tmp_path — not the real database</li><li>Assignment 14 submitted via GitHub URL</li></ul><!-- prev-next -->
+<h2>Before you leave this week</h2><ul class="checklist"><li>All five database functions implemented and working</li><li>Every SQL statement uses ? placeholders — no f-strings anywhere</li><li>row_factory used in get_all_records — returns list of dicts</li><li>All database tests use tmp_path — not the real database</li><li>Assignment 14 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What is the purpose of using ? placeholders in a sqlite3 query?</div>
+<ul class="quiz-options">
+<li>a) To mark optional columns</li>
+<li>b) To prevent SQL injection by separating SQL structure from user-supplied values</li>
+<li>c) To match column types automatically</li>
+<li>d) To create indexes</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Never build SQL with f-strings. conn.execute(&#x27;INSERT INTO t VALUES (?)&#x27;, (value,)) is safe; f&#x27;INSERT INTO t VALUES ({value})&#x27; is a SQL injection vulnerability.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does with sqlite3.connect(db_file) as conn: ensure?</div>
+<ul class="quiz-options">
+<li>a) The database is always created fresh</li>
+<li>b) The connection is committed and closed automatically when the block exits</li>
+<li>c) All queries run in read-only mode</li>
+<li>d) The database is locked for the test</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The context manager handles cleanup. If an exception is raised, changes are rolled back. This prevents connection leaks.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What does this function return for a new, empty database?</div>
+<pre><code>def get_all_records(db_file=DB_FILE):
+    with sqlite3.connect(db_file) as conn:
+        rows = conn.execute(&#x27;SELECT * FROM requests&#x27;).fetchall()
+    return rows</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An empty list [] <span style="color:var(--muted);">— fetchall() returns all matching rows as a list of tuples. If the table has no rows, it returns an empty list.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">Why do ISM3232 database functions accept a db_file parameter with a default value?</div>
+<ul class="quiz-options">
+<li>a) To switch between MySQL and SQLite</li>
+<li>b) To let tests use a temporary database instead of the production file</li>
+<li>c) To set the connection timeout</li>
+<li>d) To specify the SQL dialect</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Tests pass tmp_path / &#x27;test.db&#x27; as db_file, keeping test data completely separate from the real database.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What does tmp_path provide in a pytest test?</div>
+<ul class="quiz-options">
+<li>a) A mock of the database connection</li>
+<li>b) A temporary directory unique to the test, cleaned up after the test runs</li>
+<li>c) A pre-populated test database</li>
+<li>d) A path to the production database</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Using tmp_path / &#x27;test.db&#x27; as db_file ensures each test gets a fresh, isolated database with no leftover data from other tests.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does conn.execute() return for an INSERT statement?</div>
+<ul class="quiz-options">
+<li>a) The inserted row as a dict</li>
+<li>b) A cursor object (use .lastrowid to get the new id)</li>
+<li>c) The total number of rows in the table</li>
+<li>d) True if successful, False if not</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The cursor has useful properties: .lastrowid (id of the just-inserted row) and .rowcount (number of rows affected).</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">You should build SQL query strings using f-strings when values come from user input.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— Building SQL with f-strings is a SQL injection vulnerability. Always use parameterised queries with ? placeholders: conn.execute(&#x27;SELECT * FROM t WHERE id = ?&#x27;, (id,)).</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">fetchone() raises an exception if no rows match the query.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— fetchone() returns None if no rows match. Always check for None before accessing fields, or you will get TypeError: &#x27;NoneType&#x27; object is not subscriptable.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What are the five required database functions in the ISM3232 capstone, and what does each one do?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">create_table (creates the table if not exists), add_record (INSERT a new row, return new id), get_all_records (SELECT * and return all rows), update_status (UPDATE a specific row&#x27;s status by id), get_status_report (SELECT grouped by status and return counts or totals). Each is tested separately.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week13_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span></a><span></span><a href="week15_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 14 &nbsp;·&nbsp; Python + SQL Integration</div>
 <script src="../site.js"></script>

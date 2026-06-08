@@ -207,7 +207,93 @@ weekly_hours = credit_hours * 2
 
 print(f&#x27;Course: {course_name}&#x27;)
 print(f&#x27;Expected weekly hours: {weekly_hours}&#x27;)
-print(&#x27;Environment verified. Week 1 complete.&#x27;)</code></pre><div class="code-label">Save and run</div><pre><code>python3 hello_ism3232.py</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">shell</span><span class="term-def">The program that reads your typed commands and executes them. We use zsh.</span></div><div class="term"><span class="term-word">terminal / terminal emulator</span><span class="term-def">The window you type commands into. VS Code has one built in.</span></div><div class="term"><span class="term-word">directory</span><span class="term-def">A folder. Directories contain files and other directories.</span></div><div class="term"><span class="term-word">absolute path</span><span class="term-def">A path starting from root (/). Works from anywhere.</span></div><div class="term"><span class="term-word">relative path</span><span class="term-def">A path starting from your current location. Shorter, but location-dependent.</span></div><div class="term"><span class="term-word">~ (tilde)</span><span class="term-def">Shorthand for your home directory. cd ~ takes you home from anywhere.</span></div><div class="term"><span class="term-word">.. (dot dot)</span><span class="term-def">The parent directory. cd .. moves you up one level.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Prompt ends with % (not $)</li><li>All six verification commands ran without errors</li><li>course folder at ~/ism3232/module01_setup/ exists</li><li>hello_ism3232.py runs and prints three lines</li><li>Screenshot taken and saved</li><li>Assignment 1 submitted to Canvas</li></ul><!-- prev-next -->
+print(&#x27;Environment verified. Week 1 complete.&#x27;)</code></pre><div class="code-label">Save and run</div><pre><code>python3 hello_ism3232.py</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">shell</span><span class="term-def">The program that reads your typed commands and executes them. We use zsh.</span></div><div class="term"><span class="term-word">terminal / terminal emulator</span><span class="term-def">The window you type commands into. VS Code has one built in.</span></div><div class="term"><span class="term-word">directory</span><span class="term-def">A folder. Directories contain files and other directories.</span></div><div class="term"><span class="term-word">absolute path</span><span class="term-def">A path starting from root (/). Works from anywhere.</span></div><div class="term"><span class="term-word">relative path</span><span class="term-def">A path starting from your current location. Shorter, but location-dependent.</span></div><div class="term"><span class="term-word">~ (tilde)</span><span class="term-def">Shorthand for your home directory. cd ~ takes you home from anywhere.</span></div><div class="term"><span class="term-word">.. (dot dot)</span><span class="term-def">The parent directory. cd .. moves you up one level.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Prompt ends with % (not $)</li><li>All six verification commands ran without errors</li><li>course folder at ~/ism3232/module01_setup/ exists</li><li>hello_ism3232.py runs and prints three lines</li><li>Screenshot taken and saved</li><li>Assignment 1 submitted to Canvas</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What does a shell do?</div>
+<ul class="quiz-options">
+<li>a) Renders web pages</li>
+<li>b) Reads and executes typed commands</li>
+<li>c) Stores files on disk</li>
+<li>d) Compiles Python to machine code</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The shell (zsh in ISM3232) interprets what you type and tells the OS what to do.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">Which prompt character confirms you are running zsh?</div>
+<ul class="quiz-options">
+<li>a) $</li>
+<li>b) #</li>
+<li>c) %</li>
+<li>d) &gt;</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A dollar sign means bash; a percent sign means zsh. Fix this before continuing.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">What does a path starting with / represent?</div>
+<ul class="quiz-options">
+<li>a) A relative path from your home directory</li>
+<li>b) An absolute path from the filesystem root</li>
+<li>c) A temporary directory</li>
+<li>d) A Python module path</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">All absolute paths start at /, the root of the directory tree.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does ~ represent in a file path?</div>
+<ul class="quiz-options">
+<li>a) The parent directory</li>
+<li>b) The current directory</li>
+<li>c) Your home directory</li>
+<li>d) A hidden file</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">cd ~ takes you home from anywhere, regardless of where you currently are.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">Which command verifies your Python version in ISM3232?</div>
+<ul class="quiz-options">
+<li>a) python --version</li>
+<li>b) python3 --version</li>
+<li>c) py --version</li>
+<li>d) check python</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Always use python3, not python. The plain python command may point to Python 2 on some systems.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does .. (dot dot) refer to in a path?</div>
+<ul class="quiz-options">
+<li>a) The current directory</li>
+<li>b) The home directory</li>
+<li>c) The parent directory</li>
+<li>d) A hidden directory</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">cd .. moves you up one level in the directory tree.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">A directory can contain both files and other directories.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Directories contain files and/or other directories. This is the fundamental structure of every filesystem.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">The terminal and the shell are the same program.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— The terminal is the window you type in; the shell (zsh) is the program inside it that reads your commands.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What are the six verification commands you must run successfully in Week 1, and what does each confirm?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">echo $SHELL (shell is zsh), zsh --version (5.x+), python3 --version (3.10+), git --version (2.x), pwd (shows home dir), ls (lists home contents). All six must run without errors before continuing.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><span></span><a href="week02_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 2</span>zsh Navigation &amp; File Ops</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 1 &nbsp;·&nbsp; Developer Mindset &amp; First Setup</div>
 <script src="../site.js"></script>

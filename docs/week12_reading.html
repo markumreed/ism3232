@@ -310,7 +310,94 @@ class LeaveManager:
      When you design your own capstone class, start here. Replace the attributes and
      the business rule threshold. The scaffolding is the same.</p>
 </div>
-<h2>Before you leave this week</h2><ul class="checklist"><li>design.md committed before models.py</li><li>At least 5 pytest tests passing</li><li>None of the four OOP mistakes are present in the code</li><li>self.items = [] is inside __init__, not at class level</li><li>Assignment 12 submitted via GitHub URL — includes design.md</li></ul><!-- prev-next -->
+<h2>Before you leave this week</h2><ul class="checklist"><li>design.md committed before models.py</li><li>At least 5 pytest tests passing</li><li>None of the four OOP mistakes are present in the code</li><li>self.items = [] is inside __init__, not at class level</li><li>Assignment 12 submitted via GitHub URL — includes design.md</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">According to the ISM3232 workflow, what must be completed before creating any .py files?</div>
+<ul class="quiz-options">
+<li>a) Install all dependencies</li>
+<li>b) Write all tests first</li>
+<li>c) Write a class design document</li>
+<li>d) Create the database schema</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Design before you type. The design document defines entities, attributes, methods, and relationships. Code files come after.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What is the first of the four OOP mistakes to catch this week?</div>
+<ul class="quiz-options">
+<li>a) Using inheritance instead of composition</li>
+<li>b) Missing the self parameter on an instance method</li>
+<li>c) Forgetting __repr__</li>
+<li>d) Hardcoding values as literals</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">def approve(): raises TypeError on call; def approve(self): is correct. Every instance method needs self as its first parameter.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What mistake is in this code, and what error will it raise?</div>
+<pre><code>class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def apply_discount(rate):
+        self.price = self.price * (1 - rate)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Missing self in apply_discount <span style="color:var(--muted);">— def apply_discount(rate): should be def apply_discount(self, rate):. Calling p.apply_discount(0.1) raises: TypeError: apply_discount() takes 1 positional argument but 2 were given.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does writing tests before the implementation (TDD-style) help you do?</div>
+<ul class="quiz-options">
+<li>a) Skip the design document</li>
+<li>b) Clarify what the class must do before deciding how it does it</li>
+<li>c) Generate test data automatically</li>
+<li>d) Avoid writing __init__</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Tests define the expected behaviour first. You then write code to satisfy them. This catches design problems early.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">A class design document should define which of the following?</div>
+<ul class="quiz-options">
+<li>a) Only the __init__ signature</li>
+<li>b) Entity name, attributes with types, methods with purpose, and relationships to other classes</li>
+<li>c) Only the SQL schema</li>
+<li>d) Only the test cases</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The design document is your contract. Code and tests are written from it.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does &#x27;minimum five tests&#x27; mean for the Week 12 assignment?</div>
+<ul class="quiz-options">
+<li>a) Five test files</li>
+<li>b) Five test functions, each testing a distinct behaviour</li>
+<li>c) Five lines of assert statements</li>
+<li>d) Five runs of pytest</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Each test_ function is one test. The minimum is five distinct behaviours: init, method 1, method 2, edge case, error case.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">It is acceptable in ISM3232 to add attributes to an object outside of __init__.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False (by course convention) <span style="color:var(--muted);">— All instance attributes must be defined in __init__. Attributes added elsewhere are invisible to readers of __init__ and make the class harder to understand and test.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">A design document is only useful for large, complex systems.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— Even for a two-class system, a design document prevents the most common beginner mistake: discovering structural problems after writing code. Five minutes of design saves thirty minutes of refactoring.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">Why should a class method do one thing rather than multiple things?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Methods that do one thing are easier to name, test, and reuse. If approve() also sends a notification and logs to a file, you must mock two systems just to test the approval logic. One responsibility per method means one assert per test.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week11_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span></a><span></span><a href="week13_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 12 &nbsp;·&nbsp; OOP III — Applied Practice &amp; Design</div>
 <script src="../site.js"></script>

@@ -249,7 +249,91 @@ GROUP BY status;
 .schema requests -- show CREATE TABLE statement
 .mode column     -- aligned output
 .headers on      -- show column names
-.quit            -- exit the shell</code></pre><h2>Schema design — choosing the right types</h2><div class="term"><span class="term-word">TEXT</span><span class="term-def">Names, categories, statuses. Any string value.</span></div><div class="term"><span class="term-word">INTEGER</span><span class="term-def">IDs, counts, whole numbers.</span></div><div class="term"><span class="term-word">REAL</span><span class="term-def">Prices, rates, decimal numbers. Use for all money values.</span></div><div class="term"><span class="term-word">NOT NULL</span><span class="term-def">This column is required — INSERT fails if omitted.</span></div><div class="term"><span class="term-word">DEFAULT &#x27;Pending&#x27;</span><span class="term-def">Automatically used if no value is provided on INSERT.</span></div><div class="term"><span class="term-word">PRIMARY KEY AUTOINCREMENT</span><span class="term-def">Database assigns a unique integer ID automatically. Never provide this yourself.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>PROPOSAL.md submitted and approved by instructor</li><li>Can run all five SQL operations in the sqlite3 shell</li><li>Understand why UPDATE must always have a WHERE clause</li><li>SQL schema designed for your specific capstone (column names and types)</li><li>Assignment 13 submitted to Canvas</li></ul><!-- prev-next -->
+.quit            -- exit the shell</code></pre><h2>Schema design — choosing the right types</h2><div class="term"><span class="term-word">TEXT</span><span class="term-def">Names, categories, statuses. Any string value.</span></div><div class="term"><span class="term-word">INTEGER</span><span class="term-def">IDs, counts, whole numbers.</span></div><div class="term"><span class="term-word">REAL</span><span class="term-def">Prices, rates, decimal numbers. Use for all money values.</span></div><div class="term"><span class="term-word">NOT NULL</span><span class="term-def">This column is required — INSERT fails if omitted.</span></div><div class="term"><span class="term-word">DEFAULT &#x27;Pending&#x27;</span><span class="term-def">Automatically used if no value is provided on INSERT.</span></div><div class="term"><span class="term-word">PRIMARY KEY AUTOINCREMENT</span><span class="term-def">Database assigns a unique integer ID automatically. Never provide this yourself.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>PROPOSAL.md submitted and approved by instructor</li><li>Can run all five SQL operations in the sqlite3 shell</li><li>Understand why UPDATE must always have a WHERE clause</li><li>SQL schema designed for your specific capstone (column names and types)</li><li>Assignment 13 submitted to Canvas</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">In the sqlite3 shell, which command lists all tables in the database?</div>
+<ul class="quiz-options">
+<li>a) SHOW TABLES;</li>
+<li>b) LIST TABLES;</li>
+<li>c) .tables</li>
+<li>d) SELECT * FROM tables;</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">sqlite3 dot commands start with . and are not SQL. .tables lists tables; .schema tablename shows the CREATE TABLE statement.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does PRIMARY KEY AUTOINCREMENT do on a column?</div>
+<ul class="quiz-options">
+<li>a) Requires a value to be manually supplied</li>
+<li>b) Automatically assigns a unique incrementing integer id to each new row</li>
+<li>c) Prevents duplicate rows across all columns</li>
+<li>d) Creates an index on the column</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">You never insert the id yourself; SQLite assigns the next available integer automatically.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What does this SQL statement return?</div>
+<pre><code>SELECT requester, amount
+FROM requests
+WHERE status = &#x27;Pending&#x27;
+ORDER BY amount DESC;</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The requester name and amount for all rows where status is &#x27;Pending&#x27;, sorted with the highest amounts first (descending).</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">Which SQL data type stores decimal numbers like prices?</div>
+<ul class="quiz-options">
+<li>a) INTEGER</li>
+<li>b) TEXT</li>
+<li>c) REAL</li>
+<li>d) BLOB</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">REAL stores floating-point numbers (e.g., 1250.00). INTEGER stores whole numbers; TEXT stores strings; BLOB stores binary data.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What does NOT NULL mean in a column definition?</div>
+<ul class="quiz-options">
+<li>a) The column stores only zero values</li>
+<li>b) The column cannot be left empty — a value must be provided</li>
+<li>c) The column stores text, not numbers</li>
+<li>d) The column is a foreign key</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An INSERT without a value for a NOT NULL column raises an error. Omitting it allows NULL (missing) values, which can cause unexpected bugs.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">How many required fields does the ISM3232 project proposal have?</div>
+<ul class="quiz-options">
+<li>a) 5</li>
+<li>b) 8</li>
+<li>c) 10</li>
+<li>d) 12</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">All 10 fields are required: project name, business problem, primary user, records stored, key operations, Python entities, SQL tables, success criterion, stretch goal, and tech stack confirmation.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">In SQL, an UPDATE statement without a WHERE clause modifies every row in the table.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— UPDATE requests SET status = &#x27;Approved&#x27;; changes every row. Always add WHERE id = ? or another specific condition to target only the intended row.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">The sqlite3 shell .mode column and .headers on settings are saved permanently to the database.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— These dot commands configure the current session&#x27;s display only. They are not stored. Add them to ~/.sqliterc to make them permanent.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the difference between CREATE TABLE and CREATE TABLE IF NOT EXISTS?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">CREATE TABLE raises an error if the table already exists. CREATE TABLE IF NOT EXISTS checks first and silently skips creation if the table is there. Always use IF NOT EXISTS in create_table() functions so they are safe to call multiple times, including in tests.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week12_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>OOP III — Design &amp; Practice</span></a><span></span><a href="week14_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 13 &nbsp;·&nbsp; Capstone Design &amp; SQL Foundations</div>
 <script src="../site.js"></script>

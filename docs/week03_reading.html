@@ -227,7 +227,93 @@ mkcd() { mkdir -p &quot;$1&quot; &amp;&amp; cd &quot;$1&quot;; }</code></pre><di
 ll              # runs ls -la
 gs              # runs git status
 mkcd testdir    # creates testdir/ AND enters it
-pwd             # should end in /testdir</code></pre><div class="warn"><div class="concept-label">⚠ source is required</div><p>Aliases only become active after <code>source ~/.zshrc</code>. In future sessions they activate automatically when the terminal opens. Only in the current session do you need to source manually after editing.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">venv</span><span class="term-def">Virtual environment — an isolated Python + packages installation for one project.</span></div><div class="term"><span class="term-word">source .venv/bin/activate</span><span class="term-def">Activates the venv. The (.venv) prefix confirms it.</span></div><div class="term"><span class="term-word">which python3</span><span class="term-def">Shows which Python is currently active. Must show .venv/bin/python3 when activated.</span></div><div class="term"><span class="term-word">pip freeze</span><span class="term-def">Lists all installed packages with exact version numbers.</span></div><div class="term"><span class="term-word">requirements.txt</span><span class="term-def">A text file listing pinned package versions so others can recreate the environment.</span></div><div class="term"><span class="term-word">.gitignore</span><span class="term-def">A file telling Git which files/folders to never track. .venv/ must be listed here.</span></div><div class="term"><span class="term-word">.zshrc</span><span class="term-def">zsh startup script. Aliases and functions defined here are always available.</span></div><div class="term"><span class="term-word">alias</span><span class="term-def">A shortcut that expands to a longer command when typed.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can create, activate, install into, and deactivate a venv without notes</li><li>which python3 shows .venv/bin/python3 when the venv is active</li><li>.gitignore contains .venv/ and __pycache__/</li><li>requirements.txt exists with pinned versions</li><li>All 9 aliases working after source ~/.zshrc</li><li>Assignment 3 submitted to Canvas</li></ul><!-- prev-next -->
+pwd             # should end in /testdir</code></pre><div class="warn"><div class="concept-label">⚠ source is required</div><p>Aliases only become active after <code>source ~/.zshrc</code>. In future sessions they activate automatically when the terminal opens. Only in the current session do you need to source manually after editing.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">venv</span><span class="term-def">Virtual environment — an isolated Python + packages installation for one project.</span></div><div class="term"><span class="term-word">source .venv/bin/activate</span><span class="term-def">Activates the venv. The (.venv) prefix confirms it.</span></div><div class="term"><span class="term-word">which python3</span><span class="term-def">Shows which Python is currently active. Must show .venv/bin/python3 when activated.</span></div><div class="term"><span class="term-word">pip freeze</span><span class="term-def">Lists all installed packages with exact version numbers.</span></div><div class="term"><span class="term-word">requirements.txt</span><span class="term-def">A text file listing pinned package versions so others can recreate the environment.</span></div><div class="term"><span class="term-word">.gitignore</span><span class="term-def">A file telling Git which files/folders to never track. .venv/ must be listed here.</span></div><div class="term"><span class="term-word">.zshrc</span><span class="term-def">zsh startup script. Aliases and functions defined here are always available.</span></div><div class="term"><span class="term-word">alias</span><span class="term-def">A shortcut that expands to a longer command when typed.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can create, activate, install into, and deactivate a venv without notes</li><li>which python3 shows .venv/bin/python3 when the venv is active</li><li>.gitignore contains .venv/ and __pycache__/</li><li>requirements.txt exists with pinned versions</li><li>All 9 aliases working after source ~/.zshrc</li><li>Assignment 3 submitted to Canvas</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What is the primary purpose of a virtual environment?</div>
+<ul class="quiz-options">
+<li>a) To speed up Python</li>
+<li>b) To isolate project dependencies so different projects do not conflict</li>
+<li>c) To run Python faster</li>
+<li>d) To share packages with teammates automatically</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Without venv, installing a package for one project can break another project that requires a different version of the same package.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">Which command creates a virtual environment named .venv?</div>
+<ul class="quiz-options">
+<li>a) python3 -m venv .venv</li>
+<li>b) virtualenv .venv</li>
+<li>c) venv create .venv</li>
+<li>d) pip install venv</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The -m flag runs the venv module. .venv is the convention; the leading dot makes it hidden.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">Which command activates the virtual environment on macOS/Linux?</div>
+<ul class="quiz-options">
+<li>a) activate .venv</li>
+<li>b) .venv activate</li>
+<li>c) source .venv/bin/activate</li>
+<li>d) venv on</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">source runs the activate script in your current shell. The prompt gains (.venv) when activation succeeds.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does pip freeze &gt; requirements.txt do?</div>
+<ul class="quiz-options">
+<li>a) Runs all tests</li>
+<li>b) Deletes installed packages</li>
+<li>c) Saves a snapshot of all installed packages to requirements.txt</li>
+<li>d) Updates all packages</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This snapshot lets teammates recreate your exact environment with pip install -r requirements.txt.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">Where must .venv/ always be listed?</div>
+<ul class="quiz-options">
+<li>a) requirements.txt</li>
+<li>b) README.md</li>
+<li>c) .gitignore</li>
+<li>d) site.py</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The .venv folder can contain thousands of files. It must never be committed to git; .gitignore prevents that.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">Where does the .zshrc file live?</div>
+<ul class="quiz-options">
+<li>a) /etc/zsh/</li>
+<li>b) ~/.zshrc</li>
+<li>c) ~/.config/zsh/</li>
+<li>d) /usr/local/share/zsh/</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">~ is your home directory. .zshrc is a hidden file (starts with .) that zsh reads automatically on startup.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">After you run deactivate, pip install still installs packages into the virtual environment.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— After deactivate, pip targets the system Python. Run source .venv/bin/activate again to return to the venv.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">An alias defined in .zshrc must be re-entered every time you open a new terminal.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— .zshrc is read automatically when a new shell starts. Aliases defined there persist across all future sessions without re-entry.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the difference between pip install requests and pip install -r requirements.txt?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">pip install requests installs one named package. pip install -r requirements.txt reads a file and installs every package listed in it, recreating an environment from a saved snapshot. Use the -r form when cloning a teammate&#x27;s repo.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week02_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 2</span>zsh Navigation &amp; File Ops</span></a><span></span><a href="week04_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 4</span>Search Tools, Ritual &amp; Git</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 3 &nbsp;·&nbsp; Virtual Environments &amp; Shell Customisation</div>
 <script src="../site.js"></script>

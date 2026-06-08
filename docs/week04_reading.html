@@ -232,7 +232,93 @@ git push -u origin main
 
 # Verify
 git log --oneline          # shows your commit
-git status                 # shows &#x27;nothing to commit&#x27;</code></pre><p><strong>Good commit messages</strong> describe what changed: <code>'add calculate_tax function to business_rules.py'</code>. <strong>Bad messages</strong>: <code>'update'</code>, <code>'fix'</code>, <code>'final'</code>. Write messages as if a colleague will read them tomorrow.</p><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">ripgrep (rg)</span><span class="term-def">Fast content search tool that respects .gitignore.</span></div><div class="term"><span class="term-word">git init</span><span class="term-def">Initialises a new Git repository in the current folder.</span></div><div class="term"><span class="term-word">git add .</span><span class="term-def">Stages all changes for the next commit.</span></div><div class="term"><span class="term-word">git commit -m</span><span class="term-def">Creates a snapshot of the staged changes with a message.</span></div><div class="term"><span class="term-word">git push</span><span class="term-def">Sends commits to the remote repository on GitHub.</span></div><div class="term"><span class="term-word">git log --oneline</span><span class="term-def">Shows a compact history of all commits.</span></div><div class="term"><span class="term-word">git status</span><span class="term-def">Shows which files have changed since the last commit.</span></div><div class="term"><span class="term-word">ruff format .</span><span class="term-def">Auto-formats all Python files in the current folder.</span></div><div class="term"><span class="term-word">ruff check .</span><span class="term-def">Reports style and logic issues without modifying files.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>All 9 ritual steps memorised — can run without notes</li><li>ruff format and ruff check both pass cleanly</li><li>pytest runs (even with zero tests — that is fine for now)</li><li>GitHub repository created and first push verified</li><li>Assignment 4 submitted to Canvas</li></ul><!-- prev-next -->
+git status                 # shows &#x27;nothing to commit&#x27;</code></pre><p><strong>Good commit messages</strong> describe what changed: <code>'add calculate_tax function to business_rules.py'</code>. <strong>Bad messages</strong>: <code>'update'</code>, <code>'fix'</code>, <code>'final'</code>. Write messages as if a colleague will read them tomorrow.</p><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">ripgrep (rg)</span><span class="term-def">Fast content search tool that respects .gitignore.</span></div><div class="term"><span class="term-word">git init</span><span class="term-def">Initialises a new Git repository in the current folder.</span></div><div class="term"><span class="term-word">git add .</span><span class="term-def">Stages all changes for the next commit.</span></div><div class="term"><span class="term-word">git commit -m</span><span class="term-def">Creates a snapshot of the staged changes with a message.</span></div><div class="term"><span class="term-word">git push</span><span class="term-def">Sends commits to the remote repository on GitHub.</span></div><div class="term"><span class="term-word">git log --oneline</span><span class="term-def">Shows a compact history of all commits.</span></div><div class="term"><span class="term-word">git status</span><span class="term-def">Shows which files have changed since the last commit.</span></div><div class="term"><span class="term-word">ruff format .</span><span class="term-def">Auto-formats all Python files in the current folder.</span></div><div class="term"><span class="term-word">ruff check .</span><span class="term-def">Reports style and logic issues without modifying files.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>All 9 ritual steps memorised — can run without notes</li><li>ruff format and ruff check both pass cleanly</li><li>pytest runs (even with zero tests — that is fine for now)</li><li>GitHub repository created and first push verified</li><li>Assignment 4 submitted to Canvas</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">Which command searches for the text &#x27;def approve&#x27; across all files recursively?</div>
+<ul class="quiz-options">
+<li>a) find . -name &#x27;def approve&#x27;</li>
+<li>b) grep &#x27;def approve&#x27; *.py</li>
+<li>c) rg &#x27;def approve&#x27;</li>
+<li>d) search &#x27;def approve&#x27; .</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">ripgrep (rg) searches recursively by default, is faster than grep, and respects .gitignore automatically.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does git add . do?</div>
+<ul class="quiz-options">
+<li>a) Creates a new repository</li>
+<li>b) Stages all changed files in the current directory for the next commit</li>
+<li>c) Pushes commits to GitHub</li>
+<li>d) Shows recent commits</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Staging selects changes for the next commit. git add . stages everything; git add filename.py stages one file.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">What is the correct order of the three core git commands for submitting an assignment?</div>
+<ul class="quiz-options">
+<li>a) commit → add → push</li>
+<li>b) push → add → commit</li>
+<li>c) add → commit → push</li>
+<li>d) commit → push → add</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">You must stage (add) before you can commit, and you must commit before you can push.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does ruff format . do?</div>
+<ul class="quiz-options">
+<li>a) Runs all tests</li>
+<li>b) Deletes unused imports</li>
+<li>c) Reformats all Python files to a consistent style</li>
+<li>d) Checks for logic errors</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">ruff format changes whitespace, indentation, and line length <span style="color:var(--muted);">— it does not change what the code does.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What does git log --oneline show?</div>
+<ul class="quiz-options">
+<li>a) The full diff of every commit</li>
+<li>b) A one-line summary of each commit in the history</li>
+<li>c) The current status of staged files</li>
+<li>d) Remote repository information</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">--oneline compresses each commit to its short hash and message, giving a fast visual history.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">In the pre-submission ritual, what step comes immediately before git push?</div>
+<ul class="quiz-options">
+<li>a) ruff check .</li>
+<li>b) python3 -m pytest</li>
+<li>c) git commit -m &#x27;...&#x27;</li>
+<li>d) git add .</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The ritual order ends with: git add → git commit → git push. commit must always come before push.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">git status shows which files have been changed but not yet staged.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— git status shows three categories: untracked new files, unstaged changes (modified but not added), and staged changes (added but not yet committed).</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">You can push to GitHub without first committing.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— git push sends existing commits to the remote. If you have not committed, there is nothing to push. The order is always add → commit → push.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the purpose of ruff check . in the submission ritual, and what does it find that ruff format . does not fix?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">ruff check . finds code quality issues: unused imports, undefined variables, shadowed names, and violations that a formatter cannot auto-fix. ruff format changes layout (whitespace, line length) but ignores logic. ruff check catches bugs and bad practices that format misses.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week03_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 3</span>Virtual Environments &amp; .zshrc</span></a><span></span><a href="week05_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 5</span>Variables, Data Types &amp; Operators</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 4 &nbsp;·&nbsp; Search Tools, the Submission Ritual &amp; Git</div>
 <script src="../site.js"></script>

@@ -203,7 +203,92 @@ for r in records:
 print(f&#x27;Total: ${total:,.2f}&#x27;)
 
 # The DEBUG line reveals: record 101 has &#x27;ammount&#x27; not &#x27;amount&#x27;
-# Fix the typo, then REMOVE the DEBUG print before committing</code></pre><div class="warn"><div class="concept-label">⚠ Remove DEBUG prints before committing</div><p>Debug prints left in submitted code are visible to graders. They indicate an incomplete submission. Remove them before running the ritual.</p></div><h2>Required AI literacy activity — Debug First, Then Ask</h2><p>This week includes a required structured activity. You will receive a script with two bugs. You must follow the six-step workflow before submitting:</p><ol><li><strong>Read the traceback</strong> — bottom-up. Write down the error type, file, and line number.</li><li><strong>Write your hypothesis</strong> — what do you think is wrong? Write it before touching any code.</li><li><strong>Add print() statements</strong> — inspect variables at the right points. Run and read the output.</li><li><strong>If still stuck after 10 minutes</strong> — you may ask an AI to explain the error message only. Not to fix the code.</li><li><strong>Fix the code yourself</strong> — based on your own understanding.</li><li><strong>Write the reflection</strong> — what was wrong, how you found it, what you learned.</li></ol><div class="warn"><div class="concept-label">⚠ Reflection is 30 of 70 points</div><p>A student who fixes both bugs perfectly but submits no reflection earns 40/70. The reflection is graded on its own and is not optional.</p></div><h2>Midterm review — what is and is not tested</h2><div class="ok"><div class="concept-label">✓ Tested — everything in Weeks 1–8</div><p>zsh commands · file system and paths · venv workflow · the submission ritual · all four data types · operators including // and % · if/elif/else · for loops · the accumulator pattern · dicts and list-of-dicts · functions with return · scope · modules and imports · reading tracebacks · print() debugging.</p></div><div class="warn"><div class="concept-label">⚠ NOT on the midterm</div><p>OOP · SQL · Streamlit · GenAI · FastAPI. If you have been studying those topics for the midterm, stop. Focus on Weeks 1–8.</p></div><div class="concept"><div class="concept-label">Open notes policy</div><p>Open notes means your own notes, your cheat sheet, your assignment code, and the course slides. It does NOT mean the internet, AI tools, or communicating with classmates. Open notes is individual work with your own materials.</p></div><p>Four things to be able to do without notes: 1. Trace an accumulator loop and give the final value. 2. Identify what type input() returns and what error results from adding it to an integer. 3. Read a traceback and identify the error type, file, and line number. 4. Write a boundary test for a function with a numeric threshold.</p><!-- prev-next -->
+# Fix the typo, then REMOVE the DEBUG print before committing</code></pre><div class="warn"><div class="concept-label">⚠ Remove DEBUG prints before committing</div><p>Debug prints left in submitted code are visible to graders. They indicate an incomplete submission. Remove them before running the ritual.</p></div><h2>Required AI literacy activity — Debug First, Then Ask</h2><p>This week includes a required structured activity. You will receive a script with two bugs. You must follow the six-step workflow before submitting:</p><ol><li><strong>Read the traceback</strong> — bottom-up. Write down the error type, file, and line number.</li><li><strong>Write your hypothesis</strong> — what do you think is wrong? Write it before touching any code.</li><li><strong>Add print() statements</strong> — inspect variables at the right points. Run and read the output.</li><li><strong>If still stuck after 10 minutes</strong> — you may ask an AI to explain the error message only. Not to fix the code.</li><li><strong>Fix the code yourself</strong> — based on your own understanding.</li><li><strong>Write the reflection</strong> — what was wrong, how you found it, what you learned.</li></ol><div class="warn"><div class="concept-label">⚠ Reflection is 30 of 70 points</div><p>A student who fixes both bugs perfectly but submits no reflection earns 40/70. The reflection is graded on its own and is not optional.</p></div><h2>Midterm review — what is and is not tested</h2><div class="ok"><div class="concept-label">✓ Tested — everything in Weeks 1–8</div><p>zsh commands · file system and paths · venv workflow · the submission ritual · all four data types · operators including // and % · if/elif/else · for loops · the accumulator pattern · dicts and list-of-dicts · functions with return · scope · modules and imports · reading tracebacks · print() debugging.</p></div><div class="warn"><div class="concept-label">⚠ NOT on the midterm</div><p>OOP · SQL · Streamlit · GenAI · FastAPI. If you have been studying those topics for the midterm, stop. Focus on Weeks 1–8.</p></div><div class="concept"><div class="concept-label">Open notes policy</div><p>Open notes means your own notes, your cheat sheet, your assignment code, and the course slides. It does NOT mean the internet, AI tools, or communicating with classmates. Open notes is individual work with your own materials.</p></div><p>Four things to be able to do without notes: 1. Trace an accumulator loop and give the final value. 2. Identify what type input() returns and what error results from adding it to an integer. 3. Read a traceback and identify the error type, file, and line number. 4. Write a boundary test for a function with a numeric threshold.</p>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">When reading a Python traceback, where should you start?</div>
+<ul class="quiz-options">
+<li>a) The first line</li>
+<li>b) The middle</li>
+<li>c) The last line — the error type and message</li>
+<li>d) The function name in the middle</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The last line names the error type (e.g., TypeError) and explains what went wrong. Read it first, then work up the call stack.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What does a NameError usually mean?</div>
+<ul class="quiz-options">
+<li>a) A function was called with the wrong number of arguments</li>
+<li>b) A variable was used before it was defined</li>
+<li>c) A list index was out of range</li>
+<li>d) Two incompatible types were combined</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Python raises NameError when it encounters a name it has never seen. Common causes: typo in a variable name, or using a variable before assigning it.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">What is the correct systematic debugging approach in ISM3232?</div>
+<ul class="quiz-options">
+<li>a) Ask AI immediately</li>
+<li>b) Try five random fixes</li>
+<li>c) Read the traceback, add print() statements to trace values, form a hypothesis, then test it</li>
+<li>d) Restart the kernel and rerun everything</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Systematic debugging: read the error, locate it, trace the values, understand what&#x27;s wrong, fix it.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does a TypeError typically indicate?</div>
+<ul class="quiz-options">
+<li>a) A variable name was misspelled</li>
+<li>b) An operation was applied to the wrong data type</li>
+<li>c) A file was not found</li>
+<li>d) A list was indexed out of bounds</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">For example: adding a str and int, calling a non-callable, or passing too many arguments to a function.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Code Trace</div>
+<div class="quiz-question">What error does this raise, and why?</div>
+<pre><code>def total(prices):
+    return sum(prices)
+
+result = total(&quot;49.99&quot;)
+print(result)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TypeError <span style="color:var(--muted);">— sum() expects an iterable of numbers. &quot;49.99&quot; is a string; iterating over it gives characters (&#x27;4&#x27;,&#x27;9&#x27;,&#x27;.&#x27;,…), not numbers. Fix: pass a list of floats.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What is the &#x27;Debug First, Then Ask&#x27; rule in ISM3232?</div>
+<ul class="quiz-options">
+<li>a) Never use AI tools</li>
+<li>b) Read the error and attempt at least one fix yourself before asking AI</li>
+<li>c) Ask AI first, then verify its output</li>
+<li>d) Debug for one full hour before giving up</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">You must read the traceback, form a hypothesis, and try a fix before using AI. This is a required, graded activity.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">The line number in a traceback always points to the exact line that caused the bug.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— The line number shows where Python detected the problem, which is often a consequence of the actual bug earlier in the code.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">When asking AI for debugging help, you should include the full traceback and the relevant code.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— AI tools produce much better answers with the exact error message and the code around it. Vague descriptions like &#x27;it doesn&#x27;t work&#x27; lead to generic and often wrong suggestions.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">Name four Python error types and give one distinguishing example for each.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">NameError (print(x) before x is assigned), TypeError (&quot;3&quot; + 3 — adding str and int), KeyError (d[&quot;missing&quot;] — key does not exist), IndexError ([1,2,3][5] — index out of range). Each name describes exactly which constraint was violated.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week07_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 7</span>Functions, Modules &amp; pytest</span></a><span></span><a href="week09_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 8 &nbsp;·&nbsp; Debugging, AI Literacy &amp; Midterm Review</div>
 <script src="../site.js"></script>

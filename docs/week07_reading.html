@@ -317,7 +317,93 @@ def test_get_approver_auto():
     assert get_approver(500.00) == &#x27;Auto&#x27;
 
 def test_get_approver_manager():
-    assert get_approver(501.00) == &#x27;Manager&#x27;</code></pre><div class="code-label">Run tests</div><pre><code>pytest -v</code></pre><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a complete function with type hints and docstring</li><li>Understand why functions must return, not print</li><li>Can explain scope and reproduce the NameError</li><li>tests/__init__.py exists</li><li>pytest -v shows all tests green</li><li>Assignment 7 submitted via GitHub URL</li></ul><!-- prev-next -->
+    assert get_approver(501.00) == &#x27;Manager&#x27;</code></pre><div class="code-label">Run tests</div><pre><code>pytest -v</code></pre><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a complete function with type hints and docstring</li><li>Understand why functions must return, not print</li><li>Can explain scope and reproduce the NameError</li><li>tests/__init__.py exists</li><li>pytest -v shows all tests green</li><li>Assignment 7 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What does a return statement do in a function?</div>
+<ul class="quiz-options">
+<li>a) Prints the result to the terminal</li>
+<li>b) Ends the function and sends a value back to the caller</li>
+<li>c) Stores the result in a global variable</li>
+<li>d) Calls the function again</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Without return, a function returns None. The returned value can be stored or passed to another function.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>def discount(price, rate=0.10):
+    return price * (1 - rate)
+
+print(discount(200))
+print(discount(200, 0.25))</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">180.0
+150.0 <span style="color:var(--muted);">— First call uses default rate 0.10: 200 * 0.90 = 180.0. Second uses 0.25: 200 * 0.75 = 150.0.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">What is a local variable?</div>
+<ul class="quiz-options">
+<li>a) A variable defined at the top of a file</li>
+<li>b) A variable that works in any function</li>
+<li>c) A variable defined inside a function that exists only while that function runs</li>
+<li>d) A variable imported from another module</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Local variables are created when a function is called and destroyed when it returns. They are invisible to code outside the function.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">Which pytest convention must test function names follow?</div>
+<ul class="quiz-options">
+<li>a) Must start with check_</li>
+<li>b) Must start with test_</li>
+<li>c) Must end with _test</li>
+<li>d) Can be named anything</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">pytest discovers tests by looking for functions beginning with test_. Any other prefix and pytest silently skips them.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">In the ISM3232 project structure, where must all pytest test files live?</div>
+<ul class="quiz-options">
+<li>a) In the project root</li>
+<li>b) In a tests/ directory</li>
+<li>c) Inside each source file</li>
+<li>d) In a conftest.py file</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The required structure is: models.py (source), tests/test_models.py (tests). Tests must be in a dedicated tests/ folder.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Multiple Choice</div>
+<div class="quiz-question">What does assert req.status == &#x27;Pending&#x27; do in a pytest test?</div>
+<ul class="quiz-options">
+<li>a) Prints the status</li>
+<li>b) Sets the status to &#x27;Pending&#x27;</li>
+<li>c) Fails the test if req.status is not &#x27;Pending&#x27;</li>
+<li>d) Skips the test if the condition is False</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If the assertion fails, pytest marks the test FAILED and shows the actual vs. expected values.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">A function with no return statement returns 0 by default.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— A function with no return statement returns None, not 0. Returning None when a value is expected is a common bug.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">You can import a function from another .py file using: from filename import function_name.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— For example, from models import BusinessRequest imports the class from models.py in the same directory.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is a default parameter value in a function, and why is it useful? Give a one-line example.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A default parameter gives a fallback value used when the caller does not pass that argument. It makes a parameter optional. Example: def tax(price, rate=0.07): return price * rate — calling tax(100) uses 0.07; tax(100, 0.15) overrides it.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week06_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 6</span>Conditionals, Loops &amp; Dicts</span></a><span></span><a href="week08_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 8</span>Debugging, AI Literacy &amp; Review</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 7 &nbsp;·&nbsp; Functions, Modules &amp; pytest</div>
 <script src="../site.js"></script>

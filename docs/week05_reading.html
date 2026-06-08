@@ -265,7 +265,89 @@ print(f&#x27;Product:  {product}&#x27;)
 print(f&#x27;Price:    ${price:.2f}&#x27;)        # 2 decimal places
 print(f&#x27;Total:    ${total:,.2f}&#x27;)        # comma separator + 2 decimals
 print(f&#x27;Tax rate: {0.072:.1%}&#x27;)          # percentage: 7.2%
-print(f&#x27;Boxes:    {qty // 4}&#x27;)           # expression inside { }</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">str</span><span class="term-def">String — text enclosed in quotes.</span></div><div class="term"><span class="term-word">int</span><span class="term-def">Integer — a whole number with no decimal.</span></div><div class="term"><span class="term-word">float</span><span class="term-def">Floating-point — a number with a decimal component.</span></div><div class="term"><span class="term-word">bool</span><span class="term-def">Boolean — True or False. Always derived from a comparison.</span></div><div class="term"><span class="term-word">type()</span><span class="term-def">Returns the data type of any value.</span></div><div class="term"><span class="term-word">//</span><span class="term-def">Floor division — divides and rounds down to the nearest integer.</span></div><div class="term"><span class="term-word">%</span><span class="term-def">Modulo — returns the remainder after division.</span></div><div class="term"><span class="term-word">f-string</span><span class="term-def">A string prefixed with f that evaluates expressions inside {curly braces}.</span></div><div class="term"><span class="term-word">:.2f</span><span class="term-def">f-string format spec: 2 decimal places.</span></div><div class="term"><span class="term-word">:,.2f</span><span class="term-def">f-string format spec: comma separator and 2 decimal places.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can name all four data types and give a business example of each</li><li>Can explain what // and % do (not just their symbol)</li><li>Understand why input() always returns str and how to fix it</li><li>Business data script runs cleanly with correct output</li><li>Submission ritual completed before pushing</li><li>Assignment 5 submitted via GitHub URL</li></ul><!-- prev-next -->
+print(f&#x27;Boxes:    {qty // 4}&#x27;)           # expression inside { }</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">str</span><span class="term-def">String — text enclosed in quotes.</span></div><div class="term"><span class="term-word">int</span><span class="term-def">Integer — a whole number with no decimal.</span></div><div class="term"><span class="term-word">float</span><span class="term-def">Floating-point — a number with a decimal component.</span></div><div class="term"><span class="term-word">bool</span><span class="term-def">Boolean — True or False. Always derived from a comparison.</span></div><div class="term"><span class="term-word">type()</span><span class="term-def">Returns the data type of any value.</span></div><div class="term"><span class="term-word">//</span><span class="term-def">Floor division — divides and rounds down to the nearest integer.</span></div><div class="term"><span class="term-word">%</span><span class="term-def">Modulo — returns the remainder after division.</span></div><div class="term"><span class="term-word">f-string</span><span class="term-def">A string prefixed with f that evaluates expressions inside {curly braces}.</span></div><div class="term"><span class="term-word">:.2f</span><span class="term-def">f-string format spec: 2 decimal places.</span></div><div class="term"><span class="term-word">:,.2f</span><span class="term-def">f-string format spec: comma separator and 2 decimal places.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can name all four data types and give a business example of each</li><li>Can explain what // and % do (not just their symbol)</li><li>Understand why input() always returns str and how to fix it</li><li>Business data script runs cleanly with correct output</li><li>Submission ritual completed before pushing</li><li>Assignment 5 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:400;color:var(--accent);letter-spacing:.12em;margin-left:10px;">&#9733; Midterm-Eligible</span></h2>
+<p class="lede" style="font-size:14.5px;">Quiz questions repeat on the exam verbatim or with minor variation. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What does the // operator return in Python?</div>
+<ul class="quiz-options">
+<li>a) Floating-point division</li>
+<li>b) The remainder after division</li>
+<li>c) Integer (floor) division</li>
+<li>d) Exponentiation</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">7 // 2 is 3, not 3.5. The result is always rounded down to the nearest integer.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What is the output of: type(3.0)?</div>
+<ul class="quiz-options">
+<li>a) &lt;class &#x27;int&#x27;&gt;</li>
+<li>b) &lt;class &#x27;float&#x27;&gt;</li>
+<li>c) &lt;class &#x27;str&#x27;&gt;</li>
+<li>d) &lt;class &#x27;num&#x27;&gt;</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The decimal point makes 3.0 a float, even though its value is a whole number.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">Which f-string format specifier displays 1234567.89 as 1,234,567.89?</div>
+<ul class="quiz-options">
+<li>a) :.2f</li>
+<li>b) :,.2f</li>
+<li>c) :&gt;2f</li>
+<li>d) :.2d</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The comma adds thousands separators; .2 sets decimal places; f specifies float formatting.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">Which expression converts the string &quot;42&quot; to the integer 42?</div>
+<ul class="quiz-options">
+<li>a) str(42)</li>
+<li>b) float(&quot;42&quot;)</li>
+<li>c) int(&quot;42&quot;)</li>
+<li>d) bool(&quot;42&quot;)</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">int() converts a string or float to an integer. str() goes the other direction.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Code Trace</div>
+<div class="quiz-question">What is the output?</div>
+<pre><code>price = 49.99
+qty = 3
+total = price * qty
+print(f&#x27;Total: ${total:,.2f}&#x27;)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Total: $149.97 <span style="color:var(--muted);">— price * qty = 149.97, formatted with comma separator and two decimal places.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Code Trace</div>
+<div class="quiz-question">What is printed?</div>
+<pre><code>x = 17
+print(x // 5)
+print(x % 5)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">3
+2 <span style="color:var(--muted);">— 17 // 5 = 3 (floor division); 17 % 5 = 2 (remainder).</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">In Python, &quot;3&quot; + 3 raises a TypeError.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Python does not auto-convert types. You cannot add a string and an integer. Convert first: int(&quot;3&quot;) + 3, or &quot;3&quot; + str(3).</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">The % operator returns a percentage as a float.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— % is the modulus operator; it returns the remainder after integer division. 10 % 3 is 1. To get a percentage you multiply by 100: rate * 100.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What is the difference between = and == in Python?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">= is assignment — it stores a value in a variable (x = 5). == is comparison — it tests equality and returns True or False (x == 5 → True). Using = where == is expected is one of the most common Python bugs.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week04_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 4</span>Search Tools, Ritual &amp; Git</span></a><span></span><a href="week06_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 6</span>Conditionals, Loops &amp; Dicts</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 5 &nbsp;·&nbsp; Variables, Data Types &amp; Operators</div>
 <script src="../site.js"></script>

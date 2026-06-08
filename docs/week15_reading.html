@@ -285,7 +285,93 @@ Always build the selectbox options from a live call to <code>get_all_records()</
             st.rerun()   # refresh the page to show updated data
     else:
         st.info('No requests to update.')</code></pre>
-<h2>Before you leave this week</h2><ul class="checklist"><li>create_table() called at the top of app.py — outside all tabs</li><li>All five features implemented and working</li><li>Filter applied in Python before st.dataframe() — not hardcoded</li><li>Update Status selectbox built from get_all_records()</li><li>st.rerun() called after status update so the view refreshes</li><li>Assignment 15 submitted via GitHub URL</li></ul><!-- prev-next -->
+<h2>Before you leave this week</h2><ul class="checklist"><li>create_table() called at the top of app.py — outside all tabs</li><li>All five features implemented and working</li><li>Filter applied in Python before st.dataframe() — not hardcoded</li><li>Update Status selectbox built from get_all_records()</li><li>st.rerun() called after status update so the view refreshes</li><li>Assignment 15 submitted via GitHub URL</li></ul>
+<h2 id="quiz">Module Quiz</h2>
+<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Q1 · Multiple Choice</div>
+<div class="quiz-question">What happens every time a user interacts with a Streamlit widget?</div>
+<ul class="quiz-options">
+<li>a) Only the widget&#x27;s callback runs</li>
+<li>b) The entire app.py script re-runs from top to bottom</li>
+<li>c) Only the changed section re-renders</li>
+<li>d) The database connection is reset</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This is the Streamlit execution model. Every widget interaction triggers a full rerun. Understanding this prevents bugs like re-initialising data on every click.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q2 · Multiple Choice</div>
+<div class="quiz-question">What must st.set_page_config() always be?</div>
+<ul class="quiz-options">
+<li>a) The last line of app.py</li>
+<li>b) Called inside a function</li>
+<li>c) The first Streamlit call in the script, before any other st.* calls</li>
+<li>d) Inside the main tab block</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If anything else runs first, Streamlit raises StreamlitAPIException. It must be called before any output.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">Which Streamlit function creates a multi-tab layout?</div>
+<ul class="quiz-options">
+<li>a) st.sidebar()</li>
+<li>b) st.columns()</li>
+<li>c) st.tabs()</li>
+<li>d) st.container()</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">tab1, tab2 = st.tabs([&#x27;New Request&#x27;, &#x27;All Requests&#x27;]) creates two tabs. Content inside with tab1: appears on the first tab.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q4 · Multiple Choice</div>
+<div class="quiz-question">What does st.session_state allow you to do?</div>
+<ul class="quiz-options">
+<li>a) Store values that persist across reruns within the same user session</li>
+<li>b) Connect to a database</li>
+<li>c) Cache expensive computations permanently</li>
+<li>d) Share data between different users</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Normal Python variables reset on every rerun. session_state survives reruns, making it essential for counters and form state.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q5 · Multiple Choice</div>
+<div class="quiz-question">What does st.success(&#x27;Done!&#x27;) display?</div>
+<ul class="quiz-options">
+<li>a) A red error banner</li>
+<li>b) A yellow warning</li>
+<li>c) A green success banner</li>
+<li>d) A modal dialog</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Streamlit has st.success() (green), st.error() (red), st.warning() (yellow), and st.info() (blue) for user feedback.</div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q6 · Code Trace</div>
+<div class="quiz-question">What does this code display when the text box is empty and the button is clicked?</div>
+<pre><code>name = st.text_input(&#x27;Your name&#x27;)
+if st.button(&#x27;Submit&#x27;):
+    if name:
+        st.success(f&#x27;Hello, {name}!&#x27;)
+    else:
+        st.warning(&#x27;Please enter your name.&#x27;)</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A yellow warning: &#x27;Please enter your name.&#x27; <span style="color:var(--muted);">— When name is empty (falsy), the else branch runs and st.warning() displays a yellow banner.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q7 · True / False</div>
+<div class="quiz-question">Streamlit reruns the entire script even when only one widget changes.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Streamlit reruns everything on every interaction. This makes state management simple; the trade-off is that expensive operations run on every click unless cached with @st.cache_data.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q8 · True / False</div>
+<div class="quiz-question">st.dataframe() can display a list of dicts directly.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— st.dataframe() accepts a list of dicts, a pandas DataFrame, or any sequence that can be converted to a table. It renders an interactive, sortable table automatically.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q9 · Short Answer</div>
+<div class="quiz-question">What are the five required features every ISM3232 Streamlit capstone app must include?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">(1) New request form with inputs and a submit button; (2) All requests view displaying a dataframe of all database records; (3) Update status tab to change a record&#x27;s status by id; (4) Status report showing counts or totals per status; (5) st.set_page_config() at the top with a descriptive title and wide layout.</div></details>
+</div>
+
+<!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span></a><span></span><a href="week16_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Streamlit Business Interface</div>
 <script src="../site.js"></script>
