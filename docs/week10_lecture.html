@@ -145,6 +145,15 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* video/infographic playlist */
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary)}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -237,16 +246,37 @@ print(req_102.status)             <span class="cm"># Pending &mdash; unchanged</
 <span class="cm"># Instances are independent &mdash; changing one does not affect the other</span>
 print(req_101)   <span class="cm"># BusinessRequest(101, Taylor, $1200, Approved)</span>
 print(req_102)   <span class="cm"># BusinessRequest(102, Jordan, $450, Pending)</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Encapsulation</div><div class="line"></div></div><div class="card"><div class="card-title">Encapsulation: data and behaviour belong together</div><p>Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The <code>BusinessRequest</code> class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic &mdash; it just calls the method.</p><p>This is better design than checking <code>req["amount"] &gt; 1000</code> everywhere. If the threshold changes, you update it in one place inside the class.</p></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion: what goes inside a class?</div><div class="p-text">What other methods might a BusinessRequest class need? Think about what a business process actually does to requests &mdash; routing, escalation, history tracking, notifications.</div><div class="p-hint">Look for: summary(), escalate(), add_note(), get_age_in_days(). Students start thinking about design, not just syntax.</div></div></div><div class="assignment"><div class="a-header">Assignment 10 &middot; Due end of Week 10 &middot; OOP I</div><h3>BusinessRequest Class</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> containing the <code>BusinessRequest</code> class with <code>__init__</code>, at least 3 methods, and <code>__repr__</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; creates at least 3 instances, calls each method, and prints results showing the methods work correctly.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 4 pytest tests covering the class methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F4F8;</div><div class="d-text"><strong>Screenshot:</strong> Full pre-submission ritual passing before push.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/27_oop1_classes_infographic.png"
-       alt="OOP I: Classes & Objects — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
+<div class="section-divider"><div class="line"></div><div class="label">Module Infographics &middot; 2</div><div class="line"></div></div>
+<div class="infographic-tabs" style="margin-bottom:24px;">
+  <div class="vpl-tiles" style="margin-bottom:8px;">
+    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/27_oop1_classes_infographic.png','OOP Essentials: Blueprint to Business Object')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Blueprint to Business Object</span>
+    </div>
+    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/27_oop1_classes_alt_infographic.png','Python OOP: Blueprint to Object')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Python OOP: Blueprint to Object</span>
+    </div>
+  </div>
+  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);">
+    <img src="../assets/img/infographics/27_oop1_classes_infographic.png"
+         alt="OOP Essentials: Blueprint to Business Object"
+         loading="lazy"
+         style="width:100%;height:auto;display:block;min-height:200px;">
+  </div>
 </div>
 
 <!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &middot; Week 10 &middot; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</div></div>
+<script>
+function igrSwitch(tile,src,alt){
+  var p=tile.closest(".infographic-tabs");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var img=p.querySelector(".igr-stage img");
+  img.src=src;img.alt=alt;
+}
+</script>
 <script src="../site.js"></script>
 </body></html>

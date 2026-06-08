@@ -315,12 +315,24 @@ yourname     <span class="cm"># your username</span>
   </div>
 
   
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/22_advanced_shell_infographic.png"
-       alt="Advanced Shell Tools — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
+<div class="section-divider"><div class="line"></div><div class="label">Module Infographics &middot; 2</div><div class="line"></div></div>
+<div class="infographic-tabs" style="margin-bottom:24px;">
+  <div class="vpl-tiles" style="margin-bottom:8px;">
+    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/22_advanced_shell_infographic.png','Advanced Shell Tools')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Advanced Shell Tools</span>
+    </div>
+    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/09_terminal_toolkit_infographic.png','Terminal Toolkit &mdash; 5 Core Commands')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Terminal Toolkit &mdash; 5 Core Commands</span>
+    </div>
+  </div>
+  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);">
+    <img src="../assets/img/infographics/22_advanced_shell_infographic.png"
+         alt="Advanced Shell Tools"
+         loading="lazy"
+         style="width:100%;height:auto;display:block;min-height:200px;">
+  </div>
 </div>
 
 <!-- prev-next -->
@@ -335,6 +347,13 @@ function vplSwitch(tile,src,title){
   tile.classList.add("vpl-active");
   var f=p.querySelector(".vpl-stage iframe");
   f.src=src;f.title=title;
+}
+function igrSwitch(tile,src,alt){
+  var p=tile.closest(".infographic-tabs");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var img=p.querySelector(".igr-stage img");
+  img.src=src;img.alt=alt;
 }
 </script>
 <script src="../site.js"></script>
