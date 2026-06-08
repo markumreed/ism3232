@@ -111,10 +111,21 @@ details.faq:not([open])>summary .q-icon::before{content:'+';}
   font-family:var(--mono);font-size:10px;color:var(--dim);
   letter-spacing:.08em;text-align:center;}
 
+/* prev/next nav */
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:48px;}
+.pn a{display:block;padding:14px 18px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;text-decoration:none;color:var(--text);transition:background .15s,transform .15s;}
+.pn a:hover{background:var(--bg3);transform:translateY(-1px);}
+.pn .pn-label{font-family:var(--mono);font-size:10px;letter-spacing:.15em;
+  color:var(--dim);text-transform:uppercase;margin-bottom:4px;}
+.pn .pn-title{font-weight:600;font-size:14px;color:var(--text);}
+.pn .next{text-align:right;}
+
 /* mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px;}
   pre{font-size:12px;}
+  .pn{grid-template-columns:1fr;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
@@ -538,14 +549,73 @@ pip install -r requirements.txt</pre>
 
 <!-- ── Still stuck ── -->
 <div class="section-divider"><div class="line"></div><div class="label">Still Stuck?</div><div class="line"></div></div>
-<div class="callout green">
-  <strong>Post in the course discussion board</strong> with the full traceback (all lines from &ldquo;Traceback&rdquo; to the last line), the code that triggered it, and what you already tried. Do not post just the last line &mdash; the full traceback is what allows a diagnosis.
+
+<div class="callout">
+  <strong>Don&rsquo;t sit stuck for more than 20 minutes.</strong> Email your professor or TA, come to office hours, or ask at the start of the next class. Use the format below so the problem can be diagnosed immediately &mdash; vague emails get slow responses.
 </div>
 
-<p style="margin-top:16px;font-size:14px;color:var(--muted);">
+<p style="font-size:14px;color:var(--muted);margin:20px 0 10px;font-weight:600;">What to include:</p>
+<ul style="font-size:14px;color:var(--muted);padding-left:20px;line-height:1.9;margin-bottom:20px;">
+  <li>Your <strong style="color:var(--text);">operating system</strong> and version (e.g. macOS 14 Sonoma, Windows 11 + WSL Ubuntu 22.04)</li>
+  <li>The <strong style="color:var(--text);">full traceback</strong> &mdash; all lines from &ldquo;Traceback (most recent call last)&rdquo; to the final error line. Paste it directly into the email. The last line alone is not enough for a diagnosis.</li>
+  <li>The <strong style="color:var(--text);">code that triggered it</strong> &mdash; paste as plain text in the email body. Do <em>not</em> attach a <code>.py</code> file; they are frequently blocked by university email filters and will never arrive.</li>
+  <li>Your <strong style="color:var(--text);">GitHub repo link</strong> if the assignment is on GitHub &mdash; share the URL so the full project context is visible.</li>
+  <li>A <strong style="color:var(--text);">screenshot</strong> of the error as it appears in the VS Code terminal.</li>
+  <li><strong style="color:var(--text);">What you already tried</strong> &mdash; so the response doesn&rsquo;t repeat steps you&rsquo;ve already taken.</li>
+</ul>
+
+<p style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Example email</p>
+<pre><code>Subject: ISM3232 &mdash; ModuleNotFoundError in Week 3 project
+
+Hi Professor [Name],
+
+I&rsquo;m getting the following error after following the FAQ steps.
+
+OS: Windows 11 + WSL Ubuntu 22.04
+Python version: 3.12.1
+
+Full traceback:
+------------------------------------------------
+Traceback (most recent call last):
+  File &quot;src/pipeline.py&quot;, line 4, in &lt;module&gt;
+    import requests
+ModuleNotFoundError: No module named &apos;requests&apos;
+------------------------------------------------
+
+Code (pasted &mdash; not attached):
+------------------------------------------------
+[paste your code here]
+------------------------------------------------
+
+GitHub repo: https://github.com/yourusername/ism3232-week03
+
+What I already tried:
+- Ran source .venv/bin/activate (prompt shows (.venv))
+- Ran pip install -r requirements.txt (no errors shown)
+
+Thank you,
+[Your full name]</code></pre>
+
+<div class="warn" style="margin-top:16px;">
+  <div class="concept-label">&#x26A0; Do not attach .py files</div>
+  <p>University email filters frequently block <code>.py</code> attachments and the message will never arrive. Always paste code directly into the email body or share a GitHub link instead.</p>
+</div>
+
+<p style="margin-top:20px;font-size:14px;color:var(--muted);">
   For a complete error-by-error reference including capstone-specific issues, see the
   <a href="troubleshooting.html">Troubleshooting Guide</a>.
 </p>
+
+<div class="pn">
+  <a href="precourse.html">
+    <div class="pn-label">&larr; Back</div>
+    <div class="pn-title">Pre-Course Setup Tutorial</div>
+  </a>
+  <a class="next" href="glossary.html">
+    <div class="pn-label">Also useful &rarr;</div>
+    <div class="pn-title">Glossary</div>
+  </a>
+</div>
 
 <div class="page-footer">ISM3232 &middot; Business Application Development &middot; FAQ</div>
 </div>
