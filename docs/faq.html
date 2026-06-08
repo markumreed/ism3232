@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ISM3232 FAQ — setup issues and common programming errors.">
+<title>ISM3232 &mdash; FAQ</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-bdr:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);--green-bdr:rgba(110,231,183,.25);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);--amber-bdr:rgba(252,211,77,.25);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);--red-bdr:rgba(248,113,113,.3);
+  --mono:'DM Mono','JetBrains Mono','Fira Mono',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif;font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+.wrapper{max-width:820px;margin:0 auto;}
+
+/* ── Page header ── */
+.page-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.lede{font-size:15px;color:var(--muted);line-height:1.65;
+  margin-bottom:14px;max-width:660px;}
+
+/* meta chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-bdr);}
+
+/* callout */
+.callout{padding:14px 18px;margin:0 0 26px;
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  background:var(--blue-dim);border:1px solid var(--blue-bdr);border-left-width:3px;
+  font-size:14px;color:var(--muted);line-height:1.7;}
+.callout.green{background:var(--green-dim);border-color:var(--green-bdr);border-left-color:var(--green);}
+.callout.amber{background:var(--amber-dim);border-color:var(--amber-bdr);border-left-color:var(--amber);}
+.callout strong{color:var(--text);}
+
+/* section divider */
+.section-divider{display:flex;align-items:center;gap:12px;margin:44px 0 20px;}
+.section-divider .line{flex:1;height:1px;background:var(--border);}
+.section-divider .label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);white-space:nowrap;}
+
+/* error badge */
+.err-badge{display:inline-block;font-family:var(--mono);font-size:12px;
+  font-weight:700;padding:2px 8px;border-radius:4px;
+  background:var(--red-dim);border:1px solid var(--red-bdr);color:var(--red);}
+
+/* code */
+code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--blue);}
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:7px;
+  padding:14px 18px;overflow-x:auto;margin:10px 0 0;}
+pre code{background:none;padding:0;color:#c9d1d9;font-size:13px;line-height:1.6;}
+
+a{color:var(--blue);text-decoration:none;}
+a:hover{color:#a8d4ff;}
+
+/* ── FAQ accordion ── */
+.faq-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+
+details.faq{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+}
+details.faq[open]{border-color:var(--border2);}
+details.faq[open]>summary{border-bottom:1px solid var(--border);color:var(--text);}
+
+details.faq>summary{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;cursor:pointer;list-style:none;
+  font-size:14px;font-weight:600;color:var(--muted);
+  line-height:1.4;gap:12px;transition:color .12s;user-select:none;
+}
+details.faq>summary::-webkit-details-marker{display:none;}
+details.faq>summary::marker{display:none;}
+details.faq>summary:hover{color:var(--text);}
+details.faq>summary .q-icon{
+  flex-shrink:0;font-family:var(--mono);font-size:18px;
+  color:var(--blue);line-height:1;width:18px;text-align:center;
+}
+details.faq[open]>summary .q-icon::before{content:'−';}
+details.faq:not([open])>summary .q-icon::before{content:'+';}
+
+.faq-body{
+  padding:16px 18px 18px;background:var(--bg3);
+  font-size:14px;color:var(--muted);line-height:1.75;
+}
+.faq-body p{margin:0 0 10px;}
+.faq-body p:last-child{margin-bottom:0;}
+.faq-body ul{padding-left:20px;margin:8px 0;}
+.faq-body li{margin:5px 0;}
+.faq-body strong{color:var(--text);}
+
+/* footer */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+
+/* mobile */
+@media(max-width:600px){
+  body{padding:16px 14px 48px;}
+  pre{font-size:12px;}
+}
+</style>
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<div class="wrapper" id="main-content" role="main">
+
+<!-- ── Page header ── -->
+<p class="page-eyebrow">ISM3232 &middot; Business Application Development &middot; Reference</p>
+<h1>FAQ</h1>
+<p class="lede">Common setup problems and Python errors in this course, with causes and fixes. Read the error, find the question, apply the fix.</p>
+<div class="chip-row">
+  <span class="chip blue">Setup &amp; Installation</span>
+  <span class="chip blue">Common Python Errors</span>
+  <span class="chip">See also: <a href="troubleshooting.html">Troubleshooting Guide</a> for full traceback reference</span>
+</div>
+
+<div class="callout">
+  <strong>How to read an error:</strong> Start at the <strong>bottom</strong> of the red output. The last line is the error type and message. The line above is the file name and line number. Read bottom-up, not top-down.
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- SECTION 1: SETUP                    -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Setup &amp; Installation</div><div class="line"></div></div>
+
+<div class="faq-list">
+
+  <details class="faq">
+    <summary>
+      <span><code>wsl --install</code> fails with a virtualisation error</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>WSL requires hardware virtualisation to be enabled in your machine&rsquo;s BIOS/UEFI. Many machines ship with it off.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Restart your computer and enter BIOS setup &mdash; usually by pressing <strong>Del</strong>, <strong>F2</strong>, or <strong>F10</strong> during startup (the key is shown briefly on the boot screen)</li>
+        <li>Find the setting labelled <strong>Intel VT-x</strong>, <strong>AMD-V</strong>, or <strong>Virtualization Technology</strong> and enable it</li>
+        <li>Save and restart</li>
+        <li>Run <code>wsl --install</code> again in an Administrator PowerShell window</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>echo $SHELL</code> shows <code>/bin/bash</code> &mdash; I should be in zsh</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>zsh is not your default shell yet. On Mac this is unusual (zsh has been the default since macOS Catalina); on WSL it means the <code>chsh</code> step was skipped or did not take effect.</p>
+      <p><strong>Mac fix:</strong></p>
+      <pre>chsh -s /bin/zsh</pre>
+      <p>Enter your password, then close the terminal and reopen it. Run <code>echo $SHELL</code> again &mdash; it should return <code>/bin/zsh</code>.</p>
+      <p><strong>WSL/Ubuntu fix:</strong></p>
+      <pre>sudo apt install zsh -y
+sudo chsh -s $(which zsh) $USER</pre>
+      <p>Close and reopen the Ubuntu terminal. The prompt changes from <code>$</code> to <code>%</code>.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>VS Code terminal opens PowerShell instead of Ubuntu / WSL</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>VS Code defaults to PowerShell on Windows. You need to switch the default terminal profile to WSL.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>In VS Code, press <code>Ctrl+Shift+P</code> to open the Command Palette</li>
+        <li>Type <strong>Terminal: Select Default Profile</strong> and press Enter</li>
+        <li>Choose <strong>Ubuntu (WSL)</strong> or <strong>wsl.exe</strong> from the list</li>
+        <li>Close any open terminal panels and open a new one with <code>Ctrl+`</code></li>
+        <li>The terminal should now open inside Ubuntu with a zsh prompt</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>brew: command not found</code> after installing Homebrew</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Homebrew installs correctly but its binary is not yet in your shell&rsquo;s PATH. The installer prints the exact commands needed to fix this &mdash; most people scroll past them.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Scroll back through the terminal output from the Homebrew install</li>
+        <li>Look for two lines starting with <strong>&ldquo;Next steps:&rdquo;</strong> that contain <code>echo</code> and <code>eval</code> commands</li>
+        <li>Copy and run those commands exactly as printed</li>
+        <li>Close the terminal and reopen it, then run <code>brew --version</code> to confirm</li>
+      </ul>
+      <p>If you no longer have the output, run the installer again &mdash; Homebrew detects that it is already installed and only re-prints the PATH setup steps.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>chsh: PAM authentication error</code> when switching to zsh in WSL</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Plain <code>chsh</code> fails in some WSL configurations due to how PAM (authentication) is set up in the Ubuntu environment.</p>
+      <p><strong>Fix:</strong> Use <code>sudo chsh</code> with the current user specified explicitly:</p>
+      <pre>sudo chsh -s $(which zsh) $USER</pre>
+      <p>If that still fails, edit <code>/etc/passwd</code> directly (requires root) or reinstall WSL:</p>
+      <pre>wsl --unregister Ubuntu
+wsl --install</pre>
+      <p>Note: reinstalling WSL erases the Ubuntu filesystem. Only do this if the <code>sudo chsh</code> fix does not work.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>code: command not found</code> when typing in the terminal</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The <code>code</code> shell command needs to be registered separately. On Mac it is a one-time VS Code setup step; on Windows it should happen automatically when VS Code is installed with the PATH option checked.</p>
+      <p><strong>Mac fix:</strong></p>
+      <ul>
+        <li>Open VS Code</li>
+        <li>Press <code>&#x2318;Shift+P</code> to open the Command Palette</li>
+        <li>Type <strong>Shell Command: Install &lsquo;code&rsquo; command in PATH</strong> and press Enter</li>
+        <li>Restart the terminal and run <code>code --version</code> to confirm</li>
+      </ul>
+      <p><strong>Windows WSL fix:</strong> The <code>code</code> command from inside WSL calls the Windows VS Code binary. Make sure VS Code for Windows (not Linux) is installed, and run <code>code .</code> from inside the WSL terminal &mdash; VS Code should open with the WSL remote extension active.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>Git push asks for a password but rejects it</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>GitHub stopped accepting plain passwords for Git operations in 2021. You need to use a <strong>Personal Access Token</strong> (PAT) instead.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Go to <strong>github.com &rarr; Settings &rarr; Developer Settings &rarr; Personal Access Tokens &rarr; Tokens (classic)</strong></li>
+        <li>Click <strong>Generate new token (classic)</strong></li>
+        <li>Give it a name (e.g., &ldquo;ISM3232 laptop&rdquo;) and check the <strong>repo</strong> scope</li>
+        <li>Click <strong>Generate token</strong> and copy the token immediately &mdash; it is only shown once</li>
+        <li>When Git asks for your password, paste the token</li>
+      </ul>
+      <p>To avoid entering it every time, run:</p>
+      <pre>git config --global credential.helper store</pre>
+      <p>The next time you enter the token, Git will remember it.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><code>git: command not found</code> on Mac</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Git is included with Xcode Command Line Tools, which may not be installed on your machine.</p>
+      <p><strong>Fix:</strong></p>
+      <pre>xcode-select --install</pre>
+      <p>A dialog appears &mdash; click Install. It takes 5&ndash;10 minutes. After it completes, run <code>git --version</code> to confirm.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>Ubuntu doesn&rsquo;t open automatically after a Windows restart</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>WSL does not auto-start after a reboot &mdash; you need to open it manually each session.</p>
+      <p><strong>Ways to open the WSL terminal:</strong></p>
+      <ul>
+        <li>Open the Start menu and search for <strong>Ubuntu</strong></li>
+        <li>Open PowerShell and type <code>wsl</code></li>
+        <li>Open VS Code &mdash; if the terminal is set to WSL, it opens automatically when you open a terminal panel</li>
+      </ul>
+    </div>
+  </details>
+
+</div><!-- /faq-list setup -->
+
+<!-- ═══════════════════════════════════ -->
+<!-- SECTION 2: PYTHON ERRORS            -->
+<!-- ═══════════════════════════════════ -->
+<div class="section-divider"><div class="line"></div><div class="label">Common Python Errors</div><div class="line"></div></div>
+
+<div class="callout amber">
+  <strong>Before searching here:</strong> If you have a full traceback, the <a href="troubleshooting.html">Troubleshooting Guide</a> has more detailed error-by-error explanations. This FAQ is for quick &ldquo;what went wrong&rdquo; answers.
+</div>
+
+<div class="faq-list">
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">ModuleNotFoundError: No module named &lsquo;&hellip;&rsquo;</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The package is not installed in the currently active Python environment, or the virtual environment is not activated.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Activate the virtual environment first: <code>source .venv/bin/activate</code></li>
+        <li>The prompt must show <code>(.venv)</code> before running any script</li>
+        <li>If the package is still not found: <code>pip install -r requirements.txt</code></li>
+        <li>Confirm with: <code>pip list | grep package-name</code></li>
+      </ul>
+      <pre>source .venv/bin/activate
+pip install -r requirements.txt
+python3 your_script.py</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">FileNotFoundError: No such file or directory</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Python cannot find the file at the path you gave it. The most common cause is running the script from a different directory than the one containing the file.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Run <code>pwd</code> in the terminal to confirm your location</li>
+        <li>Run <code>ls</code> to see what files are in the current directory</li>
+        <li>Always run scripts from the project root directory: <code>python3 src/script.py</code> not <code>cd src &amp;&amp; python3 script.py</code></li>
+        <li>Use paths relative to the project root, not to the script file</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">SyntaxError: invalid syntax</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Python cannot parse the file. It reports a line number, but the actual mistake is often one line <em>before</em> the reported line.</p>
+      <p><strong>Most common causes:</strong></p>
+      <ul>
+        <li>Missing colon <code>:</code> after <code>def</code>, <code>if</code>, <code>for</code>, <code>class</code></li>
+        <li>Unclosed parenthesis <code>(</code>, bracket <code>[</code>, or brace <code>{</code></li>
+        <li>Backslash inside an f-string expression: use a variable instead</li>
+      </ul>
+      <pre># Wrong — backslash in f-string
+names = ["Ana", "Ben"]
+print(f"First: {names[0]\n}")   # SyntaxError
+
+# Fix — move the newline outside
+print(f"First: {names[0]}")</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">IndentationError</span> &mdash; unexpected indent or mixed tabs and spaces</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Python is strict about consistent indentation. Mixing tabs and spaces &mdash; even invisibly &mdash; causes this error.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Use <strong>4 spaces</strong> per level, never tabs</li>
+        <li>In VS Code: <strong>View &rarr; Appearance &rarr; Render Whitespace</strong> to see what is there</li>
+        <li>Bottom-right corner shows <strong>Spaces: 4</strong> &mdash; click it and choose <strong>Indent Using Spaces: 4</strong></li>
+        <li>To convert an entire file: <code>Ctrl+Shift+P</code> &rarr; <strong>Convert Indentation to Spaces</strong></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">NameError: name &lsquo;x&rsquo; is not defined</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>A variable was used before it was assigned, or it was defined inside a function and referenced outside it (scope issue).</p>
+      <pre># Common OOP mistake — forgetting self
+class BankAccount:
+    def deposit(self, amount):
+        balance += amount   # NameError — should be self.balance
+
+    def deposit(self, amount):
+        self.balance += amount   # Correct</pre>
+      <p><strong>Fix:</strong> Check that the variable is assigned before the line that uses it. In classes, instance attributes always need <code>self.</code> prefix.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">TypeError</span> &mdash; wrong type passed to a function or operation</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The most common variant in this course: <code>input()</code> returns a string; passing it directly to math operations fails.</p>
+      <pre># Wrong
+amount = input("Enter amount: ")
+total = amount * 1.07   # TypeError: can't multiply str by float
+
+# Fix — convert immediately
+amount = float(input("Enter amount: "))
+total = amount * 1.07</pre>
+      <p>Always convert <code>input()</code> with <code>int()</code> or <code>float()</code> before using it in calculations.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">KeyError</span> &mdash; dictionary key not found</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>You accessed a key that does not exist in the dictionary. Usually a typo, or the key only exists in some records when processing a list of dicts.</p>
+      <pre>record = {"name": "Ana", "score": 95}
+print(record["scroe"])   # KeyError — typo</pre>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Print <code>record.keys()</code> to see what is actually there</li>
+        <li>Use <code>.get("key", default)</code> to handle missing keys gracefully: <code>record.get("score", 0)</code></li>
+        <li>For JSON/API responses, keys may be missing from some records &mdash; always use <code>.get()</code></li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">AttributeError: &lsquo;NoneType&rsquo; object has no attribute &lsquo;&hellip;&rsquo;</span></span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>A function or method returned <code>None</code> and you tried to call an attribute or method on it. In OOP this often means a constructor forgot to set an attribute or a method forgot to <code>return self</code>.</p>
+      <pre>class Cart:
+    def add(self, item):
+        self.items.append(item)   # AttributeError if self.items was never created
+
+class Cart:
+    def __init__(self):
+        self.items = []   # Must initialise in __init__
+
+    def add(self, item):
+        self.items.append(item)</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span><span class="err-badge">UnicodeDecodeError</span> when reading a CSV or text file</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The file contains characters that the default encoding (often UTF-8) cannot parse &mdash; common with files exported from Excel on Windows.</p>
+      <p><strong>Fix:</strong> Specify the encoding explicitly when opening the file:</p>
+      <pre># Try UTF-8 first
+with open("data.csv", encoding="utf-8") as f:
+    ...
+
+# If that fails, try latin-1 (covers most Western European characters)
+with open("data.csv", encoding="latin-1") as f:
+    ...</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>Git shows a <strong>merge conflict</strong> &mdash; what do I do?</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>A merge conflict means the same lines were changed in two different commits. Git marks the conflicting sections with <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Open the conflicted file in VS Code &mdash; it highlights the conflict with Accept/Ignore buttons</li>
+        <li>Choose which version to keep (or write a combined version)</li>
+        <li>Delete all the <code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code> marker lines</li>
+        <li>Stage and commit:</li>
+      </ul>
+      <pre>git add the_conflicted_file.py
+git commit -m "Resolve merge conflict in the_conflicted_file.py"</pre>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>My virtual environment is broken or <code>pip install</code> keeps failing</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>The quickest fix is to delete the venv and recreate it. The venv directory is disposable &mdash; all the real code is in your source files and <code>requirements.txt</code>.</p>
+      <pre># Delete the venv
+rm -rf .venv
+
+# Recreate it
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Reinstall all dependencies
+pip install -r requirements.txt</pre>
+      <p>Never commit the <code>.venv/</code> directory to git. Confirm <code>.venv</code> is in your <code>.gitignore</code>.</p>
+    </div>
+  </details>
+
+  <details class="faq">
+    <summary>
+      <span>Streamlit app crashes immediately or shows a blank page</span>
+      <span class="q-icon"></span>
+    </summary>
+    <div class="faq-body">
+      <p>Two common causes: the venv is not activated when running <code>streamlit run</code>, or there is a Python error on startup before any output is shown.</p>
+      <p><strong>Fix:</strong></p>
+      <ul>
+        <li>Always activate the venv before running: <code>source .venv/bin/activate</code></li>
+        <li>Check the terminal output &mdash; the error message appears there even if the browser is blank</li>
+        <li>If the error is <code>ModuleNotFoundError</code>, reinstall requirements: <code>pip install -r requirements.txt</code></li>
+        <li>If the browser shows a blank page with no terminal error, try a hard reload: <code>Ctrl+Shift+R</code></li>
+      </ul>
+    </div>
+  </details>
+
+</div><!-- /faq-list errors -->
+
+<!-- ── Still stuck ── -->
+<div class="section-divider"><div class="line"></div><div class="label">Still Stuck?</div><div class="line"></div></div>
+<div class="callout green">
+  <strong>Post in the course discussion board</strong> with the full traceback (all lines from &ldquo;Traceback&rdquo; to the last line), the code that triggered it, and what you already tried. Do not post just the last line &mdash; the full traceback is what allows a diagnosis.
+</div>
+
+<p style="margin-top:16px;font-size:14px;color:var(--muted);">
+  For a complete error-by-error reference including capstone-specific issues, see the
+  <a href="troubleshooting.html">Troubleshooting Guide</a>.
+</p>
+
+<div class="page-footer">ISM3232 &middot; Business Application Development &middot; FAQ</div>
+</div>
+
+<script src="../site.js"></script>
+</body>
+</html>
