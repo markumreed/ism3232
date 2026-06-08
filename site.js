@@ -122,6 +122,8 @@
       </div>
     </div>
 
+    <a class="nav-dd-btn" href="${pg}faq.html" style="text-decoration:none;">FAQ</a>
+
     <div class="nav-spacer"></div>
 
     <div class="nav-tools">
@@ -154,6 +156,7 @@
       <div class="mob-section-label">Reference</div>
       <a href="${pg}unit_1_cheatsheet.html">Cheat Sheets</a>
       <a href="${pg}glossary.html">Glossary</a>
+      <a href="${pg}faq.html">FAQ</a>
       <a href="${pg}troubleshooting.html">Help / Troubleshooting</a>
       <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
       <a href="${pg}expectations.html">Expectations</a>
