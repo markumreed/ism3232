@@ -24,27 +24,34 @@
   --dimmer: #3a3a48;
 
   --u1: #00c9a7;   /* teal */
-  --u1-dim: rgba(0,201,167,0.10);
   --u1-mid: rgba(0,201,167,0.22);
   --u1-glow: rgba(0,201,167,0.35);
 
   --u2: #818cf8;   /* indigo */
-  --u2-dim: rgba(129,140,248,0.10);
   --u2-mid: rgba(129,140,248,0.22);
   --u2-glow: rgba(129,140,248,0.35);
 
   --u3: #fb7185;   /* rose */
-  --u3-dim: rgba(251,113,133,0.10);
   --u3-mid: rgba(251,113,133,0.22);
   --u3-glow: rgba(251,113,133,0.35);
 
   --u4: #fbbf24;   /* amber */
-  --u4-dim: rgba(251,191,36,0.10);
   --u4-mid: rgba(251,191,36,0.22);
   --u4-glow: rgba(251,191,36,0.35);
 
   --mono: 'DM Mono', monospace;
   --display: 'Syne', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg:  #fbfbf7;
+  --bg2: #f5f5ee;
+  --bg3: #ffffff;
+  --border:        rgba(0,0,0,0.08);
+  --border-bright: rgba(0,0,0,0.15);
+  --text:   #1a1a26;
+  --muted:  #555566;
+  --dimmer: #b0b0c0;
 }
 
 html, body {
@@ -161,10 +168,10 @@ header h1 {
 .unit.active { transform: translateY(-3px); }
 
 /* Unit colour theming */
-.u1 { --c: var(--u1); --cdim: var(--u1-dim); --cmid: var(--u1-mid); --cglow: var(--u1-glow); }
-.u2 { --c: var(--u2); --cdim: var(--u2-dim); --cmid: var(--u2-mid); --cglow: var(--u2-glow); }
-.u3 { --c: var(--u3); --cdim: var(--u3-dim); --cmid: var(--u3-mid); --cglow: var(--u3-glow); }
-.u4 { --c: var(--u4); --cdim: var(--u4-dim); --cmid: var(--u4-mid); --cglow: var(--u4-glow); }
+.u1 { --c: var(--u1); --cmid: var(--u1-mid); --cglow: var(--u1-glow); }
+.u2 { --c: var(--u2); --cmid: var(--u2-mid); --cglow: var(--u2-glow); }
+.u3 { --c: var(--u3); --cmid: var(--u3-mid); --cglow: var(--u3-glow); }
+.u4 { --c: var(--u4); --cmid: var(--u4-mid); --cglow: var(--u4-glow); }
 
 .unit::before { background: radial-gradient(ellipse at 50% 0%, var(--cmid), transparent 70%); }
 .unit:hover::before, .unit.active::before { opacity: 1; }
@@ -378,14 +385,13 @@ footer {
 }
 .unit.active .unit-accent,
 .unit:hover .unit-accent { opacity: 1; }
-/* ism-mobile */
-@media(max-width:600px){
-  .two-col{grid-template-columns:1fr!important}
-  .concept-table{display:block;overflow-x:auto}
-  .pn{grid-template-columns:1fr}
-  .vpl-tile{min-width:unset;flex:1 1 100%}
-  pre,code{font-size:12px}
-  .two-pane{flex-direction:column}
+@media (max-width: 700px) {
+  html, body { overflow: auto; }
+  .shell { height: auto; overflow-y: auto; padding-top: 56px; }
+  .units { grid-template-columns: 1fr; }
+  .arrow-col { display: none; }
+  .detail-inner { grid-template-columns: 1fr 1fr; }
+  .detail-bar.open { max-height: 260px; }
 }
 </style>
 
@@ -406,7 +412,7 @@ footer {
   <div class="units">
 
     <!-- ── Unit 1 ── -->
-    <div class="unit u1" data-unit="1" onclick="toggle(this)">
+    <div class="unit u1" data-unit="1" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 01 &nbsp;·&nbsp; Weeks 1–4</div>
       <div class="unit-title">Developer<br>Foundations</div>
@@ -431,7 +437,7 @@ footer {
     </div>
 
     <!-- ── Unit 2 ── -->
-    <div class="unit u2" data-unit="2" onclick="toggle(this)">
+    <div class="unit u2" data-unit="2" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 02 &nbsp;·&nbsp; Weeks 5–8 + W9</div>
       <div class="unit-title">Python<br>Foundations</div>
@@ -456,7 +462,7 @@ footer {
     </div>
 
     <!-- ── Unit 3 ── -->
-    <div class="unit u3" data-unit="3" onclick="toggle(this)">
+    <div class="unit u3" data-unit="3" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 03 &nbsp;·&nbsp; Weeks 10–12</div>
       <div class="unit-title">Object-Oriented<br>Design</div>
@@ -481,7 +487,7 @@ footer {
     </div>
 
     <!-- ── Unit 4 ── -->
-    <div class="unit u4" data-unit="4" onclick="toggle(this)">
+    <div class="unit u4" data-unit="4" onclick="toggle(this)" tabindex="0" role="button" aria-pressed="false">
       <div class="unit-accent"></div>
       <div class="unit-num">Unit 04 &nbsp;·&nbsp; Weeks 13–16</div>
       <div class="unit-title">Capstone<br>Build</div>
@@ -583,21 +589,22 @@ function toggle(el) {
   const detail = document.getElementById('detail');
   const inner = document.getElementById('detail-inner');
 
-  // Deactivate all
-  document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
+  document.querySelectorAll('.unit').forEach(u => {
+    u.classList.remove('active');
+    u.setAttribute('aria-pressed', 'false');
+  });
 
   if (activeUnit === uid) {
-    // Close
     activeUnit = null;
     detail.classList.remove('open');
-    detail.style.borderColor = '';
+    detail.style.removeProperty('border-color');
     return;
   }
 
   activeUnit = uid;
   el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
 
-  // Build detail content
   const d = DETAILS[uid];
   inner.innerHTML = d.cols.map(col => `
     <div class="detail-col">
@@ -608,36 +615,41 @@ function toggle(el) {
     </div>
   `).join('');
 
-  detail.style.borderColor = `color-mix(in srgb, ${d.color} 40%, transparent)`;
+  detail.style.setProperty('border-color', `color-mix(in srgb, ${d.color} 40%, transparent)`);
   detail.classList.add('open');
-
-  // Activate arrows progressively
   animateArrows(uid);
 }
 
 function animateArrows(uid) {
   for (let i = 1; i <= 3; i++) {
-    const arr = document.getElementById('arr' + i);
-    if (i < uid) {
-      arr.classList.add('active');
-    } else {
-      arr.classList.remove('active');
-    }
+    document.getElementById('arr' + i).classList.toggle('active', i < uid);
   }
 }
 
-// Keyboard nav
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     activeUnit = null;
-    document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
-    document.getElementById('detail').classList.remove('open');
+    document.querySelectorAll('.unit').forEach(u => {
+      u.classList.remove('active');
+      u.setAttribute('aria-pressed', 'false');
+    });
+    const detail = document.getElementById('detail');
+    detail.classList.remove('open');
+    detail.style.removeProperty('border-color');
     document.querySelectorAll('.arrow-col').forEach(a => a.classList.remove('active'));
   }
   if (['1','2','3','4'].includes(e.key)) {
-    const units = document.querySelectorAll('.unit');
-    toggle(units[parseInt(e.key) - 1]);
+    toggle(document.querySelectorAll('.unit')[parseInt(e.key) - 1]);
   }
+});
+
+document.querySelectorAll('.unit').forEach(unit => {
+  unit.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggle(unit);
+    }
+  });
 });
 </script>
 
