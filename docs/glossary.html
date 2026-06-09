@@ -1,165 +1,648 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>
-(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<script>(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Complete glossary of all terms introduced across all 16 weeks — ISM3232 Business Application Development.">
-<title>ISM3232 Glossary</title>
+<title>Glossary — ISM3232 Business Application Development</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
-  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
-  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
-  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
-  --red:#f87171;--red-dim:rgba(248,113,113,.1);
-  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+:root {
+  --bg:#0f0f13; --bg2:#16161d; --bg3:#1e1e28;
+  --border:rgba(255,255,255,.07); --border2:rgba(255,255,255,.13);
+  --text:#e2e2ec; --muted:#7a7a95; --dim:#3e3e52;
+  --blue:#7eb8ff; --blue-dim:rgba(126,184,255,.12);
+  --green:#6ee7b7; --amber:#fcd34d; --red:#f87171; --purple:#c4b5fd;
   --mono:'DM Mono','Fira Mono','Courier New',monospace;
+  --sans:'Segoe UI',system-ui,sans-serif;
+  --u1:#6ee7b7; --u2:#7eb8ff; --u3:#fcd34d; --u4:#c4b5fd; --u5:#f87171;
 }
-html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
-  font-size:16px;line-height:1.7;}
-body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+[data-theme="light"] {
+  --bg:#f8fafc; --bg2:#f0f4f8; --bg3:#ffffff;
+  --text:#0f172a; --muted:#4a5568; --dim:#94a3b8;
+  --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.14);
+  --blue:#1e40af; --blue-dim:rgba(30,64,175,.08);
+}
+* { box-sizing: border-box; }
+html { min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; }
+body { min-height: 100vh; width: 100%; margin: 0; padding: 0; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 40px clamp(20px,5vw,56px) 96px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; }
+h1 { font-size: clamp(28px,4vw,44px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 12px; color: var(--text); }
+p { color: var(--muted); font-size: 15px; line-height: 1.75; margin-bottom: 12px; }
+p strong { color: var(--text); }
+.lede { font-size: 17px; color: var(--muted); line-height: 1.6; margin: 0 0 28px; max-width: 720px; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { opacity: .8; }
+code { font-family: var(--mono); font-size: .88em; background: var(--bg3); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); color: var(--blue); }
+pre { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; color: #c9d1d9; margin: 10px 0 0; }
+pre code { background: none; padding: 0; border: 0; color: inherit; }
 
-/* ── Nav bar ── */
-.nav{display:flex;align-items:center;gap:12px;margin-bottom:40px;
-  padding-bottom:20px;border-bottom:1px solid var(--border);}
-.nav-course{font-family:var(--mono);font-size:11px;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--muted);padding:3px 10px;
-  border:1px solid var(--border2);border-radius:4px;}
-.nav-title{font-size:14px;font-weight:600;color:var(--text);}
-.nav-week{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto;}
+/* alpha index */
+.alpha-index { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 32px; }
+.alpha-index a { font-family: var(--mono); font-size: 12px; padding: 4px 10px; background: var(--bg2); border: 1px solid var(--border2); border-radius: 6px; color: var(--muted); transition: color .12s, border-color .12s; }
+.alpha-index a:hover { color: var(--blue); border-color: rgba(126,184,255,.4); opacity: 1; }
 
-/* ── Week header ── */
-.wk-header{margin-bottom:36px;}
-.wk-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
-.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
-  color:var(--text);line-height:1.2;margin-bottom:10px;}
-.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
-  line-height:1.5;margin-bottom:16px;padding-left:14px;
-  border-left:2px solid var(--dim);}
-.wk-meta{display:flex;gap:8px;flex-wrap:wrap;}
-.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
-  padding:3px 10px;border-radius:20px;
-  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
-.chip.blue{background:var(--blue-dim);color:var(--blue);border-color:rgba(126,184,255,.25);}
-.chip.green{background:var(--green-dim);color:var(--green);border-color:rgba(110,231,183,.25);}
-.chip.amber{background:var(--amber-dim);color:var(--amber);border-color:rgba(252,211,77,.25);}
+/* unit filter */
+.unit-filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 36px; }
+.uf-btn { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 5px 14px; border: 1px solid var(--border2); border-radius: 999px; background: var(--bg2); color: var(--muted); cursor: pointer; transition: all .15s; }
+.uf-btn:hover, .uf-btn.active { color: var(--text); background: var(--bg3); }
+.uf-btn.u1.active { color: var(--u1); border-color: var(--u1); background: rgba(110,231,183,.08); }
+.uf-btn.u2.active { color: var(--u2); border-color: var(--u2); background: rgba(126,184,255,.08); }
+.uf-btn.u3.active { color: var(--u3); border-color: var(--u3); background: rgba(252,211,77,.08); }
+.uf-btn.u4.active { color: var(--u4); border-color: var(--u4); background: rgba(196,181,253,.08); }
+.uf-btn.u5.active { color: var(--u5); border-color: var(--u5); background: rgba(248,113,113,.08); }
 
-/* ── Section headings ── */
-h2{font-size:18px;font-weight:700;color:var(--text);margin:40px 0 12px;
-  padding-bottom:8px;border-bottom:1px solid var(--border);}
-h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+/* glossary entry */
+.gl-entry {
+  padding: 18px 20px 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 10px;
+  border-left: 3px solid var(--border2);
+  transition: border-color .15s;
+}
+.gl-entry.u1 { border-left-color: var(--u1); }
+.gl-entry.u2 { border-left-color: var(--u2); }
+.gl-entry.u3 { border-left-color: var(--u3); }
+.gl-entry.u4 { border-left-color: var(--u4); }
+.gl-entry.u5 { border-left-color: var(--u5); }
 
-/* ── Body text ── */
-p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
-p strong{color:var(--text);font-weight:600;}
-p code, li code{font-family:var(--mono);font-size:.88em;
-  background:var(--bg3);padding:1px 5px;border-radius:3px;
-  color:var(--blue);}
+.gl-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.gl-term { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text); }
+.gl-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; padding: 2px 8px; border-radius: 999px; border: 1px solid; flex-shrink: 0; }
+.u1 .gl-badge { color: var(--u1); border-color: rgba(110,231,183,.35); background: rgba(110,231,183,.08); }
+.u2 .gl-badge { color: var(--u2); border-color: rgba(126,184,255,.35); background: rgba(126,184,255,.08); }
+.u3 .gl-badge { color: var(--u3); border-color: rgba(252,211,77,.35); background: rgba(252,211,77,.08); }
+.u4 .gl-badge { color: var(--u4); border-color: rgba(196,181,253,.35); background: rgba(196,181,253,.08); }
+.u5 .gl-badge { color: var(--u5); border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.08); }
 
-/* ── Concept cards ── */
-.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin:16px 0;}
-.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
-.concept p{color:var(--text);font-size:14px;margin:0;}
+.gl-def { font-size: 14.5px; color: var(--muted); line-height: 1.65; margin-bottom: 4px; }
+.gl-def strong { color: var(--text); }
+.gl-also { font-size: 12px; font-family: var(--mono); color: var(--dim); margin-top: 8px; }
+.gl-also a { color: var(--muted); }
+.gl-also a:hover { color: var(--blue); opacity: 1; }
 
-.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
-  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin:16px 0;}
-.warn .concept-label{color:var(--amber);}
-.warn p{color:var(--text);font-size:14px;margin:0;}
+/* section letter header */
+.letter-head { font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--dim); margin: 44px 0 14px; letter-spacing: -.02em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
 
-.ok{background:var(--green-dim);border:1px solid rgba(110,231,183,.2);
-  border-left:3px solid var(--green);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin:16px 0;}
-.ok .concept-label{color:var(--green);}
-.ok p{color:var(--text);font-size:14px;margin:0;}
+/* prev/next nav */
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 60px; }
+.pn a { display: block; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); transition: border-color .15s; }
+.pn a:hover { border-color: var(--border2); opacity: 1; }
+.pn-dir { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+.pn-title { font-weight: 600; font-size: 14px; color: var(--text); }
+.pn-right { text-align: right; }
 
-/* ── Code blocks ── */
-pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
-  padding:16px 20px;overflow-x:auto;margin:16px 0;}
-pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
-  line-height:1.7;background:none;padding:0;}
-.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: .08em; margin-top: 60px; }
 
-/* ── Lists ── */
-ul,ol{padding-left:20px;margin:10px 0 16px;}
-li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
-li strong{color:var(--text);}
-li::marker{color:var(--dim);}
-
-/* ── Checklist ── */
-.checklist{list-style:none;padding:0;}
-.checklist li{display:flex;gap:10px;align-items:flex-start;
-  padding:7px 0;border-bottom:1px solid var(--border);}
-.checklist li:last-child{border-bottom:none;}
-.checklist li::before{content:'☐';color:var(--green);font-size:16px;
-  flex-shrink:0;line-height:1.4;}
-
-/* ── Topics grid ── */
-.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
-.topic-item{background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:10px 14px;}
-.topic-num{font-family:var(--mono);font-size:9px;color:var(--dim);
-  letter-spacing:.1em;margin-bottom:4px;text-transform:uppercase;}
-.topic-text{font-size:13px;color:var(--text);font-weight:600;}
-.topic-sub{font-size:12px;color:var(--muted);margin-top:2px;}
-
-/* ── Key terms ── */
-.term{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);
-  align-items:baseline;}
-.term:last-child{border-bottom:none;}
-.term-word{font-family:var(--mono);font-size:13px;font-weight:700;
-  color:var(--blue);min-width:180px;flex-shrink:0;}
-.term-def{font-size:14px;color:var(--muted);}
-
-/* ── Before you start / self-check ── */
-.check-block{background:var(--bg2);border:1px solid var(--border);
-  border-radius:10px;padding:20px;margin:20px 0;}
-.check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
-
-/* ── Footer ── */
-.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
-  font-family:var(--mono);font-size:10px;color:var(--dim);
-  letter-spacing:.08em;text-align:center;}
-
-/* ism-mobile */
-@media(max-width:600px){
-  body{padding:16px 14px 48px!important}
-  .wrapper{padding-left:14px!important;padding-right:14px!important}
-  .two-col{grid-template-columns:1fr!important}
-  .concept-table{display:block;overflow-x:auto}
-  .pn{grid-template-columns:1fr}
-  .vpl-tile{min-width:unset;flex:1 1 100%}
-  pre,code{font-size:12px}
-  .two-pane{flex-direction:column}
+@media(max-width:600px) {
+  .pn { grid-template-columns: 1fr; }
+  pre { font-size: 12px; padding: 12px 14px; }
+  .uf-btn { font-size: 10px; padding: 4px 10px; }
 }
 </style>
 <link rel="stylesheet" href="../site.css">
 </head>
 <body>
-<div class="wrapper" id="main-content" role="main"><div style="margin-bottom:32px;">
-  <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-     color:var(--blue);margin-bottom:8px;">Reference</p>
-  <h1 style="font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--text);
-     margin-bottom:10px;">Course Glossary</h1>
-  <p>Every term introduced across all 16 weeks, alphabetically sorted.
-     Click any letter to jump to that section. Each entry shows which week the term was introduced.</p>
-</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 28px;"><a href="#gl-#" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">#</a><a href="#gl-A" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">A</a><a href="#gl-B" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">B</a><a href="#gl-C" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">C</a><a href="#gl-D" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">D</a><a href="#gl-E" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">E</a><a href="#gl-F" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">F</a><a href="#gl-G" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">G</a><a href="#gl-I" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">I</a><a href="#gl-L" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">L</a><a href="#gl-M" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">M</a><a href="#gl-N" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">N</a><a href="#gl-P" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">P</a><a href="#gl-R" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">R</a><a href="#gl-S" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">S</a><a href="#gl-T" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">T</a><a href="#gl-V" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">V</a><a href="#gl-W" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">W</a><a href="#gl-Z" style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:4px;background:var(--bg2);color:var(--muted);border:1px solid var(--border);text-decoration:none;transition:background .15s,color .15s;"onmouseover="this.style.background='var(--blue-dim)';this.style.color='var(--blue)'"onmouseout="this.style.background='var(--bg2)';this.style.color='var(--muted)'">Z</a></div><div id="gl-#" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">#</div><div class="term"><span class="term-word">.. (dot dot)</span><span class="term-def">The parent directory. cd .. moves you up one level. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">~ (tilde)</span><span class="term-def">Shorthand for your home directory. cd ~ takes you home from anywhere. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">%</span><span class="term-def">Modulo — returns the remainder after division. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">//</span><span class="term-def">Floor division — divides and rounds down to the nearest integer. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">:,.2f</span><span class="term-def">f-string format spec: comma separator and 2 decimal places. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">:.2f</span><span class="term-def">f-string format spec: 2 decimal places. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div></div><div id="gl-A" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">A</div><div class="term"><span class="term-word">absolute path</span><span class="term-def">A path starting from root (/). Works from anywhere. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">accumulator pattern</span><span class="term-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div><div class="term"><span class="term-word">add_request(req)</span><span class="term-def">→ INSERT INTO requests VALUES (...) <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">alias</span><span class="term-def">A shortcut that expands to a longer command when typed. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div><div class="term"><span class="term-word">append()</span><span class="term-def">Adds one item to the end of a list. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div></div><div id="gl-B" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">B</div><div class="term"><span class="term-word">bool</span><span class="term-def">Boolean — True or False. Always derived from a comparison. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div></div><div id="gl-C" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">C</div><div class="term"><span class="term-word">cat</span><span class="term-def">Print the full contents of a file to the terminal. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">cd</span><span class="term-def">Change Directory — move to a different folder. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">class</span><span class="term-def">A blueprint that defines what objects of that type have (attributes) and can do (methods). <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">class BusinessRequest</span><span class="term-def">→ CREATE TABLE requests (...) <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">code .</span><span class="term-def">Open the current folder as a VS Code workspace. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">cp</span><span class="term-def">Copy a file — the original stays in place. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div></div><div id="gl-D" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">D</div><div class="term"><span class="term-word">DEFAULT &#x27;Pending&#x27;</span><span class="term-def">Automatically used if no value is provided on INSERT. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div><div class="term"><span class="term-word">dict key access</span><span class="term-def">record[&#x27;key&#x27;] — retrieves the value for that key. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div><div class="term"><span class="term-word">directory</span><span class="term-def">A folder. Directories contain files and other directories. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div></div><div id="gl-E" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">E</div><div class="term"><span class="term-word">encapsulation</span><span class="term-def">Bundling data and the methods that operate on it inside one class. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div></div><div id="gl-F" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">F</div><div class="term"><span class="term-word">f-string</span><span class="term-def">A string prefixed with f that evaluates expressions inside {curly braces}. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">float</span><span class="term-def">Floating-point — a number with a decimal component. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">for loop</span><span class="term-def">Iterates over every item in a sequence, executing the loop body once per item. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div></div><div id="gl-G" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">G</div><div class="term"><span class="term-word">get by id</span><span class="term-def">→ SELECT * WHERE id = ? <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">git add .</span><span class="term-def">Stages all changes for the next commit. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">git commit -m</span><span class="term-def">Creates a snapshot of the staged changes with a message. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">git init</span><span class="term-def">Initialises a new Git repository in the current folder. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">git log --oneline</span><span class="term-def">Shows a compact history of all commits. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">git push</span><span class="term-def">Sends commits to the remote repository on GitHub. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">git status</span><span class="term-def">Shows which files have changed since the last commit. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">.gitignore</span><span class="term-def">A file telling Git which files/folders to never track. .venv/ must be listed here. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div></div><div id="gl-I" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">I</div><div class="term"><span class="term-word">if / elif / else</span><span class="term-def">Branching statement — runs different code depending on which condition is True. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The constructor — runs once when an instance is created. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">instance / object</span><span class="term-def">One specific thing built from a class. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">instance attribute</span><span class="term-def">A variable stored on a specific instance. Accessed with self.name. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">instance req_101</span><span class="term-def">→ one row in the requests table <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">int</span><span class="term-def">Integer — a whole number with no decimal. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div><div class="term"><span class="term-word">INTEGER</span><span class="term-def">IDs, counts, whole numbers. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div></div><div id="gl-L" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">L</div><div class="term"><span class="term-word">list-of-dicts</span><span class="term-def">One dict per record; the list holds all records. One dict = one row, list = the table. <a href="week06_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 6</a></span></div><div class="term"><span class="term-word">list_by_status(&#x27;Pending&#x27;)</span><span class="term-def">→ SELECT * WHERE status = &#x27;Pending&#x27; <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">ls</span><span class="term-def">List — shows the contents of the current directory. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">ls -la</span><span class="term-def">List all, including hidden files, in long format. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div></div><div id="gl-M" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">M</div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Always takes self as the first parameter. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">mkdir</span><span class="term-def">Make Directory — create a new folder. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">mv</span><span class="term-def">Move or rename a file — the original is gone from the source. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div></div><div id="gl-N" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">N</div><div class="term"><span class="term-word">NOT NULL</span><span class="term-def">This column is required — INSERT fails if omitted. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div></div><div id="gl-P" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">P</div><div class="term"><span class="term-word">pip freeze</span><span class="term-def">Lists all installed packages with exact version numbers. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div><div class="term"><span class="term-word">PRIMARY KEY AUTOINCREMENT</span><span class="term-def">Database assigns a unique integer ID automatically. Never provide this yourself. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div><div class="term"><span class="term-word">pwd</span><span class="term-def">Print Working Directory — shows your current location. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div></div><div id="gl-R" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">R</div><div class="term"><span class="term-word">REAL</span><span class="term-def">Prices, rates, decimal numbers. Use for all money values. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div><div class="term"><span class="term-word">relative path</span><span class="term-def">A path starting from your current location. Shorter, but location-dependent. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">__repr__</span><span class="term-def">Returns a readable string representation of the object. Used by print(). <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">requirements.txt</span><span class="term-def">A text file listing pinned package versions so others can recreate the environment. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div><div class="term"><span class="term-word">ripgrep (rg)</span><span class="term-def">Fast content search tool that respects .gitignore. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">rm</span><span class="term-def">Remove — permanently delete a file. No undo. <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">ruff check .</span><span class="term-def">Reports style and logic issues without modifying files. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div><div class="term"><span class="term-word">ruff format .</span><span class="term-def">Auto-formats all Python files in the current folder. <a href="week04_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 4</a></span></div></div><div id="gl-S" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">S</div><div class="term"><span class="term-word">self</span><span class="term-def">The specific instance the method is being called on. <a href="week10_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 10</a></span></div><div class="term"><span class="term-word">self.amount — attribute</span><span class="term-def">→ amount REAL column <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">shell</span><span class="term-def">The program that reads your typed commands and executes them. We use zsh. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">source .venv/bin/activate</span><span class="term-def">Activates the venv. The (.venv) prefix confirms it. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div><div class="term"><span class="term-word">str</span><span class="term-def">String — text enclosed in quotes. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div></div><div id="gl-T" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">T</div><div class="term"><span class="term-word">terminal / terminal emulator</span><span class="term-def">The window you type commands into. VS Code has one built in. <a href="week01_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 1</a></span></div><div class="term"><span class="term-word">TEXT</span><span class="term-def">Names, categories, statuses. Any string value. <a href="week13_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 13</a></span></div><div class="term"><span class="term-word">total_amount()</span><span class="term-def">→ SELECT SUM(amount) FROM requests <a href="week11_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 11</a></span></div><div class="term"><span class="term-word">touch</span><span class="term-def">Create an empty file (or update its timestamp). <a href="week02_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 2</a></span></div><div class="term"><span class="term-word">type()</span><span class="term-def">Returns the data type of any value. <a href="week05_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 5</a></span></div></div><div id="gl-V" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">V</div><div class="term"><span class="term-word">venv</span><span class="term-def">Virtual environment — an isolated Python + packages installation for one project. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div></div><div id="gl-W" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">W</div><div class="term"><span class="term-word">which python3</span><span class="term-def">Shows which Python is currently active. Must show .venv/bin/python3 when activated. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div></div><div id="gl-Z" style="margin-bottom:32px;"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:12px;">Z</div><div class="term"><span class="term-word">.zshrc</span><span class="term-def">zsh startup script. Aliases and functions defined here are always available. <a href="week03_reading.html#key-terms" style="font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;margin-left:8px;">→ Week 3</a></span></div></div><div class="page-footer">ISM3232 · Course Glossary · All 16 weeks</div></div>
+
+<div class="wrap" id="main">
+<div class="page-eyebrow">REFERENCE · ISM3232</div>
+<h1>Course Glossary</h1>
+<p class="lede">Every key term introduced across all 16 weeks, organized alphabetically. Each entry shows which week introduced the concept. Use the unit filters to focus on a specific topic area.</p>
+
+<!-- Alpha index -->
+<div class="alpha-index">
+<a href="#gl-num">#</a>
+<a href="#gl-A">A</a><a href="#gl-B">B</a><a href="#gl-C">C</a><a href="#gl-D">D</a>
+<a href="#gl-E">E</a><a href="#gl-F">F</a><a href="#gl-G">G</a>
+<a href="#gl-I">I</a><a href="#gl-L">L</a><a href="#gl-M">M</a><a href="#gl-N">N</a>
+<a href="#gl-P">P</a><a href="#gl-R">R</a><a href="#gl-S">S</a><a href="#gl-T">T</a>
+<a href="#gl-V">V</a><a href="#gl-W">W</a><a href="#gl-Z">Z</a>
+</div>
+
+<!-- Unit filters -->
+<div class="unit-filter">
+  <button class="uf-btn active" onclick="filterUnits('all',this)">All</button>
+  <button class="uf-btn u1" onclick="filterUnits('u1',this)">Shell &amp; Files</button>
+  <button class="uf-btn u2" onclick="filterUnits('u2',this)">Dev &amp; Git</button>
+  <button class="uf-btn u3" onclick="filterUnits('u3',this)">Python</button>
+  <button class="uf-btn u4" onclick="filterUnits('u4',this)">OOP</button>
+  <button class="uf-btn u5" onclick="filterUnits('u5',this)">Databases</button>
+</div>
+
+<!-- ═══ # ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-num">#</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">.. (dot dot)</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">The parent directory. <code>cd ..</code> moves you up one level in the file tree.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">~ (tilde)</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">Shorthand for your home directory. <code>cd ~</code> takes you home from anywhere.</div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">%</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Modulo — returns the remainder after division. <code>7 % 3</code> evaluates to <code>1</code>.</div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">//</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Floor division — divides and rounds down to the nearest integer. <code>7 // 3</code> evaluates to <code>2</code>.</div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">:,.2f</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">f-string format spec: comma thousands separator and 2 decimal places. <code>f"${total:,.2f}"</code> → <code>$1,234.56</code></div>
+  <div class="gl-also">See also: <a href="#gl-F">f-string</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">:.2f</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">f-string format spec: 2 decimal places, no comma. <code>f"{price:.2f}"</code> → <code>9.99</code></div>
+  <div class="gl-also">See also: <a href="#gl-F">f-string</a></div>
+</div>
+
+<!-- ═══ A ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-A">A</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">absolute path</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">A path starting from root (<code>/</code>). Works from anywhere regardless of your current directory.</div>
+  <div class="gl-also">See also: <a href="#gl-R">relative path</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">accumulator pattern</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def">Initialise a variable before the loop; update it inside. Produces a running total or collected list with each iteration.</div>
+  <pre><code>total = 0
+for item in items:
+    total += item["price"]</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">add_request(req)</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">A method that maps to <code>INSERT INTO requests VALUES (...)</code> in SQL. Encapsulates the database write behind a Python method call.</div>
+  <div class="gl-also">See also: <a href="#gl-C">class BusinessRequest</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">alias</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">A shortcut that expands to a longer command when typed. Defined in <code>.zshrc</code> and loaded on every new terminal session.</div>
+  <div class="gl-also">See also: <a href="#gl-Z">.zshrc</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">append()</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def">Adds one item to the end of a list in place. <code>records.append(new_item)</code></div>
+</div>
+
+<!-- ═══ B ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-B">B</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">bool</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Boolean — <code>True</code> or <code>False</code>. Always derived from a comparison expression or boolean context.</div>
+  <div class="gl-also">See also: <a href="#gl-I">if / elif / else</a></div>
+</div>
+
+<!-- ═══ C ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-C">C</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">cat</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Print the full contents of a file to the terminal. Useful for quickly checking small text files.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">cd</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Change Directory — move to a different folder. <code>cd ..</code> goes up one level; <code>cd ~</code> goes to home.</div>
+  <div class="gl-also">See also: <a href="#gl-num">.. (dot dot)</a>, <a href="#gl-num">~ (tilde)</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">class</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">A blueprint that defines what objects of that type have (attributes) and can do (methods). Defined with the <code>class</code> keyword.</div>
+  <pre><code>class BusinessRequest:
+    def __init__(self, title, amount):
+        self.title = title
+        self.amount = amount</code></pre>
+  <div class="gl-also">See also: <a href="#gl-I">__init__</a>, <a href="#gl-I">instance / object</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">class BusinessRequest</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">Maps to <code>CREATE TABLE requests (...)</code> in SQL. The class definition is the schema; each instance is one row.</div>
+  <div class="gl-also">See also: <a href="#gl-I">instance req_101</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">code .</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Open the current folder as a VS Code workspace. The <code>code</code> CLI must be installed via VS Code's Command Palette (<strong>Shell Command: Install 'code'</strong>).</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">cp</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Copy a file — the original stays in place. <code>cp source.txt dest.txt</code></div>
+  <div class="gl-also">See also: <a href="#gl-M">mv</a></div>
+</div>
+
+<!-- ═══ D ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-D">D</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">DEFAULT 'Pending'</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">A column constraint used automatically when no value is provided on <code>INSERT</code>. Example: <code>status TEXT DEFAULT 'Pending'</code></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">dict key access</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def"><code>record['key']</code> — retrieves the value for that key. Raises <code>KeyError</code> if missing; use <code>.get('key')</code> for safe access.</div>
+  <div class="gl-also">See also: <a href="#gl-L">list-of-dicts</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">directory</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">A folder. Directories contain files and other directories, forming a tree starting from root (<code>/</code> on Mac/Linux).</div>
+  <div class="gl-also">See also: <a href="#gl-A">absolute path</a>, <a href="#gl-R">relative path</a></div>
+</div>
+
+<!-- ═══ E ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-E">E</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">encapsulation</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">Bundling data and the methods that operate on it inside one class. External code interacts through defined methods rather than touching internal state directly.</div>
+  <div class="gl-also">See also: <a href="#gl-C">class</a>, <a href="#gl-M">method</a></div>
+</div>
+
+<!-- ═══ F ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-F">F</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">f-string</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">A string prefixed with <code>f</code> that evaluates Python expressions inside <code>{curly braces}</code>. The standard way to embed variables in strings (Python 3.6+).</div>
+  <pre><code>name = "Alice"
+print(f"Hello, {name}!")        # Hello, Alice!
+print(f"Total: ${amount:,.2f}") # Total: $1,234.56</code></pre>
+  <div class="gl-also">See also: <a href="#gl-num">:,.2f</a>, <a href="#gl-num">:.2f</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">float</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Floating-point — a number with a decimal component. May have tiny rounding errors; use <code>round()</code> for display.</div>
+  <div class="gl-also">See also: <a href="#gl-I">int</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">for loop</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def">Iterates over every item in a sequence, executing the loop body once per item. Works on any iterable: lists, dicts, strings, ranges.</div>
+  <pre><code>for record in records:
+    print(record["title"])</code></pre>
+</div>
+
+<!-- ═══ G ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-G">G</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">get by id</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">A method that maps to <code>SELECT * WHERE id = ?</code>. Returns a single object (row) by its unique primary key.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git add .</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Stages all changes in the current directory for the next commit. Prefer staging specific files (<code>git add file.py</code>) to avoid accidentally including <code>.venv/</code> or secrets.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git commit -m</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Creates a snapshot of staged changes with a message. Write messages that describe <em>why</em>, not just what changed.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git init</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Initialises a new Git repository in the current folder, creating a hidden <code>.git/</code> directory that stores all history.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git log --oneline</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Shows a compact history of all commits — one line each with hash and message. Add <code>--graph</code> to visualize branches.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git push</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Sends local commits to the remote repository on GitHub. First push requires <code>git push -u origin main</code> to set the upstream branch.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">git status</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Shows which files have changed since the last commit — staged (green) and unstaged (red). Run before every commit.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">.gitignore</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">A file telling Git which files and folders to never track. <code>.venv/</code> must always be listed — never commit your virtual environment.</div>
+  <div class="gl-also">See also: <a href="#gl-V">venv</a></div>
+</div>
+
+<!-- ═══ I ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-I">I</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">if / elif / else</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def">Branching — runs different code depending on which condition is <code>True</code>. Only one branch executes. <code>elif</code> tests additional conditions; <code>else</code> is the fallback.</div>
+  <pre><code>if status == "Approved":
+    process(req)
+elif status == "Pending":
+    queue(req)
+else:
+    reject(req)</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">__init__</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">The constructor — runs automatically when an instance is created. Sets initial attribute values on <code>self</code>.</div>
+  <div class="gl-also">See also: <a href="#gl-S">self</a>, <a href="#gl-I">instance attribute</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">instance / object</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">One specific thing built from a class. If <code>BusinessRequest</code> is the class (blueprint), then <code>req = BusinessRequest(...)</code> creates an instance.</div>
+  <div class="gl-also">See also: <a href="#gl-C">class</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">instance attribute</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">A variable stored on a specific instance. Accessed with <code>self.name</code> inside methods, <code>obj.name</code> from outside. Each instance has its own copy.</div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">instance req_101</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">Maps to one row in the <code>requests</code> table. The instance's attributes correspond directly to the row's column values.</div>
+  <div class="gl-also">See also: <a href="#gl-C">class BusinessRequest</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">int</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Integer — a whole number with no decimal. Division with <code>/</code> always returns a <code>float</code>; use <code>//</code> for an integer result.</div>
+  <div class="gl-also">See also: <a href="#gl-num">//</a>, <a href="#gl-F">float</a></div>
+</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">INTEGER</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">SQLite column type for IDs, counts, and whole numbers. Do not use for money — use <code>REAL</code> instead.</div>
+  <div class="gl-also">See also: <a href="#gl-R">REAL</a>, <a href="#gl-P">PRIMARY KEY AUTOINCREMENT</a></div>
+</div>
+
+<!-- ═══ L ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-L">L</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">list-of-dicts</span><span class="gl-badge">Week 6 · Python</span></div>
+  <div class="gl-def">One dict per record; the list holds all records. The in-memory equivalent of a database table: one dict = one row, the list = the table.</div>
+  <pre><code>records = [
+    {"id": 1, "title": "Laptop",  "amount": 1200.0},
+    {"id": 2, "title": "Monitor", "amount":  450.0},
+]</code></pre>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">list_by_status('Pending')</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">A method that maps to <code>SELECT * WHERE status = 'Pending'</code>. Filters all records by a field value and returns matching instances.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">ls</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">List — shows the contents of the current directory. Add <code>-la</code> to include hidden files with full details.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">ls -la</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">List all, including hidden files (those starting with <code>.</code>), in long format with permissions, size, and modification date.</div>
+</div>
+
+<!-- ═══ M ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-M">M</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">method</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">A function defined inside a class. Always takes <code>self</code> as the first parameter, giving it access to the instance's own attributes.</div>
+  <div class="gl-also">See also: <a href="#gl-S">self</a>, <a href="#gl-C">class</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">mkdir</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Make Directory — create a new folder. <code>mkdir -p path/to/dir</code> creates all intermediate directories at once.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">mv</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Move or rename a file — the original is gone from the source. <code>mv old.py new.py</code> renames; <code>mv file.py dir/</code> moves it.</div>
+  <div class="gl-also">See also: <a href="#gl-C">cp</a></div>
+</div>
+
+<!-- ═══ N ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-N">N</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">NOT NULL</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">A column constraint meaning the field is required — <code>INSERT</code> fails if the value is omitted. Enforces data integrity at the database level.</div>
+</div>
+
+<!-- ═══ P ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-P">P</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">pip freeze</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">Lists all installed packages with exact version numbers. Pipe to create a requirements file: <code>pip freeze &gt; requirements.txt</code></div>
+  <div class="gl-also">See also: <a href="#gl-R">requirements.txt</a></div>
+</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">PRIMARY KEY AUTOINCREMENT</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">SQLite assigns a unique integer ID automatically. Never provide this value on <code>INSERT</code> — leave it out and let the database handle it.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">pwd</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Print Working Directory — shows your current location in the file system. Run this any time you're unsure where you are.</div>
+</div>
+
+<!-- ═══ R ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-R">R</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">REAL</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">SQLite column type for prices, rates, and decimal numbers. Use for all money values.</div>
+  <div class="gl-also">See also: <a href="#gl-I">INTEGER</a></div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">relative path</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">A path starting from your current location. Shorter and portable within a project, but breaks if you run the script from a different directory.</div>
+  <div class="gl-also">See also: <a href="#gl-A">absolute path</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">__repr__</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">Returns a readable string representation of the object. Called automatically by <code>print()</code>. Show key attributes so you can debug instances easily.</div>
+  <pre><code>def __repr__(self):
+    return f"BusinessRequest({self.title!r}, ${self.amount:.2f})"</code></pre>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">requirements.txt</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">A text file listing pinned package versions so others can recreate your environment exactly. Generate: <code>pip freeze &gt; requirements.txt</code>. Install: <code>pip install -r requirements.txt</code></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">ripgrep (rg)</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">A fast content search tool that respects <code>.gitignore</code>. Much faster than <code>grep</code> for large codebases. <code>rg "BusinessRequest"</code> finds all usages instantly.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">rm</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Remove — permanently deletes a file. No undo, no Trash. <code>rm -r folder/</code> deletes an entire directory recursively.</div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">ruff check .</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Reports style and logic issues without modifying files. Run before every commit to catch bugs and style violations early.</div>
+  <div class="gl-also">See also: <a href="#gl-R">ruff format .</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">ruff format .</span><span class="gl-badge">Week 4 · Git</span></div>
+  <div class="gl-def">Auto-formats all Python files to a consistent style. Safe to run anytime — changes only whitespace and layout, never logic.</div>
+  <div class="gl-also">See also: <a href="#gl-R">ruff check .</a></div>
+</div>
+
+<!-- ═══ S ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-S">S</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">self</span><span class="gl-badge">Week 10 · OOP</span></div>
+  <div class="gl-def">The specific instance a method is being called on. Always the first parameter of any method. <code>self.amount</code> reads that instance's own <code>amount</code> attribute.</div>
+  <div class="gl-also">See also: <a href="#gl-I">instance attribute</a>, <a href="#gl-M">method</a></div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">self.amount — attribute</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">Maps to the <code>amount REAL</code> column in SQLite. An instance attribute corresponds directly to a column in the database table.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">shell</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">The program that reads your typed commands and executes them. This course uses <code>zsh</code> (Z shell), the default on macOS and configured on Linux/WSL.</div>
+  <div class="gl-also">See also: <a href="#gl-Z">.zshrc</a></div>
+</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">source .venv/bin/activate</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">Activates the virtual environment for the current terminal session. The <code>(.venv)</code> prefix in your prompt confirms it is active. Must be run in every new terminal.</div>
+  <div class="gl-also">See also: <a href="#gl-V">venv</a></div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">str</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">String — text enclosed in quotes. Strings are immutable: methods like <code>.upper()</code> return a new string rather than modifying the original.</div>
+</div>
+
+<!-- ═══ T ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-T">T</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">terminal / terminal emulator</span><span class="gl-badge">Week 1 · Shell</span></div>
+  <div class="gl-def">The window you type commands into. VS Code has one built in (Ctrl+`). On Mac: Terminal.app or iTerm2. On Windows: Windows Terminal running WSL.</div>
+  <div class="gl-also">See also: <a href="#gl-S">shell</a></div>
+</div>
+
+<div class="gl-entry u5">
+  <div class="gl-head"><span class="gl-term">TEXT</span><span class="gl-badge">Week 13 · SQLite</span></div>
+  <div class="gl-def">SQLite column type for names, categories, statuses — any string value. SQLite has no fixed-length <code>CHAR</code>; always use <code>TEXT</code>.</div>
+</div>
+
+<div class="gl-entry u4">
+  <div class="gl-head"><span class="gl-term">total_amount()</span><span class="gl-badge">Week 11 · OOP</span></div>
+  <div class="gl-def">A method that maps to <code>SELECT SUM(amount) FROM requests</code>. Aggregates a numeric field across all records in the collection.</div>
+</div>
+
+<div class="gl-entry u1">
+  <div class="gl-head"><span class="gl-term">touch</span><span class="gl-badge">Week 2 · Shell</span></div>
+  <div class="gl-def">Create an empty file (or update its timestamp if it exists). <code>touch app.py</code> creates an empty <code>app.py</code> ready to edit.</div>
+</div>
+
+<div class="gl-entry u3">
+  <div class="gl-head"><span class="gl-term">type()</span><span class="gl-badge">Week 5 · Python</span></div>
+  <div class="gl-def">Returns the data type of any value. <code>type(42)</code> → <code>&lt;class 'int'&gt;</code>. Essential for debugging type errors.</div>
+</div>
+
+<!-- ═══ V ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-V">V</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">venv</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">Virtual environment — an isolated Python + packages installation for one project. Created with <code>python3 -m venv .venv</code>. Prevents project dependencies from conflicting.</div>
+  <div class="gl-also">See also: <a href="#gl-S">source .venv/bin/activate</a>, <a href="#gl-G">.gitignore</a></div>
+</div>
+
+<!-- ═══ W ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-W">W</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">which python3</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">Shows which Python executable is currently active. Must show <code>.venv/bin/python3</code> when the venv is activated. If it shows the system Python, activate your venv first.</div>
+  <div class="gl-also">See also: <a href="#gl-V">venv</a></div>
+</div>
+
+<!-- ═══ Z ════════════════════════════════════════════════════════════════════ -->
+<div class="letter-head" id="gl-Z">Z</div>
+
+<div class="gl-entry u2">
+  <div class="gl-head"><span class="gl-term">.zshrc</span><span class="gl-badge">Week 3 · Dev Tools</span></div>
+  <div class="gl-def">The zsh startup script that runs whenever a new terminal session opens. Aliases, functions, and <code>PATH</code> additions defined here are always available.</div>
+  <div class="gl-also">See also: <a href="#gl-A">alias</a></div>
+</div>
+
+<!-- ═══ BOTTOM NAV ════════════════════════════════════════════════════════════ -->
+<div class="pn">
+  <a href="faq.html">
+    <div class="pn-dir">← Also useful</div>
+    <div class="pn-title">FAQ</div>
+  </a>
+  <a href="troubleshooting.html" class="pn-right">
+    <div class="pn-dir">Also useful →</div>
+    <div class="pn-title">Troubleshooting Guide</div>
+  </a>
+</div>
+
+</div>
+
+<footer>ISM3232 · BUSINESS APPLICATION DEVELOPMENT · USF MUMA COLLEGE OF BUSINESS</footer>
+
+<script>
+function filterUnits(unit, btn) {
+  document.querySelectorAll('.uf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gl-entry').forEach(el => {
+    el.style.display = (unit === 'all' || el.classList.contains(unit)) ? '' : 'none';
+  });
+  document.querySelectorAll('.letter-head').forEach(lh => {
+    let el = lh.nextElementSibling;
+    let visible = false;
+    while (el && !el.classList.contains('letter-head') && !el.classList.contains('pn')) {
+      if (el.classList.contains('gl-entry') && el.style.display !== 'none') { visible = true; break; }
+      el = el.nextElementSibling;
+    }
+    lh.style.display = visible ? '' : 'none';
+  });
+}
+</script>
 <script src="../site.js"></script>
 </body>
 </html>
