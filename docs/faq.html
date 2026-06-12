@@ -554,6 +554,29 @@ pip install -r requirements.txt</pre>
   <strong>Don&rsquo;t sit stuck for more than 20 minutes.</strong> Email your professor or TA, come to office hours, or ask at the start of the next class. Use the format below so the problem can be diagnosed immediately &mdash; vague emails get slow responses.
 </div>
 
+<div class="callout">
+  <strong>Try the duck first.</strong> Before you hit send, explain the failing code out loud, line by line, to an inanimate object &mdash; <em>rubber duck debugging</em>, from <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, Addison-Wesley, 1999). The bug often surfaces mid-explanation &mdash; and if it doesn&rsquo;t, the explanation you just rehearsed is the email. Full technique in the <a href="week08_reading.html">Week 8 reading</a>.
+</div>
+
+<p style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px;">Example &mdash; a duck session becomes the email</p>
+<pre><code>You, to the duck:
+
+&quot;Line 4 imports requests. I activated the venv &mdash; the prompt
+shows (.venv) &mdash; and pip install -r requirements.txt ran with
+no errors. So the import should work. Unless&hellip; the terminal
+I ran the script from is not the one where I activated. Or
+pip installed into a different Python. I don&apos;t know how to
+check which Python the script actually used.&quot;
+
+The duck didn&apos;t fix it &mdash; but it just wrote your email:
+
+What I expected:  import requests works inside the venv
+What happened:    ModuleNotFoundError: No module named &apos;requests&apos;
+What I tried:     venv active (prompt shows (.venv)); reinstalled
+                  requirements with no errors; suspect the script
+                  ran with a different Python &mdash; not sure how to verify</code></pre>
+<p style="font-size:14px;color:var(--muted);margin:10px 0 20px;">A duck session that fails still ends somewhere specific. That last sentence &mdash; <em>&ldquo;I suspect X but don&rsquo;t know how to verify it&rdquo;</em> &mdash; is the most useful line a help email can contain. It goes straight into the &ldquo;what you already tried&rdquo; item below, and it is the difference between an answer in one reply and three rounds of &ldquo;can you tell me more.&rdquo;</p>
+
 <p style="font-size:14px;color:var(--muted);margin:20px 0 10px;font-weight:600;">What to include:</p>
 <ul style="font-size:14px;color:var(--muted);padding-left:20px;line-height:1.9;margin-bottom:20px;">
   <li>Your <strong style="color:var(--text);">operating system</strong> and version (e.g. macOS 14 Sonoma, Windows 11 + WSL Ubuntu 22.04)</li>
