@@ -246,13 +246,14 @@ def format_summary(total, count):
 
 total = get_total(records)
 print(format_summary(total, len(records)))
-print(is_over_limit(total))</pre></div><p>Run: <code>python3 week8_buggy.py</code></p><p><strong>Read the traceback bottom-up:</strong></p><p>1. What is the error type on the last line?</p><p>2. Which file and line number is highlighted?</p><p>3. What does that error type mean?</p><p>Open <code>debug_log.md</code> and fill in the Bug 1 section before touching any code.</p><div class="code-block"><div class="cb-label">debug_log.md template</div><pre># debug_log.md
+print(is_over_limit(total))</pre></div><p>Run: <code>python3 week8_buggy.py</code></p><p><strong>Read the traceback bottom-up:</strong></p><p>1. What is the error type on the last line?</p><p>2. Which file and line number is highlighted?</p><p>3. What does that error type mean?</p><p><strong>Then explain <code>get_total()</code> to the duck</strong> &mdash; out loud, one line at a time, to a rubber duck or any inanimate object (<em>rubber duck debugging</em>, from <em>The Pragmatic Programmer</em>, Hunt &amp; Thomas, 1999 &mdash; see the <a href="week08_reading.html">Week 8 reading</a>). Say what each line literally does, not what it should do. What you catch yourself saying becomes the next two lines of the log.</p><p>Open <code>debug_log.md</code> and fill in the Bug 1 section before touching any code.</p><div class="code-block"><div class="cb-label">debug_log.md template</div><pre># debug_log.md
 # Author: [Your Name]
 
 ## Bug 1
 Error type: ___
 File + line: ___
 What the error means: ___
+What I told the duck: ___
 What I tried: ___
 How I fixed it: ___
 
@@ -279,7 +280,7 @@ Can I explain every fixed line? Yes / No
     for rec in records:
         print(f'DEBUG: rec = {rec}')   # add this
         total += rec['amount']
-    return total</pre></div><p>Run again. The DEBUG output shows you every record. Spot the typo in the first record&rsquo;s key name. Fix it in the <code>records</code> list. Remove the DEBUG print. Run again to confirm Bug 1 is gone.</p><p>Update debug_log.md: what did you find and how did you fix it?</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Fix Bug 2</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">A new error appears after fixing Bug 1</div><div class="task-body"><p>Read the new traceback. Bug 2 is in <code>is_over_limit()</code>. It is a comparison between an integer and a string.</p><p>Fix it without AI first. Update debug_log.md before asking AI anything.</p><div class="expected">Total: $5150.00 across 3 records
+    return total</pre></div><p>Run again. The DEBUG output shows you every record. Spot the typo in the first record&rsquo;s key name. Fix it in the <code>records</code> list. Remove the DEBUG print. Run again to confirm Bug 1 is gone.</p><p>Update debug_log.md: what did you find and how did you fix it?</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Fix Bug 2</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">A new error appears after fixing Bug 1</div><div class="task-body"><p>Read the new traceback. Bug 2 is in <code>is_over_limit()</code>. It is a comparison between an integer and a string.</p><p>Explain the comparison to the duck before reaching for AI &mdash; say out loud what type each side of the <code>&gt;</code> actually is. Fix it without AI first. Update debug_log.md before asking AI anything.</p><div class="expected">Total: $5150.00 across 3 records
 True</div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot of the correct final output after both bugs are fixed.</div></div><div class="hint-box"><strong>Hint:</strong> Python cannot compare an int and a string with &gt;. The string '1000' needs to become the integer 1000.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Write Tests for the Fixed Code</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write five pytest tests verifying the fixed functions</div><div class="task-body"><div class="code-block"><div class="cb-label">tests/test_week8.py</div><pre>from week8_buggy import get_total, is_over_limit, format_summary
 
 def test_get_total_correct():
