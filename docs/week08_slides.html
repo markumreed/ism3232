@@ -138,14 +138,15 @@ Code label: Traceback anatomy — read from bottom to top</aside></section>
 
 Code label: Debugging workflow — add prints, run, read, remove when fixed</aside></section>
 <section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Required AI Literacy Activity: Debug First, Then Ask</h1><aside class="notes">Students who submit only the corrected file with no reflection receive no credit for the activity portion. The six-step written reflection is the assignment.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Required workflow — follow every step in order</h3><pre><code class="language-bash">Step 1: Read the traceback. Write what you think is wrong in your own words.
-Step 2: Try to fix it yourself using print() statements.
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Required workflow — follow every step in order</h3><pre><code class="language-bash">Step 1: Read the traceback — bottom-up. Note the error type, file, and line number.
+Step 2: Write your hypothesis — what you think is wrong, in your own words,
+        BEFORE touching any code. (Explain it to the duck.)
+Step 3: Add print() statements to test your hypothesis.
         Document what you tried and what you observed.
-Step 3: If still stuck, ask AI to explain the error message ONLY.
+Step 4: If still stuck after 10 minutes, ask AI to explain the error message ONLY.
         Prompt: &quot;Explain this Python error without giving me corrected code.&quot;
         Do NOT ask AI to fix the code.
-Step 4: Fix the code yourself based on the AI explanation.
-Step 5: Run pytest — all tests must pass before continuing.
+Step 5: Fix the code yourself, then run pytest — all tests must pass before continuing.
 Step 6: Write reflection.md covering:
         — What was the bug?
         — What did AI explain (paste the AI response)?
