@@ -337,7 +337,11 @@ li::marker{color:var(--dim);}
   <p style="margin:0;"><strong>Fix:</strong> Create a <code>.env</code> file in the project root with <code>ANTHROPIC_API_KEY=your-key-here</code>. Confirm <code>python-dotenv</code> is installed and <code>load_dotenv()</code> is called at the top of <code>ai_feature.py</code>.</p>
 </div><div style="margin-top:40px;padding-top:20px;border-top:1px solid var(--border);">
   <h2>Still stuck?</h2>
-  <p>After trying the fix above, if the error persists:</p>
+  <div class="ok">
+    <div class="concept-label">✓ Step 0 — explain it to the duck</div>
+    <p>Before asking anyone, explain the failing code out loud, one line at a time, to an inanimate object — <strong>rubber duck debugging</strong>, named in <em>The Pragmatic Programmer</em> (Hunt &amp; Thomas, Addison-Wesley, 1999). Stating what each line literally does, instead of what you assumed it does, surfaces a surprising number of bugs mid-sentence. Full technique in the <a href="week08_reading.html" style="color:var(--green);">Week 8 reading</a>.</p>
+  </div>
+  <p>If the duck doesn't crack it and the error persists:</p>
   <ol>
     <li>Copy the <strong>full traceback</strong> (all lines from "Traceback" to the last line)</li>
     <li>Write one sentence describing what you were trying to do when the error appeared</li>
