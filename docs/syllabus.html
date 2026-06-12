@@ -533,10 +533,10 @@ li::marker{color:var(--dim);}
   <div class="syl-card-body">
     <ol style="margin:0 0 0 18px;padding:0;line-height:2;font-size:14px;">
       <li>Read the traceback bottom-up. Write the error type and line number.</li>
-      <li>Write your hypothesis before touching any code.</li>
+      <li>Write your hypothesis before touching any code — explain the code out loud, line by line, to a rubber duck (<em>rubber duck debugging</em>, from <em>The Pragmatic Programmer</em>, Hunt &amp; Thomas, 1999).</li>
       <li>Add strategic print() statements and run the script.</li>
       <li>If stuck after 10 minutes — ask AI to explain the error only, not to fix it.</li>
-      <li>Fix the code yourself.</li>
+      <li>Fix the code yourself, then run pytest — all tests must pass.</li>
       <li>Write the required reflection. This is 30 of 70 points and is not optional.</li>
     </ol>
   </div>
