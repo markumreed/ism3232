@@ -54,6 +54,7 @@
         <a href="${pg}syllabus.html">Syllabus</a>
         <a href="${pg}course_map.html">Course Map</a>
         <a href="${pg}unit_all_overview.html">All Units Overview</a>
+        <a href="${pg}troubleshooting.html">Troubleshooting</a>
       </div>
     </div>
 
@@ -151,6 +152,7 @@
       <a href="${pg}syllabus.html">Syllabus</a>
       <a href="${pg}course_map.html">Course Map</a>
       <a href="${pg}unit_all_overview.html">All Units Overview</a>
+      <a href="${pg}troubleshooting.html">Troubleshooting</a>
     </div>
     <div class="mob-section">
       <div class="mob-section-label">Reference</div>
