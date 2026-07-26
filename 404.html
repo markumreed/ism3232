@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Page not found — ISM3232</title>
+<link rel="stylesheet" href="/ism3232/site.css">
+<style>
+  :root {
+    --bg:        #0f0f17;
+    --bg2:       #15151f;
+    --text:      #e8e8f0;
+    --muted:     #9a9aab;
+    --accent:    #fbbf24;
+    --mono:      'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+    --sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  [data-theme="light"] {
+    --bg: #fbfbf7; --bg2: #f5f5ee; --text: #1a1a26; --muted: #4a4a5a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+  body { min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 40px 20px; }
+  .four {
+    font-family: var(--mono); font-size: clamp(80px, 16vw, 160px); font-weight: 800;
+    line-height: 1; letter-spacing: -.05em; color: var(--accent); margin: 0;
+  }
+  h1 { font-size: clamp(24px, 4vw, 36px); margin: 20px 0 10px; }
+  p { color: var(--muted); font-size: 17px; max-width: 540px; margin: 0 auto 30px; line-height: 1.6; }
+  .links {
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+    margin-top: 28px;
+  }
+  .links a {
+    padding: 10px 18px; border-radius: 8px;
+    text-decoration: none; font-size: 14px; font-weight: 600;
+    background: var(--bg2); color: var(--text); border: 1px solid rgba(255,255,255,.14);
+    transition: border-color .15s, background .15s;
+  }
+  .links a:hover { border-color: var(--accent); }
+  .links a.primary { background: var(--accent); color: #1a1a26; border-color: var(--accent); }
+  .links a.primary:hover { background: #fcd34d; }
+</style>
+</head>
+<body>
+<main>
+  <p class="four">404</p>
+  <h1>Page not found</h1>
+  <p>The page you're looking for doesn't exist — it may have moved, been renamed, or never existed. Head back to the course hub to find your way.</p>
+  <div class="links">
+    <a href="/ism3232/" class="primary">Course Hub</a>
+    <a href="/ism3232/docs/syllabus.html">Syllabus</a>
+    <a href="/ism3232/docs/unit_all_overview.html">All Units</a>
+  </div>
+</main>
+</body>
+</html>
