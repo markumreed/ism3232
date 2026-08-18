@@ -284,7 +284,7 @@ If you cannot say "A X IS A Y" with a straight face, use composition instead.</p
 <li>c) Combining two functions into one</li>
 <li>d) Storing class data in a database</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">In the manager pattern, RequestManager has a self.requests list of BusinessRequest objects <span style="color:var(--muted);">— it &#x27;has&#x27; requests, it doesn&#x27;t &#x27;is&#x27; one.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An object that contains another object as an attribute <span style="color:var(--muted);">— In the manager pattern, RequestManager has a self.requests list of BusinessRequest objects <span style="color:var(--muted);">— it &#x27;has&#x27; requests, it doesn&#x27;t &#x27;is&#x27; one.</span></span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
@@ -295,7 +295,7 @@ If you cannot say "A X IS A Y" with a straight face, use composition instead.</p
 <li>c) Whenever you want to reuse code</li>
 <li>d) When one class needs to call a method from another</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">&#x27;A TravelRequest IS A BusinessRequest&#x27; is valid. If the is-a sentence sounds wrong, use composition instead.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">When one class IS a more specific version of another (is-a relationship) <span style="color:var(--muted);">— &#x27;A TravelRequest IS A BusinessRequest&#x27; is valid. If the is-a sentence sounds wrong, use composition instead.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
@@ -325,7 +325,7 @@ Woof <span style="color:var(--muted);">— d.name comes from Animal.__init__ (in
 <li>c) A database connection</li>
 <li>d) A SQL query</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The class defines the structure (attributes ↔ columns); each instance maps to one row.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A database table <span style="color:var(--muted);">— The class defines the structure (attributes ↔ columns); each instance maps to one row.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
@@ -336,7 +336,7 @@ Woof <span style="color:var(--muted);">— d.name comes from Animal.__init__ (in
 <li>c) It makes the list read-only</li>
 <li>d) Class-level lists don&#x27;t support append()</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If requests = [] were at the class level, all instances would share it. A bug in one manager would corrupt all others.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It ensures each RequestManager instance has its own independent list <span style="color:var(--muted);">— If requests = [] were at the class level, all instances would share it. A bug in one manager would corrupt all others.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
@@ -347,7 +347,7 @@ Woof <span style="color:var(--muted);">— d.name comes from Animal.__init__ (in
 <li>c) BusinessRequest is a TravelRequest</li>
 <li>d) TravelRequest replaces BusinessRequest</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TravelRequest extends BusinessRequest with a lower approval limit; it is still a BusinessRequest, making inheritance appropriate.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TravelRequest is a BusinessRequest <span style="color:var(--muted);">— TravelRequest extends BusinessRequest with a lower approval limit; it is still a BusinessRequest, making inheritance appropriate.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>

@@ -330,7 +330,7 @@ def test_get_approver_manager():
 <li>c) Stores the result in a global variable</li>
 <li>d) Calls the function again</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Without return, a function returns None. The returned value can be stored or passed to another function.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Ends the function and sends a value back to the caller <span style="color:var(--muted);">— Without return, a function returns None. The returned value can be stored or passed to another function.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
@@ -352,7 +352,7 @@ print(discount(200, 0.25))</code></pre>
 <li>c) A variable defined inside a function that exists only while that function runs</li>
 <li>d) A variable imported from another module</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Local variables are created when a function is called and destroyed when it returns. They are invisible to code outside the function.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A variable defined inside a function that exists only while that function runs <span style="color:var(--muted);">— Local variables are created when a function is called and destroyed when it returns. They are invisible to code outside the function.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
@@ -363,7 +363,7 @@ print(discount(200, 0.25))</code></pre>
 <li>c) Must end with _test</li>
 <li>d) Can be named anything</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">pytest discovers tests by looking for functions beginning with test_. Any other prefix and pytest silently skips them.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Must start with test_ <span style="color:var(--muted);">— pytest discovers tests by looking for functions beginning with test_. Any other prefix and pytest silently skips them.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
@@ -374,7 +374,7 @@ print(discount(200, 0.25))</code></pre>
 <li>c) Inside each source file</li>
 <li>d) In a conftest.py file</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The required structure is: models.py (source), tests/test_models.py (tests). Tests must be in a dedicated tests/ folder.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">In a tests/ directory <span style="color:var(--muted);">— The required structure is: models.py (source), tests/test_models.py (tests). Tests must be in a dedicated tests/ folder.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
@@ -385,7 +385,7 @@ print(discount(200, 0.25))</code></pre>
 <li>c) Fails the test if req.status is not &#x27;Pending&#x27;</li>
 <li>d) Skips the test if the condition is False</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If the assertion fails, pytest marks the test FAILED and shows the actual vs. expected values.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Fails the test if req.status is not 'Pending' <span style="color:var(--muted);">— If the assertion fails, pytest marks the test FAILED and shows the actual vs. expected values.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>

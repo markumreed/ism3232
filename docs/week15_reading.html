@@ -298,7 +298,7 @@ Always build the selectbox options from a live call to <code>get_all_records()</
 <li>c) Only the changed section re-renders</li>
 <li>d) The database connection is reset</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This is the Streamlit execution model. Every widget interaction triggers a full rerun. Understanding this prevents bugs like re-initialising data on every click.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The entire app.py script re-runs from top to bottom <span style="color:var(--muted);">— This is the Streamlit execution model. Every widget interaction triggers a full rerun. Understanding this prevents bugs like re-initialising data on every click.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
@@ -309,7 +309,7 @@ Always build the selectbox options from a live call to <code>get_all_records()</
 <li>c) The first Streamlit call in the script, before any other st.* calls</li>
 <li>d) Inside the main tab block</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">If anything else runs first, Streamlit raises StreamlitAPIException. It must be called before any output.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The first Streamlit call in the script, before any other st.* calls <span style="color:var(--muted);">— If anything else runs first, Streamlit raises StreamlitAPIException. It must be called before any output.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
@@ -320,7 +320,7 @@ Always build the selectbox options from a live call to <code>get_all_records()</
 <li>c) st.tabs()</li>
 <li>d) st.container()</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">tab1, tab2 = st.tabs([&#x27;New Request&#x27;, &#x27;All Requests&#x27;]) creates two tabs. Content inside with tab1: appears on the first tab.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">st.tabs() <span style="color:var(--muted);">— tab1, tab2 = st.tabs([&#x27;New Request&#x27;, &#x27;All Requests&#x27;]) creates two tabs. Content inside with tab1: appears on the first tab.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
@@ -331,7 +331,7 @@ Always build the selectbox options from a live call to <code>get_all_records()</
 <li>c) Cache expensive computations permanently</li>
 <li>d) Share data between different users</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Normal Python variables reset on every rerun. session_state survives reruns, making it essential for counters and form state.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Store values that persist across reruns within the same user session <span style="color:var(--muted);">— Normal Python variables reset on every rerun. session_state survives reruns, making it essential for counters and form state.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
@@ -342,7 +342,7 @@ Always build the selectbox options from a live call to <code>get_all_records()</
 <li>c) A green success banner</li>
 <li>d) A modal dialog</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Streamlit has st.success() (green), st.error() (red), st.warning() (yellow), and st.info() (blue) for user feedback.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A green success banner <span style="color:var(--muted);">— Streamlit has st.success() (green), st.error() (red), st.warning() (yellow), and st.info() (blue) for user feedback.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Code Trace</div>

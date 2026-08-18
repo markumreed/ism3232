@@ -315,7 +315,7 @@ This ordering is intentional and important — reversing it breaks the logic sil
 <li>c) Counts backward from n to 0</li>
 <li>d) Exits a loop when a condition is met</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An accumulator starts at an empty/zero value, then grows with each iteration.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Builds up a result across loop iterations using += or .append() <span style="color:var(--muted);">— An accumulator starts at an empty/zero value, then grows with each iteration.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Code Trace</div>
@@ -336,7 +336,7 @@ print(total)</code></pre>
 <li>c) d-&gt;status</li>
 <li>d) d(status)</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Square bracket notation is the standard way to access dict values by key.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">d["status"] <span style="color:var(--muted);">— Square bracket notation is the standard way to access dict values by key.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
@@ -356,7 +356,7 @@ print(record[&quot;price&quot;] * record[&quot;qty&quot;])</code></pre>
 <li>c) Raises a KeyError</li>
 <li>d) Creates the key with value None</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">d[&quot;missing_key&quot;] raises KeyError immediately. Use d.get(&quot;key&quot;) to get None instead of an error.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Raises a KeyError <span style="color:var(--muted);">— d[&quot;missing_key&quot;] raises KeyError immediately. Use d.get(&quot;key&quot;) to get None instead of an error.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
@@ -367,7 +367,7 @@ print(record[&quot;price&quot;] * record[&quot;qty&quot;])</code></pre>
 <li>c) A table schema</li>
 <li>d) A database connection</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This is the standard pattern for tabular data: one list holding many records, each record a dict with the same keys.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">One record (row) of data <span style="color:var(--muted);">— This is the standard pattern for tabular data: one list holding many records, each record a dict with the same keys.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>

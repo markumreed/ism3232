@@ -329,7 +329,7 @@ print("All integration checks passed.")</code></pre>
 <li>c) To match column types automatically</li>
 <li>d) To create indexes</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Never build SQL with f-strings. conn.execute(&#x27;INSERT INTO t VALUES (?)&#x27;, (value,)) is safe; f&#x27;INSERT INTO t VALUES ({value})&#x27; is a SQL injection vulnerability.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">To prevent SQL injection by separating SQL structure from user-supplied values <span style="color:var(--muted);">— Never build SQL with f-strings. conn.execute(&#x27;INSERT INTO t VALUES (?)&#x27;, (value,)) is safe; f&#x27;INSERT INTO t VALUES ({value})&#x27; is a SQL injection vulnerability.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
@@ -340,7 +340,7 @@ print("All integration checks passed.")</code></pre>
 <li>c) All queries run in read-only mode</li>
 <li>d) The database is locked for the test</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The context manager handles cleanup. If an exception is raised, changes are rolled back. This prevents connection leaks.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The connection is committed and closed automatically when the block exits <span style="color:var(--muted);">— The context manager handles cleanup. If an exception is raised, changes are rolled back. This prevents connection leaks.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
@@ -360,7 +360,7 @@ print("All integration checks passed.")</code></pre>
 <li>c) To set the connection timeout</li>
 <li>d) To specify the SQL dialect</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Tests pass tmp_path / &#x27;test.db&#x27; as db_file, keeping test data completely separate from the real database.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">To let tests use a temporary database instead of the production file <span style="color:var(--muted);">— Tests pass tmp_path / &#x27;test.db&#x27; as db_file, keeping test data completely separate from the real database.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
@@ -371,7 +371,7 @@ print("All integration checks passed.")</code></pre>
 <li>c) A pre-populated test database</li>
 <li>d) A path to the production database</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Using tmp_path / &#x27;test.db&#x27; as db_file ensures each test gets a fresh, isolated database with no leftover data from other tests.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A temporary directory unique to the test, cleaned up after the test runs <span style="color:var(--muted);">— Using tmp_path / &#x27;test.db&#x27; as db_file ensures each test gets a fresh, isolated database with no leftover data from other tests.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>
@@ -382,7 +382,7 @@ print("All integration checks passed.")</code></pre>
 <li>c) The total number of rows in the table</li>
 <li>d) True if successful, False if not</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The cursor has useful properties: .lastrowid (id of the just-inserted row) and .rowcount (number of rows affected).</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A cursor object (use .lastrowid to get the new id) <span style="color:var(--muted);">— The cursor has useful properties: .lastrowid (id of the just-inserted row) and .rowcount (number of rows affected).</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>

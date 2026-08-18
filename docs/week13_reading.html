@@ -273,7 +273,7 @@ GROUP BY status;
 <li>c) Prevents duplicate rows across all columns</li>
 <li>d) Creates an index on the column</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">You never insert the id yourself; SQLite assigns the next available integer automatically.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Automatically assigns a unique incrementing integer id to each new row <span style="color:var(--muted);">— You never insert the id yourself; SQLite assigns the next available integer automatically.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Code Trace</div>
@@ -304,7 +304,7 @@ ORDER BY amount DESC;</code></pre>
 <li>c) The column stores text, not numbers</li>
 <li>d) The column is a foreign key</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An INSERT without a value for a NOT NULL column raises an error. Omitting it allows NULL (missing) values, which can cause unexpected bugs.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The column cannot be left empty — a value must be provided <span style="color:var(--muted);">— An INSERT without a value for a NOT NULL column raises an error. Omitting it allows NULL (missing) values, which can cause unexpected bugs.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Multiple Choice</div>

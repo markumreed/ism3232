@@ -234,7 +234,7 @@ def test_summarise_returns_text():
 <li>c) The API might return incorrect JSON</li>
 <li>d) The API call increases the database file size</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">ISM3232 requires sending only non-identifying fields (category, description) to the API, never names, IDs, or financial totals.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Sensitive or identifying data may be stored or logged by the provider <span style="color:var(--muted);">— ISM3232 requires sending only non-identifying fields (category, description) to the API, never names, IDs, or financial totals.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
@@ -245,7 +245,7 @@ def test_summarise_returns_text():
 <li>c) A log file recording every API call</li>
 <li>d) An admin approval for each AI response</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Users must always know when they are reading AI-generated text. Use st.info() or an explicit &#x27;AI-generated summary&#x27; label.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A visible label or banner whenever AI-generated content is displayed <span style="color:var(--muted);">— Users must always know when they are reading AI-generated text. Use st.info() or an explicit &#x27;AI-generated summary&#x27; label.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
@@ -256,7 +256,7 @@ def test_summarise_returns_text():
 <li>c) Running the AI in offline mode</li>
 <li>d) Testing only the UI, not the function</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">unittest.mock.patch replaces the Anthropic client during tests so tests make no real API calls, incur no cost, and do not fail due to network issues.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Replacing the real API call with a controlled fake that returns a predictable response <span style="color:var(--muted);">— unittest.mock.patch replaces the Anthropic client during tests so tests make no real API calls, incur no cost, and do not fail due to network issues.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Code Trace</div>
@@ -290,7 +290,7 @@ def test_summarise_returns_text():
 <li>c) Encrypt the input</li>
 <li>d) Convert all text to uppercase</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Control 2 of the six required controls. Always validate before the API call: reject empty input, enforce length limits, restrict to expected categories.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Validate and limit input: check non-empty, cap length, allow only expected values <span style="color:var(--muted);">— Control 2 of the six required controls. Always validate before the API call: reject empty input, enforce length limits, restrict to expected categories.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>

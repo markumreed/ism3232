@@ -240,7 +240,7 @@ pwd             # should end in /testdir</code></pre><div class="warn"><div clas
 <li>c) To run Python faster</li>
 <li>d) To share packages with teammates automatically</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Without venv, installing a package for one project can break another project that requires a different version of the same package.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">To isolate project dependencies so different projects do not conflict <span style="color:var(--muted);">— Without venv, installing a package for one project can break another project that requires a different version of the same package.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
@@ -251,7 +251,7 @@ pwd             # should end in /testdir</code></pre><div class="warn"><div clas
 <li>c) venv create .venv</li>
 <li>d) pip install venv</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The -m flag runs the venv module. .venv is the convention; the leading dot makes it hidden.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">python3 -m venv .venv <span style="color:var(--muted);">— The -m flag runs the venv module. .venv is the convention; the leading dot makes it hidden.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q3 · Multiple Choice</div>
@@ -262,7 +262,7 @@ pwd             # should end in /testdir</code></pre><div class="warn"><div clas
 <li>c) source .venv/bin/activate</li>
 <li>d) venv on</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">source runs the activate script in your current shell. The prompt gains (.venv) when activation succeeds.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">source .venv/bin/activate <span style="color:var(--muted);">— source runs the activate script in your current shell. The prompt gains (.venv) when activation succeeds.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
@@ -273,7 +273,7 @@ pwd             # should end in /testdir</code></pre><div class="warn"><div clas
 <li>c) Saves a snapshot of all installed packages to requirements.txt</li>
 <li>d) Updates all packages</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">This snapshot lets teammates recreate your exact environment with pip install -r requirements.txt.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Saves a snapshot of all installed packages to requirements.txt <span style="color:var(--muted);">— This snapshot lets teammates recreate your exact environment with pip install -r requirements.txt.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
@@ -295,7 +295,7 @@ pwd             # should end in /testdir</code></pre><div class="warn"><div clas
 <li>c) ~/.config/zsh/</li>
 <li>d) /usr/local/share/zsh/</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">~ is your home directory. .zshrc is a hidden file (starts with .) that zsh reads automatically on startup.</div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">~/.zshrc <span style="color:var(--muted);">— ~ is your home directory. .zshrc is a hidden file (starts with .) that zsh reads automatically on startup.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q7 · True / False</div>
