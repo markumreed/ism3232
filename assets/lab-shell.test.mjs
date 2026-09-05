@@ -103,3 +103,14 @@ test('prompt shows basename or ~', () => {
   run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
   assert.equal(prompt(sh), 'student@MacBook-Pro week2_lab %');
 });
+
+test('python3 uses injected pythonRunner when set', async () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => 'Week 2 complete\n';
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch week2_script.py');
+  const r = run(sh, 'python3 week2_script.py');
+  // when a runner is present, run() returns a Promise-like marker the widget awaits
+  assert.ok(r.async instanceof Promise);
+  assert.equal((await r.async).out, 'Week 2 complete\n');
+});

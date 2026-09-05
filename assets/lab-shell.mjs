@@ -551,7 +551,28 @@ function cmd_code(shell, args) {
   return { out: `(VS Code would open: ${args[0] || '.'})\n`, err: '' };
 }
 
-function cmd_python3() {
+// python3 <file.py>
+// With no runner injected, returns the Task 1 stub string. When the reveal.js
+// terminal widget sets shell.pythonRunner (src -> Promise<string>), the file's
+// stored contents are handed to Pyodide and run() surfaces an `async` marker
+// (a Promise resolving to { out, err }) that the widget awaits and appends.
+function cmd_python3(shell, args) {
+  if (shell && typeof shell.pythonRunner === 'function') {
+    const file = (args || []).find((a) => !a.startsWith('-'));
+    let src = '';
+    if (file) {
+      const node = nodeAt(shell._fs, resolvePath(shell, file));
+      if (typeof node === 'string') src = node;
+    }
+    return {
+      out: '',
+      err: '',
+      async: Promise.resolve(shell.pythonRunner(src)).then((out) => ({
+        out: out || '',
+        err: '',
+      })),
+    };
+  }
   return { out: '(python3 stub — wired to Pyodide in Task 5)\n', err: '' };
 }
 
@@ -664,7 +685,9 @@ export function run(shell, line) {
     }
   }
 
-  return { out, err, cleared: !!result.cleared };
+  const ret = { out, err, cleared: !!result.cleared };
+  if (result && result.async) ret.async = result.async;
+  return ret;
 }
 
 // ---------------------------------------------------------------------------
