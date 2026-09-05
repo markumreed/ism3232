@@ -45,6 +45,23 @@ function resolvePath(shell, p) {
   return normalize(base);
 }
 
+// macOS's default locale sorts filenames case-insensitively (so `ls` shows
+// `hello.py` before `README.md`), unlike a raw JS codepoint `.sort()` which
+// orders all capitals ahead of all lowercase. The shell labs compare the
+// emulator's output to a stock macOS terminal, so fold case first. Comparison
+// is still codepoint-wise on the lowercased names (NOT localeCompare, whose
+// locale collation reweights punctuation and would put `notes_backup.txt`
+// before `notes.txt`); original case only breaks an exact fold tie.
+function sortNames(names) {
+  return [...names].sort((a, b) => {
+    const la = a.toLowerCase();
+    const lb = b.toLowerCase();
+    if (la < lb) return -1;
+    if (la > lb) return 1;
+    return a < b ? -1 : a > b ? 1 : 0;
+  });
+}
+
 function basename(p) {
   const parts = p.split('/').filter(Boolean);
   return parts.length ? parts[parts.length - 1] : '/';
@@ -243,9 +260,9 @@ function parseLsFlags(args) {
 }
 
 function lsLongBlock(map, parentMap, all) {
-  const names = [...map.keys()]
-    .filter((n) => all || !n.startsWith('.'))
-    .sort();
+  const names = sortNames(
+    [...map.keys()].filter((n) => all || !n.startsWith('.')),
+  );
   const entries = [];
   if (all) {
     entries.push(['.', map]);
@@ -284,7 +301,9 @@ function cmd_ls(shell, args) {
     const parent = nodeAt(shell._fs, parentPath(path));
     return { out: lsLongBlock(node, parent, all), err: '' };
   }
-  let names = [...node.keys()].filter((n) => all || !n.startsWith('.')).sort();
+  let names = sortNames(
+    [...node.keys()].filter((n) => all || !n.startsWith('.')),
+  );
   if (all) names = ['.', '..', ...names];
   return { out: names.length ? names.join('  ') + '\n' : '', err: '' };
 }
@@ -445,8 +464,8 @@ function cmd_tree(shell, args) {
   const walk = (map, prefix, depth) => {
     if (depth > maxDepth) return;
     const keys = [...map.keys()];
-    const dirs = keys.filter((k) => map.get(k) instanceof Map).sort();
-    const files = keys.filter((k) => !(map.get(k) instanceof Map)).sort();
+    const dirs = sortNames(keys.filter((k) => map.get(k) instanceof Map));
+    const files = sortNames(keys.filter((k) => !(map.get(k) instanceof Map)));
     const ordered = [...dirs, ...files];
     ordered.forEach((name, idx) => {
       const last = idx === ordered.length - 1;
@@ -703,5 +722,5 @@ export function listing(shell, path) {
   const target = path ? resolvePath(shell, path) : shell.cwd;
   const node = nodeAt(shell._fs, target);
   if (!(node instanceof Map)) return [];
-  return [...node.keys()].filter((n) => !n.startsWith('.')).sort();
+  return sortNames([...node.keys()].filter((n) => !n.startsWith('.')));
 }

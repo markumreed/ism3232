@@ -40,6 +40,28 @@ test('touch multi-arg then ls and ls -la ordering', () => {
   assert.match(la, /\.\.\n/);      // ".." entry present
 });
 
+test('ls / tree fold case but keep codepoint order for punctuation', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch README.md alpha.txt Beta.txt hello.py');
+  // raw codepoint sort would give "Beta.txt  README.md  alpha.txt  hello.py"
+  assert.equal(
+    run(sh, 'ls').out.trim(),
+    'alpha.txt  Beta.txt  hello.py  README.md',
+  );
+  // '.' must still sort before '_' — notes.txt before notes_backup.txt
+  run(sh, 'touch notes.txt notes_backup.txt');
+  assert.equal(
+    run(sh, 'ls').out.trim(),
+    'alpha.txt  Beta.txt  hello.py  notes.txt  notes_backup.txt  README.md',
+  );
+  run(sh, 'cd ~/ism3232');
+  const t2 = run(sh, 'tree -L 2').out;
+  const m1 = t2.slice(t2.indexOf('module01_setup'));
+  // hello_ism3232.py must list before README.md inside module01_setup
+  assert.ok(m1.indexOf('hello_ism3232.py') < m1.indexOf('README.md'));
+});
+
 test('echo > overwrites, echo >> appends, cat concatenates', () => {
   const sh = createShell(seed());
   run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
