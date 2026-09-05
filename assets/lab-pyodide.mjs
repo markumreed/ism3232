@@ -150,49 +150,54 @@ export async function runPython(code, { stdin = [], onStatus } = {}) {
   let stderrBuf = '';
   const queue = [...stdin]; // shift off a COPY; caller's array is untouched
 
-  // --- redirect stdout/stderr to the buffers -----------------------------
-  const hasSetStreams =
-    typeof pyodide.setStdout === 'function' &&
-    typeof pyodide.setStderr === 'function';
-  if (hasSetStreams) {
-    // Pyodide 0.26 native API (verified against the streams docs).
-    pyodide.setStdout({
-      batched: (s) => {
-        stdoutBuf += s;
-      },
-    });
-    pyodide.setStderr({
-      batched: (s) => {
-        stderrBuf += s;
-      },
-    });
-  } else {
-    // Fallback for a build without setStdout/setStderr: swap sys.stdout /
-    // sys.stderr for a tiny Python shim that calls back into JS.
-    pyodide.globals.set('__lab_write_out', (s) => {
-      stdoutBuf += s;
-    });
-    pyodide.globals.set('__lab_write_err', (s) => {
-      stderrBuf += s;
-    });
-    await pyodide.runPythonAsync(INSTALL_STREAMS_PY);
-  }
-
-  // --- override builtins.input to drain the queue -----------------------
-  // Returns undefined (-> Python None) when the queue is empty; the Python
-  // shim turns that into a real EOFError so a missing input line surfaces as
-  // an ordinary Python traceback (the guide teaches it as a real error).
-  pyodide.globals.set('__lab_next_line', (promptStr) => {
-    if (!queue.length) return undefined;
-    const v = queue.shift();
-    stdoutBuf += (promptStr == null ? '' : promptStr) + v + '\n';
-    return v;
-  });
-  await pyodide.runPythonAsync(INSTALL_INPUT_PY);
-
-  // --- run the user code ----------------------------------------------------
+  // `hasSetStreams` is read by the `finally` below, so it lives in the
+  // function scope. Everything that mutates the shared Pyodide singleton
+  // (stream redirection + the `input` override) happens INSIDE the `try`, so
+  // the `finally` restore path runs even if a setup step throws or rejects.
+  let hasSetStreams = false;
   let ok = true;
   try {
+    // --- redirect stdout/stderr to the buffers ---------------------------
+    hasSetStreams =
+      typeof pyodide.setStdout === 'function' &&
+      typeof pyodide.setStderr === 'function';
+    if (hasSetStreams) {
+      // Pyodide 0.26 native API (verified against the streams docs).
+      pyodide.setStdout({
+        batched: (s) => {
+          stdoutBuf += s;
+        },
+      });
+      pyodide.setStderr({
+        batched: (s) => {
+          stderrBuf += s;
+        },
+      });
+    } else {
+      // Fallback for a build without setStdout/setStderr: swap sys.stdout /
+      // sys.stderr for a tiny Python shim that calls back into JS.
+      pyodide.globals.set('__lab_write_out', (s) => {
+        stdoutBuf += s;
+      });
+      pyodide.globals.set('__lab_write_err', (s) => {
+        stderrBuf += s;
+      });
+      await pyodide.runPythonAsync(INSTALL_STREAMS_PY);
+    }
+
+    // --- override builtins.input to drain the queue ---------------------
+    // Returns undefined (-> Python None) when the queue is empty; the Python
+    // shim turns that into a real EOFError so a missing input line surfaces
+    // as an ordinary Python traceback (the guide teaches it as a real error).
+    pyodide.globals.set('__lab_next_line', (promptStr) => {
+      if (!queue.length) return undefined;
+      const v = queue.shift();
+      stdoutBuf += (promptStr == null ? '' : promptStr) + v + '\n';
+      return v;
+    });
+    await pyodide.runPythonAsync(INSTALL_INPUT_PY);
+
+    // --- run the user code --------------------------------------------------
     await pyodide.runPythonAsync(code);
   } catch (err) {
     ok = false;
