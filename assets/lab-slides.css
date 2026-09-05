@@ -72,7 +72,7 @@
 }
 .reveal h1 {
   font-size: 1.65em;
-  color: var(--accent);
+  color: var(--tx);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -286,19 +286,23 @@
   gap: 0.5em;
   margin: 0.55em 0 0.35em;
 }
+/* Accent reads as an OUTLINE here, never as a fill behind fixed-color text —
+ * so the control stays legible for both the teal and the dark-blue accent. */
 .reveal .run .bar button {
   font-family: inherit;
   font-size: 0.44em;
   padding: 0.4em 1em;
   border-radius: 6px;
   border: 1px solid var(--accent);
-  background: var(--accent);
-  color: #06231f;
+  background: var(--bg2);
+  color: var(--tx);
   font-weight: 700;
   cursor: pointer;
-  transition: filter 0.15s, opacity 0.15s;
+  transition: background 0.15s, opacity 0.15s;
 }
-.reveal .run .bar button:hover { filter: brightness(1.08); }
+.reveal .run .bar button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg2));
+}
 .reveal .run .bar button:disabled { opacity: 0.55; cursor: default; }
 .reveal .run .bar button.reset,
 .reveal .run .bar button.reveal-btn {
@@ -355,7 +359,7 @@
 .reveal .run.shell .cli .ps1 {
   font-family: "Fira Code", "Courier New", monospace;
   font-size: 0.44em;
-  color: var(--accent);
+  color: var(--mu);
   white-space: pre;
   flex-shrink: 0;
 }
@@ -415,9 +419,9 @@
 }
 .reveal .quiz button.check {
   width: auto;
-  background: var(--accent);
+  background: var(--bg2);
   border-color: var(--accent);
-  color: #06231f;
+  color: var(--tx);
   font-weight: 700;
 }
 .reveal .quiz .why {
