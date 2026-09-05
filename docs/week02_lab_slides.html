@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Week 2 Lab — zsh Navigation &amp; File Operations</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 2 &nbsp;·&nbsp; Module 02 &nbsp;·&nbsp; Unit 1</p>
+<h1>zsh Navigation &amp; File Operations</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome + setup: create <code>week2_lab/</code></span>
+<span class="t-item"><strong>0:04–0:20</strong> Part 1 — Navigation</span>
+<span class="t-item"><strong>0:20–0:38</strong> Part 2 — File operations</span>
+<span class="t-item"><strong>0:38–0:53</strong> Part 3 — Safe file deletion</span>
+<span class="t-item"><strong>0:53–1:08</strong> Part 4 — Command reference README</span>
+<span class="t-item"><strong>1:08–1:15</strong> Stretch preview + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+This lab's real subject is muscle memory, not new concepts — every command here is individually simple, and the actual teaching challenge is getting students to type each one deliberately, read its output before moving to the next, and build the reflex of checking where they are before doing anything destructive. Part 3's <code>rm</code> safety ritual deserves outsized attention: it's a two-command habit (<code>pwd</code> then <code>ls</code>, always, before <code>rm</code>) that this course will hold students to for the rest of the semester, and the earlier it becomes automatic, the fewer real losses happen later when <code>rm</code> targets something that actually matters.
+Full class period, 75 minutes. Live terminal code-along.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live terminal code-along</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 1: verified zsh / Python / Git, and the <code>ism3232/</code> folder structure (marked Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (navigation) – Part 4 (command reference README), plus a Stretch on pipes / redirect</span></div>
+<div><span class="k">Submission</span><span class="v">4 screenshots + <code>module02_zsh/README.md</code> (12+ commands documented), uploaded to Canvas — completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. Prerequisite check: every student needs <code>ism3232/module02_zsh/</code> from Week 1 — if a section didn't reach that far, create it live before demonstrating. Pre-check that <code>tree</code> is installed on a sample of machines; the one-line fix on Mac is <code>brew install tree</code>.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Navigate the filesystem using <code>pwd</code>, <code>ls</code>, <code>ls -la</code>, and <code>cd</code> (including <code>cd ..</code> and <code>cd ~</code>) without hesitation.</li>
+<li>Visualize a folder's structure with <code>tree -L 2</code>.</li>
+<li>Create, copy, rename, read, and preview files with <code>touch</code>, <code>cp</code>, <code>mv</code>, <code>cat</code>, and <code>head</code>.</li>
+<li>Apply the <code>rm</code> safety ritual — <code>pwd</code> then <code>ls</code>, every time, before any deletion — as an automatic habit, not a reminder they need every time.</li>
+<li>Open a folder as a proper VS Code workspace, and document a session's commands in a README table.</li>
+</ul>
+<aside class="notes">By the end of class students should do each of these without hesitation. The verbs matter — "without hesitation," "automatic habit" — this is a fluency session, not a first exposure.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome + setup: create <code>week2_lab/</code></td><td>4</td></tr>
+<tr><td>0:04–0:20</td><td>Part 1 — Navigation</td><td>16</td></tr>
+<tr><td>0:20–0:38</td><td>Part 2 — File operations</td><td>18</td></tr>
+<tr><td>0:38–0:53</td><td>Part 3 — Safe file deletion</td><td>15</td></tr>
+<tr><td>0:53–1:08</td><td>Part 4 — Command reference README</td><td>15</td></tr>
+<tr><td>1:08–1:15</td><td>Stretch preview + wrap-up, submission checklist</td><td>7</td></tr>
+</tbody>
+</table>
+<aside class="notes">Four required parts fill the class period; the pipes/redirect Stretch is positioned as a genuine bonus, since it introduces two new ideas (<code>|</code> and <code>&gt;&gt;</code>) beyond what the required parts cover, worth full attention only if time allows rather than rushed.</aside>
+</section>
+
+<!-- 5. PART 1 — divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:20</span>
+<h1>Navigation</h1>
+<aside class="notes">
+Teaching goal: the four navigation commands (<code>pwd</code>, <code>ls</code>, <code>ls -la</code>, <code>cd</code>) fluent enough to use without thinking — and a first look at <code>tree</code> for visualizing structure at a glance.
+Say to the class: "Nine commands, in sequence. I want you reading each result before typing the next line — don't paste this whole block at once. The point today is noticing what changes after each command."
+Setup just before this: <code>cd ~/ism3232/module02_zsh</code>, <code>mkdir week2_lab</code>, <code>cd week2_lab</code>, <code>pwd</code> — "Everything today happens inside a fresh <code>week2_lab/</code> folder, so today's practice doesn't clutter what you'll build in later weeks."
+</aside>
+</section>
+
+<!-- 6. PART 1 — idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>Make <code>pwd</code> your reflex in any unfamiliar terminal.</p>
+<p><code>pwd</code> / <code>ls</code> are Week 1's familiar pair — now the automatic first move in any new terminal session.</p>
+<p><code>ls -la</code> is two flags at once: <code>-l</code> (long format, one entry per line with permissions and size) and <code>-a</code> (all, including hidden files whose names start with a dot, like <code>.gitignore</code> or <code>.zshrc</code>, which plain <code>ls</code> hides). Hidden files aren't rare edge cases here — <code>.venv/</code>, <code>.gitignore</code>, and <code>.zshrc</code> all arrive in Week 3, and <code>ls -la</code> is how you'll confirm they exist.</p>
+</div>
+<aside class="notes">Making <code>pwd</code> your reflexive first command in any unfamiliar terminal state is exactly the habit this whole unit is building. Emphasise the "read each result before the next line" discipline here.</aside>
+</section>
+
+<!-- 7. PART 1 — live code -->
+<section class="s-code">
+<h3>Live-code — one command at a time, pause for output after each</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232":{"module01_setup":{"hello_ism3232.py":"print(\"hi\")\n","README.md":"# m1\n"},"module02_zsh":{"week2_lab":{}},"data":{},"screenshots":{},"module03_git_github":{},"module04_programming":{},"module05_functions":{},"module06_oop":{},"module07_final_project":{}}}'>cd ~/ism3232/module02_zsh/week2_lab
+pwd
+ls
+ls -la
+cd ..
+pwd
+cd ~/ism3232
+tree -L 2
+cd module02_zsh/week2_lab
+pwd</div>
+<p class="expect">The first <code>cd</code> just puts the emulator where the Setup step left you. <code>tree -L 2</code> then draws the <code>ism3232/</code> structure two levels deep; the final <code>pwd</code> confirms you are back in <code>week2_lab</code>.</p>
+<aside class="notes">
+Line by line:
+- <code>pwd</code> / <code>ls</code> — Week 1's familiar pair, now the automatic first move in any new terminal session.
+- <code>ls -la</code> — <code>-l</code> (long format: permissions, size, one per line) and <code>-a</code> (all, including hidden dot-files). Hidden files matter: <code>.venv/</code>, <code>.gitignore</code>, <code>.zshrc</code> are coming in Week 3.
+- <code>cd ..</code> — <code>..</code> means "the parent of the current directory"; moves up exactly one level.
+- <code>cd ~/ism3232</code> — an absolute-from-home jump using <code>~</code>. Contrast with <code>cd ..</code>: <code>..</code> is always relative to where you are now; <code>~/ism3232</code> works identically from anywhere, anchored to home.
+- <code>tree -L 2</code> — new command today. <code>tree</code> draws the folder structure as a text diagram; <code>-L 2</code> limits the depth to 2 levels so the output stays readable. Fastest way to get an at-a-glance sense of a project's shape.
+- <code>cd module02_zsh/week2_lab</code> — a relative path with two segments, moving through two levels of nesting in one <code>cd</code>. <code>cd</code> is not limited to one folder at a time.
+(The emulator labels the tree root <code>.</code> rather than <code>ism3232/</code> — that is exactly what real <code>tree</code> prints when run from inside the folder; contents also vary by what each student has built so far.)
+</aside>
+</section>
+
+<!-- 8. PART 1 — predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>Before running: if you ran <code>tree -L 1</code> instead of <code>tree -L 2</code> here, what would change?</p>
+<pre class="answer" hidden>Only the top-level folder names would show — none of their contents.
+-L limits how DEEP tree looks, not WHICH folders appear.</pre>
+</div>
+<aside class="notes">Common misconception: students read <code>-L 2</code> as limiting which folders show rather than how deep the walk goes. Get a student to state the correct version out loud.</aside>
+</section>
+
+<!-- 9. PART 1 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Starting from <code>~/ism3232/module02_zsh/week2_lab</code>, what is the shortest <code>cd</code> command to reach <code>~/ism3232/module01_setup</code>?</p>
+<button data-opt="A"><code>cd ../../module01_setup</code></button>
+<button data-opt="B"><code>cd ../module01_setup</code></button>
+<button data-opt="C"><code>cd module01_setup</code></button>
+<p class="why"><code>cd ../../module01_setup</code> — up two levels to <code>ism3232/</code>, then down into <code>module01_setup</code>. <code>cd ~/ism3232/module01_setup</code> is an equally correct absolute alternative; the tradeoff is that the relative path is shorter here but breaks if you're not starting in <code>week2_lab</code>, while the absolute path works from anywhere.</p>
+</div>
+<aside class="notes">A relative-path reasoning check. <code>../module01_setup</code> (B) only goes up one level, to <code>module02_zsh</code>, where <code>module01_setup</code> doesn't exist; <code>module01_setup</code> (C) looks for it inside <code>week2_lab</code>.</aside>
+</section>
+
+<!-- 10. PART 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>cd module02_zsh/week2_lab</code> from somewhere other than directly inside <code>~/ism3232</code> — produces <code>No such file or directory</code>, since this is a relative path that requires the right starting point. Have the student run <code>pwd</code> first and reason about it.</p>
+<p>Confusing <code>tree</code>'s depth limit (<code>-L 2</code>) with somehow limiting which folders show, rather than how deep it looks.</p>
+<p>Not noticing hidden files in <code>ls -la</code> output — there simply aren't any yet this early in the semester. That's expected; Week 3 is where <code>ls -la</code> starts showing something genuinely new (<code>.venv/</code>, <code>.gitignore</code>).</p>
+</div>
+<aside class="notes">Check for understanding: "Starting from <code>~/ism3232/module02_zsh/week2_lab</code>, what's the shortest <code>cd</code> to reach <code>~/ism3232/module01_setup</code>?" Answer: <code>cd ../../module01_setup</code> (up two levels, then down), or the absolute <code>cd ~/ism3232/module01_setup</code> — ask the student to name the tradeoff between the two styles.</aside>
+</section>
+
+<!-- 11. PART 2 — divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:20–0:38</span>
+<h1>File Operations</h1>
+<aside class="notes">
+Teaching goal: create, write to, read, copy, and rename files entirely from the terminal, and open a folder properly as a VS Code workspace — the complete "manage files without a file browser" toolkit.
+Say to the class: "Six file operations, and I want you to genuinely read each output rather than just trusting the command ran. <code>cat</code> and <code>head</code> in particular — I want you to predict what each will print before you run it."
+</aside>
+</section>
+
+<!-- 12. PART 2 — live code -->
+<section class="s-code">
+<h3>Live-code — file operations</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh/week2_lab":{}}'>cd ~/ism3232/module02_zsh/week2_lab
+touch notes.txt commands.txt hello_week2.py
+ls -la
+echo 'Week 2 navigation practice' > notes.txt
+cat notes.txt
+head -1 notes.txt
+cp notes.txt notes_backup.txt
+mv hello_week2.py week2_script.py
+ls -la</div>
+<p class="expect"><code>cat</code> and <code>head -1</code> each print <code>Week 2 navigation practice</code>. The final <code>ls -la</code> shows four files — <code>commands.txt</code>, <code>notes.txt</code>, <code>notes_backup.txt</code>, <code>week2_script.py</code> — <code>hello_week2.py</code> is genuinely gone, replaced by its renamed version. (In VS Code you then add <code>print('Week 2 complete')</code> to <code>week2_script.py</code> and <code>python3 week2_script.py</code> prints that third line.)</p>
+<aside class="notes">
+Line by line:
+- <code>touch notes.txt commands.txt hello_week2.py</code> — Week 1's <code>touch</code>, now creating three files in one command (same "multiple arguments" pattern as <code>mkdir</code> last week).
+- <code>echo 'Week 2 navigation practice' &gt; notes.txt</code> — new syntax: the <code>&gt;</code> redirect operator. <code>echo</code> alone prints to the terminal; <code>&gt;</code> sends that output into a file, overwriting whatever was there. <code>&gt;</code> completely replaces a file's contents — the same "silent overwrite" risk as Python's <code>"w"</code> file mode. The Stretch's <code>&gt;&gt;</code> is the safer alternative.
+- <code>cat notes.txt</code> — prints a file's entire contents; simplest way to view a small file without an editor.
+- <code>head -1 notes.txt</code> — prints only the first line. <code>notes.txt</code> has one line, so this looks identical to <code>cat</code> right now; the real value of <code>head</code> shows on a longer file.
+- <code>cp notes.txt notes_backup.txt</code> — copy: <code>notes.txt</code> stays untouched, a new <code>notes_backup.txt</code> is created with identical contents.
+- <code>mv hello_week2.py week2_script.py</code> — rename (or move). Unlike <code>cp</code>, <code>mv</code> does not leave the original behind; <code>hello_week2.py</code> no longer exists at all afterward.
+</aside>
+</section>
+
+<!-- 13. PART 2 — idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>&gt;</code> replaces a file's contents — a silent overwrite. <code>cp</code> keeps the original; <code>mv</code> does not.</p>
+<p><code>cp source destination</code> leaves <code>source</code> in place and makes a second file. <code>mv source destination</code> renames or moves — after it runs, the original name is gone entirely. Both take arguments in the same order: "this becomes that."</p>
+</div>
+<aside class="notes">Confusing <code>cp</code>'s and <code>mv</code>'s argument order is the most common mistake here — a reversed order copies or renames in the wrong direction. If it happens, have the student re-run <code>ls -la</code> and reason about which file now has which name and content before "fixing" it by guessing.</aside>
+</section>
+
+<!-- 14. PART 2 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">After <code>mv hello_week2.py week2_script.py</code>, what does <code>ls</code> show?</p>
+<button data-opt="A">Both <code>hello_week2.py</code> and <code>week2_script.py</code></button>
+<button data-opt="B">Only <code>week2_script.py</code></button>
+<button data-opt="C">Only <code>hello_week2.py</code></button>
+<p class="why">Unlike <code>cp</code>, <code>mv</code> does not leave the original behind. After this line, <code>hello_week2.py</code> no longer exists at all — only <code>week2_script.py</code> does, with the same content.</p>
+</div>
+<aside class="notes">If a student picks A, they're thinking of <code>cp</code>. This is the core <code>cp</code>-vs-<code>mv</code> distinction — worth making them say the difference in their own words.</aside>
+</section>
+
+<!-- 15. PART 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Confusing <code>cp</code>'s and <code>mv</code>'s argument order — both take <code>source destination</code>. A reversed order copies or renames in the wrong direction; have the student re-run <code>ls -la</code> and reason before "fixing" it by guessing.</p>
+<p>Using <code>&gt;</code> a second time on <code>notes.txt</code> by accident (for example re-running the <code>echo</code> line) — silently replaces the content again rather than adding to it. This is exactly the risk the Stretch's <code>&gt;&gt;</code> avoids.</p>
+<p>Opening <code>week2_script.py</code> by double-clicking it in a file browser instead of via <code>code week2_script.py</code> or the already-open workspace — not an error, but it breaks the "everything through the terminal / workspace" discipline this unit is building.</p>
+</div>
+<aside class="notes">Check for understanding: "If you ran <code>cp notes.txt notes.txt</code> — same source and destination name — what would happen?" Most systems either refuse with an error (<code>cp: notes.txt and notes.txt are identical</code>) or leave the file unchanged. Not something to demonstrate destructively — a reasoning question about what <code>cp</code>'s two-argument contract requires: a genuinely different destination.</aside>
+</section>
+
+<!-- 16. PART 2 — VS Code workspace -->
+<section class="s-code">
+<h3>Then open the folder properly in VS Code</h3>
+<div class="run" data-lang="shell" data-readonly data-fs='{"~/ism3232/module02_zsh":{"week2_lab":{"commands.txt":"","notes.txt":"Week 2 navigation practice\n","notes_backup.txt":"Week 2 navigation practice\n","week2_script.py":"print(\"Week 2 complete\")\n"}}}'>cd ~/ism3232/module02_zsh
+code .</div>
+<p class="expect"><code>code .</code> opens the whole folder as a workspace — not a single file. Confirm the Explorer panel shows <code>week2_lab/</code> and its files.</p>
+<aside class="notes">Reinforces Week 1's "open the whole workspace, not individual files" habit, now one level up from last week — <code>module02_zsh</code> rather than a single lab folder. In the emulator <code>code .</code> just prints a placeholder line; the point is the command and the workspace concept.</aside>
+</section>
+
+<!-- 17. PART 3 — divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:38–0:53</span>
+<h1>Safe File Deletion</h1>
+<aside class="notes">
+Teaching goal: <code>rm</code>'s permanence, and the two-step safety ritual (<code>pwd</code> then <code>ls</code>, every single time, before deleting) as an automatic reflex — this is the highest-stakes command taught all semester, and the only one with genuinely no undo.
+Say to the class: "Everything else today, if you make a mistake, you can fix it — rename it back, recreate it, copy it again. <code>rm</code> is different. There is no Trash, no Recycle Bin, no undo. Once it runs, the file is gone. So before every single <code>rm</code> for the rest of this course, you run two commands first: <code>pwd</code>, then <code>ls</code>. Confirm where you are, confirm what's actually there. I'm going to do this myself, every time, all semester — watch me model it now."
+State explicitly at the start of this part exactly when you will demonstrate a real <code>rm</code>, and narrate the ritual every single time you run it yourself today.
+</aside>
+</section>
+
+<!-- 18. PART 3 — idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept danger">
+<div class="concept-lbl">Ritual</div>
+<p>Before every <code>rm</code>: <code>pwd</code>, then <code>ls</code>. No Trash. No undo.</p>
+<p><code>pwd</code> catches an earlier <code>cd</code> that didn't do what you expected — you could be about to delete in the wrong place entirely. <code>ls</code> confirms the file exists here, spelled the way you expect, and shows what else is here so a typo doesn't silently take the wrong file.</p>
+</div>
+<aside class="notes">Repetition is the point. Say "this is permanent" out loud each time. The ritual has to become reflexive before speed does.</aside>
+</section>
+
+<!-- 19. PART 3 — live code -->
+<section class="s-code">
+<h3>Live-code — the full ritual, narrating each step</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh/week2_lab":{"commands.txt":"","notes.txt":"Week 2 navigation practice\n","notes_backup.txt":"Week 2 navigation practice\n","week2_script.py":"print(\"Week 2 complete\")\n"}}'>cd ~/ism3232/module02_zsh/week2_lab
+pwd
+ls
+rm notes_backup.txt
+ls</div>
+<p class="expect">First <code>ls</code>: <code>commands.txt&nbsp;&nbsp;notes.txt&nbsp;&nbsp;notes_backup.txt&nbsp;&nbsp;week2_script.py</code>. After <code>rm</code>, the final <code>ls</code> has exactly <code>commands.txt&nbsp;&nbsp;notes.txt&nbsp;&nbsp;week2_script.py</code> — one fewer, and only the intended file gone.</p>
+<aside class="notes">
+Line by line:
+- <code>pwd</code> — confirms you're in the folder you think you're in; catches the case where an earlier <code>cd</code> didn't do what you expected and you're about to delete in the wrong place.
+- <code>ls</code> — confirms the file you're about to delete actually exists here, spelled the way you expect, and lets you see what else is here so a typo in the <code>rm</code> filename doesn't silently delete the wrong thing.
+- <code>rm notes_backup.txt</code> — the actual deletion. No confirmation prompt, no warning, no Trash. This is permanent.
+- Final <code>ls</code> — confirms the deletion happened and that only the intended file is gone, nothing else.
+(The emulator prints <code>/Users/student/…</code>; on a student machine the <code>pwd</code> line shows their own username.)
+</aside>
+</section>
+
+<!-- 20. PART 3 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Why does the ritual specifically require <em>both</em> <code>pwd</code> and <code>ls</code>, rather than just one or the other?</p>
+<button data-opt="A"><code>pwd</code> alone is enough — if you know where you are, you're safe</button>
+<button data-opt="B"><code>ls</code> alone is enough — if you can see the file, you're safe</button>
+<button data-opt="C">Each catches a different failure mode that the other misses</button>
+<p class="why"><code>pwd</code> confirms <em>where</em> you are; <code>ls</code> confirms <em>what's actually there</em>. You could be in the exact right folder but misremember or mistype a filename — <code>ls</code> catches that. You could see a familiar-looking filename in <code>ls</code> output while actually being in the wrong folder entirely — <code>pwd</code> catches that. Neither check alone covers both failure modes.</p>
+</div>
+<aside class="notes">Have a student articulate this in their own words, not just recite it. The two checks are not redundant — they cover orthogonal mistakes.</aside>
+</section>
+
+<!-- 21. PART 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Skipping straight to <code>rm</code> without the <code>pwd</code> / <code>ls</code> steps, especially once students feel confident and start moving faster. Correct this every time you see it during this part, even though it slows the room down — the point is that the ritual becomes reflexive before speed does.</p>
+<p>Using a wildcard carelessly (<code>rm *</code> or <code>rm *.txt</code>) without fully understanding what it will match. <code>rm *.txt</code> deletes every <code>.txt</code> file in the current directory at once, with the same total permanence as a single-file <code>rm</code>. Warn verbally — never demo it live on a real folder.</p>
+<p>Attempting to <code>rm</code> a folder with the same syntax as a file — <code>rm</code> alone refuses on a directory (<code>rm: some_folder: is a directory</code>). Removing a folder needs <code>rm -r</code> (recursive), which is more dangerous, not less. Mention as a caution; do not demonstrate live.</p>
+</div>
+<aside class="notes">Check for understanding: "Why does the ritual require both <code>pwd</code> and <code>ls</code>?" — <code>pwd</code> confirms where you are; <code>ls</code> confirms what's actually there. A student in the right folder can still mistype a filename (<code>ls</code> catches it); a student seeing a familiar filename can still be in the wrong folder (<code>pwd</code> catches it). Neither alone covers both failure modes.</aside>
+</section>
+
+<!-- 22. PART 4 — divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:53–1:08</span>
+<h1>Command Reference README</h1>
+<aside class="notes">
+Teaching goal: document every command practiced today in a structured README table — reinforcing both the commands themselves (writing a description forces genuine recall, not just muscle memory) and the documentation habit established in Week 1.
+Say to the class: "Twelve commands, minimum, each with a one-line description in your own words. Writing the description is the actual test of whether you understand what a command does, not just that you can type it."
+</aside>
+</section>
+
+<!-- 23. PART 4 — create the file -->
+<section class="s-code">
+<h3>Create the README and open it</h3>
+<div class="run" data-lang="shell" data-readonly data-fs='{"~/ism3232/module02_zsh":{"week2_lab":{}}}'>cd ~/ism3232/module02_zsh
+touch README.md
+code README.md</div>
+<p class="expect">Creates <code>module02_zsh/README.md</code> and opens it in the editor. The table below goes inside it.</p>
+<aside class="notes">The README lives in <code>module02_zsh/</code>, one level up from <code>week2_lab/</code> — it documents the whole module's practice, not just today's throwaway folder.</aside>
+</section>
+
+<!-- 24. PART 4 — template -->
+<section class="s-code">
+<h3>Fill in the full command list</h3>
+<pre class="tmpl" data-readonly># ISM3232 - Module 2: zsh Navigation and File Operations
+
+## Commands Practiced
+
+| Command        | What it does                            |
+|----------------|-----------------------------------------|
+| pwd            | Prints the current working directory    |
+| ls             | Lists visible files and folders         |
+| ls -la         | Lists all files including hidden ones   |
+| [add the rest] | [your description]                      |
+
+## AI Use Statement
+I did not use AI for this lab.</pre>
+<aside class="notes">
+The table format is identical Markdown syntax to Week 1's version table — pipes (<code>|</code>) separate columns, a row of dashes (<code>|---|---|</code>) marks the header boundary. Second week in a row using the same syntax: reinforce, don't re-teach.
+"Document at least 12 commands" is not an arbitrary number — between Parts 1–3 students genuinely used at least that many distinct commands: <code>pwd</code>, <code>ls</code>, <code>ls -la</code>, <code>cd</code>, <code>tree</code>, <code>touch</code>, <code>echo</code>, <code>cat</code>, <code>head</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>, plus <code>code</code> and <code>python3</code>. The requirement is "did you document everything you did today," not "pad the list to a number."
+Each description should be written from memory first, then verified — attempting a description before checking is what actually tests recall.
+</aside>
+</section>
+
+<!-- 25. PART 4 — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">The "12 commands" minimum is really asking you to&hellip;</p>
+<button data-opt="A">Pad the list until it reaches twelve rows</button>
+<button data-opt="B">Document everything you actually did today, in your own words</button>
+<button data-opt="C">List only the headline commands from Parts 1–3</button>
+<p class="why">It isn't an arbitrary number — between Parts 1–3 you used at least that many distinct commands (<code>pwd</code>, <code>ls</code>, <code>ls -la</code>, <code>cd</code>, <code>tree</code>, <code>touch</code>, <code>echo</code>, <code>cat</code>, <code>head</code>, <code>cp</code>, <code>mv</code>, <code>rm</code>, plus <code>code</code> and <code>python3</code>). The requirement is "did you document everything you did," not "pad the list to reach a number."</p>
+</div>
+<aside class="notes">
+Common pitfalls for Part 4: descriptions that just restate the command name ("<code>ls -la</code> — lists files with -la") — push for genuine explanation of what <code>-la</code> adds over plain <code>ls</code>. Forgetting <code>code</code> and <code>python3</code> in the count — any command genuinely used today counts. Copying descriptions verbatim from the guide or lab page rather than original phrasing — the AI Use Statement is about honesty regarding how the work was produced.
+Check for understanding: "Which command from today would you have the hardest time explaining to someone who's never used a terminal, and why?" No single right answer — a closing reflection on which concepts (redirect operators, hidden files, <code>cp</code> vs <code>mv</code>) felt least automatic, useful as a signal of what to reinforce next week.
+</aside>
+</section>
+
+<!-- 26. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:08–1:15</span>
+<h1>Pipes &amp; Redirect</h1>
+<aside class="notes">
+Genuine bonus — full attention only if time allows. It introduces two new ideas (<code>|</code> and <code>&gt;&gt;</code>) beyond the required parts, worth a few extra minutes only if the room has them, not a rushed add-on.
+</aside>
+</section>
+
+<!-- 27. STRETCH — live code -->
+<section class="s-code">
+<h3>Live-code — pipes and append</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh/week2_lab":{"commands.txt":"","notes.txt":"Week 2 navigation practice\n","week2_script.py":"print(\"Week 2 complete\")\n"}}'>cd ~/ism3232/module02_zsh/week2_lab
+ls -la | head -5
+echo 'extra line' >> notes.txt
+cat notes.txt
+wc -l notes.txt</div>
+<p class="expect"><code>ls -la | head -5</code> shows only the first 5 lines of the listing. After the append, <code>cat notes.txt</code> shows both lines and <code>wc -l notes.txt</code> reports <code>2</code>.</p>
+<aside class="notes">
+- <code>ls -la | head -5</code> — the pipe (<code>|</code>) takes the output of the command on its left and feeds it as input to the command on its right. <code>ls -la</code>'s full listing gets fed into <code>head -5</code>, showing only the first 5 lines. Piping is how you chain simple commands into something more specific without a single built-in command that does exactly what you want — a foundational Unix idea.
+- <code>echo 'extra line' &gt;&gt; notes.txt</code> — two <code>&gt;</code> characters, not one. <code>&gt;&gt;</code> appends to a file, adding a new line at the end while preserving everything already there; a single <code>&gt;</code> would have erased <code>notes.txt</code>'s existing content entirely. This is the fix to Part 2's overwrite risk. <code>wc -l</code> (word count, <code>-l</code> for lines) then confirms the file now has two lines, not one.
+</aside>
+</section>
+
+<!-- 28. STRETCH — predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>Before running <code>cat notes.txt</code> after the append — how many lines will it show?</p>
+<pre class="answer" hidden>Two: the original "Week 2 navigation practice" line,
+plus the appended "extra line".
+
+&gt;&gt; adds to the file; a single &gt; would have wiped the first line.
+wc -l then reports 2.</pre>
+</div>
+<aside class="notes">Ask the room to predict before running — a good check that the append-vs-overwrite distinction actually landed.</aside>
+</section>
+
+<!-- 29. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li><strong>Screenshot 1:</strong> <code>tree -L 2</code> output from <code>~/ism3232/</code></li>
+<li><strong>Screenshot 2:</strong> <code>ls -la</code> and <code>python3 week2_script.py</code> output</li>
+<li><strong>Screenshot 3:</strong> VS Code with <code>module02_zsh</code> open as workspace</li>
+<li><strong>Screenshot 4:</strong> <code>pwd</code> + <code>ls</code> before <code>rm</code>, then <code>ls</code> after — all in one screenshot</li>
+<li><strong>File upload:</strong> <code>module02_zsh/README.md</code> — command reference table with at least 12 commands</li>
+<li>All uploaded to Canvas by end of class</li>
+</ul>
+<aside class="notes">Review this on screen together in the last few minutes. Completion credit — the bar is "did you do the work and document it," not a graded rubric.</aside>
+</section>
+
+<!-- 30. WRAP — next week -->
+<section class="s-wrap">
+<h3>Next week</h3>
+<p>Every hidden file you glimpsed in <code>ls -la</code> today with nothing actually there yet — that changes next week. Virtual environments and shell customization mean your <code>ls -la</code> output finally has something real to show.</p>
+<aside class="notes">Week 3: virtual environments and shell customization. The <code>ls -la</code> reflex built today is what students will use to confirm <code>.venv/</code> and <code>.gitignore</code> exist.</aside>
+</section>
+
+<!-- 31. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 2</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w02.md (Week 2 facilitation guide).</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
