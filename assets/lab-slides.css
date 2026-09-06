@@ -311,11 +311,23 @@
   color: var(--mu);
   font-weight: 500;
 }
-.reveal .run .status {
+.reveal .run .status,
+.reveal .run .pkg-status {
   font-size: 0.42em;
   color: var(--mu);
   font-style: italic;
   min-height: 1.2em;
+}
+
+/* Readonly static code block (renderStaticCode) — same frame as the .run code
+ * areas, no interactive chrome. Background comes from the highlight.js theme. */
+.reveal .run pre.static {
+  font-size: 0.44em;
+  margin: 0.35em 0 0;
+  padding: 0.55em 0.7em;
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  overflow-x: auto;
 }
 .reveal .run .out {
   font-family: "Fira Code", "Courier New", monospace;
@@ -331,6 +343,14 @@
   color: var(--term-tx);
 }
 .reveal .run .out .err { color: var(--red); }
+.reveal .run .out img.fig {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.3em 0;
+  background: #fff;
+  border-radius: 4px;
+}
 
 /* Terminal variant */
 .reveal .run.shell { background: var(--term-bg); border-color: #000; }

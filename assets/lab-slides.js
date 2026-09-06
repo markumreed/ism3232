@@ -11,7 +11,7 @@
 // custom property that lab-slides.css defines per course.
 
 import { createShell, run, prompt } from './lab-shell.mjs';
-import { runPython } from './lab-pyodide.mjs';
+import { runPython, loadPackages } from './lab-pyodide.mjs';
 import { upgradeAll } from './lab-widgets.mjs';
 import { initDraw } from './lab-draw.mjs';
 
@@ -64,6 +64,25 @@ function parseStdin(raw) {
   const parts = String(raw == null ? '' : raw).split(/\r?\n|&#10;/);
   if (parts.length && parts[parts.length - 1] === '') parts.pop();
   return parts;
+}
+
+// --- matplotlib → PNG (only for data-packages="…,matplotlib") -----------
+// Forces the headless AGG backend, then AFTER the user code tries to grab any
+// open figure and print it as a base64 PNG on a "__LABPNG__" sentinel line
+// (buildPython's writeStdout turns that into an <img>). Guarded so a block that
+// draws nothing stays silent and a matplotlib import error is not masked.
+function wrapFigure(code) {
+  return (
+    'import matplotlib; matplotlib.use("AGG")\n' +
+    code +
+    '\ntry:\n' +
+    '    import matplotlib.pyplot as _p, io as _io, base64 as _b64\n' +
+    '    if _p.get_fignums():\n' +
+    '        _bf = _io.BytesIO(); _p.savefig(_bf, format="png")\n' +
+    '        print("__LABPNG__" + _b64.b64encode(_bf.getvalue()).decode())\n' +
+    'except Exception:\n' +
+    '    pass\n'
+  );
 }
 
 // --- component upgrade ---------------------------------------------------
@@ -131,6 +150,25 @@ function buildPython(el, src) {
   const status = document.createElement('div');
   status.className = 'status';
   el.appendChild(status);
+
+  // --- data-packages preload (ISM2411 data weeks) ----------------------
+  // Comma-separated Pyodide package list, e.g. "pandas" or "pandas,matplotlib".
+  // The Run button's FIRST activation preloads them; later Runs skip it. A
+  // block WITHOUT data-packages is completely unaffected — `pkgs` is empty and
+  // every branch below is guarded on `pkgs.length`.
+  const pkgs = (el.dataset.packages || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const wrapFig = pkgs.includes('matplotlib');
+  let pkgsLoaded = false;
+  let pkgStatus = null;
+  if (pkgs.length) {
+    pkgStatus = document.createElement('span');
+    pkgStatus.className = 'pkg-status';
+    el.appendChild(pkgStatus);
+  }
+
   const out = document.createElement('pre');
   out.className = 'out';
   el.appendChild(out);
@@ -152,15 +190,53 @@ function buildPython(el, src) {
     out.appendChild(span);
   };
 
+  // Only used for matplotlib blocks: split stdout on our sentinel lines and
+  // render each captured figure as an <img> in place of that line.
+  const FIG_RE = /^__LABPNG__([A-Za-z0-9+/=]+)$/;
+  const writeStdout = (text) => {
+    const buf = [];
+    const flush = () => {
+      if (buf.length) {
+        out.appendChild(document.createTextNode(buf.join('\n')));
+        buf.length = 0;
+      }
+    };
+    for (const line of String(text).split('\n')) {
+      const m = FIG_RE.exec(line);
+      if (m) {
+        flush();
+        const img = document.createElement('img');
+        img.className = 'fig';
+        img.alt = 'matplotlib figure';
+        img.src = 'data:image/png;base64,' + m[1];
+        out.appendChild(img);
+      } else {
+        buf.push(line);
+      }
+    }
+    flush();
+  };
+
   const execute = async () => {
     const code = editor ? editor.value : src;
     const stdin = stdinBox ? parseStdin(stdinBox.value) : [];
     out.textContent = '';
     runBtn.disabled = true;
     try {
-      // runPython may REJECT on a Pyodide loader failure (carry-in 3).
-      const res = await runPython(code, { stdin, onStatus });
-      out.textContent = res.stdout || '';
+      if (pkgs.length && !pkgsLoaded) {
+        if (pkgStatus) pkgStatus.textContent = 'loading packages…';
+        try {
+          await loadPackages(pkgs);
+          pkgsLoaded = true;
+        } finally {
+          if (pkgStatus) pkgStatus.textContent = '';
+        }
+      }
+      // runPython may REJECT on a Pyodide loader failure (carry-in 3), and
+      // loadPackages above rejects when offline — both land in catch, no throw.
+      const res = await runPython(wrapFig ? wrapFigure(code) : code, { stdin, onStatus });
+      if (wrapFig) writeStdout(res.stdout || '');
+      else out.textContent = res.stdout || '';
       if (res.stderr) writeErr((res.stdout ? '\n' : '') + res.stderr);
     } catch (e) {
       writeErr(errText(e));
