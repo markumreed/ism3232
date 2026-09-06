@@ -140,9 +140,15 @@ export function upgradePredict(el) {
     pre.hidden = false;
     btn.hidden = true;
     const hljs = typeof window !== 'undefined' ? window.hljs : null;
-    if (hljs && typeof hljs.highlightElement === 'function') {
-      hljs.highlightElement(pre.querySelector('code') || pre);
-    }
+    if (!hljs || typeof hljs.highlightElement !== 'function') return;
+    const target = pre.querySelector('code') || pre;
+    // Skip if we — or reveal.js' RevealHighlight, which stamps
+    // data-highlighted="yes" per highlight.js — already highlighted it.
+    // Avoids highlight.js' "Element previously highlighted" console.warn.
+    if (pre.dataset.highlighted || target.dataset.highlighted) return;
+    pre.dataset.highlighted = '1';
+    target.dataset.highlighted = '1';
+    hljs.highlightElement(target);
   });
   el.insertBefore(btn, pre);
 }

@@ -182,8 +182,28 @@ function buildPython(el, src) {
   }
 }
 
+// --- readonly static code block -----------------------------------------
+// Renders `src` as a plain, syntax-highlightable <pre><code class="language-*">.
+// reveal.js' RevealHighlight picks these up on 'ready'. No interactive UI.
+function renderStaticCode(el, src, lang) {
+  const pre = document.createElement('pre');
+  pre.className = 'static';
+  const code = document.createElement('code');
+  code.className = 'language-' + lang;
+  code.textContent = src;
+  pre.appendChild(code);
+  el.appendChild(pre);
+}
+
 // --- shell (zsh terminal) widget ------------------------------------------
 function buildShell(el, src) {
+  // data-readonly shell steps (git / venv / pip — not runnable in the
+  // emulator) render as a static block: no "Run all", no prompt/input line,
+  // no createShell transcript. Mirrors buildPython's readonly handling.
+  if ('readonly' in el.dataset) {
+    renderStaticCode(el, src, 'bash');
+    return;
+  }
   el.classList.add('shell');
   let seed = {};
   try { seed = el.dataset.fs ? JSON.parse(el.dataset.fs) : {}; } catch (_) { seed = {}; }
