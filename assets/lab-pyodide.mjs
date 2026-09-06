@@ -150,11 +150,12 @@ export async function runPython(code, { stdin = [], onStatus } = {}) {
   let stderrBuf = '';
   const queue = [...stdin]; // shift off a COPY; caller's array is untouched
 
-  // `hasSetStreams` is read by the `finally` below, so it lives in the
-  // function scope. Everything that mutates the shared Pyodide singleton
+  // `hasSetStreams` and `ns` are read by the `finally` below, so they live in
+  // the function scope. Everything that mutates the shared Pyodide singleton
   // (stream redirection + the `input` override) happens INSIDE the `try`, so
   // the `finally` restore path runs even if a setup step throws or rejects.
   let hasSetStreams = false;
+  let ns = null; // fresh per-run globals dict (PyProxy) — destroyed in finally
   let ok = true;
   try {
     // --- redirect stdout/stderr to the buffers ---------------------------
@@ -197,8 +198,21 @@ export async function runPython(code, { stdin = [], onStatus } = {}) {
     });
     await pyodide.runPythonAsync(INSTALL_INPUT_PY);
 
-    // --- run the user code --------------------------------------------------
-    await pyodide.runPythonAsync(code);
+    // --- run the user code in a FRESH namespace ---------------------------
+    // Every .run block on a page shares this one interpreter, so running user
+    // code in pyodide.globals would let slide 4's variables leak into slide 9
+    // (breaking a deliberate NameError demo) and would expose our __lab_*
+    // helpers to a dir()/globals() demo. Each call therefore gets its own
+    // globals dict; `globals` is a documented runPythonAsync option (Pyodide
+    // FAQ, "How can I execute code in a custom namespace?" — named-only since
+    // 0.21). The builtins.input override and the sys.stdout/sys.stderr
+    // redirection are interpreter-global, not namespace-scoped, so they still
+    // apply to code running here.
+    const dictCls = pyodide.globals.get('dict');
+    ns = dictCls();
+    try { dictCls.destroy(); } catch (_) { /* best effort */ }
+    ns.set('__name__', '__main__');
+    await pyodide.runPythonAsync(code, { globals: ns });
   } catch (err) {
     ok = false;
     // PythonError.message is Pyodide's formatted Python traceback with no JS
@@ -209,6 +223,15 @@ export async function runPython(code, { stdin = [], onStatus } = {}) {
     if (stderrBuf && !stderrBuf.endsWith('\n')) stderrBuf += '\n';
     stderrBuf += traceback;
   } finally {
+    // --- flush BEFORE unhooking the streams -------------------------------
+    // Pyodide's stdout is line-buffered, so a trailing print("x", end="") is
+    // still sitting in the buffer here; flushing after setStdout() reset would
+    // send it to the console instead of our buffer, silently dropping it.
+    try {
+      pyodide.runPython('import sys; sys.stdout.flush(); sys.stderr.flush()');
+    } catch (_) {
+      /* best effort */
+    }
     // --- ALWAYS restore default streams + builtins.input ------------------
     try {
       if (hasSetStreams) {
@@ -236,6 +259,14 @@ export async function runPython(code, { stdin = [], onStatus } = {}) {
       } catch (_) {
         /* not set — fine */
       }
+    }
+    if (ns) {
+      try {
+        ns.destroy();
+      } catch (_) {
+        /* best effort */
+      }
+      ns = null;
     }
   }
 

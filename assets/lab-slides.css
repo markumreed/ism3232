@@ -342,7 +342,11 @@
   background: var(--term-bg);
   color: var(--term-tx);
 }
-.reveal .run .out .err { color: var(--red); }
+/* Terminal-context colors are pinned, NOT theme tokens: .out and .term always
+ * sit on the always-dark --term-bg, so a token that flips to its light-mode
+ * value (var(--red) -> #dc2626) would drop to ~3.4:1 there. #ff7b72 clears
+ * 4.5:1 on #0d1117 in both themes. */
+.reveal .run .out .err { color: #ff7b72; }
 .reveal .run .out img.fig {
   display: block;
   max-width: 100%;
@@ -369,7 +373,7 @@
 }
 .reveal .run.shell .term .echo { color: var(--term-tx); opacity: 0.9; }
 .reveal .run.shell .term .out { color: var(--term-tx); }
-.reveal .run.shell .term .err { color: var(--red); }
+.reveal .run.shell .term .err { color: #ff7b72; }
 .reveal .run.shell .cli {
   display: flex;
   align-items: center;
@@ -379,7 +383,9 @@
 .reveal .run.shell .cli .ps1 {
   font-family: "Fira Code", "Courier New", monospace;
   font-size: 0.44em;
-  color: var(--mu);
+  /* Pinned, not var(--mu): the prompt line sits on the always-dark terminal
+   * frame, where the light-mode --mu (#57606a) would be ~2.4:1. */
+  color: #8b949e;
   white-space: pre;
   flex-shrink: 0;
 }
@@ -453,8 +459,11 @@
   background: rgba(99, 102, 241, 0.08);
   border-radius: 0 6px 6px 0;
 }
-.reveal .quiz.answered .why,
-.reveal .quiz .why:not([hidden]) { display: block; }
+/* The base `display: none` above must win until the widget grades the answer —
+ * a `:not([hidden])` companion here would show .why for the split second
+ * between first paint and upgradeQuiz(). Only the .answered class reveals it
+ * (upgradeQuiz adds the class AND clears the hidden attribute). */
+.reveal .quiz.answered .why { display: block; }
 
 /* --------------------------------------------------------------------------
  * .predict component
@@ -470,8 +479,7 @@
   border: 1px solid var(--bd);
   border-radius: 6px;
 }
-.reveal .predict .reveal-btn,
-.reveal .predict button.reveal {
+.reveal .predict .reveal-btn {
   display: block;
   width: 100%;
   text-align: left;
@@ -486,8 +494,7 @@
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.reveal .predict .reveal-btn:hover,
-.reveal .predict button.reveal:hover {
+.reveal .predict .reveal-btn:hover {
   background: color-mix(in srgb, var(--accent) 14%, var(--bg2));
   border-color: var(--accent);
 }

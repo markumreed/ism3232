@@ -26,8 +26,21 @@ export function initDraw(opts = {}) {
   if (!window.Reveal) return;
 
   var accent   = opts.accent || '#2dd4bf';
-  var CHANNEL  = 'ismlab_draw';
+  /* Scope the channel to THIS deck: two different decks open in two tabs must
+   * not cross-paint. The notes popup carries the same pathname, so the
+   * presentation ↔ notes sync is unaffected. */
+  var CHANNEL  = 'ismlab_draw:' + location.pathname;
   var bc       = null;
+
+  /* "#2dd4bf" + alpha -> "rgba(45,212,191,alpha)" so the toolbar's active
+   * state uses the course accent instead of a hardcoded teal. */
+  function accentRGBA(a) {
+    var h = String(accent).trim().replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    if (h.length !== 6 || isNaN(n)) return 'rgba(45,212,191,' + a + ')';
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
 
   /* BroadcastChannel — supported in all modern browsers */
   try { bc = new BroadcastChannel(CHANNEL); } catch (e) { bc = null; }
@@ -187,11 +200,11 @@ export function initDraw(opts = {}) {
     canvas.style.pointerEvents = on ? 'all' : 'none';
     canvas.style.cursor        = on ? 'crosshair' : 'default';
     var tb = document.getElementById('labdraw-toolbar');
-    if (tb) tb.style.outline = on ? '2px solid rgba(45,212,191,.5)' : 'none';
+    if (tb) tb.style.outline = on ? '2px solid ' + accentRGBA('.5') : 'none';
     var tog = document.getElementById('dtog');
     if (tog) {
-      tog.style.background  = on ? 'rgba(45,212,191,.35)' : 'rgba(255,255,255,.08)';
-      tog.style.color       = on ? '#2dd4bf' : '#ccc';
+      tog.style.background  = on ? accentRGBA('.35') : 'rgba(255,255,255,.08)';
+      tog.style.color       = on ? accent : '#ccc';
     }
     /* Hide reveal controls while drawing so clicks don't navigate */
     var ctrl = document.querySelector('.reveal > .controls');

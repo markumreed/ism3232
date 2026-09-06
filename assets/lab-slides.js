@@ -71,6 +71,11 @@ function parseStdin(raw) {
 // open figure and print it as a base64 PNG on a "__LABPNG__" sentinel line
 // (buildPython's writeStdout turns that into an <img>). Guarded so a block that
 // draws nothing stays silent and a matplotlib import error is not masked.
+//
+// The capture ALWAYS ends with plt.close("all") so figures never survive into
+// the next block — otherwise a later block that draws nothing would re-emit the
+// previous block's chart (every run shares one Pyodide interpreter, and
+// pyplot's figure registry is interpreter-global, not namespace-local).
 function wrapFigure(code) {
   return (
     'import matplotlib; matplotlib.use("AGG")\n' +
@@ -80,6 +85,7 @@ function wrapFigure(code) {
     '    if _p.get_fignums():\n' +
     '        _bf = _io.BytesIO(); _p.savefig(_bf, format="png")\n' +
     '        print("__LABPNG__" + _b64.b64encode(_bf.getvalue()).decode())\n' +
+    '    _p.close("all")\n' +
     'except Exception:\n' +
     '    pass\n'
   );
@@ -113,8 +119,15 @@ function buildPython(el, src) {
     el.appendChild(stdinBox);
   }
 
+  // data-readonly python = the source shown as a static highlighted block +
+  // Run + output pane (no editable textarea). upgradeRunners has already
+  // emptied el, so without this the pane would render a bare Run button over
+  // nothing. (readonly SHELL differs: static code only, no Run — see
+  // buildShell.)
   let editor = null;
-  if (!('readonly' in el.dataset)) {
+  if ('readonly' in el.dataset) {
+    renderStaticCode(el, src, 'python');
+  } else {
     editor = document.createElement('textarea');
     editor.className = 'code';
     editor.spellcheck = false;
@@ -237,7 +250,12 @@ function buildPython(el, src) {
       const res = await runPython(wrapFig ? wrapFigure(code) : code, { stdin, onStatus });
       if (wrapFig) writeStdout(res.stdout || '');
       else out.textContent = res.stdout || '';
-      if (res.stderr) writeErr((res.stdout ? '\n' : '') + res.stderr);
+      // Separate stdout from a traceback with exactly one newline — stdout that
+      // already ends in "\n" (always true after an input() echo) must not get a
+      // blank line before "Traceback", so the widget matches the s-out slides.
+      if (res.stderr) {
+        writeErr((res.stdout && !res.stdout.endsWith('\n') ? '\n' : '') + res.stderr);
+      }
     } catch (e) {
       writeErr(errText(e));
     } finally {
@@ -259,8 +277,12 @@ function buildPython(el, src) {
 }
 
 // --- readonly static code block -----------------------------------------
-// Renders `src` as a plain, syntax-highlightable <pre><code class="language-*">.
-// reveal.js' RevealHighlight picks these up on 'ready'. No interactive UI.
+// Renders `src` as a plain <pre><code class="language-*">. No interactive UI.
+//
+// reveal.js 4.6.1's RevealHighlight plugin runs during Reveal.initialize(),
+// i.e. BEFORE the 'ready' event where these upgraders run — so it never sees
+// these nodes. Highlight them ourselves, and stamp data-highlighted so the
+// .predict reveal guard (and any later pass) does not double-highlight.
 function renderStaticCode(el, src, lang) {
   const pre = document.createElement('pre');
   pre.className = 'static';
@@ -269,6 +291,14 @@ function renderStaticCode(el, src, lang) {
   code.textContent = src;
   pre.appendChild(code);
   el.appendChild(pre);
+  try {
+    if (window.hljs && typeof window.hljs.highlightElement === 'function') {
+      window.hljs.highlightElement(code);
+    }
+  } catch (_) {
+    /* highlighting is cosmetic — never break the slide */
+  }
+  code.dataset.highlighted = '1';
 }
 
 // --- shell (zsh terminal) widget ------------------------------------------
@@ -284,10 +314,16 @@ function buildShell(el, src) {
   let seed = {};
   try { seed = el.dataset.fs ? JSON.parse(el.dataset.fs) : {}; } catch (_) { seed = {}; }
   const shell = createShell(seed);
-  // python3 <file> in the emulator delegates to Pyodide (brief Step 3 hook).
+  // python3 <file> / python3 -c "<code>" in the emulator delegates to Pyodide.
+  // Returns BOTH streams so a Python traceback lands in the transcript as .err
+  // instead of being swallowed.
   shell.pythonRunner = async (code) => {
-    try { return (await runPython(code)).stdout; }
-    catch (e) { return errText(e); }
+    try {
+      const r = await runPython(code);
+      return { out: r.stdout, err: r.stderr };
+    } catch (e) {
+      return { out: '', err: errText(e) };
+    }
   };
 
   const term = document.createElement('div');

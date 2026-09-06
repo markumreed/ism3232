@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseAnswer, gradeQuiz, upgradePredict } from './lab-widgets.mjs';
+import { parseAnswer, gradeQuiz, upgradePredict, upgradeQuiz } from './lab-widgets.mjs';
 
 test('parseAnswer single and multi, case/space insensitive', () => {
   assert.deepEqual([...parseAnswer('B')], ['B']);
@@ -48,8 +48,17 @@ const doc = { createElement: (tag) => mkEl(tag) };
 function mkEl(tag, attrs = {}) {
   const children = [];
   const listeners = {};
+  const classList = {
+    contains(c) { return String(el.className || '').split(/\s+/).includes(c); },
+    add(c) { if (!this.contains(c)) el.className = (el.className ? el.className + ' ' : '') + c; },
+    remove(c) {
+      el.className = String(el.className || '').split(/\s+/).filter((x) => x && x !== c).join(' ');
+    },
+    toggle(c) { this.contains(c) ? this.remove(c) : this.add(c); },
+  };
   const el = {
     tagName: String(tag).toUpperCase(),
+    classList,
     dataset: {},
     style: {},
     hidden: false,
@@ -90,4 +99,42 @@ test('upgradePredict does not re-highlight an already-highlighted answer', () =>
   el.querySelector('button')?.click?.();
   assert.equal(calls, 0);
   delete global.window;
+});
+
+test('upgradePredict names its button reveal-btn, not reveal', () => {
+  const pre = mkEl('pre', { class: 'answer' });
+  const el = mkEl('div', { class: 'predict' }); el.append(pre);
+  upgradePredict(el);
+  assert.equal(el.querySelector('button').className, 'reveal-btn');
+});
+
+// --- multi-answer quiz ------------------------------------------------------
+function mkQuiz(answer, optLetters) {
+  const el = mkEl('div', { class: 'quiz' });
+  el.dataset.answer = answer;
+  const why = mkEl('p', { class: 'why' });
+  const opts = optLetters.map((L) => {
+    const b = mkEl('button');
+    b.dataset.opt = L;
+    el.appendChild(b);
+    return b;
+  });
+  el.appendChild(why);
+  return { el, opts, why };
+}
+
+test('multi-answer Check with nothing selected is a no-op, not a lock', () => {
+  const { el, opts, why } = mkQuiz('A,C', ['A', 'B', 'C']);
+  upgradeQuiz(el);
+  const check = el.querySelector('[data-check]');
+  check.click();                       // Check pressed with no selection
+  assert.equal(el.dataset.answered, undefined);
+  assert.equal(why.hidden, true);
+  assert.ok(opts.every((b) => b.disabled === false));
+  // …and the question still grades normally afterwards
+  opts[0].click(); opts[2].click();
+  check.click();
+  assert.equal(el.dataset.answered, 'correct');
+  assert.equal(why.hidden, false);
+  assert.ok(el.classList.contains('answered'));
 });

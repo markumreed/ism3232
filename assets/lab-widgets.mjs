@@ -82,6 +82,10 @@ export function upgradeQuiz(el) {
       btn.disabled = true;
     }
     if (why) why.hidden = false;
+    // Both paths matter: the stylesheet reveals .why via `.quiz.answered .why`
+    // (so the base `display:none` wins before JS runs and there is no flash of
+    // the explanation), while `hidden = false` covers the attribute.
+    if (el.classList) el.classList.add('answered');
     el.dataset.answered = result.correct ? 'correct' : 'incorrect';
   };
 
@@ -107,6 +111,9 @@ export function upgradeQuiz(el) {
         const picked = opts
           .filter((b) => b.classList.contains('chosen'))
           .map((b) => b.dataset.opt);
+        // Check with nothing selected is a no-op, not a permanent "incorrect"
+        // lock — grade() disables every option and can never be re-run.
+        if (!picked.length) return;
         grade(picked);
       });
     }
@@ -134,7 +141,9 @@ export function upgradePredict(el) {
 
   const btn = doc.createElement('button');
   btn.type = 'button';
-  btn.className = 'reveal';
+  // NOT "reveal" — that class is reveal.js' own root-element class and every
+  // stylesheet rule in the wild is written as `.reveal <something>`.
+  btn.className = 'reveal-btn';
   btn.textContent = 'Reveal answer ▾';
   btn.addEventListener('click', () => {
     pre.hidden = false;

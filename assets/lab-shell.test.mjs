@@ -136,3 +136,33 @@ test('python3 uses injected pythonRunner when set', async () => {
   assert.ok(r.async instanceof Promise);
   assert.equal((await r.async).out, 'Week 2 complete\n');
 });
+
+test('python3 -c routes the code string to the runner (no FS lookup)', async () => {
+  const sh = createShell(seed());
+  let seen = null;
+  sh.pythonRunner = async (src) => { seen = src; return { out: '2\n', err: '' }; };
+  const r = run(sh, 'python3 -c "print(1+1)"');
+  assert.equal(r.err, '');
+  assert.ok(r.async instanceof Promise);
+  assert.equal(seen, 'print(1+1)');
+  assert.deepEqual(await r.async, { out: '2\n', err: '' });
+});
+
+test('python3 surfaces the runner stderr as err', async () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => ({ out: '', err: 'Traceback…\nNameError: x\n' });
+  const r = run(sh, 'python3 -c "x"');
+  assert.equal((await r.async).err, 'Traceback…\nNameError: x\n');
+});
+
+test('python3 on a missing file is a synchronous can\'t-open error', () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => ({ out: 'should not run', err: '' });
+  const r = run(sh, 'python3 nope.py');
+  assert.equal(r.out, '');
+  assert.equal(
+    r.err,
+    "python3: can't open file 'nope.py': [Errno 2] No such file or directory\n",
+  );
+  assert.equal(r.async, undefined);
+});

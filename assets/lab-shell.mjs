@@ -570,29 +570,48 @@ function cmd_code(shell, args) {
   return { out: `(VS Code would open: ${args[0] || '.'})\n`, err: '' };
 }
 
-// python3 <file.py>
+// python3 <file.py>   — runs the file's stored contents
+// python3 -c "<code>" — runs the literal code string, no FS lookup
+//
 // With no runner injected, returns the Task 1 stub string. When the reveal.js
-// terminal widget sets shell.pythonRunner (src -> Promise<string>), the file's
-// stored contents are handed to Pyodide and run() surfaces an `async` marker
-// (a Promise resolving to { out, err }) that the widget awaits and appends.
+// terminal widget sets shell.pythonRunner (src -> Promise<{out, err}> or
+// Promise<string>), the source is handed to Pyodide and run() surfaces an
+// `async` marker (a Promise resolving to { out, err }) that the widget awaits
+// and appends. A missing file is a synchronous CPython-shaped error — no
+// `async` key at all, so the widget has nothing to await.
 function cmd_python3(shell, args) {
-  if (shell && typeof shell.pythonRunner === 'function') {
-    const file = (args || []).find((a) => !a.startsWith('-'));
-    let src = '';
-    if (file) {
-      const node = nodeAt(shell._fs, resolvePath(shell, file));
-      if (typeof node === 'string') src = node;
-    }
-    return {
-      out: '',
-      err: '',
-      async: Promise.resolve(shell.pythonRunner(src)).then((out) => ({
-        out: out || '',
-        err: '',
-      })),
-    };
+  if (!(shell && typeof shell.pythonRunner === 'function')) {
+    return { out: '(python3 stub — wired to Pyodide in Task 5)\n', err: '' };
   }
-  return { out: '(python3 stub — wired to Pyodide in Task 5)\n', err: '' };
+  const argv = args || [];
+  let src = null;
+  const cIdx = argv.indexOf('-c');
+  if (cIdx >= 0) {
+    // The Python source is the next arg (already unquoted by the tokenizer).
+    src = argv[cIdx + 1] === undefined ? '' : argv[cIdx + 1];
+  } else {
+    const file = argv.find((a) => !a.startsWith('-'));
+    if (file === undefined) return { out: '', err: '' }; // bare `python3` — REPL, no-op
+    const node = nodeAt(shell._fs, resolvePath(shell, file));
+    if (typeof node !== 'string') {
+      return {
+        out: '',
+        err: `python3: can't open file '${file}': [Errno 2] No such file or directory\n`,
+      };
+    }
+    src = node;
+  }
+  return {
+    out: '',
+    err: '',
+    async: Promise.resolve(shell.pythonRunner(src)).then((r) => {
+      // Accept both the {out, err} shape and the legacy plain-string shape.
+      if (r && typeof r === 'object') {
+        return { out: r.out || '', err: r.err || '' };
+      }
+      return { out: r || '', err: '' };
+    }),
+  };
 }
 
 // ---------------------------------------------------------------------------
