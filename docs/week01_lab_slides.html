@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 1 — Developer Mindset &amp; First Setup</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 1 &nbsp;·&nbsp; Module 01 &nbsp;·&nbsp; Unit 1</p>
+<h1>Developer Mindset &amp; First Setup</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:05</strong> Welcome: the terminal is the tool for this semester</span>
+<span class="t-item"><strong>0:05–0:18</strong> Part 1 — Verify your environment</span>
+<span class="t-item"><strong>0:18–0:35</strong> Part 2 — Course folder structure</span>
+<span class="t-item"><strong>0:35–0:58</strong> Part 3 — First Python script + explain-what-happened</span>
+<span class="t-item"><strong>0:58–1:10</strong> Part 4 — README</span>
+<span class="t-item"><strong>1:10–1:15</strong> Stretch preview + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+ISM3232 is structured around a shell-first developer discipline from day one — this is not a course that eases into the terminal, it starts there, and every remaining lab this semester assumes students are fluent with what's built today. The single most consequential moment in this entire lab is the very first line: confirming the terminal prompt shows <code>%</code> (zsh), not <code>$</code> (bash). Get this wrong and every subsequent command in the semester behaves subtly differently from what the course materials show. Do not let a single student proceed past Task 1 with the wrong shell.
+Full class period, 75 minutes. Live terminal code-along — every student verifies their own machine in real time; nothing is copy-pasted, everything is typed.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live terminal code-along — every student verifies their own machine in real time; nothing is copy-pasted, everything is typed</span></div>
+<div><span class="k">Prerequisites</span><span class="v">None — this is the first lab of the semester (marked Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (environment verification) – Part 4 (README) + Stretch (Git identity)</span></div>
+<div><span class="k">Submission</span><span class="v">3 screenshots + <code>hello_ism3232.py</code> + <code>README.md</code>, uploaded to Canvas by end of class, completion credit</span></div>
+</ul>
+<aside class="notes">Environment problems are the dominant risk in this lab, not conceptual difficulty — pace is deliberately verification-heavy.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<ul>
+<li>Confirm the terminal is running zsh, not bash, and verify Python 3.10+, Git, and the home directory are all correctly configured.</li>
+<li>Build a consistent, multi-module course folder structure from the terminal, without using a file browser.</li>
+<li>Write, save, and run a <code>.py</code> file from the terminal, and read the file's own comment-block questions as prompts for genuine understanding, not fill-in-the-blank busywork.</li>
+<li>Write a README documenting what was done and verified — a habit that begins in Week 1 and is required for every remaining lab.</li>
+</ul>
+<aside class="notes">Verbs lifted from the guide's Learning Objectives. Objective 1 is the load-bearing one today — a wrong shell caught now saves a Week-3 debugging session later.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:05</td><td>Welcome: "the terminal is the tool for this entire semester"</td><td>5</td></tr>
+<tr><td>0:05–0:18</td><td>Part 1 — Verify your environment</td><td>13</td></tr>
+<tr><td>0:18–0:35</td><td>Part 2 — Course folder structure</td><td>17</td></tr>
+<tr><td>0:35–0:58</td><td>Part 3 — First Python script + explain-what-happened</td><td>23</td></tr>
+<tr><td>0:58–1:10</td><td>Part 4 — README</td><td>12</td></tr>
+<tr><td>1:10–1:15</td><td>Stretch preview + wrap-up, submission checklist</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Four required parts fill the period at a careful, verification-heavy pace appropriate for a first lab where environment problems are the dominant risk. The Git-identity Stretch is a genuine two-command task, positioned at the end specifically because Week 4 requires it and this is a low-stakes moment to get it done early.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>The terminal is the tool for this entire semester</h1>
+<aside class="notes">
+Say to the class: "Welcome to ISM3232 — Business Application Development. This course is built around a professional developer workflow from day one: terminal-first, discipline around verification, and habits — like the README you'll write today — that repeat every single week. Today has one job: confirm your machine is correctly set up, and build the folder structure everything else this semester lives inside. If anything here doesn't work, this is the class to raise your hand in — not week 8."
+Do: write today's four parts on the board as a visible checklist — Verify, Structure, Script, README — since, like ISM2411's Week 1, there's no code output yet to signal progress the way later labs will have.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:05–0:18</span>
+<h1>Verify Your Environment</h1>
+<aside class="notes">
+Teaching goal: confirm the terminal itself is zsh (not bash), and that Python, Git, and the home directory are all correctly configured — before touching a single line of course content.
+Say to the class: "Open the VS Code integrated terminal. Look at the prompt character right now, before typing anything: if it ends in <code>%</code>, you're in zsh — correct. If it ends in <code>$</code>, you're in bash — stop, raise your hand, don't run anything else yet. This distinction matters because zsh and bash have real, different behaviors, and every script and alias this course teaches assumes zsh specifically."
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept danger">
+<div class="concept-lbl">Stop if this is wrong</div>
+<p>Prompt ends in <code>%</code> &rarr; zsh &rarr; correct. Prompt ends in <code>$</code> &rarr; bash &rarr; stop, raise your hand, run nothing else.</p>
+<p>This isn't a cosmetic preference — every alias, function, and <code>.zshrc</code> configuration this course teaches from Week 3 on assumes zsh. A bash setup is a real compatibility problem, not a style difference.</p>
+</div>
+<aside class="notes">Walk the room during Part 1 specifically — a wrong shell is the single highest-leverage thing to catch early. Fixing one student one-on-one now is far faster than untangling a Week-3 <code>.zshrc</code> mystery later. macOS (Catalina+) defaults to zsh; Windows students are on WSL or Git Bash per the precourse setup — confirm the course's specific Windows path.</aside>
+</section>
+
+<!-- 8. PART 1 code (readonly — versions can't be checked in the emulator) -->
+<section class="s-code">
+<h3>Verify — run each on your own machine, read every line of output</h3>
+<div class="run" data-lang="shell" data-readonly>echo $SHELL          # Expected: /bin/zsh
+zsh --version         # Expected: zsh 5.x or higher
+python3 --version     # Expected: Python 3.10 or higher
+git --version         # Expected: git version 2.x
+pwd                   # Expected: your home directory
+ls                    # Expected: Desktop  Documents  Downloads  etc.</div>
+<p class="expect">Shown for reference — version checks and <code>$SHELL</code> expansion can't run in the browser, so run these in the VS Code integrated terminal on your own machine. The next slide shows the shape of a correct result.</p>
+<aside class="notes">
+Line by line:
+- <code>echo $SHELL</code> — prints the <code>SHELL</code> environment variable: the shell your terminal is configured to launch. This checks configuration, not necessarily what's currently running.
+- <code>zsh --version</code> — confirms zsh itself is installed and reports a real version — a different check from the line above, since <code>$SHELL</code> could point somewhere zsh isn't installed on a broken setup.
+- <code>python3 --version</code> — same check as ISM2411's Module 02, framed here as step three of six.
+- <code>git --version</code> — confirms Git is installed; the course reaches Git formally in Week 4, but a broken install should surface today.
+- <code>pwd</code> — should print the home directory (e.g. <code>/Users/yourname</code>), the terminal's default starting location; establishes a known baseline before Part 2.
+- <code>ls</code> — should show the standard top-level folders (<code>Desktop</code>, <code>Documents</code>, ...); a sanity check that the home directory isn't unusual or corrupted.
+</aside>
+</section>
+
+<!-- 9. PART 1 expected output -->
+<section class="s-out">
+<h3>Verified example output — check the pattern, not the exact numbers</h3>
+<pre>/bin/zsh
+zsh 5.9 (arm64-apple-darwin25.0)
+Python 3.12.2
+git version 2.51.2
+/Users/yourname
+Desktop Documents Downloads Library Movies Music Pictures Public</pre>
+<p class="expect">Exact values vary by machine. What matters: <code>$SHELL</code> is <code>/bin/zsh</code>, Python is 3.10+, Git is 2.x, and <code>pwd</code> shows your real home directory.</p>
+<aside class="notes">Reproduces the guide's "Verified example output" verbatim (guide Part 1). If <code>echo $SHELL</code> prints <code>/bin/bash</code>, stop that student before they proceed — walk them through <code>chsh -s /bin/zsh</code> on Mac, or the course's Windows/WSL guidance. Python below 3.10 or <code>command not found</code> → route to the precourse setup page, don't attempt a live install fix.</aside>
+</section>
+
+<!-- 10. PART 1 quiz A -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You open the terminal and the prompt ends in <code>$</code>, not <code>%</code>. What should you do?</p>
+<button data-opt="A">Nothing — <code>$</code> and <code>%</code> are just different visual styles for the same shell</button>
+<button data-opt="B">Stop, raise your hand, and don't run anything else — you're in bash, and this course assumes zsh</button>
+<button data-opt="C">Type <code>zsh</code> once to switch for this session and carry on as normal</button>
+<p class="why" hidden>A <code>$</code> prompt means bash. Every alias, function, and <code>.zshrc</code> configuration taught from Week 3 on assumes zsh specifically — this is a real compatibility requirement, not a cosmetic preference. Get the default shell fixed (<code>chsh -s /bin/zsh</code> on Mac, or the course's Windows path) before doing anything else.</p>
+</div>
+<aside class="notes">Option C is a trap: typing <code>zsh</code> starts a subshell for this one session but leaves the default wrong, so the problem silently returns next time and <code>.zshrc</code> work later won't apply. The fix is changing the login shell.</aside>
+</section>
+
+<!-- 11. PART 1 quiz B (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If your <code>echo $SHELL</code> had printed <code>/bin/bash</code> instead of <code>/bin/zsh</code>, what specifically would that mean for the rest of this course?</p>
+<button data-opt="A">Nothing meaningful — Python and Git work identically under either shell, which is all that matters</button>
+<button data-opt="B">Only the prompt character changes; every command in the course would still behave the same</button>
+<button data-opt="C">Every alias, function, and shell-specific syntax taught from Week 3 on — <code>.zshrc</code> configuration specifically — would not apply the same way, or at all</button>
+<p class="why" hidden>Every alias, function, and shell-specific syntax taught starting Week 3 — <code>.zshrc</code> configuration specifically — would not apply the same way, or at all, to a bash setup. This isn't a cosmetic preference, it's a real compatibility requirement.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer. Get a student to say out loud that this is a compatibility requirement, not a preference.</aside>
+</section>
+
+<!-- 12. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A <code>$</code> prompt instead of <code>%</code> — stop this student before they proceed. Walking them through changing the default shell now, one-on-one, beats letting them continue into folder creation on the wrong shell.</p>
+<p><code>python3 --version</code> reporting below 3.10, or <code>command not found</code> entirely — route to the precourse setup page rather than a from-scratch install fix in front of the whole room.</p>
+<p>Confusing the VS Code integrated terminal with a separate system Terminal app that may have different defaults — if a student's results look inconsistent with a neighbour's, confirm they're using the integrated terminal.</p>
+</div>
+<aside class="notes">The wrong shell is the single highest-leverage thing to catch early in this lab.</aside>
+</section>
+
+<!-- 13. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:18–0:35</span>
+<h1>Course Folder Structure</h1>
+<aside class="notes">
+Teaching goal: build a complete, multi-module folder structure entirely from the terminal — the physical home for every remaining assignment this semester — and open it properly in VS Code as a workspace, not by double-clicking individual files.
+Say to the class: "Eight folders, one command. This structure is going to hold every assignment for the rest of the semester — get the names exactly right now, and you'll never think about 'where does this go' again."
+</aside>
+</section>
+
+<!-- 14. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>mkdir</code> takes many names at once — one command creates eight folders.</p>
+<p><code>code .</code> opens the <em>current directory</em> as a VS Code workspace. This is the correct way to start work on a project: open the whole folder, not double-click one file at a time. A proper workspace is what makes the file explorer, integrated terminal, and Git integration work together coherently.</p>
+</div>
+<aside class="notes">The backslash (<code>\</code>) at the end of a line is a line continuation — "this command isn't finished, keep reading the next line as part of the same command." Purely a readability convenience for a long command; typing it all on one physical line works identically. The runnable block below uses the one-line form.</aside>
+</section>
+
+<!-- 15. PART 2 live code (runnable) -->
+<section class="s-code">
+<h3>Live-code — build the structure, then open it as a workspace</h3>
+<div class="run" data-lang="shell" data-fs='{"~":{"Desktop":{},"Documents":{},"Downloads":{},"Library":{},"Movies":{},"Music":{},"Pictures":{},"Public":{}}}'>cd ~
+mkdir ism3232
+cd ism3232
+mkdir module01_setup module02_zsh module03_git_github module04_programming module05_functions module06_oop module07_final_project data screenshots
+ls
+code .</div>
+<p class="expect">The guide writes the <code>mkdir</code> line with <code>\</code> line continuations for readability; this runs it as one line — identical result. <code>ls</code> confirms all eight folders exist; <code>code .</code> opens <code>ism3232/</code> as the workspace (the emulator prints a stand-in for the real VS Code window).</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~</code> — <code>~</code> is shorthand for the home directory: the same location <code>pwd</code> confirmed in Part 1.
+- <code>mkdir ism3232</code> then <code>cd ism3232</code> — create the course's top-level folder, then move inside it.
+- <code>mkdir module01_setup module02_zsh ... data screenshots</code> — creates eight folders at once, since <code>mkdir</code> accepts multiple names as separate arguments.
+- <code>ls</code> — confirms all eight folders now exist.
+- <code>code .</code> — opens the current directory (<code>.</code>) as a VS Code workspace. Open the whole folder as a workspace, not loose individual files — that's what keeps the explorer, terminal, and Git integration coherent.
+</aside>
+</section>
+
+<!-- 16. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>data  module01_setup  module02_zsh  module03_git_github  module04_programming  module05_functions  module06_oop  module07_final_project  screenshots
+(VS Code would open: .)</pre>
+<p class="expect"><code>ls</code> lists the nine created folders (case-folded sort puts <code>data</code> first). In VS Code, the Explorer panel should show all eight module/data/screenshots subfolders nested under <code>ism3232</code>.</p>
+<aside class="notes">Verified against <code>ism3232/assets/lab-shell.mjs</code>: the seeded home plus the <code>mkdir</code> line produces exactly this <code>ls</code> output. On a real machine <code>ls</code> would show the folders in the same set; ordering matches a stock zsh <code>ls</code>.</aside>
+</section>
+
+<!-- 17. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If you ran <code>code .</code> from inside <code>module01_setup/</code> instead of from <code>ism3232/</code>, what would the VS Code Explorer show — and would that be wrong?</p>
+<button data-opt="A">Only <code>module01_setup/</code>'s contents as the workspace root — not wrong for working on that one module in isolation, just a smaller, less useful view</button>
+<button data-opt="B">An error — <code>code .</code> only works from a course's top-level folder</button>
+<button data-opt="C">The whole <code>ism3232/</code> structure anyway — <code>code .</code> always finds the course root</button>
+<p class="why" hidden>It would show only <code>module01_setup/</code>'s own contents as the workspace root, not the whole course structure — not strictly wrong for working on that one module in isolation, but a smaller, less useful view. <code>code .</code> opens <em>whatever the current directory is</em> as the workspace, not some fixed course-level location.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer. The point is that <code>code .</code> resolves <code>.</code> to the current directory — there is no "course root" magic.</aside>
+</section>
+
+<!-- 18. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>mkdir</code> from the wrong location (not inside <code>~/ism3232</code>) — produces eight folders in the wrong place. Have students run <code>pwd</code> immediately before the <code>mkdir</code> line.</p>
+<p>Misspelling a folder name (a stray underscore, a typo) — not an error, just a folder that won't match what future labs expect. Check the Explorer panel against the required eight names now — far easier than discovering it three weeks later when a lab's <code>cd module02_zsh</code> fails.</p>
+<p>Defaulting to <code>code filename.py</code> later in the semester instead of <code>code .</code> once per project — the workspace-first habit established today is the one to reach for when starting a module's work.</p>
+</div>
+<aside class="notes">Walk the room checking the Explorer panel against the exact eight names.</aside>
+</section>
+
+<!-- 19. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:35–0:58</span>
+<h1>First Python Script</h1>
+<aside class="notes">
+Teaching goal: the complete write-save-run loop, in <code>module01_setup/</code> specifically — plus a required comment-block reflection asking students to explain, in their own words, what actually happened when the script ran.
+Say to the class: "First real script. I want you to type every character — not copy-paste — because the muscle memory of typing Python, including the mistakes you'll inevitably make and fix, is itself part of learning to code. Then, once it runs, you're going to answer four questions about <em>why</em> it worked, in a comment block. This is not busywork — if you can't answer these four questions, you don't yet understand what just happened, even if the script ran."
+</aside>
+</section>
+
+<!-- 20. PART 3 create the file (runnable shell) -->
+<section class="s-code">
+<h3>Live-code — create the file, open it in the workspace</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232":{"module01_setup":{},"module02_zsh":{},"module03_git_github":{},"module04_programming":{},"module05_functions":{},"module06_oop":{},"module07_final_project":{},"data":{},"screenshots":{}}}'>cd ~/ism3232/module01_setup
+touch hello_ism3232.py
+code hello_ism3232.py
+ls</div>
+<p class="expect"><code>touch</code> creates the empty file; <code>code</code> opens it inside the already-open workspace from Part 2; <code>ls</code> confirms it exists.</p>
+<aside class="notes">
+- <code>touch hello_ism3232.py</code> — creates an empty file with that exact name (<code>touch</code>'s original purpose was updating a timestamp; creating a new empty file is a well-known side effect).
+- <code>code hello_ism3232.py</code> — opens that specific file in VS Code, inside the workspace from Part 2.
+</aside>
+</section>
+
+<!-- 21. PART 3 the script (runnable python) -->
+<section class="s-code">
+<h3>Type this into the file — type it, do not paste</h3>
+<div class="run" data-lang="python"># hello_ism3232.py
+# ISM3232 - Business Application Development
+# Author: [Your Name]
+
+print('Hello, ISM3232!')
+
+course_name   = 'Business Application Development'
+credit_hours  = 3
+weekly_hours  = credit_hours * 2
+
+print(f'Course: {course_name}')
+print(f'Expected weekly hours: {weekly_hours}')
+print('Environment verified. Week 1 complete.')</div>
+<p class="expect">On your machine you would save with <code>&#8984;S</code> / <code>Ctrl+S</code> and run <code>python3 hello_ism3232.py</code> in the terminal. Here, press <strong>Run</strong> to execute it in the browser.</p>
+<aside class="notes">
+Line by line:
+- The header comment block — a file-identification convention worth establishing from the first script: any reader can see what this file is and who wrote it without reading code.
+- <code>print('Hello, ISM3232!')</code> — <strong>single quotes</strong>, not double. Python treats single and double quotes identically for defining a string; this is purely a style choice, and this course's materials consistently use single quotes. Consistency within a codebase is itself a professional habit.
+- <code>course_name   = '...'</code> — the extra spaces before <code>=</code> align it with the two lines below: a manual alignment style choice (echoing ISM2411 Module 03's aligned print labels), purely cosmetic.
+- <code>credit_hours  = 3</code> — an <code>int</code>.
+- <code>weekly_hours  = credit_hours * 2</code> — a derived value: the "compute once, store in a named variable" pattern, modeling a course-planning calculation.
+- The three final <code>print()</code> calls, two of them f-strings — nothing new syntactically for students with prior Python exposure.
+</aside>
+</section>
+
+<!-- 22. PART 3 verified output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>Hello, ISM3232!
+Course: Business Application Development
+Expected weekly hours: 6
+Environment verified. Week 1 complete.</pre>
+<p class="expect">Matches the guide's "Verified output" for Part 3. On your machine this appears in the <em>terminal</em>, not the editor pane.</p>
+<aside class="notes">Verified with CPython 3.12.2 (the version Pyodide 0.26.4 bundles). <code>weekly_hours</code> = <code>credit_hours * 2</code> = <code>6</code>.</aside>
+</section>
+
+<!-- 23. PART 3 the reflection block -->
+<section class="s-code">
+<h3>Required reflection — answer it, don't guess</h3>
+<pre class="tmpl" data-readonly># --- What happened when I ran this script? ---
+# 1. The shell found the python3 interpreter at: ___
+# 2. Python read the file from top to bottom: True / False
+# 3. The f-string on line 11 evaluated {weekly_hours} to: ___
+# 4. The output appeared in: the editor / the terminal / both</pre>
+<p class="expect">Add this comment block below the header and fill it in from real checks — not guesses.</p>
+<aside class="notes">
+Model strong answers:
+1. Run <code>which python3</code> right now, live, and use its actual output — a real, checkable fact about this machine, not a guess. (<code>which</code> reports the full path a bare command name resolves to.)
+2. <strong>True</strong> — Python executes a script's statements top to bottom. Prove it to a skeptic: reorder two <code>print()</code> lines, re-run, watch the output order change.
+3. <strong>6</strong> — <code>credit_hours * 2</code> with <code>credit_hours = 3</code>.
+4. <strong>The terminal</strong> — the editor pane shows the source code; the integrated terminal is where <code>print()</code>'s output appears. Editing and running produce output in two visually separate places in the same VS Code window.
+</aside>
+</section>
+
+<!-- 24. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">You move <code>hello_ism3232.py</code> to <code>module02_zsh/</code> but keep running <code>python3 hello_ism3232.py</code> from inside <code>module01_setup/</code>. What happens?</p>
+<button data-opt="A">It still runs — <code>python3</code> searches every folder under <code>ism3232/</code> for the file</button>
+<button data-opt="B">It runs, but prints nothing, because the file is now in a different module</button>
+<button data-opt="C"><code>python3: can't open file 'hello_ism3232.py': No such file or directory</code> — the file isn't in the current directory</button>
+<p class="why" hidden><code>python3: can't open file 'hello_ism3232.py': No such file or directory</code> — the classic "wrong directory" failure. <code>python3 hello_ism3232.py</code> looks for the file relative to where you are now, and it's no longer there.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding. Same "wrong directory" failure mode covered at length in the ISM2411 terminal modules; a check that this error type is recognizable even in a brand-new course.</aside>
+</section>
+
+<!-- 25. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Copy-pasting despite the explicit "type it" instruction — restate the <em>why</em>: typing builds the muscle memory of noticing your own typos, which pasting bypasses.</p>
+<p>Answering the reflection with guesses rather than checking — e.g. guessing a plausible path for question 1 instead of running <code>which python3</code>. Walk the room confirming question 1's answer matches a live <code>which python3</code> on that student's machine.</p>
+<p>Running the script from the wrong directory — a quick <code>pwd</code> check if <code>python3 hello_ism3232.py</code> reports "No such file or directory".</p>
+</div>
+<aside class="notes">The reflection is the actual learning artifact here — a script that runs but can't be explained means the concept hasn't landed yet.</aside>
+</section>
+
+<!-- 26. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:58–1:10</span>
+<h1>README</h1>
+<aside class="notes">
+Teaching goal: write a README documenting the day's work — the first instance of a documentation habit this course requires every remaining week — including an explicit AI Use Statement, worth flagging as a recurring, serious course policy element, not boilerplate.
+Say to the class: "Every lab this semester ends with a README update. Today's is the simplest version you'll ever write — treat it as establishing the habit, not just filling in a template. And notice the AI Use Statement at the bottom — this appears in every README template this course provides, and it's a real, graded honesty requirement, not decoration."
+</aside>
+</section>
+
+<!-- 27. PART 4 create + template -->
+<section class="s-code">
+<h3>Create the README</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module01_setup
+touch README.md
+code README.md</div>
+<p class="expect">Shown for reference — run on your own machine. The template below goes into <code>README.md</code>.</p>
+<aside class="notes">The Markdown syntax (<code>#</code>, <code>##</code>, <code>**bold**</code>, a pipe-delimited table) is the same lightweight formatting language ISM2411's Module 08 README exercise uses, and it renders automatically formatted on GitHub once this repo is pushed (Week 4).</aside>
+</section>
+
+<!-- 28. PART 4 markdown template -->
+<section class="s-code">
+<h3>README.md — fill in real details</h3>
+<pre class="tmpl" data-readonly># ISM3232 - Module 1: Course Setup
+
+**Name:** [Your Name]
+**Date:** [Today's Date]
+
+## What I Did
+- Verified zsh, Python 3, and Git versions
+- Created the ism3232/ course folder structure
+- Wrote and ran hello_ism3232.py from the terminal
+
+## Verification Results
+
+| Tool     | Version |
+|----------|---------|
+| zsh      |         |
+| Python 3 |         |
+| Git      |         |
+
+## AI Use Statement
+I did not use AI for this lab.</pre>
+<p class="expect">Fill the Verification Results table with your <em>actual</em> version numbers from Part 1 — this table is a real, checkable record.</p>
+<aside class="notes">
+Say plainly: the AI Use Statement line must be honest. If a student used an AI tool for any part of today's lab in a way that goes beyond what the syllabus permits, the statement needs to reflect that, not default to "I did not use AI." Frame it as a trust-building habit that starts on day one — students write this exact statement, updated as appropriate, in every remaining lab's README.
+</aside>
+</section>
+
+<!-- 29. PART 4 quiz (CFU — open-ended, R-conv-3 fallback) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You used an AI assistant today <em>only</em> to look up what <code>touch</code> does — you never pasted your own code into it. Is "I did not use AI for this lab" still the right thing to write?</p>
+<button data-opt="A">Yes, always — looking up a command is never "AI use"</button>
+<button data-opt="B">It's a judgment call — check the syllabus's specific AI policy; when in doubt, disclosing minor tool-adjacent use is safer and more honest than omitting it</button>
+<button data-opt="C">No — any AI-adjacent activity whatsoever means you must write a full disclosure paragraph</button>
+<p class="why" hidden>Genuinely a judgment call worth discussing. A good answer recognizes that "AI use" likely means something more specific in the course's actual policy than any AI-adjacent activity whatsoever, and that when in doubt, disclosing minor, tool-adjacent use is safer and more honest than omitting it. Point students to the syllabus's specific AI policy for the precise line — it varies by course and instructor.</p>
+</div>
+<aside class="notes">The guide's Part 4 Check for understanding has no single Q&amp;A answer — it is explicitly framed as "a judgment call worth discussing rather than answering definitively." The keyed option and <code>.why</code> are lifted verbatim from that guide passage (guide Part 4). Point students to the syllabus for the precise line.</aside>
+</section>
+
+<!-- 30. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Leaving the version-table cells blank rather than filling them with Part 1's actual verified output — walk the room checking this, since it's easy to skip when a README feels like an afterthought.</p>
+<p>Copying the AI Use Statement template without genuinely considering whether it's accurate for their own work today — a brief, non-accusatory reminder to the whole room that this is a real statement, not boilerplate.</p>
+</div>
+<aside class="notes">The README habit starts today and is required every remaining week.</aside>
+</section>
+
+<!-- 31. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:10–1:15</span>
+<h1>Configure Git Identity</h1>
+<aside class="notes">Frame as a quick, required-for-later two-command task, not optional depth: "This is a one-time setup, and Week 4's first-ever <code>git commit</code> will fail without it — doing it now, while it's fresh and low-stakes, saves a confusing moment later. <code>--global</code> means this identity applies to every Git repository on this machine, not just this course's, so use your real name and an email you're comfortable having attached to your commit history — many students use their GitHub account's email specifically, since that's what will show up on their public commit history there."</aside>
+</section>
+
+<!-- 32. STRETCH code (readonly) + output -->
+<section class="s-code">
+<h3>One-time Git identity — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>git config --global user.name 'Your Name'
+git config --global user.email 'you@email.com'
+git config --global --list</div>
+<p class="expect">Shown for reference — <code>git</code> can't run in the browser. The last line prints back what you just set, so you can confirm it took.</p>
+<aside class="notes">Week 4's first <code>git commit</code> fails without this. <code>--global</code> = every repo on the machine.</aside>
+</section>
+
+<!-- 33. STRETCH illustrative output -->
+<section class="s-out">
+<h3>Illustrative result — not run here</h3>
+<pre>user.name=Your Name
+user.email=you@email.com</pre>
+<p class="expect"><code>git config --global --list</code> echoes back the identity you just configured (plus any other global settings already on the machine). Screenshot this for your own records — Week 4 depends on it.</p>
+<aside class="notes">Shows the two lines the Stretch's <code>--list</code> is meant to confirm. A real machine may also list <code>init.defaultbranch</code>, <code>core.editor</code>, etc. depending on prior setup.</aside>
+</section>
+
+<!-- 34. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li><strong>Screenshot 1:</strong> all six verification commands and their output, visible in one screenshot</li>
+<li><strong>Screenshot 2:</strong> VS Code Explorer panel showing all eight module subfolders</li>
+<li><strong>Screenshot 3:</strong> terminal showing <code>hello_ism3232.py</code>'s output</li>
+<li><strong>File upload:</strong> <code>module01_setup/hello_ism3232.py</code>, including the answered reflection comment block</li>
+<li><strong>File upload:</strong> <code>module01_setup/README.md</code>, with name, date, versions, and AI use statement filled in</li>
+<li>All uploaded to Canvas by end of class</li>
+</ul>
+<aside class="notes">Completion credit — the bar is "did you do the work and document it," not a graded rubric. Review this on screen together in the last few minutes.</aside>
+</section>
+
+<!-- 35. WRAP — next week -->
+<section class="s-wrap">
+<h3>Next week</h3>
+<p>Today verified your tools work. Next week, you actually <em>use</em> the terminal to navigate and manipulate files — real practice with the commands that will become completely automatic by the end of this unit.</p>
+<aside class="notes">Week 2: zsh navigation and file operations. The verification discipline built today is what every later lab assumes.</aside>
+</section>
+
+<!-- 36. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 1</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w01.md (Week 1 facilitation guide).</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
