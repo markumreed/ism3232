@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 13 — Capstone Design &amp; SQL Foundations</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 13 &nbsp;·&nbsp; Module 13 &nbsp;·&nbsp; Unit 4 · Capstone Build</p>
+<h1>Capstone Design &amp; SQL Foundations</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "this proposal is what Weeks 14–16 build"</span>
+<span class="t-item"><strong>0:04–0:26</strong> Part 1 — Capstone project proposal (write + review)</span>
+<span class="t-item"><strong>0:26–0:42</strong> Part 2 — SQL fundamentals in the <code>sqlite3</code> shell</span>
+<span class="t-item"><strong>0:42–0:56</strong> Part 3 — Design your capstone schema</span>
+<span class="t-item"><strong>0:56–1:04</strong> Part 4 — <code>sqlite3</code> shell reference (README)</span>
+<span class="t-item"><strong>1:04–1:10</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:10–1:15</strong> Wrap-up, submission checklist</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Format: independent proposal writing (instructor-gated) + guided SQL shell practice. Prerequisites: Weeks 10–12 — full OOP fluency: classes, composition, independent design and build. This is the highest-stakes single lab of the semester so far, for one reason: the capstone proposal written today must be reviewed and approved before any capstone code is written in Week 14, and the entire remaining four weeks build on it. It also introduces SQL for the first time — pairing directly with Week 11's OOP-to-SQL mapping table and giving that abstract exercise concrete, executable form.
+Say to the class (Intro, verbatim): "Everything you build for the rest of this semester — Weeks 14 through 16 — is defined by what you write today. Not a rough idea: a specific, ten-field proposal that I have to approve before you write a single line of capstone code next week. Vague answers today become an undefined, unfinishable project in three weeks. Take this seriously, and ask questions now, while there's still time to adjust."
+Do: write on the board: <strong>Proposal approved by instructor &rarr; Week 14 code begins. No sign-off, no green light.</strong>
+NOTE ON THIS DECK: this is the CAPSTONE-DESIGN + SQL-FOUNDATIONS week, and the facilitation guide contains <strong>no runnable Python at all</strong> — so this deck has <strong>zero <code>data-lang="python"</code> blocks</strong>, by design (no forced runnable block where the guide has none). SQL is still CONCEPTUAL this week: every <code>CREATE TABLE</code> / <code>INSERT</code> / <code>SELECT</code> / <code>WHERE</code> / <code>UPDATE</code> / <code>GROUP BY</code> snippet is shown static in a plain <code>&lt;pre&gt;&lt;code class="language-sql"&gt;</code> block, <strong>outside</strong> any <code>.run</code> div — nothing executes here (Week 14 runs real <code>sqlite3</code>). Where the guide gives a query-result table it is reproduced as a static <code>&lt;pre&gt;</code> labelled "illustrative result". The Part 3 schema is reproduced verbatim from the guide and labelled "the instructor's prepared model". Capstone-design segments (Part 1) are discussion — idea cards plus the guide's proposal template as a read-only <code>.tmpl</code> pane. The Part 1 setup and Part 5 ritual shell blocks are <code>data-readonly</code> (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). No <code>pytest</code> this week — there is no Python code yet. Quizzes: Parts 2, 3 and 5 key the guide's own "Check for understanding" parenthetical verbatim; Part 1 has no explicit CFU, so its quiz uses the R-conv-3 same-segment-line fallback (disclosed in that slide's notes); Part 4's CFU is a semi-open reflection, so its quiz keys only the position the guide clearly endorses — <code>GROUP BY</code>/aggregates as the most direct Python parallel (also disclosed).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Independent proposal writing (instructor-gated) + guided SQL shell practice</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 10–12: full OOP fluency — classes, composition, independent design and build</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (capstone proposal) – Part 5 (ritual + push)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>PROPOSAL.md</code> (instructor-approved) + <code>schema.sql</code> + screenshot, GitHub URL, Canvas</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. This is a <strong>two-gate lab</strong> and both gates matter: the capstone proposal (Part 1) needs instructor sign-off before Week 14 — unlike Week 12's same-day design gate, this approval genuinely blocks a student's next <em>class session</em>, not just their next hour. Plan review-queue logistics for it. Students work in a fresh <code>~/ism3232/module07_final_project/</code> folder — the capstone's home for the rest of the semester. Before class: rehearse the full Part 2 <code>sqlite3</code> shell sequence yourself, including <code>.mode column</code> / <code>.headers on</code>; prepare your own capstone-adjacent <code>schema.sql</code> (this guide continues the Week 12 event-registration domain); confirm <code>sqlite3</code> runs on a few sampled student machines (ships with macOS/most Linux; Windows/WSL may need an install step).
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Write a complete, specific capstone proposal — business problem, primary user, records stored, business rules, planned classes, tables, Streamlit features, and a GenAI feature — concrete enough to build from.</li>
+<li>Create a table with <code>CREATE TABLE</code>, specifying column types and constraints (<code>NOT NULL</code>, <code>DEFAULT</code>, <code>PRIMARY KEY AUTOINCREMENT</code>).</li>
+<li>Insert, query, filter, update, and aggregate data using <code>INSERT</code>, <code>SELECT</code>, <code>WHERE</code>, <code>UPDATE ... SET</code>, and <code>GROUP BY</code> with <code>COUNT</code>/<code>SUM</code>.</li>
+<li>Design and test a <code>schema.sql</code> for their own capstone system in the <code>sqlite3</code> shell.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is Part 1's ten-field proposal; objective 2 is Part 2's <code>CREATE TABLE</code>; objective 3 is Part 2's <code>INSERT</code>/<code>SELECT</code>/<code>WHERE</code>/<code>UPDATE</code>/<code>GROUP BY</code>; objective 4 is Part 3's <code>schema.sql</code> for the student's own approved proposal, tested in the shell.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "this proposal is what Weeks 14–16 build"</td><td>4</td></tr>
+<tr><td>0:04–0:26</td><td>Part 1 — Capstone project proposal (write + review)</td><td>22</td></tr>
+<tr><td>0:26–0:42</td><td>Part 2 — SQL fundamentals in the <code>sqlite3</code> shell</td><td>16</td></tr>
+<tr><td>0:42–0:56</td><td>Part 3 — Design your capstone schema</td><td>14</td></tr>
+<tr><td>0:56–1:04</td><td>Part 4 — <code>sqlite3</code> shell reference (README)</td><td>8</td></tr>
+<tr><td>1:04–1:10</td><td>Part 5 — Ritual and push</td><td>6</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-up, submission checklist</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 1 receives the most protected time of the whole lab, for the same structural reason as Week 12's design gate, amplified: the stakes of an under-baked proposal are higher here, since it governs four remaining weeks, not one. Part 1 includes both independent writing time and a queued instructor review that gates all further progress — build the review wait into the plan, not as slack.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>This proposal is what Weeks 14–16 build</h1>
+<aside class="notes">
+Teaching goal: frame the day — everything built for the rest of the semester is defined by today's ten-field proposal, which the instructor must approve before any capstone code is written next week.
+Say to the class (verbatim): "Everything you build for the rest of this semester — Weeks 14 through 16 — is defined by what you write today. Not a rough idea: a specific, ten-field proposal that I have to approve before you write a single line of capstone code next week. Vague answers today become an undefined, unfinishable project in three weeks. Take this seriously, and ask questions now, while there's still time to adjust."
+Do: write on the board: <strong>Proposal approved by instructor &rarr; Week 14 code begins. No sign-off, no green light.</strong>
+This deck demonstrates the instructor's own worked example — the GalaTrack event-registration proposal, continuing the Week 12 domain — as a model of <em>specificity</em>, distinct from any specific student's actual proposed system.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:26</span>
+<h1>Capstone Project Proposal</h1>
+<aside class="notes">
+Teaching goal: a complete, specific, ten-field proposal — the single most consequential document of the semester's second half.
+Say to the class (verbatim): "Ten fields. I want specific answers, not aspirational ones — 'a system for managing things' is not a business problem; 'the office manager who currently tracks 40 travel requests a month in a spreadsheet' is. Every vague answer today is a decision you'll be forced to make anyway, later, under time pressure — make it now, deliberately."
+Do: <code>cd ~/ism3232/module07_final_project</code>; the venv ritual (next slide); <code>touch PROPOSAL.md &amp;&amp; code PROPOSAL.md</code>.
+Running the review — higher stakes than Week 12's design gate: this approval blocks a student's next class session, not just their next hour. Treat a rushed or skipped review here as a real problem to avoid.
+Common student mistakes: a "Business Problem" that describes the <em>system</em> rather than the <em>problem</em>; business rules that aren't rules, just descriptions; five Streamlit features padded with near-duplicates. Detail on the pitfalls slide.
+No explicit "Check for understanding" appears in this segment of the guide. This part's knowledge-check therefore uses the R-conv-3 same-segment-line fallback — see that slide's notes.
+</aside>
+</section>
+
+<!-- 7. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Setup — the venv ritual, plus one new <code>.gitignore</code> line</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module07_final_project
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
+echo '*.db' &gt;&gt; .gitignore
+touch PROPOSAL.md &amp;&amp; code PROPOSAL.md</div>
+<p class="expect">Shown for reference — <code>venv</code>, <code>pip</code>, and <code>code</code> can't run in the browser; run this on your own machine. Identical to every prior module's venv ritual, with one new line: <code>echo '*.db' &gt;&gt; .gitignore</code>.</p>
+<aside class="notes">
+Line-by-line: identical to every prior module's venv ritual, with one new addition worth flagging explicitly: <code>echo '*.db' &gt;&gt; .gitignore</code> — say why: SQLite database <strong>files</strong> (which Parts 2–3 create) are generated data, not source code — regenerable from <code>schema.sql</code> plus whatever data gets inserted, and often not something you want tracked in version control (especially once real or realistic-looking data populates them) — the same underlying principle as excluding <code>.venv/</code>, applied to a new kind of generated artifact.
+<code>~/ism3232/module07_final_project/</code> is the capstone's home for the rest of the semester — a fresh folder, created today.
+</aside>
+</section>
+
+<!-- 8. PART 1 idea — the template -->
+<section class="s-idea">
+<h3>Fill in every field — the <code>PROPOSAL.md</code> template</h3>
+<pre class="tmpl" data-readonly># ISM3232 Capstone Project Proposal
+# Author: [Your Name]
+
+## Project Name
+[Give your system a clear, descriptive name]
+
+## Business Problem
+[What problem does this solve? Who has this problem? 2-3 sentences.]
+
+## Primary User
+[Who will use this system? Be specific.]
+
+## Records Stored
+[What data is stored? Name every type of record.]
+
+## Business Rules
+[At least 2 explicit rules. e.g., 'Requests over $1000 require manager approval']
+1.
+2.
+
+## OOP Classes
+[List each class with key attributes and methods]
+- Class 1: [name] | attributes: [...] | methods: [...]
+- Class 2: [name] | attributes: [...] | methods: [...]
+
+## SQL Tables
+[List each table with columns and types]
+- Table 1: [name] | columns: [...]
+
+## Streamlit Features
+1. Add a record
+2. View all records
+3. Filter records
+4. Update status
+5. Display a report
+
+## GenAI Feature
+[What will AI do? e.g., 'Summarise a request description in one sentence']
+
+## Out of Scope
+[What are you explicitly NOT building?]</pre>
+<p class="expect">Ten fields, every one filled with real content — no "TBD". The lab page's own warning: vague answers today become an undefined, unfinishable project in three weeks.</p>
+<aside class="notes">
+Line-by-line (guide, Part 1 template): the <strong>Business Problem</strong> is 2–3 sentences naming a real pain point and who has it. <strong>Primary User</strong> is a specific person/role. <strong>Records Stored</strong> names every type of record. <strong>Business Rules</strong> — at least 2 explicit rules with actual thresholds or conditions. <strong>OOP Classes</strong> lists each class with key attributes and methods; <strong>SQL Tables</strong> lists each table with columns and types — the two must correspond (Week 14 wires them together). <strong>Streamlit Features</strong> — exactly 5, genuinely distinct. <strong>GenAI Feature</strong> — one achievable summarize/generate task. <strong>Out of Scope</strong> names what the student is deliberately not building.
+Reproduced verbatim from the guide's Part 1 template.
+</aside>
+</section>
+
+<!-- 9. PART 1 idea — the worked example -->
+<section class="s-idea">
+<h3>The instructor's worked example — GalaTrack (a model of <em>specificity</em>)</h3>
+<pre class="tmpl" data-readonly>## Project Name
+GalaTrack — Event Registration Manager
+
+## Business Problem
+A nonprofit's annual gala currently tracks registrations in a shared
+spreadsheet that multiple staff edit simultaneously, causing overwritten
+entries and no reliable way to see confirmed revenue at a glance.
+
+## Primary User
+The nonprofit's events coordinator, who processes 150-300 registrations
+per event and needs an at-a-glance revenue and confirmation status view.
+
+## Records Stored
+Events (name, date, capacity). Registrations (attendee, event, price,
+status).
+
+## Business Rules
+1. A registration over $500 is flagged as VIP and routed to a
+   dedicated check-in line.
+2. An event cannot accept new registrations once confirmed
+   registrations reach its capacity.
+
+## OOP Classes
+- Class 1: Registration | attributes: reg_id, attendee_name, event,
+  price, status | methods: confirm(), cancel(), is_vip()
+- Class 2: Event | attributes: event_id, name, capacity | methods:
+  is_full(registrations)
+
+## SQL Tables
+- Table 1: events | columns: event_id INTEGER PK, name TEXT NOT NULL,
+  capacity INTEGER NOT NULL
+- Table 2: registrations | columns: reg_id INTEGER PK, attendee_name
+  TEXT NOT NULL, event_id INTEGER NOT NULL, price REAL NOT NULL,
+  status TEXT DEFAULT 'Pending'
+
+## Streamlit Features
+1. Add a new registration
+2. View all registrations for an event
+3. Filter registrations by status
+4. Confirm or cancel a registration
+5. Display a revenue/status summary report
+
+## GenAI Feature
+Generate a one-sentence welcome email draft for a newly confirmed
+attendee, using their name and event details.
+
+## Out of Scope
+Payment processing, waitlist management, multi-event discount codes.</pre>
+<p class="expect">Demonstrated live as a model of <em>specificity</em> — a named problem with a named user, rules with real thresholds, OOP classes and SQL tables that correspond — not an answer to copy. Continues the Week 12 event-registration domain.</p>
+<aside class="notes">
+Guide, Part 1 worked example (event registrations, used throughout, and reproduced complete in Appendix A). Note the correspondence the guide insists on: <code>Registration</code>'s attributes (<code>reg_id</code>, <code>attendee_name</code>, <code>event</code>, <code>price</code>, <code>status</code>) map onto the <code>registrations</code> table's columns; <code>Event</code>'s (<code>event_id</code>, <code>name</code>, <code>capacity</code>) map onto <code>events</code>. Business Rule 1 has an actual threshold ("over $500"). The GenAI feature is a one-sentence generation task, not an open-ended agent. Out of scope is explicit. This is the instructor's own capstone-adjacent example — distinct from any specific student's actual system.
+</aside>
+</section>
+
+<!-- 10. PART 1 idea — the review bar -->
+<section class="s-idea">
+<h3>What "approved" means — the review bar</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Every field genuinely specific.</strong> A named business problem with a named user type, not a generic description; at least 2 real business rules with actual thresholds or conditions; OOP classes that map sensibly onto the business rules described; SQL tables whose columns genuinely support the records described; exactly 5 Streamlit features (keep the template's five); a GenAI feature achievable in the time remaining — a one-sentence summarize/generate task, not an ambitious open-ended AI agent.</p>
+<p><strong>The most common reason to send a proposal back:</strong> scope too large for four remaining weeks — three or more OOP classes doing genuinely different jobs, or business rules that imply significant extra infrastructure (user authentication, multi-tenant data separation, real payment processing). Redirect toward the <em>minimum</em> viable version — a favor to the student's own future weeks, not gatekeeping.</p>
+<p><strong>A second common issue:</strong> OOP classes and SQL tables that don't correspond — a class attribute that appears nowhere in the SQL Tables section, or vice versa. Week 14 explicitly requires wiring the two together, so a mismatch here becomes a real blocker then.</p>
+</div>
+<p class="expect">A review should take well under a minute per student. Plan a fixed-order queue (by row, alphabetically, a sign-up sheet), not an open "raise your hand whenever" free-for-all. Early-approved finishers may begin Part 2 immediately.</p>
+<aside class="notes">
+Guide, Part 1 "Facilitation notes on running the proposal review" — higher stakes than Week 12's design gate. The three bullets are the guide's own: (1) what "approved" means, field by field; (2) the most common send-back is over-scoped work — redirect to the minimum viable version; (3) OOP classes and SQL tables that don't correspond to each other.
+</aside>
+</section>
+
+<!-- 11. PART 1 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">During proposal review, which counts as a real <em>business rule</em> rather than just a description?</p>
+<button data-opt="A">"Requests have a status field" — it names a fact about the data the system stores</button>
+<button data-opt="B">"A registration over $500 is flagged as VIP and routed to a dedicated check-in line" — a genuine <code>if</code>-shaped rule with an actual threshold and a consequence</button>
+<button data-opt="C">"The system should track everything reliably and be easy to use" — a clear statement of what a good system does</button>
+<p class="why" hidden>The guide's Part 1 "Common student mistakes": "'requests have a status' is a fact, not a rule; 'requests over $1000 require manager approval' is a rule, since it implies real conditional logic — push for something with a genuine <code>if</code>-shaped consequence." The review bar also requires "at least 2 real business rules with actual thresholds or conditions."</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 1 of the guide, so this quiz uses the R-conv-3 same-segment-line fallback. Answer B is drawn verbatim from Part 1's "Common student mistakes to watch for": "Business rules that aren't actually rules, just descriptions ('requests have a status' is a fact, not a rule; 'requests over $1000 require manager approval' is a rule, since it implies real conditional logic) — push for something with a genuine <code>if</code>-shaped consequence." Options A and C are the exact "fact, not a rule" / "vague" cases the same line rejects. This is a near-factual design point the guide clearly takes a position on, not an open matter of opinion.</aside>
+</section>
+
+<!-- 12. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A "Business Problem" that describes the <em>system</em> rather than the <em>problem</em> ("I will build an app that tracks requests" instead of "the office currently loses track of which requests are pending because there's no shared view") — redirect toward the pain point a real person has today, before any software exists to fix it.</p>
+<p>Business rules that aren't actually rules, just descriptions ("requests have a status" is a fact; "requests over $1000 require manager approval" is a rule, since it implies real conditional logic) — push for something with a genuine <code>if</code>-shaped consequence.</p>
+<p>Five Streamlit features padded with near-duplicates ("view all records" and "view records list" as two separate items) — a quick read-through catches this; redirect toward five genuinely distinct capabilities.</p>
+</div>
+<aside class="notes">The most common reason to send a proposal back for revision is scope that's too large for four remaining weeks — three or more OOP classes doing genuinely different jobs, or rules implying auth / multi-tenant separation / real payments. Redirect toward the minimum viable version of the idea. Also flag any OOP class whose attributes don't appear in the SQL Tables section (or vice versa) — Week 14 requires wiring the two together.</aside>
+</section>
+
+<!-- 13. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:26–0:42</span>
+<h1>SQL Fundamentals in the <code>sqlite3</code> Shell</h1>
+<aside class="notes">
+Teaching goal: the core SQL vocabulary — <code>CREATE TABLE</code>, <code>INSERT</code>, <code>SELECT</code>, <code>WHERE</code>, <code>UPDATE ... SET</code>, <code>GROUP BY</code> with aggregates — in the <code>sqlite3</code> interactive shell, on data that directly parallels Weeks 10–11's <code>BusinessRequest</code> system.
+Say to the class (verbatim): "This should feel familiar in a specific way: every operation we run today maps directly onto something you already built in Python over the last three weeks. <code>CREATE TABLE</code> is <code>class</code>. <code>INSERT</code> is creating an instance. <code>SELECT ... WHERE</code> is a list comprehension filter. <code>GROUP BY</code> with <code>SUM</code> is your manager's <code>total_amount()</code>. You already know these ideas — today is new vocabulary for concepts you've already built by hand."
+This deck is conceptual: every SQL snippet in Part 2 is shown static, outside any runnable block — it does not execute here. Week 14 runs real <code>sqlite3</code>. Live-code it yourself in the terminal (<code>sqlite3 lab13.db</code>) and read each result on the projector.
+Check for understanding (asked at the end of this part): "Which Python method from Week 11's <code>RequestManager</code> does <code>GROUP BY status</code> most directly replace?" Answer: <code>summary_report()</code> — specifically the parts computing counts and totals per status; a good direct check that the mapping from Week 11 genuinely transferred to real, executable SQL today.
+</aside>
+</section>
+
+<!-- 14. PART 2 idea — the parallel -->
+<section class="s-idea">
+<h3>Every operation maps onto something you already built</h3>
+<table class="grid">
+<thead><tr><th>SQL today</th><th>Python you already wrote</th></tr></thead>
+<tbody>
+<tr><td><code>CREATE TABLE requests (...)</code></td><td><code>class BusinessRequest:</code> — a fixed blueprint for every row</td></tr>
+<tr><td><code>INSERT INTO requests ... VALUES (...)</code></td><td><code>BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> — one new record</td></tr>
+<tr><td><code>SELECT * FROM requests WHERE amount &gt; 1000</code></td><td><code>[r for r in requests if r.amount &gt; 1000]</code> — a list-comprehension filter</td></tr>
+<tr><td><code>SELECT status, COUNT(*), SUM(amount) ... GROUP BY status</code></td><td><code>RequestManager.summary_report()</code> — counts and totals per status</td></tr>
+</tbody>
+</table>
+<p class="expect">New vocabulary for concepts you've already built by hand. The <code>requests</code> practice table this week deliberately parallels Weeks 10–11's <code>BusinessRequest</code>.</p>
+<aside class="notes">
+The mapping from the guide's "Say to the class": <code>CREATE TABLE</code> is <code>class</code>; <code>INSERT</code> is creating an instance; <code>SELECT ... WHERE</code> is a list comprehension filter; <code>GROUP BY</code> with <code>SUM</code> is the manager's <code>total_amount()</code> / <code>summary_report()</code>. This is a direct callback to Week 11 Part 3's OOP-to-SQL mapping table — that abstract exercise now gets concrete, executable form (executable in Week 14; conceptual today).
+</aside>
+</section>
+
+<!-- 15. PART 2 CREATE TABLE (static SQL) -->
+<section class="s-out">
+<h3><code>CREATE TABLE</code> — static this week, real <code>sqlite3</code> in Week 14</h3>
+<pre><code class="language-sql">-- Create a table
+CREATE TABLE requests (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT 'Pending'
+);</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — this is the conceptual SQL week. In class, run <code>sqlite3 lab13.db</code> first, then type this at the shell. Week 14 runs it for real.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2):
+- <code>CREATE TABLE requests (...)</code> — say explicitly, direct callback to Week 11 Part 3's mapping table: this line <strong>is</strong> the SQL equivalent of <code>class BusinessRequest:</code> — a fixed blueprint for what every row will contain.
+- <code>id INTEGER PRIMARY KEY AUTOINCREMENT</code> — <code>INTEGER</code> is the column's type; <code>PRIMARY KEY</code> marks this column as the unique identifier for every row (no two rows can share an <code>id</code>); <code>AUTOINCREMENT</code> means SQLite assigns the next number automatically — you never manually specify <code>id</code> when inserting.
+- <code>requester TEXT NOT NULL</code> — <code>NOT NULL</code> is a <strong>constraint</strong>: SQLite will refuse to insert a row missing this value. SQL's version of a required field — Python's equivalent would be a parameter with no default value in <code>__init__</code>.
+- <code>amount REAL</code> — <strong>no <code>NOT NULL</code> here, deliberately</strong> — this column is allowed to be empty (a <code>NULL</code> value), unlike <code>requester</code>/<code>category</code>.
+- <code>status TEXT DEFAULT 'Pending'</code> — direct SQL equivalent of Week 10's <code>self.status = 'Pending'</code> in <code>__init__</code> — a value automatically applied when a row is inserted without explicitly specifying <code>status</code>.
+Reproduced verbatim from the guide's Part 2.
+</aside>
+</section>
+
+<!-- 16. PART 2 INSERT (static SQL) -->
+<section class="s-out">
+<h3><code>INSERT</code> — three records</h3>
+<pre><code class="language-sql">INSERT INTO requests (requester, category, amount) VALUES ('Taylor', 'Travel', 1200);
+INSERT INTO requests (requester, category, amount) VALUES ('Jordan', 'Equipment', 450);
+INSERT INTO requests (requester, category, amount) VALUES ('Morgan', 'Software', 3500);</code></pre>
+<p class="expect">Static — type these into the shell after <code>CREATE TABLE</code>. Note that <code>id</code> and <code>status</code> are <em>omitted</em> from the column list on purpose.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2): <code>INSERT INTO requests (requester, category, amount) VALUES (...)</code> — say explicitly, this is the SQL equivalent of <code>BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> from Week 10 — creating one new record. <code>id</code> and <code>status</code> are both omitted from the column list — <code>id</code> because <code>AUTOINCREMENT</code> assigns it automatically, <code>status</code> because its <code>DEFAULT 'Pending'</code> fills in automatically when not specified — this mirrors Python's <code>__init__</code> not requiring <code>status</code> as a parameter at all, since it was always hardcoded to default there too.
+Reproduced verbatim from the guide's Part 2.
+</aside>
+</section>
+
+<!-- 17. PART 2 SELECT * + illustrative -->
+<section class="s-out">
+<h3><code>SELECT *</code> — with the shell's display commands</h3>
+<pre><code class="language-sql">.mode column
+.headers on
+SELECT * FROM requests;</code></pre>
+<pre>illustrative result of  SELECT * FROM requests
+(guide's "Verified output"):
+
+id  requester  category   amount  status
+--  ---------  ---------  ------  -------
+1   Taylor     Travel     1200.0  Pending
+2   Jordan     Equipment  450.0   Pending
+3   Morgan     Software   3500.0  Pending</pre>
+<p class="expect">Static — the result block is reproduced verbatim from the guide's "Verified output" and labelled <em>illustrative</em>. Nothing executes here; run it live in <code>sqlite3</code>.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2): <code>.mode column</code> and <code>.headers on</code> are <strong>shell-specific formatting commands</strong> (note: no trailing semicolon, and they start with a dot) — say explicitly, these aren't SQL itself, they're instructions to the <code>sqlite3</code> program about how to <em>display</em> query results readably, worth running once at the start of any session. <code>SELECT * FROM requests;</code> — <code>*</code> means "every column"; this returns all three inserted rows. Each row shows <code>Pending</code> — the <code>DEFAULT</code> filled in — and <code>1200.0</code> / <code>450.0</code> / <code>3500.0</code>: <code>REAL</code> stores them as floats.
+</aside>
+</section>
+
+<!-- 18. PART 2 WHERE + illustrative -->
+<section class="s-out">
+<h3><code>WHERE</code> — filter rows</h3>
+<pre><code class="language-sql">SELECT * FROM requests WHERE amount &gt; 1000;</code></pre>
+<pre>illustrative result of  SELECT * FROM requests WHERE amount &gt; 1000
+(from the guide: two rows -- Taylor's $1,200 and Morgan's $3,500;
+ Jordan's $450 is correctly excluded):
+
+id  requester  category   amount  status
+--  ---------  ---------  ------  -------
+1   Taylor     Travel     1200.0  Pending
+3   Morgan     Software   3500.0  Pending</pre>
+<p class="expect">Static — the guide gives this result as prose ("two rows … Jordan's $450 correctly excluded"); it is reproduced here in the same column format and labelled <em>illustrative</em>.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2): direct SQL equivalent of <code>[r for r in requests if r.amount &gt; 1000]</code> — say explicitly, this is precisely Week 11's mapping-table row, now actually executed. Verified output (guide): two rows, Taylor's $1,200 and Morgan's $3,500; Jordan's $450 correctly excluded.
+</aside>
+</section>
+
+<!-- 19. PART 2 UPDATE + illustrative -->
+<section class="s-out">
+<h3><code>UPDATE ... SET</code> — and why <code>WHERE</code> is essential</h3>
+<pre><code class="language-sql">UPDATE requests SET status = 'Approved' WHERE id = 1;
+SELECT * FROM requests;</code></pre>
+<pre>illustrative result -- only id = 1's status changed
+(guide's "Verified output"):
+
+id  requester  category   amount  status
+--  ---------  ---------  ------  --------
+1   Taylor     Travel     1200.0  Approved
+2   Jordan     Equipment  450.0   Pending
+3   Morgan     Software   3500.0  Pending</pre>
+<p class="expect">Static — result reproduced verbatim from the guide's "Verified output". <strong><code>WHERE id = 1</code> is essential:</strong> without it, every row's status would become <code>'Approved'</code> at once.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2): <code>UPDATE requests SET status = 'Approved' WHERE id = 1</code> — direct SQL equivalent of <code>req_101.approve()</code> — say explicitly: <strong><code>WHERE id = 1</code> is essential here</strong> — without it, <code>UPDATE requests SET status = 'Approved'</code> would set <em>every single row's</em> status to <code>'Approved'</code> at once, a genuinely dangerous mistake worth flagging explicitly, parallel in spirit to Week 2's <code>rm</code> safety ritual (know exactly what you're about to affect before running a command that changes or destroys data).
+</aside>
+</section>
+
+<!-- 20. PART 2 GROUP BY + illustrative -->
+<section class="s-out">
+<h3><code>GROUP BY</code> with aggregates — one line replaces a whole manager class</h3>
+<pre><code class="language-sql">SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status;</code></pre>
+<pre>illustrative result  (guide's "Verified output"):
+
+status    count  total
+--------  -----  ------
+Approved  1      1200.0
+Pending   2      3950.0</pre>
+<p class="expect">Static — result reproduced verbatim from the guide. This is the single most important line of Part 2: one line of SQL replacing what took an entire manager class's worth of Python methods to build by hand.</p>
+<aside class="notes">
+Line-by-line (guide, Part 2): <strong>this is the single most important line of Part 2 — the direct SQL equivalent of everything Week 11's <code>RequestManager.summary_report()</code> computed by hand, in Python, across multiple methods.</strong> <code>GROUP BY status</code> buckets rows by their <code>status</code> value (exactly like Week 6's <code>.get(key, 0)</code> accumulate-into-a-dict pattern, or Week 11's <code>list_pending()</code>/<code>get_by_status()</code>); <code>COUNT(*) as count</code> counts rows in each bucket; <code>SUM(amount) as total</code> sums the <code>amount</code> column within each bucket. Say explicitly: <strong>one line of SQL is replacing what took an entire manager class's worth of Python methods to build by hand</strong> — let that land as a genuinely striking comparison. <code>Pending</code> total is <code>3950.0</code> (450 + 3500); <code>Approved</code> total is <code>1200.0</code>. Exit the shell with <code>.quit</code>.
+</aside>
+</section>
+
+<!-- 21. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Which Python method from Week 11's <code>RequestManager</code> does <code>GROUP BY status</code> most directly replace?</p>
+<button data-opt="A"><code>add_request()</code> — it files each new record under its status</button>
+<button data-opt="B"><code>list_pending()</code> — it returns just the records that share one status</button>
+<button data-opt="C"><code>summary_report()</code> — specifically the parts computing counts and totals per status</button>
+<p class="why" hidden>The guide's Part 2 "Check for understanding": "<code>summary_report()</code> — specifically the parts computing counts and totals per status; a good direct check that the mapping from Week 11 genuinely transferred to real, executable SQL today."</p>
+</div>
+<aside class="notes">Guide's Part 2 "Check for understanding", verbatim answer: "<code>summary_report()</code> — specifically the parts computing counts and totals per status; a good direct check that the mapping from Week 11 genuinely transferred to real, executable SQL today." <code>list_pending()</code> maps onto a <code>WHERE</code> clause (a single-status filter), not the per-status aggregate; <code>add_request()</code> maps onto <code>INSERT</code>.</aside>
+</section>
+
+<!-- 22. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting the semicolon at the end of a SQL statement — the shell simply waits for more input, showing a <code>...&gt;</code> continuation prompt instead of running the statement; demonstrate this live so students recognize the "stuck" prompt and know to add the missing <code>;</code>.</p>
+<p>Running <code>UPDATE</code> without a <code>WHERE</code> clause — demonstrate the consequence live, deliberately, on the throwaway <code>lab13.db</code>: run <code>UPDATE requests SET status = 'Approved';</code> with no <code>WHERE</code>, then <code>SELECT * FROM requests;</code> to show all three rows now incorrectly <code>'Approved'</code>.</p>
+<p>Confusing SQL's <code>=</code> (used for both assignment in <code>SET</code> and comparison in <code>WHERE</code>) with Python's <code>=</code>/<code>==</code> distinction — <strong>SQL uses a single <code>=</code> for equality comparison in a <code>WHERE</code> clause</strong>, unlike Python's <code>==</code>.</p>
+</div>
+<aside class="notes">All three are the guide's Part 2 "Common student mistakes to watch for", verbatim. The <code>UPDATE</code>-without-<code>WHERE</code> demo is safe to witness on <code>lab13.db</code> (a throwaway), never on the capstone's real database.</aside>
+</section>
+
+<!-- 23. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:42–0:56</span>
+<h1>Design Your Capstone Schema</h1>
+<aside class="notes">
+Teaching goal: write <code>schema.sql</code> for the student's own approved capstone proposal, and test it directly in the <code>sqlite3</code> shell.
+Say to the class (verbatim): "Now your own tables, from your own proposal's 'SQL Tables' section. Real types, <code>NOT NULL</code> where it matters, a status column with a default — exactly the pattern from Part 2, applied to your own domain."
+Do: <code>touch schema.sql &amp;&amp; code schema.sql</code>.
+The one genuinely new element this part introduces is the <code>FOREIGN KEY</code> — SQL's mechanism for expressing the relationship Week 11's <code>Registration.event</code> attribute expressed in Python.
+Check for understanding (asked at the end of this part): "Why does <code>registrations</code> store <code>event_id</code> (a number) rather than the event's actual <code>name</code>?" Answer: storing just the ID and looking up the name via the relationship avoids duplicating the event's name in every single registration row — if the event were ever renamed, only one row in <code>events</code> needs updating, not every related registration. A genuine, important database design principle — avoiding redundant, duplicated data.
+</aside>
+</section>
+
+<!-- 24. PART 3 idea — FOREIGN KEY -->
+<section class="s-idea">
+<h3>The one new element — <code>FOREIGN KEY</code></h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>FOREIGN KEY (event_id) REFERENCES events(event_id)</code></strong> — this is SQL's mechanism for expressing exactly the relationship Week 11's <code>Registration.event</code> attribute expressed in Python (one <code>Registration</code> object holding a reference to a specific <code>Event</code> object).</p>
+<p>In SQL, a table can't hold a whole other row <em>inside</em> a cell the way a Python attribute can hold a whole other object — instead, <code>registrations.event_id</code> holds just the <em>id</em> of the related <code>events</code> row, and <code>FOREIGN KEY</code> formally declares that relationship, letting the database enforce it (refusing to insert a registration whose <code>event_id</code> doesn't correspond to a real event).</p>
+<p>That enforcement isn't automatic in SQLite by default — a detail beyond today's required depth, but worth a one-sentence flag if a curious student asks why an invalid <code>event_id</code> doesn't immediately error.</p>
+</div>
+<p class="expect">Everything else in the schema — types, <code>NOT NULL</code>, a status column with a <code>DEFAULT</code> — is exactly the Part 2 pattern, now applied to the student's own domain.</p>
+<aside class="notes">
+Line-by-line (guide, Part 3): <code>FOREIGN KEY (event_id) REFERENCES events(event_id)</code> — say explicitly, this is SQL's mechanism for expressing exactly the relationship Week 11's <code>Registration.event</code> attribute expressed in Python. <code>registrations.event_id</code> holds just the id of the related <code>events</code> row; <code>FOREIGN KEY</code> formally declares the relationship, letting the database enforce it — refusing to insert a registration whose <code>event_id</code> doesn't correspond to a real event, if foreign key enforcement is turned on (it isn't automatic in SQLite by default).
+</aside>
+</section>
+
+<!-- 25. PART 3 schema.sql (static SQL) -->
+<section class="s-out">
+<h3><code>schema.sql</code> — the instructor's prepared model (continuing GalaTrack)</h3>
+<pre><code class="language-sql">-- schema.sql
+CREATE TABLE events (
+    event_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    name      TEXT    NOT NULL,
+    capacity  INTEGER NOT NULL
+);
+
+CREATE TABLE registrations (
+    reg_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    attendee_name  TEXT    NOT NULL,
+    event_id       INTEGER NOT NULL,
+    price          REAL    NOT NULL,
+    status         TEXT    DEFAULT 'Pending',
+    FOREIGN KEY (event_id) REFERENCES events(event_id)
+);</code></pre>
+<p class="expect">Reproduced verbatim from the guide's Part 3 — <strong>the instructor's prepared model</strong>, distinct from any specific student's proposed system. Static: nothing executes here. Students write their own <code>schema.sql</code> from their own proposal's "SQL Tables" section.</p>
+<aside class="notes">
+Reproduced verbatim from the guide's Part 3 worked example (also in Appendix A). This is the instructor's own capstone-adjacent example, continuing the Week 12 / Part 1 GalaTrack domain — demonstrated as a model of the process, not distributed as a copyable answer. Note the pattern each student mirrors: real SQLite types (<code>TEXT</code>, <code>INTEGER</code>, <code>REAL</code>), <code>NOT NULL</code> where a value must always exist, a <code>status</code> column with a <code>DEFAULT</code>, and one <code>FOREIGN KEY</code> declaring the relationship.
+</aside>
+</section>
+
+<!-- 26. PART 3 test in shell + illustrative -->
+<section class="s-out">
+<h3>Test it in the <code>sqlite3</code> shell</h3>
+<pre><code class="language-sql">sqlite3 capstone.db
+.read schema.sql
+.schema
+INSERT INTO events (name, capacity) VALUES ('Annual Gala', 200);
+INSERT INTO registrations (attendee_name, event_id, price) VALUES ('Taylor', 1, 750);
+SELECT * FROM registrations;
+.quit</code></pre>
+<pre>illustrative result -- .schema, then the final SELECT
+(guide's "Verified output"):
+
+CREATE TABLE events (
+    event_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    name      TEXT    NOT NULL,
+    capacity  INTEGER NOT NULL
+);
+CREATE TABLE registrations (
+    reg_id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    attendee_name  TEXT    NOT NULL,
+    event_id       INTEGER NOT NULL,
+    price          REAL    NOT NULL,
+    status         TEXT    DEFAULT 'Pending',
+    FOREIGN KEY (event_id) REFERENCES events(event_id)
+);
+reg_id  attendee_name  event_id  price  status
+------  -------------  --------  -----  -------
+1       Taylor         1         750.0  Pending</pre>
+<p class="expect">Static — result reproduced verbatim from the guide's "Verified output". Nothing runs here; students type this into <code>sqlite3</code> themselves.</p>
+<aside class="notes">
+Line-by-line (guide, Part 3):
+- <code>.read schema.sql</code> — a shell command (dot-prefixed) that runs every SQL statement in the named file, exactly as if each had been typed individually — say explicitly, this is the SQL equivalent of Python's <code>import</code>: pulling in and executing a whole file's worth of definitions in one step.
+- <code>.schema</code> — another shell command, printing the <code>CREATE TABLE</code> statement(s) currently defined in this database, as SQLite itself understands them — a good verification that <code>.read</code> worked, independent of trusting the source file was typo-free.
+- The two <code>INSERT</code> statements and final <code>SELECT</code> — a genuine end-to-end test: create one event, one registration referencing it by <code>event_id</code>, and confirm the registration reads back correctly (<code>status</code> defaults to <code>Pending</code>; <code>price</code> stored as <code>750.0</code>).
+</aside>
+</section>
+
+<!-- 27. PART 3 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Why does <code>registrations</code> store <code>event_id</code> (a number) rather than the event's actual <code>name</code>?</p>
+<button data-opt="A">Storing just the ID avoids duplicating the event's name in every registration row — if the event is ever renamed, only one row in <code>events</code> changes, not every related registration</button>
+<button data-opt="B">SQLite cannot store text in a column that takes part in a relationship, so a number is the only option</button>
+<button data-opt="C">Numbers sort and index faster, and speed is the only reason it matters here</button>
+<p class="why" hidden>The guide's Part 3 "Check for understanding": "Storing just the ID and looking up the name via the relationship avoids duplicating the event's name in every single registration row — if the event were ever renamed, only one row in <code>events</code> needs updating, not every related registration. This is a genuine, important database design principle — avoiding redundant, duplicated data — worth stating explicitly even at this introductory level."</p>
+</div>
+<aside class="notes">Guide's Part 3 "Check for understanding", verbatim answer: "Storing just the ID and looking up the name via the relationship avoids duplicating the event's name in every single registration row — if the event were ever renamed, only one row in <code>events</code> needs updating, not every related registration. This is a genuine, important database design principle — avoiding redundant, duplicated data — worth stating explicitly even at this introductory level." Options B and C are plausible-sounding distractors the guide's answer does not support.</aside>
+</section>
+
+<!-- 28. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using a type name that doesn't exist in SQLite (e.g., <code>VARCHAR(50)</code>, common in other database systems) — SQLite is famously permissive about types (it will often accept this without error, due to "type affinity" rather than strict typing), but steer students toward SQLite's own core type names (<code>TEXT</code>, <code>INTEGER</code>, <code>REAL</code>) for clarity and consistency with Part 2.</p>
+<p>Forgetting <code>NOT NULL</code> on columns that clearly should always have a value (an attendee's name, an event's name) — walk each student's schema checking this against their own proposal's described records.</p>
+<p>A <code>FOREIGN KEY</code> line referencing a table or column name that doesn't exactly match the other <code>CREATE TABLE</code> statement (a typo) — SQLite may not immediately error on this depending on settings, so a careful read-through, not just a successful <code>.read</code>, is the real check.</p>
+</div>
+<aside class="notes">All three are the guide's Part 3 "Common student mistakes to watch for", verbatim.</aside>
+</section>
+
+<!-- 29. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:56–1:04</span>
+<h1><code>sqlite3</code> Shell Reference (README)</h1>
+<aside class="notes">
+Teaching goal: a README cheatsheet documenting every required SQL operation with a real example — the same "document what you learned" habit from Week 2's command-reference README, now applied to SQL.
+Say to the class (verbatim): "Same habit as Week 2's command reference — but SQL this time. One example of each required operation, from your own actual work today, not copied generically."
+Do, live: <code>touch README.md &amp;&amp; code README.md</code>.
+Point out explicitly: <code>ORDER BY</code> and <code>AVG</code> weren't run live in Part 2 — students should test these themselves in the shell before documenting them, not just copy the template's placeholder syntax. <strong>A README documenting a command that was never actually run and verified is exactly the kind of unreliable documentation this course's habits are meant to prevent.</strong>
+Check for understanding (asked at the end of this part): "Which of these eight operations maps most directly onto something you've already built in <code>RequestManager</code>, and which feels most genuinely new?" Answer: a good closing reflection — most students should name <code>GROUP BY</code>/aggregates as the most direct Python parallel and <code>FOREIGN KEY</code>-style relationships or <code>ORDER BY</code> as comparatively newer territory, though answers will reasonably vary.
+</aside>
+</section>
+
+<!-- 30. PART 4 idea — document what you ran -->
+<section class="s-idea">
+<h3>Document what you <em>ran</em>, not the template's placeholders</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>One example of each required operation, from today's own work.</strong> The reference section lists eight operations — <code>CREATE TABLE</code>, <code>INSERT INTO</code>, <code>SELECT *</code>, <code>WHERE</code>, <code>UPDATE ... SET</code>, <code>ORDER BY</code>, <code>GROUP BY</code>, and the aggregate functions <code>COUNT</code> / <code>SUM</code> / <code>AVG</code>.</p>
+<p><strong><code>ORDER BY</code> and <code>AVG</code> weren't part of Part 2's guided walkthrough.</strong> Test them yourself in the shell before documenting them — don't just copy the template's placeholder syntax.</p>
+<p><strong>Why it matters:</strong> a README documenting a command that was never actually run and verified is exactly the kind of unreliable documentation this course's habits are meant to prevent — the same principle as Week 2's command-reference README.</p>
+</div>
+<p class="expect">Each line is filled in with a real example from the student's own <code>lab13.db</code> work, not generic syntax.</p>
+<aside class="notes">
+Guide, Part 4: "Point out explicitly" — <code>ORDER BY</code> and <code>AVG</code> weren't run live in Part 2; students should test these themselves before documenting them. "A README documenting a command that was never actually run and verified is exactly the kind of unreliable documentation this course's habits are meant to prevent." Common mistake: copying example syntax without actually running it first — walk the room checking <code>ORDER BY</code> / <code>AVG</code> specifically were tested.
+</aside>
+</section>
+
+<!-- 31. PART 4 SQL Reference section (readonly template pane) -->
+<section class="s-out">
+<h3>The README <code>## SQL Reference</code> section — fill each line from real work</h3>
+<pre class="tmpl" data-readonly>## SQL Reference
+
+CREATE TABLE   -- define a table
+  e.g. CREATE TABLE requests (id INTEGER PRIMARY KEY, ...);
+
+INSERT INTO    -- add a record
+  e.g. INSERT INTO requests (requester, amount) VALUES ('Taylor', 1200);
+
+SELECT *       -- retrieve all records
+  e.g. SELECT * FROM requests;
+
+WHERE          -- filter records
+  e.g. SELECT * FROM requests WHERE amount &gt; 1000;
+
+UPDATE ... SET -- change a value
+  e.g. UPDATE requests SET status = 'Approved' WHERE id = 1;
+
+ORDER BY       -- sort results
+  e.g. SELECT * FROM requests ORDER BY amount DESC;
+
+GROUP BY       -- aggregate by column
+  e.g. SELECT status, COUNT(*) FROM requests GROUP BY status;
+
+COUNT / SUM / AVG -- aggregate functions
+  e.g. SELECT SUM(amount) FROM requests;</pre>
+<p class="expect">Shown as a read-only reference pane, reproduced verbatim from the guide's Part 4. Static — nothing runs here. Students fill each <code>e.g.</code> line with an example they actually executed and read in the shell.</p>
+<aside class="notes">
+Reproduced verbatim from the guide's Part 4 "Add a SQL reference section" template. Eight operations. <code>ORDER BY</code> and <code>AVG</code> are the two that weren't part of Part 2's guided sequence — they must be tested in the shell before being written down, not copied as placeholder syntax.
+</aside>
+</section>
+
+<!-- 32. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Of the eight operations in the reference, which maps most directly onto something you already built in <code>RequestManager</code>?</p>
+<button data-opt="A"><code>CREATE TABLE</code> — you never wrote anything resembling it in Python</button>
+<button data-opt="B"><code>GROUP BY</code> with <code>COUNT</code> / <code>SUM</code> — it does in one line what <code>summary_report()</code> computed by hand across several methods</button>
+<button data-opt="C"><code>WHERE</code> — Python has no equivalent to filtering a collection</button>
+<p class="why" hidden>The guide's Part 4 "Check for understanding": "most students should name <code>GROUP BY</code>/aggregates as the most direct Python parallel and <code>FOREIGN KEY</code>-style relationships or <code>ORDER BY</code> as comparatively newer territory." Part 2 makes the same point: one line of <code>GROUP BY</code> SQL replaces "an entire manager class's worth of Python methods." <code>WHERE</code> does have a direct parallel — a list-comprehension filter — so option C is wrong; <code>CREATE TABLE</code> parallels <code>class</code>.</p>
+</div>
+<aside class="notes">Part 4's "Check for understanding" is a semi-open reflection ("answers will reasonably vary"), so this quiz keys only the position the guide clearly endorses: "most students should name <code>GROUP BY</code>/aggregates as the most direct Python parallel." This is reinforced by Part 2's stated point that one <code>GROUP BY</code> line replaces "an entire manager class's worth of Python methods" (<code>summary_report()</code>). Option C contradicts the guide, which explicitly maps <code>SELECT ... WHERE</code> onto a list-comprehension filter; option A contradicts the guide's <code>CREATE TABLE</code> &rarr; <code>class</code> mapping.</aside>
+</section>
+
+<!-- 33. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Copying example syntax without actually running it first — walk the room checking that <code>ORDER BY</code> / <code>AVG</code> examples specifically were tested in the shell, since they weren't part of Part 2's guided sequence.</p>
+<p>A README that documents a command that was never actually run and verified — exactly the kind of unreliable documentation this course's habits are meant to prevent.</p>
+</div>
+<aside class="notes">The guide's Part 4 "Common student mistakes to watch for", verbatim, plus the "Point out explicitly" framing about unreliable documentation.</aside>
+</section>
+
+<!-- 34. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 1:04–1:10</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: commit and push the proposal, schema, and README — note this week's ritual is shorter than usual, since there's no Python code yet to format, lint, or test.
+Say to the class (verbatim): "No <code>ruff</code> or <code>pytest</code> today — there's no Python code yet, just the proposal, schema, and README. Stage, commit, push."
+Live-code this: <code>git add . &amp;&amp; git commit -m 'lab 13: proposal and SQL schema' &amp;&amp; git push</code>.
+Common student mistake: accidentally committing a <code>.db</code> file despite the <code>.gitignore</code> entry added in Part 1 — if <code>lab13.db</code> or <code>capstone.db</code> was created <em>before</em> <code>.gitignore</code> was updated to include <code>*.db</code>, Git may have already started tracking it; a quick <code>git status</code> before <code>add</code>/<code>commit</code> catches this, and if needed, <code>git rm --cached *.db</code> removes it from tracking without deleting the actual file.
+Check for understanding (asked at the end of this part): "If this week's ritual has no <code>pytest</code> step, does that mean nothing about today's work can be verified as correct?" Answer: No — Part 2 and Part 3's <code>SELECT</code> queries, run and read carefully in the shell, <em>are</em> the verification this week, just manual rather than automated; Week 14 is where automated <code>pytest</code> coverage returns, now including database-backed tests.
+</aside>
+</section>
+
+<!-- 35. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The shorter ritual — no <code>ruff</code>, no <code>pytest</code> this week</h3>
+<div class="run" data-lang="shell" data-readonly>git add . &amp;&amp; git commit -m 'lab 13: proposal and SQL schema' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>git</code> can't run in the browser. There's no Python code yet, so nothing to format, lint, or test. The commit message must include <strong>"lab 13"</strong>. Run <code>git status</code> first to be sure no <code>.db</code> file slipped in.</p>
+<aside class="notes">
+Say to the class (verbatim): "No <code>ruff</code> or <code>pytest</code> today — there's no Python code yet, just the proposal, schema, and README. Stage, commit, push."
+Line by line: <code>git add .</code> stages the proposal, schema, and README; <code>git commit -m 'lab 13: proposal and SQL schema'</code> — message must include "lab 13"; <code>git push</code>. Then paste the GitHub repository URL into Canvas.
+Common mistake: a <code>.db</code> file already tracked because it was created before Part 1's <code>echo '*.db' &gt;&gt; .gitignore</code> line — check <code>git status</code> before <code>add</code>; <code>git rm --cached *.db</code> untracks it without deleting the file.
+</aside>
+</section>
+
+<!-- 36. PART 5 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">This week's ritual has no <code>pytest</code> step. Does that mean nothing about today's work can be verified as correct?</p>
+<button data-opt="A">Correct — without <code>pytest</code>, there is no way to know today's schema works until Week 14</button>
+<button data-opt="B">Correct — SQL cannot be tested at all, only Python can</button>
+<button data-opt="C">No — Part 2 and Part 3's <code>SELECT</code> queries, run and read carefully in the shell, are the verification this week, just manual rather than automated; Week 14 is where automated <code>pytest</code> returns</button>
+<p class="why" hidden>The guide's Part 5 "Check for understanding": "No — Part 2 and Part 3's <code>SELECT</code> queries, run and read carefully in the shell, <em>are</em> the verification this week, just manual rather than automated; Week 14 is where automated <code>pytest</code> coverage returns, now including database-backed tests."</p>
+</div>
+<aside class="notes">Guide's Part 5 "Check for understanding", verbatim answer: "No — Part 2 and Part 3's <code>SELECT</code> queries, run and read carefully in the shell, <em>are</em> the verification this week, just manual rather than automated; Week 14 is where automated <code>pytest</code> coverage returns, now including database-backed tests."</aside>
+</section>
+
+<!-- 37. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Accidentally committing a <code>.db</code> file despite the <code>.gitignore</code> entry added in Part 1 — if <code>lab13.db</code> or <code>capstone.db</code> was created <em>before</em> <code>.gitignore</code> was updated to include <code>*.db</code>, Git may have already started tracking it.</p>
+<p>A quick <code>git status</code> before <code>add</code>/<code>commit</code> catches this; if needed, <code>git rm --cached *.db</code> removes it from tracking without deleting the actual file.</p>
+<p>Forgetting "lab 13" in the commit message — the same graded requirement pattern as every prior week.</p>
+</div>
+<aside class="notes">The <code>.db</code>-tracking mistake is the guide's Part 5 "Common student mistakes to watch for", verbatim. The commit-message-string requirement is unchanged from every prior week.</aside>
+</section>
+
+<!-- 38. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · finished early</span>
+<h1>Extra Practice — <code>ORDER BY</code>, <code>AVG</code>, and a <code>JOIN</code> preview</h1>
+<aside class="notes">
+Lighter section — from the guide's Appendix B ("Extra Practice — only if the class finishes early"). Offer this only if a student's proposal is approved and their schema tests cleanly well before time is up.
+Framing: <code>ORDER BY</code> and <code>AVG</code> are both part of Part 4's required README documentation but weren't part of Part 2's guided walkthrough — running them here confirms students have actually executed, not just copied, every operation they document. A <code>JOIN</code> is beyond this lab's required scope, but a working, verified example is a genuinely motivating preview of Week 14's deeper Python-SQL integration work.
+Everything on the next slide is static SQL, outside any runnable block — the illustrative results are labelled; the <code>JOIN</code> result (<code>Taylor | Annual Gala</code>) is confirmed in the guide's Appendix B.
+</aside>
+</section>
+
+<!-- 39. STRETCH idea -->
+<section class="s-idea">
+<h3>Three things to genuinely run, not copy</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>ORDER BY</code>.</strong> <code>SELECT * FROM requests ORDER BY amount DESC;</code> — sorts the rows highest-amount-first. Required in Part 4's README; not in Part 2's guided run.</p>
+<p><strong><code>AVG</code>.</strong> <code>SELECT AVG(amount) FROM requests;</code> — the mean of the <code>amount</code> column. Also Part 4-required, also not in Part 2's walkthrough.</p>
+<p><strong>A <code>JOIN</code> preview.</strong> For a capstone with two related tables (most have them), <code>SELECT registrations.attendee_name, events.name FROM registrations JOIN events ON registrations.event_id = events.event_id;</code> — follows the <code>FOREIGN KEY</code> relationship to pull matching rows from both tables. Beyond today's required scope; a motivating look ahead to Week 14.</p>
+</div>
+<p class="expect">Have students run each one themselves in the shell — confirming they've executed, not just copied, every operation they document.</p>
+<aside class="notes">
+From the guide's Appendix B. The <code>ORDER BY</code> / <code>AVG</code> round exists because both are part of Part 4's required documentation but weren't part of Part 2's guided walkthrough. The <code>JOIN</code> is explicitly beyond the lab's required scope but a genuinely motivating preview of Week 14's Python-SQL integration — the guide confirms it returns <code>Taylor | Annual Gala</code> for this guide's sample data.
+</aside>
+</section>
+
+<!-- 40. STRETCH static SQL + illustrative -->
+<section class="s-out">
+<h3>Static this week — run them yourself in <code>sqlite3</code></h3>
+<pre><code class="language-sql">SELECT * FROM requests ORDER BY amount DESC;
+SELECT AVG(amount) FROM requests;
+
+-- JOIN preview (Appendix B) -- follows the FOREIGN KEY relationship
+SELECT registrations.attendee_name, events.name
+FROM registrations JOIN events ON registrations.event_id = events.event_id;</code></pre>
+<pre>illustrative result of  SELECT * FROM requests ORDER BY amount DESC
+(on the Part 2 practice rows, before the UPDATE):
+
+id  requester  category   amount  status
+--  ---------  ---------  ------  -------
+3   Morgan     Software   3500.0  Pending
+1   Taylor     Travel     1200.0  Pending
+2   Jordan     Equipment  450.0   Pending
+
+illustrative result of  SELECT AVG(amount) FROM requests :
+1716.6666666666667   (the mean of 1200, 450, 3500)
+
+illustrative result of the JOIN  (guide Appendix B, confirmed):
+
+attendee_name  name
+-------------  -----------
+Taylor         Annual Gala</pre>
+<p class="expect">Static, <strong>outside</strong> any runnable block — the conceptual SQL week. The <code>ORDER BY</code> / <code>AVG</code> results are illustrative (derived from Part 2's three practice rows); the <code>JOIN</code> result is confirmed in the guide's Appendix B on the Part 3 sample data.</p>
+<aside class="notes">
+<code>ORDER BY amount DESC</code> sorts highest-first: Morgan (3500) &rarr; Taylor (1200) &rarr; Jordan (450), shown on the pre-<code>UPDATE</code> state where all three are <code>Pending</code>. <code>AVG(amount)</code> over 1200, 450, 3500 is <code>1716.6666666666667</code>. The <code>JOIN</code> follows <code>registrations.event_id</code> to the matching <code>events</code> row and returns <code>Taylor | Annual Gala</code> — the guide's Appendix B states this verbatim as confirmed for the Part 3 sample data (one event "Annual Gala", one registration for Taylor). None of this executes in the deck.
+</aside>
+</section>
+
+<!-- 41. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li><code>PROPOSAL.md</code> — all 10 fields completed, genuinely specific, <strong>instructor-approved</strong></li>
+<li><code>schema.sql</code> — <code>CREATE TABLE</code> statement(s) for the capstone, tested in the <code>sqlite3</code> shell</li>
+<li><code>README.md</code> — SQL reference section, all eight operations documented with real, tested examples</li>
+<li>Git commit made, with a message including "lab 13"</li>
+<li>Repo pushed</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last ~5 minutes. Reproduced verbatim from the guide's Wrap-Up. The proposal must be <strong>instructor-approved</strong> — that gate blocks Week 14, not just the next hour. The featured idea to reinforce as they leave: the design skill from Week 12's <code>design.md</code> — naming entities, attributes, and relationships before writing code — is exactly what today formalized into real database design.</aside>
+</section>
+
+<!-- 42. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 14</h3>
+<p>"Next week, Python and SQL finally connect — reading from and writing to your actual database from inside a Python script, using the schema you designed today. This is where your OOP classes from Weeks 10–12 and your SQL tables from today become one working system."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: today's <code>schema.sql</code> and the OOP-to-SQL mapping from Week 11 both feed directly into Week 14, where <code>import sqlite3</code> runs for real and automated <code>pytest</code> coverage returns, now including database-backed tests.</aside>
+</section>
+
+<!-- 43. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 13</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w13.md (Week 13 facilitation guide, "Capstone Design &amp; SQL Foundations"). This is the CAPSTONE-DESIGN + SQL-FOUNDATIONS week and the guide contains no runnable Python — so this deck has <strong>zero <code>data-lang="python"</code> blocks</strong> (no forced runnable where the guide has none), and there is no <code>pytest</code> this week. SQL is CONCEPTUAL: every <code>CREATE TABLE</code> / <code>INSERT</code> / <code>SELECT</code> / <code>WHERE</code> / <code>UPDATE</code> / <code>GROUP BY</code> snippet is a static <code>&lt;pre&gt;&lt;code class="language-sql"&gt;</code> block outside any <code>.run</code> div — nothing executes (Week 14 runs real <code>sqlite3</code>). Query-result tables are reproduced verbatim from the guide's "Verified output" where given (Part 2 <code>SELECT *</code> / <code>UPDATE</code> / <code>GROUP BY</code>; Part 3 <code>.schema</code> + final <code>SELECT</code>), or derived from the guide's prose and labelled "illustrative result" (Part 2 <code>WHERE</code>; the Stretch <code>ORDER BY</code> / <code>AVG</code>); the Stretch <code>JOIN</code> result (<code>Taylor | Annual Gala</code>) is confirmed in the guide's Appendix B. The Part 3 schema is reproduced verbatim and labelled "the instructor's prepared model". Part 1's proposal template and worked GalaTrack example, and Part 4's README reference section, are read-only <code>.tmpl</code> panes reproduced verbatim. The Part 1 setup and Part 5 ritual shell blocks are <code>data-readonly</code> (no <code>venv</code> / <code>git</code> in the browser). Quizzes: Parts 2, 3, 5 key the guide's "Check for understanding" parenthetical verbatim; Part 1 has no explicit CFU and uses the R-conv-3 same-segment-line fallback (Part 1 "Common student mistakes": a fact vs an <code>if</code>-shaped rule); Part 4's CFU is a semi-open reflection, so its quiz keys only the guide-endorsed position (<code>GROUP BY</code>/aggregates as the most direct Python parallel). Keyed letters: B, C, A, B, C. ISM3232 style: single quotes in SQL string literals throughout, matching the guide.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
