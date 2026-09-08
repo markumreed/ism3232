@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 7 — Functions, Modules &amp; pytest</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 7 &nbsp;·&nbsp; Module 07 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Python Foundations</p>
+<h1>Functions, Modules &amp; pytest</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:03</strong> Welcome: "logic, presentation, verification"</span>
+<span class="t-item"><strong>0:03–0:12</strong> Part 1 — Required project structure</span>
+<span class="t-item"><strong>0:12–0:28</strong> Part 2 — Write the functions</span>
+<span class="t-item"><strong>0:28–0:38</strong> Part 3 — Import and call in <code>main.py</code></span>
+<span class="t-item"><strong>0:38–0:58</strong> Part 4 — Eight <code>pytest</code> tests</span>
+<span class="t-item"><strong>0:58–1:06</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:06–1:15</strong> Stretch (doctest) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Live code-along, ending with the full submission ritual. This is the first lab this semester with a genuine <strong>multi-file project structure</strong> — a separate <code>business_rules.py</code> module, imported by <code>main.py</code>, tested by a third file in <code>tests/</code>. The lab page's own warning deserves to be read verbatim and taken seriously: <strong>no <code>print()</code> at the module level in <code>business_rules.py</code></strong> — functions return values; <code>main.py</code> prints them; tests assert them. This is a real, professional separation of concerns (business logic vs. presentation vs. verification), not an arbitrary rule, and it's worth explaining <em>why</em> as much as enforcing <em>that</em>. This week's provided code — both <code>business_rules.py</code> and all eight tests — is correct as written; no hidden bugs this time.
+Say to the class (Intro, verbatim): "Three files today, each with one job: <code>business_rules.py</code> computes things and returns values — nothing else. <code>main.py</code> calls those functions and prints the results — it's the only file that talks to a human. <code>tests/test_business_rules.py</code> calls the same functions and checks the results are correct — it never prints anything either, <code>pytest</code> reports pass/fail on its own. This separation — logic, presentation, verification, each in its own file — is how real software projects are organized, not a classroom simplification."
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. <strong><code>pytest</code> has no runner in Pyodide</strong> — every <code>pytest</code> / <code>pytest -v</code> invocation and the provided test file are shown static, with the guide's verified output beside them, labelled "not run here — run on your own machine". The functions under test stay genuinely runnable, and Part 4 also runs the same eight assertions live so the logic executes in the room even though <code>pytest</code> itself is static. The project-setup block and the submission ritual are shown read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Multi-file note: each Pyodide block is a fresh namespace, so the "module" functions and the code that imports/uses them are combined into one runnable block; the guide splits them across <code>business_rules.py</code>, <code>main.py</code>, and <code>tests/test_business_rules.py</code>.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 6: list-of-dicts, conditionals, loops, <code>pytest</code> basics (marked Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (project structure) – Part 5 (ritual + push) + Stretch (doctest)</span></div>
+<div><span class="k">Submission</span><span class="v">Git commit (message must include "lab 7") + Canvas URL — completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. Students start a fresh <code>~/ism3232/module05_functions/</code> project folder this week. This lab has more interdependent files than any prior week — rehearse the full <code>business_rules.py</code> → <code>main.py</code> → <code>tests/test_business_rules.py</code> import chain once before class so the live session has no surprises. Part 4 gets the most time of any single part, because <strong>boundary-case testing</strong> is a genuinely new, important idea and deserves unhurried treatment.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Organize a project into a business-logic module (<code>business_rules.py</code>), a runnable entry point (<code>main.py</code>), and a test file — and explain why keeping logic and presentation separate matters.</li>
+<li>Write functions with docstrings, type hints on parameters and return values, and a <code>return</code> statement — not a <code>print()</code> — as the function's actual output.</li>
+<li>Import specific functions from a local module with <code>from business_rules import ...</code>.</li>
+<li>Write <strong>boundary-case tests</strong> — testing the exact edge where a rule's behavior changes, not just a clearly-true and clearly-false case.</li>
+<li>Add a doctest — a runnable example embedded directly in a docstring.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 (the three-file layout) is the spine of Part 1; objective 2 is Part 2's "functions return, they don't print" discipline plus type hints (new syntax); objective 3 is Part 3's local-module import; objective 4 is Part 4's featured idea; objective 5 is the Stretch.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:03</td><td>Welcome: "logic, presentation, verification — three separate files"</td><td>3</td></tr>
+<tr><td>0:03–0:12</td><td>Part 1 — Required project structure</td><td>9</td></tr>
+<tr><td>0:12–0:28</td><td>Part 2 — Write the functions</td><td>16</td></tr>
+<tr><td>0:28–0:38</td><td>Part 3 — Import and call in <code>main.py</code></td><td>10</td></tr>
+<tr><td>0:38–0:58</td><td>Part 4 — Eight <code>pytest</code> tests</td><td>20</td></tr>
+<tr><td>0:58–1:06</td><td>Part 5 — Ritual and push</td><td>8</td></tr>
+<tr><td>1:06–1:15</td><td>Stretch (doctest) + wrap-up</td><td>9</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 4 gets the most time of any single part, since <strong>boundary-case testing</strong> is a genuinely new, important idea this lab introduces and deserves unhurried treatment, not just eight tests typed and run quickly.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:03</span>
+<h1>Logic, presentation, verification — three separate files</h1>
+<aside class="notes">
+Teaching goal: set the frame — three files, each with exactly one job, is how real software projects are organized.
+Say to the class (verbatim): "Three files today, each with one job: <code>business_rules.py</code> computes things and returns values — nothing else. <code>main.py</code> calls those functions and prints the results — it's the only file that talks to a human. <code>tests/test_business_rules.py</code> calls the same functions and checks the results are correct — it never prints anything either, <code>pytest</code> reports pass/fail on its own. This separation — logic, presentation, verification, each in its own file — is how real software projects are organized, not a classroom simplification."
+Do: name the arc — Part 1 creates all three files empty, up front; Part 2 writes the four functions (return, never print); Part 3 imports and calls them from <code>main.py</code>; Part 4 tests them, with two genuine boundary cases; Part 5 is the familiar ritual.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:03–0:12</span>
+<h1>Required Project Structure</h1>
+<aside class="notes">
+Teaching goal: a fresh project setup, now creating three files up front (<code>business_rules.py</code>, <code>main.py</code>, <code>tests/test_business_rules.py</code>) before writing any content into them.
+Say to the class (verbatim): "Same setup ritual as every module — but notice we're creating all three files now, empty, before writing a single line into any of them. This is deliberate: seeing the whole structure laid out first makes the 'who does what' separation concrete before the details fill in."
+Line-by-line: the first four lines are Week 3/5's now-automatic setup sequence, unchanged. The final two lines are new in what they create: <code>business_rules.py</code> and <code>main.py</code> side by side at the project root, plus <code>tests/test_business_rules.py</code> nested one level deeper — this three-file layout, more than any single line of code today, is the actual lesson of Part 1.
+Common mistakes: creating <code>test_business_rules.py</code> directly in the project root instead of inside <code>tests/</code> — <code>pytest</code> can often still discover it there, but it breaks the organizational convention established since Week 4; do a quick structural check before moving on.
+Check for understanding (asked at the end of this part): "Before writing any code, what do you predict <code>main.py</code> needs to contain a line of, near its top, that today's other lab files haven't needed?" Answer: An <code>import</code> statement, pulling in the functions from <code>business_rules.py</code> — a good prediction check that primes Part 3's actual content.
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Three files, three jobs.</strong> <code>business_rules.py</code> — business logic: computes and <code>return</code>s values, nothing else, <strong>no <code>print()</code></strong>. <code>main.py</code> — presentation: imports the functions, calls them, prints the results; the only file that talks to a human. <code>tests/test_business_rules.py</code> — verification: calls the same functions and asserts the results; never prints, <code>pytest</code> reports pass/fail on its own.</p>
+<p>All three files are created <strong>empty, up front</strong> — <code>touch business_rules.py main.py</code> at the root, <code>tests/test_business_rules.py</code> one level deeper — so the whole structure is visible before any detail fills in.</p>
+</div>
+<aside class="notes">This separation — business logic vs. presentation vs. verification — is a real, professional pattern, not a classroom simplification. The concrete demonstration the guide suggests: add a stray <code>print()</code> to a function live, run <code>main.py</code>, and ask the room what looks wrong about the output (a debug-looking line appearing outside <code>main.py</code>'s own controlled formatting).</aside>
+</section>
+
+<!-- 8. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Create all three files — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module05_functions
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
+touch business_rules.py main.py
+mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_business_rules.py</div>
+<p class="expect">Shown for reference — <code>venv</code>, <code>pip</code>, <code>source</code> can't execute in the browser. Run this on your own machine. The first four lines are the now-automatic setup sequence; the last two are new in <em>what</em> they create — three files, with the test file nested inside <code>tests/</code>.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism3232/module05_functions</code> — a fresh project folder this week.
+- <code>python3 -m venv .venv &amp;&amp; source .venv/bin/activate</code> — the standard venv creation and activation.
+- <code>pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt</code> — the test runner and linter, plus a pinned dependency list.
+- <code>echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore</code> — keep the venv and bytecode caches out of Git.
+- <code>touch business_rules.py main.py</code> — the module and the entry point, side by side at the project root.
+- <code>mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_business_rules.py</code> — the test file, one level deeper, inside <code>tests/</code>.
+Common mistakes: creating <code>test_business_rules.py</code> in the project root instead of inside <code>tests/</code> — discovery may still work, but it breaks the convention established since Week 4; check the structure before moving on.
+Check for understanding: "What does <code>main.py</code> need near its top that the other files don't?" Answer: an <code>import</code> statement pulling in the functions from <code>business_rules.py</code>.
+</aside>
+</section>
+
+<!-- 9. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Before writing any code, what does <code>main.py</code> need a line of, near its top, that today's other lab files don't?</p>
+<button data-opt="A">An <code>import</code> statement — <code>from business_rules import ...</code> — pulling in the functions from <code>business_rules.py</code></button>
+<button data-opt="B">A <code>print()</code> call, since <code>main.py</code> is the only file that displays output</button>
+<button data-opt="C">An <code>if __name__ == '__main__':</code> guard, required before any function can be called</button>
+<p class="why" hidden>An <code>import</code> statement, pulling in the functions from <code>business_rules.py</code> — a good prediction check that primes Part 3's actual content. (<code>business_rules.py</code> defines the functions and imports nothing; <code>main.py</code> and the test file both need the import line.)</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "An <code>import</code> statement, pulling in the functions from <code>business_rules.py</code> — a good prediction check that primes Part 3's actual content."</aside>
+</section>
+
+<!-- 10. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Creating <code>test_business_rules.py</code> directly in the project root instead of inside <code>tests/</code> — <code>pytest</code> can often still discover it there, but it breaks the organizational convention established since Week 4 and makes the project harder to navigate as it grows. Worth a quick structural check before moving on.</p>
+</div>
+<aside class="notes">Check for understanding: "What does <code>main.py</code> need near its top that the other files don't?" Answer: an <code>import</code> statement, pulling in the functions from <code>business_rules.py</code>.</aside>
+</section>
+
+<!-- 11. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:12–0:28</span>
+<h1>Write the Functions</h1>
+<aside class="notes">
+Teaching goal: four business-rule functions, each with a docstring, type hints, and a <code>return</code> — genuinely new syntax (type hints) combined with the "functions return, they don't print" discipline stated up front.
+Say to the class (verbatim): "Four functions. Every single one needs three things: a docstring explaining what it does, type hints on its parameters and return value, and a <code>return</code> statement — never a <code>print()</code>. Watch for that last rule specifically as we go."
+Line-by-line: <code>APPROVAL_LIMIT = 1000</code> — Week 6's named-constant convention, now at the <strong>module level</strong>, available to every function in the file without being passed as a parameter. <code>def calculate_total(price: float, quantity: int) -&gt; float:</code> — <strong>type hints, new syntax today</strong>: <code>price: float</code> annotates the expected argument type, <code>-&gt; float</code> the expected return type; <strong>Python does not enforce these at runtime</strong> — they are documentation, for humans and for external tools (linters, IDEs). <code>"""Return total cost including 7% tax."""</code> — a <strong>docstring</strong>, a string literal immediately after the <code>def</code> line, retrievable with <code>help(calculate_total)</code> and shown by editor hover tooltips. <code>return price * quantity * 1.07</code> — the whole body is one line, and it's a <code>return</code>, never a <code>print()</code>: "if I wanted to see this value, I do that in <code>main.py</code>." <code>get_approval_tier</code> — the richest function, an <code>if</code>/<code>elif</code>/<code>else</code> chain classifying an amount into three string tiers; the single-line branch bodies (<code>if amount &lt;= 500:    return 'auto'</code>) are a valid but unusual style — the conventional multi-line form is equally fine. <code>apply_discount</code> — <code>pct</code> is a percentage on a 0–100 scale (documented in the docstring, since "0 to 100" isn't a Python type): <code>apply_discount(100.00, 10)</code> means "10%", computed as <code>price * (1 - pct/100)</code> = <code>90.0</code>.
+Common mistakes: adding a <code>print()</code> inside a function "just to check it's working" and forgetting to remove it — walk the room checking for this; suggest calling the function from the REPL instead. Confusing the boundary logic in <code>get_approval_tier</code> — <code>&lt;=500</code> and <code>&lt;=2000</code> are <strong>inclusive</strong>. Forgetting type hints, or applying them inconsistently.
+Check for understanding (asked at the end of this part): "Without running it, what does <code>get_approval_tier(500)</code> return — exactly at the first boundary?" Answer: <code>'auto'</code> — since the check is <code>&lt;= 500</code>, inclusive; a direct preview of Part 4's <code>test_tier_boundary_500</code>.
+</aside>
+</section>
+
+<!-- 12. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>Every function needs <strong>three things</strong>: a <strong>docstring</strong> (a string literal right after <code>def</code>, describing what it does), <strong>type hints</strong> (<code>price: float</code> on parameters, <code>-&gt; float</code> on the return), and a <strong><code>return</code></strong> — never a <code>print()</code>.</p>
+<p><strong>Type hints are not enforced at runtime.</strong> <code>calculate_total('bad', 'input')</code> wouldn't raise just from the hints — they're documentation, for humans and for tools (linters, IDEs) that check them separately. Worth using anyway: they make a function's contract readable without opening its body.</p>
+<p><code>APPROVAL_LIMIT = 1000</code> lives at the <strong>module level</strong>, above every function — so any function that needs it can read it without it being passed as a parameter.</p>
+</div>
+<aside class="notes">The single-line <code>if</code>/<code>elif</code>/<code>else</code> bodies in <code>get_approval_tier</code> are a valid but unusual compact style; the conventional multi-line form (each <code>return</code> on its own indented line) is equally correct and a student's preference for it is completely fine. <code>apply_discount</code>'s <code>pct</code> is on a 0–100 scale, documented in the docstring because "0 to 100" isn't expressible as a Python type — a student who passed <code>0.10</code> instead of <code>10</code> would get a wildly, non-obviously wrong result.</aside>
+</section>
+
+<!-- 13. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>business_rules.py</code>: the four functions</h3>
+<div class="run" data-lang="python">
+# business_rules.py
+# Author: [Your Name]
+
+APPROVAL_LIMIT = 1000
+
+def calculate_total(price: float, quantity: int) -&gt; float:
+    """Return total cost including 7% tax."""
+    return price * quantity * 1.07
+
+def requires_review(amount: float) -&gt; bool:
+    """Return True if amount exceeds the approval limit."""
+    return amount &gt; APPROVAL_LIMIT
+
+def get_approval_tier(amount: float) -&gt; str:
+    """Return the approval routing tier."""
+    if amount &lt;= 500:    return 'auto'
+    elif amount &lt;= 2000: return 'manager'
+    else:                return 'director'
+
+def apply_discount(price: float, pct: float) -&gt; float:
+    """Return price after discount. pct is 0-100."""
+    return price * (1 - pct / 100)
+
+# REPL-style checks — these would live in main.py or a test, never here
+print(calculate_total(100.00, 2))
+print(requires_review(1500))
+print(get_approval_tier(500))
+print(apply_discount(100.00, 10))
+</div>
+<p class="expect">Matches the guide's <code>business_rules.py</code> verbatim, docstrings included. The four <code>print()</code> lines are a throwaway check that would live <strong>outside</strong> the module in real life — in <code>business_rules.py</code> itself there is <strong>no <code>print()</code></strong>. Run it to see each function's return value.</p>
+<aside class="notes">
+Line by line:
+- <code>APPROVAL_LIMIT = 1000</code> — module-level named constant, all-caps by convention; available to every function in the file (here, just <code>requires_review</code>).
+- <code>def calculate_total(price: float, quantity: int) -&gt; float:</code> — type hints (new today): <code>price: float</code>, <code>quantity: int</code> annotate expected argument types; <code>-&gt; float</code> the return type. Not enforced at runtime.
+- the docstring — a string literal right after <code>def</code>; retrievable with <code>help(...)</code>, shown by editor tooltips. Guide uses <code>"""..."""</code>.
+- <code>return price * quantity * 1.07</code> — one-line body, a <code>return</code> not a <code>print()</code>.
+- <code>get_approval_tier</code> — <code>if</code>/<code>elif</code>/<code>else</code> into three string tiers; <code>&lt;=500</code> / <code>&lt;=2000</code> are inclusive; single-line branch bodies are a valid compact style.
+- <code>apply_discount</code> — <code>pct</code> is a 0–100 percentage; <code>apply_discount(100.00, 10)</code> = <code>100 * (1 - 0.10)</code> = <code>90.0</code>.
+Common mistakes: a leftover debugging <code>print()</code> inside a function; misreading the inclusive boundaries; missing or inconsistent type hints.
+Check for understanding: "What does <code>get_approval_tier(500)</code> return?" Answer: <code>'auto'</code> — the check is <code>&lt;= 500</code>, inclusive.
+</aside>
+</section>
+
+<!-- 14. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>214.0
+True
+auto
+90.0</pre>
+<p class="expect"><code>calculate_total(100.00, 2)</code> = <code>100 * 2 * 1.07</code> = <code>214.0</code> (this particular arithmetic lands exactly — Part 4's <code>test_total_includes_tax</code> still wraps it in <code>round(..., 2)</code> as a precaution). <code>requires_review(1500)</code> = <code>True</code> (<code>1500 &gt; 1000</code>). <code>get_approval_tier(500)</code> = <code>auto</code> (inclusive <code>&lt;= 500</code>). <code>apply_discount(100.00, 10)</code> = <code>90.0</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): the block prints exactly these four lines. Note <code>get_approval_tier</code> returns the bare string <code>auto</code> (no quotes) when passed to <code>print()</code>.</aside>
+</section>
+
+<!-- 15. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Without running it, what does <code>get_approval_tier(500)</code> return — exactly at the first boundary?</p>
+<button data-opt="A"><code>'manager'</code> — 500 falls past the first tier into the second</button>
+<button data-opt="B"><code>'auto'</code> — the check is <code>&lt;= 500</code>, inclusive, so 500 still lands in the first tier</button>
+<button data-opt="C"><code>'director'</code> — 500 is matched by no branch, so the final <code>else</code> runs</button>
+<p class="why" hidden><code>'auto'</code> — since the check is <code>&lt;= 500</code>, inclusive; a good direct preview of Part 4's <code>test_tier_boundary_500</code>. A value sitting exactly on an inclusive boundary belongs to that branch.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "<code>'auto'</code> — since the check is <code>&lt;= 500</code>, inclusive; a good direct preview of Part 4's <code>test_tier_boundary_500</code>."</aside>
+</section>
+
+<!-- 16. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Adding a <code>print()</code> inside one of these functions "just to check it's working" while developing, and forgetting to remove it — a natural debugging instinct that directly violates this lab's stated rule. Suggest an alternative: temporarily call the function from the Python REPL (a separate, throwaway check) instead of embedding a print inside the function.</p>
+<p>Confusing the boundary logic in <code>get_approval_tier</code> — <code>&lt;=500</code> and <code>&lt;=2000</code> use <strong>inclusive</strong> boundaries; connect this directly to Part 4's dedicated boundary tests.</p>
+<p>Forgetting type hints entirely, or applying them inconsistently (hints on some parameters but not others) — not a runtime error, but hold the room to the lab's "every function must have" standard.</p>
+</div>
+<aside class="notes">Check for understanding: "What does <code>get_approval_tier(500)</code> return?" Answer: <code>'auto'</code> — the check is <code>&lt;= 500</code>, inclusive.</aside>
+</section>
+
+<!-- 17. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:28–0:38</span>
+<h1>Import and Call in <code>main.py</code></h1>
+<aside class="notes">
+Teaching goal: import specific functions from a local module, and confirm all four work together — <code>main.py</code>'s entire, deliberately narrow job.
+Say to the class (verbatim): "This file has exactly one job: call the four functions from <code>business_rules.py</code> and print what they return. No business logic lives here — if you find yourself computing something in <code>main.py</code> beyond formatting a print statement, that computation probably belongs in <code>business_rules.py</code> instead."
+Line-by-line: <code>from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount</code> — <strong>new import style today</strong>. <code>business_rules</code> is not an installed package — it's <code>business_rules.py</code>, sitting right next to <code>main.py</code> in the same folder; Python automatically looks in the current file's directory for a module by that name. <code>from ... import name1, name2</code> pulls in specific functions so they're callable directly (<code>calculate_total(...)</code>) rather than prefixed (<code>business_rules.calculate_total(...)</code>, which a plain <code>import business_rules</code> would give). <code>price, qty = 450.00, 3</code> — tuple unpacking. <code>total = calculate_total(price, qty)</code> — the first concrete payoff of "functions return values": <code>total</code> now holds a real number, usable in every subsequent line, impossible if the function had only <code>print()</code>ed. The four <code>print()</code> calls — exactly and only what <code>main.py</code> is for; every actual calculation is delegated to <code>business_rules.py</code>.
+Common mistakes: running <code>python3 main.py</code> from the wrong directory — the import fails with <code>ModuleNotFoundError: No module named 'business_rules'</code>. Misspelling an imported name, or omitting one from the <code>from ... import</code> list — <code>ImportError</code> naming the missing function, or <code>NameError</code> at the point of use. Computing something directly in <code>main.py</code> instead of calling a function — not a syntax error, but a violation of the separation the lab is building.
+Check for understanding (asked at the end of this part): "If you wanted to add a fifth business rule tomorrow, which file would you edit first, and would <code>main.py</code> need to change at all?" Answer: <code>business_rules.py</code> first, to define the new function; <code>main.py</code> would only need to change if you also wanted to <em>display</em> that new rule's result — the two concerns are genuinely independent, which is the entire point of today's structure.
+</aside>
+</section>
+
+<!-- 18. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount</code> — <code>business_rules</code> is <strong>not an installed package</strong>; it's <code>business_rules.py</code>, the file right next to <code>main.py</code>. Python looks in the current file's own directory for a module by that name — no installation needed.</p>
+<p><code>from ... import name1, name2, ...</code> pulls in <strong>specific functions by name</strong>, so they're called directly — <code>calculate_total(...)</code> — instead of prefixed — <code>business_rules.calculate_total(...)</code>, which a plain <code>import business_rules</code> would give.</p>
+<p><code>total = calculate_total(price, qty)</code> — the first concrete payoff of "functions return values": <code>total</code> holds a real number, reusable on every line below. That would be impossible if <code>calculate_total</code> had only <code>print()</code>ed.</p>
+</div>
+<aside class="notes"><code>main.py</code>'s job is deliberately narrow — call the four functions, format and print what they return. If a computation shows up in <code>main.py</code> beyond formatting a print statement, it belongs in <code>business_rules.py</code> instead. Multi-file disclosure: the guide keeps <code>business_rules.py</code> and <code>main.py</code> as separate files; the runnable block below combines them into one Pyodide namespace (module functions defined first, then the <code>main.py</code> code).</aside>
+</section>
+
+<!-- 19. PART 3 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>main.py</code>: import and call all four</h3>
+<div class="run" data-lang="python">
+# business_rules.py  (guide: a separate file, imported by main.py)
+APPROVAL_LIMIT = 1000
+
+def calculate_total(price: float, quantity: int) -&gt; float:
+    """Return total cost including 7% tax."""
+    return price * quantity * 1.07
+
+def requires_review(amount: float) -&gt; bool:
+    """Return True if amount exceeds the approval limit."""
+    return amount &gt; APPROVAL_LIMIT
+
+def get_approval_tier(amount: float) -&gt; str:
+    """Return the approval routing tier."""
+    if amount &lt;= 500:
+        return 'auto'
+    elif amount &lt;= 2000:
+        return 'manager'
+    else:
+        return 'director'
+
+def apply_discount(price: float, pct: float) -&gt; float:
+    """Return price after discount. pct is 0-100."""
+    return price * (1 - pct / 100)
+
+# main.py  -- from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+price, qty = 450.00, 3
+total = calculate_total(price, qty)
+
+print(f'Total:          ${total:.2f}')
+print(f'Requires review: {requires_review(total)}')
+print(f'Approval tier:   {get_approval_tier(total)}')
+print(f'10% discount:    ${apply_discount(price, 10):.2f}')
+</div>
+<p class="expect">Each Pyodide block is a fresh namespace, so the module functions and the <code>main.py</code> code live in one block here — the guide splits them across <code>business_rules.py</code> and <code>main.py</code>, with the commented <code>from business_rules import ...</code> line standing in for the real import. Run it: all four functions work together.</p>
+<aside class="notes">
+Line by line (<code>main.py</code> portion):
+- <code>from business_rules import ...</code> (shown as a comment here) — imports four specific functions from the local module file.
+- <code>price, qty = 450.00, 3</code> — tuple unpacking, familiar from prior modules.
+- <code>total = calculate_total(price, qty)</code> — stores the returned value; <code>total</code> = <code>450.00 * 3 * 1.07</code> = <code>1444.5</code>.
+- the four <code>print()</code> calls — each calls a function and formats its result; <code>${...:.2f}</code> gives two decimals, <code>requires_review(1444.5)</code> = <code>True</code>, <code>get_approval_tier(1444.5)</code> = <code>manager</code> (past 500, within 2000), <code>apply_discount(450.00, 10)</code> = <code>405.0</code>.
+Common mistakes: wrong working directory → <code>ModuleNotFoundError: No module named 'business_rules'</code>; misspelled / omitted import name → <code>ImportError</code> or <code>NameError</code>; recomputing something inline instead of calling the function.
+Check for understanding: "Add a fifth business rule tomorrow — which file first, does <code>main.py</code> change?" Answer: <code>business_rules.py</code> first; <code>main.py</code> only if you also want to display the new rule's result — the two concerns are independent.
+</aside>
+</section>
+
+<!-- 20. PART 3 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Total:          $1444.50
+Requires review: True
+Approval tier:   manager
+10% discount:    $405.00</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 3 exactly. <code>total</code> = <code>450.00 * 3 * 1.07</code> = <code>1444.50</code>; it's over <code>APPROVAL_LIMIT</code> so review is <code>True</code>; <code>1444.50</code> is past 500 but within 2000 so the tier is <code>manager</code>; a 10% discount on <code>$450.00</code> is <code>$405.00</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the combined block prints exactly these four lines. In Pyodide the same holds — the module functions are defined in the same namespace before the <code>main.py</code> code runs, so the (commented-out) import is not needed for the block to execute.</aside>
+</section>
+
+<!-- 21. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">To add a fifth business rule tomorrow, which file do you edit first — and does <code>main.py</code> have to change?</p>
+<button data-opt="A"><code>main.py</code> first — a rule has to be wired into the output before it exists anywhere</button>
+<button data-opt="B">Both files always change together — the import list and the function are one unit</button>
+<button data-opt="C"><code>business_rules.py</code> first, to define the function; <code>main.py</code> changes only if you also want to <em>display</em> that rule's result — the two concerns are independent</button>
+<p class="why" hidden><code>business_rules.py</code> first, to define the new function; <code>main.py</code> would only need to change if you also wanted to <em>display</em> that new rule's result — the two concerns are genuinely independent, which is the entire point of today's structure.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: "<code>business_rules.py</code> first, to define the new function; <code>main.py</code> would only need to change if you also wanted to <em>display</em> that new rule's result — the two concerns are genuinely independent, which is the entire point of today's structure."</aside>
+</section>
+
+<!-- 22. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>python3 main.py</code> from the wrong directory (not <code>module05_functions/</code>) — the import fails with <code>ModuleNotFoundError: No module named 'business_rules'</code>, since Python's search for a local module starts from the current working directory.</p>
+<p>Misspelling an imported function name, or forgetting one in the <code>from ... import</code> list — raises <code>ImportError</code> naming the missing function, or <code>NameError</code> at the point of use if the import line itself succeeded.</p>
+<p>Computing something directly in <code>main.py</code> (e.g. recomputing tax inline instead of calling <code>calculate_total</code>) — not a syntax error, but a direct violation of the separation-of-concerns principle. Redirect back to "does this belong in <code>business_rules.py</code> instead?"</p>
+</div>
+<aside class="notes">Check for understanding: "Add a fifth business rule — which file first, does <code>main.py</code> change?" Answer: <code>business_rules.py</code> first; <code>main.py</code> only if you also want to display the result.</aside>
+</section>
+
+<!-- 23. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:38–0:58</span>
+<h1>Eight <code>pytest</code> Tests — boundary cases</h1>
+<aside class="notes">
+Teaching goal: write eight tests, including at least two genuine <strong>boundary cases</strong> — testing the exact edge where a rule's behavior changes, not just an obviously-true and obviously-false case.
+Say to the class (verbatim): "Eight tests, and I want to spend real time on two of them specifically — the boundary tests. A boundary case tests the exact edge of a rule, where behavior flips. For a threshold of 1000, that's testing with exactly 1000, not just a comfortably-above or comfortably-below number. This is where the most dangerous real bugs actually hide — an off-by-one in a threshold check, a <code>&gt;</code> where you meant <code>&gt;=</code>."
+Line-by-line: <code>from business_rules import ...</code> — tests import the module under test exactly the same way any other code would. <code>test_total_includes_tax</code> — <code>round(calculate_total(100.00, 2), 2) == 214.00</code>; the <code>round(..., 2)</code> is a Week 5 floating-point precaution (raw binary float may not land on an exact <code>214.00</code>). <code>test_requires_review_over</code> / <code>test_requires_review_under</code> — the two "obviously true / obviously false" cases; <strong>not sufficient testing on their own</strong>. <code>test_boundary_at_limit</code> — the featured boundary case: <code>requires_review(1000)</code> should be <code>False</code>, since the condition is <code>amount &gt; APPROVAL_LIMIT</code> (strictly greater), not <code>&gt;=</code>. <strong>If a developer had written <code>&gt;=</code> by mistake, both "obvious" tests would still pass — only this boundary test catches it.</strong> <code>test_tier_boundary_500</code> — the second required boundary case: <code>500</code> itself (inclusive) lands in <code>'auto'</code>. <code>test_discount_ten</code> — plain <code>==</code>, no <code>round()</code>: <code>100.00 * (1 - 10/100)</code> happens to compute to an exact <code>90.0</code> here; floating-point precision issues are input-dependent, not universal.
+Live demo, if time: change <code>requires_review</code>'s <code>&gt;</code> to <code>&gt;=</code>, re-run <code>pytest -v</code> — <code>test_boundary_at_limit</code> fails, every other test still passes — then revert.
+Common mistakes: treating <code>requires_review(1500) is True</code> as risky chained-comparison syntax per Week 5 — reassure: it's a single function call evaluated first, then compared with <code>is True</code>; the Week 5 hazard was chaining a comparison operator directly against <code>is</code> in one expression. Writing only "obviously true/false" tests and skipping genuine boundary cases.
+Check for understanding (asked at the end of this part): "For <code>get_approval_tier</code>'s second threshold, at <code>2000</code>, what boundary test would you write, and what should it assert?" Answer: <code>assert get_approval_tier(2000) == 'manager'</code> — since the condition is <code>&lt;= 2000</code>, inclusive.
+</aside>
+</section>
+
+<!-- 24. PART 4 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>A <strong>boundary case</strong> tests the exact edge of a rule, where behavior flips. For a threshold of 1000, that means testing with <strong>exactly 1000</strong> — not a comfortably-above or comfortably-below number.</p>
+<p><code>test_requires_review_over</code> (1500 → True) and <code>test_requires_review_under</code> (500 → False) are the "obvious" cases. <strong>If a developer wrote <code>&gt;=</code> instead of <code>&gt;</code>, both would still pass.</strong> Only <code>test_boundary_at_limit</code> — <code>requires_review(1000) is False</code> — catches that specific mistake.</p>
+<p>This is the single most important idea in the lab: comfortable, clearly-true/false tests can give false confidence; boundary tests catch the bugs that actually matter — an off-by-one, a <code>&gt;</code> where you meant <code>&gt;=</code>.</p>
+</div>
+<aside class="notes"><code>test_total_includes_tax</code> wraps its call in <code>round(..., 2)</code> as a Week 5 floating-point precaution; <code>test_discount_ten</code> uses a bare <code>==</code> because <code>100.00 * (1 - 10/100)</code> happens to land on an exact <code>90.0</code> — precision issues are input-dependent, not universal. <code>requires_review(1500) is True</code> is safe: the function call is evaluated first, then compared with <code>is True</code> — not the Week 5 chained-comparison hazard.</aside>
+</section>
+
+<!-- 25. PART 4 provided test file (STATIC — no pytest runner in browser) -->
+<section class="s-code">
+<h3>Type the tests as provided — <code>tests/test_business_rules.py</code></h3>
+<pre><code class="language-python">from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+
+def test_total_includes_tax():
+    assert round(calculate_total(100.00, 2), 2) == 214.00
+
+def test_requires_review_over():
+    assert requires_review(1500) is True
+
+def test_requires_review_under():
+    assert requires_review(500) is False
+
+def test_boundary_at_limit():
+    # Exactly at 1000 should NOT require review (&gt; not &gt;=)
+    assert requires_review(1000) is False
+
+def test_tier_auto():
+    assert get_approval_tier(400) == 'auto'
+
+def test_tier_boundary_500():
+    assert get_approval_tier(500) == 'auto'  # exactly at limit
+
+def test_tier_manager():
+    assert get_approval_tier(1500) == 'manager'
+
+def test_discount_ten():
+    assert apply_discount(100.00, 10) == 90.0</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, so neither this file nor the <code>pytest -v</code> pane can execute in the browser. Type it into <code>tests/test_business_rules.py</code> and run <code>pytest -v</code> on your own machine. Two slides on, the same eight assertions run live.</p>
+<aside class="notes">
+Line by line:
+- <code>from business_rules import ...</code> — the exact same import line as <code>main.py</code>; tests access functions the same way any other code would.
+- <code>test_total_includes_tax</code> — <code>round(calculate_total(100.00, 2), 2) == 214.00</code>; the <code>round(..., 2)</code> is a Week 5 floating-point precaution.
+- <code>test_requires_review_over</code> / <code>test_requires_review_under</code> — the two "obvious" cases; not sufficient alone.
+- <code>test_boundary_at_limit</code> — the featured boundary case; its own comment states why it exists: the condition is <code>amount &gt; APPROVAL_LIMIT</code> (strict), not <code>&gt;=</code>. A <code>&gt;=</code> bug would pass both obvious tests and fail only here.
+- <code>test_tier_boundary_500</code> — the second required boundary case: <code>500</code> (inclusive) lands in <code>'auto'</code>.
+- <code>test_discount_ten</code> — bare <code>==</code>; <code>100.00 * (1 - 10/100)</code> lands on an exact <code>90.0</code> in this case.
+Common mistakes: misreading <code>is True</code> as the Week 5 chained-comparison hazard (it isn't); skipping genuine boundary cases when writing your own tests later.
+Check for understanding: "Boundary test for the 2000 threshold?" Answer: <code>assert get_approval_tier(2000) == 'manager'</code> — the condition is <code>&lt;= 2000</code>, inclusive.
+</aside>
+</section>
+
+<!-- 26. PART 4 pytest -v pane (STATIC) -->
+<section class="s-out">
+<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
+<pre>tests/test_business_rules.py::test_total_includes_tax PASSED
+tests/test_business_rules.py::test_requires_review_over PASSED
+tests/test_business_rules.py::test_requires_review_under PASSED
+tests/test_business_rules.py::test_boundary_at_limit PASSED
+tests/test_business_rules.py::test_tier_auto PASSED
+tests/test_business_rules.py::test_tier_boundary_500 PASSED
+tests/test_business_rules.py::test_tier_manager PASSED
+tests/test_business_rules.py::test_discount_ten PASSED
+8 passed</pre>
+<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all eight pass as provided". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. The next two slides run the same eight assertions live.</p>
+<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output — all eight pass as provided": the eight <code>PASSED</code> lines and the <code>8 passed</code> summary. This pane is <strong>not executed</strong> in the deck — <code>pytest</code> has no browser runner. Double-checked locally with <code>python3 -m pytest -v</code> on <code>python3</code> 3.12.2 against the provided <code>business_rules.py</code> + test file: <code>8 passed</code>. The provided code is correct as written — no hidden bugs this week.</aside>
+</section>
+
+<!-- 27. PART 4 live-logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The same eight checks, run live</h3>
+<div class="run" data-lang="python">
+APPROVAL_LIMIT = 1000
+
+def calculate_total(price: float, quantity: int) -&gt; float:
+    """Return total cost including 7% tax."""
+    return price * quantity * 1.07
+
+def requires_review(amount: float) -&gt; bool:
+    """Return True if amount exceeds the approval limit."""
+    return amount &gt; APPROVAL_LIMIT
+
+def get_approval_tier(amount: float) -&gt; str:
+    """Return the approval routing tier."""
+    if amount &lt;= 500:
+        return 'auto'
+    elif amount &lt;= 2000:
+        return 'manager'
+    else:
+        return 'director'
+
+def apply_discount(price: float, pct: float) -&gt; float:
+    """Return price after discount. pct is 0-100."""
+    return price * (1 - pct / 100)
+
+# the same eight checks the pytest file makes, as bare asserts
+assert round(calculate_total(100.00, 2), 2) == 214.00
+assert requires_review(1500) is True
+assert requires_review(500) is False
+assert requires_review(1000) is False        # boundary: exactly at the limit
+assert get_approval_tier(400) == 'auto'
+assert get_approval_tier(500) == 'auto'       # boundary: exactly at 500
+assert get_approval_tier(1500) == 'manager'
+assert apply_discount(100.00, 10) == 90.0
+print('all 8 checks passed')
+
+print('requires_review(1000) =', requires_review(1000))
+print('get_approval_tier(500) =', get_approval_tier(500))
+</div>
+<p class="expect">Where the guide's point is "the tests pass", this runs the same eight assertions with <code>assert</code> so the logic executes live even though <code>pytest</code> itself is static. If every <code>assert</code> holds, <code>all 8 checks passed</code> prints; the two boundary values are then printed explicitly.</p>
+<aside class="notes">
+Line by line: the four functions are re-defined (fresh namespace), then the eight assertions from <code>tests/test_business_rules.py</code> run as bare <code>assert</code> statements. A failing <code>assert</code> would raise <code>AssertionError</code> and stop before <code>all 8 checks passed</code>. The final two <code>print()</code> lines surface the boundary results: <code>requires_review(1000)</code> is <code>False</code> (strict <code>&gt;</code>), <code>get_approval_tier(500)</code> is <code>auto</code> (inclusive <code>&lt;=</code>).
+This block lets the room watch the tested logic execute even though the <code>pytest</code> runner can't run in the browser.
+Check for understanding: "Boundary test for the 2000 threshold?" Answer: <code>assert get_approval_tier(2000) == 'manager'</code>.
+</aside>
+</section>
+
+<!-- 28. PART 4 live-logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>all 8 checks passed
+requires_review(1000) = False
+get_approval_tier(500) = auto</pre>
+<p class="expect">Every one of the eight assertions holds, so <code>all 8 checks passed</code> prints — the live equivalent of the static <code>8 passed</code> pane. The two boundary values confirm the inclusive/strict edges: <code>1000</code> does <em>not</em> require review; <code>500</code> is <code>auto</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these three lines and exits 0. Each <code>assert</code> corresponds one-to-one with a test in <code>tests/test_business_rules.py</code>, so a clean run here means all eight <code>pytest</code> tests pass too.</aside>
+</section>
+
+<!-- 29. PART 4 broken (RUNNABLE) -->
+<section class="s-code">
+<h3>The <code>&gt;=</code> bug on purpose — what only the boundary test catches</h3>
+<div class="run" data-lang="python">
+APPROVAL_LIMIT = 1000
+
+def requires_review(amount: float) -&gt; bool:
+    """Return True if amount exceeds the approval limit."""
+    return amount &gt;= APPROVAL_LIMIT   # BUG: &gt;= instead of &gt;
+
+# the two 'comfortable' tests still pass...
+assert requires_review(1500) is True
+assert requires_review(500) is False
+print('over / under tests: pass')
+
+# ...but the boundary test now fails:
+assert requires_review(1000) is False   # test_boundary_at_limit
+print('boundary test: pass')
+</div>
+<p class="expect">One character changed — <code>&gt;</code> became <code>&gt;=</code>. Run it: <code>test_requires_review_over</code> and <code>test_requires_review_under</code> still pass, so <code>over / under tests: pass</code> prints — then the boundary assertion raises before <code>boundary test: pass</code> ever prints. This is the guide's live demo, done as an assertion instead of a <code>pytest</code> run.</p>
+<aside class="notes">
+The guide's Part 4 live demo: "deliberately change <code>requires_review</code>'s <code>&gt;</code> to <code>&gt;=</code> in <code>business_rules.py</code>, save, and re-run <code>pytest -v</code>. <code>test_boundary_at_limit</code> fails; every other test still passes." Because <code>pytest</code> can't run here, the same point is made with bare asserts: <code>requires_review(1000)</code> now returns <code>True</code>, so <code>assert requires_review(1000) is False</code> raises <code>AssertionError</code>. The two "comfortable" assertions above it are untouched — proving that clearly-true/false tests give false confidence and only the boundary test catches the bug. Revert to <code>&gt;</code> before moving on (next slide).
+</aside>
+</section>
+
+<!-- 30. PART 4 broken traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>over / under tests: pass
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 13, in &lt;module&gt;
+    assert requires_review(1000) is False   # test_boundary_at_limit
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError</pre>
+<p class="expect">The load-bearing last line is <code>AssertionError</code> — <code>requires_review(1000)</code> now returns <code>True</code> under the <code>&gt;=</code> bug, so <code>assert ... is False</code> fails. <code>over / under tests: pass</code> printed first: the two "obvious" tests never exercise the value <code>1000</code>.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly this <code>AssertionError</code> (with the caret markers under the asserted expression) and exits 1; <code>boundary test: pass</code> never prints. In Pyodide the file shows as <code>&lt;exec&gt;</code> (a temp path under <code>python3</code>) and the line number depends on the block's leading lines — neither is load-bearing; the <code>AssertionError</code> on the boundary <code>assert</code> is. Make a student say "the boundary assertion failed," not just "it broke."</aside>
+</section>
+
+<!-- 31. PART 4 fixed (RUNNABLE) -->
+<section class="s-code">
+<h3>Fixed — strict <code>&gt;</code> restored</h3>
+<div class="run" data-lang="python">
+APPROVAL_LIMIT = 1000
+
+def requires_review(amount: float) -&gt; bool:
+    """Return True if amount exceeds the approval limit."""
+    return amount &gt; APPROVAL_LIMIT      # fixed: strictly greater-than
+
+assert requires_review(1500) is True
+assert requires_review(500) is False
+print('over / under tests: pass')
+
+assert requires_review(1000) is False   # test_boundary_at_limit
+print('boundary test: pass')
+</div>
+<p class="expect">The only change from the broken block is <code>&gt;=</code> &rarr; <code>&gt;</code>. Now <code>requires_review(1000)</code> is <code>False</code> again, the boundary assertion holds, and both lines print — matching the featured boundary test <code>test_boundary_at_limit</code>.</p>
+<aside class="notes">The single change from the broken block is <code>&gt;=</code> back to <code>&gt;</code> on the <code>return</code> line. Takeaway: the strict <code>&gt;</code> is what makes "exactly at the limit does not require review" true, and only a test that uses the value <code>1000</code> itself can verify it. This is the guide's "revert the change back to <code>&gt;</code> before moving on."</aside>
+</section>
+
+<!-- 32. PART 4 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>over / under tests: pass
+boundary test: pass</pre>
+<p class="expect">With strict <code>&gt;</code> restored, all three assertions hold and both lines print — no traceback. Equivalent to <code>test_boundary_at_limit</code> passing alongside the two "obvious" tests.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly these two lines and exits 0.</aside>
+</section>
+
+<!-- 33. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">For <code>get_approval_tier</code>'s second threshold, at <code>2000</code>, what boundary test would you write?</p>
+<button data-opt="A"><code>assert get_approval_tier(2000) == 'manager'</code> — the condition is <code>&lt;= 2000</code>, inclusive</button>
+<button data-opt="B"><code>assert get_approval_tier(2000) == 'director'</code> — <code>2000</code> is the start of the top tier</button>
+<button data-opt="C"><code>assert get_approval_tier(2001) == 'manager'</code> — test just past the edge, not on it</button>
+<p class="why" hidden><code>assert get_approval_tier(2000) == 'manager'</code> — since the condition is <code>&lt;= 2000</code>, inclusive. Constructing this test yourself, unprompted, confirms the boundary-testing instinct generalized beyond the two examples explicitly given. A boundary test uses the edge value <em>itself</em> (2000), not a value next to it.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "<code>assert get_approval_tier(2000) == 'manager'</code> — since the condition is <code>&lt;= 2000</code>, inclusive; getting a student to construct this test themselves, unprompted, confirms the boundary-testing instinct generalized beyond the two examples explicitly given."</aside>
+</section>
+
+<!-- 34. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Treating <code>requires_review(1500) is True</code> as risky, chained-comparison-prone syntax per Week 5's lesson — reassure explicitly: this is safe, since <code>requires_review(1500)</code> is a single function call evaluated first, <em>then</em> compared with <code>is True</code>. The Week 5 hazard was chaining a comparison operator (<code>&gt;</code>) directly against <code>is</code> in one unbroken expression (<code>1500 &gt; 1000 is True</code>), which this isn't.</p>
+<p>Writing only "obviously true/false" tests and skipping genuine boundary cases when adding your own tests later — this is exactly the habit this lab exists to correct. Hold students to including at least one real boundary case in any test set they write independently from today forward.</p>
+</div>
+<aside class="notes">Check for understanding: "Boundary test for the 2000 threshold?" Answer: <code>assert get_approval_tier(2000) == 'manager'</code> — the condition is <code>&lt;= 2000</code>, inclusive.</aside>
+</section>
+
+<!-- 35. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:06</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: the established five-step ritual, now including <code>-v</code> on the test step by default — since this lab's tests are numerous and specific enough that seeing each one named is worth the extra output.
+Say to the class (verbatim): "Same ritual — note <code>pytest -v</code> this time instead of bare <code>pytest</code>, since with eight tests, seeing each one individually named as it passes is worth the extra verbosity."
+Line-by-line: <code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v</code> — format, lint, test, chained so a failure stops the chain. <code>git add . &amp;&amp; git commit -m 'lab 7: functions modules pytest' &amp;&amp; git push</code> — stage, commit (message must include "lab 7"), push.
+Common mistakes: none new this week — pure repetition of an already-established sequence; the thing worth watching for is students running it confidently without the steps spelled out, confirming the habit from Weeks 4–6 has stuck.
+Check for understanding (asked at the end of this part): "This is the fourth week running this ritual. What's changed about how you type it, compared to Week 4?" Answer: a reflective question — most students should report it's become noticeably faster and more automatic, which is worth naming explicitly as the whole point of repeating it identically, week after week.
+</aside>
+</section>
+
+<!-- 36. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 7: functions modules pytest' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Note <code>pytest -v</code> this week instead of bare <code>pytest</code>: with eight tests, seeing each one named as it passes is worth the extra output. Same five steps as Weeks 4–6.</p>
+<aside class="notes">
+Line by line: format, lint, then <code>pytest -v</code> — the <code>-v</code> is the only change from prior weeks' ritual, chosen because eight named tests are more informative than a bare dot summary. Second line: stage everything, commit with a message that <strong>includes "lab 7"</strong> (graded requirement), push. The <code>&amp;&amp;</code> chaining means a failure at any step stops the rest.
+Common mistakes: none new this week; forgetting "lab 7" in the commit message is the same graded requirement as every prior week.
+Check for understanding: "Fourth week running this ritual — what's changed about how you type it?" Answer: reflective — it's become faster and more automatic, which is the whole point of repeating it identically each week.
+</aside>
+</section>
+
+<!-- 37. PART 5 what each step gates -->
+<section class="s-out">
+<h3>What each step gates</h3>
+<pre>ruff format .   &amp;&amp;   ruff check .   &amp;&amp;   pytest -v
+      |                  |                 |
+   reformats         no errors        all 8 pass
+                                          |
+git add .   &amp;&amp;   git commit -m 'lab 7: ...'   &amp;&amp;   git push
+   |                     |                          |
+ stages            message has "lab 7"      lands on GitHub</pre>
+<p class="expect"><code>&amp;&amp;</code> makes each step a gate: the next command runs only if the previous one succeeded. A failing <code>ruff check</code> or <code>pytest -v</code> stops the chain before anything is committed or pushed.</p>
+<aside class="notes">Commands can't run here — the point is the gate order and the "lab 7" message requirement. This is the same ritual as Weeks 4–6, with <code>pytest -v</code> in place of bare <code>pytest</code>.</aside>
+</section>
+
+<!-- 38. PART 5 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Part 5 runs <code>pytest -v</code> instead of bare <code>pytest</code>. Per the guide, why the <code>-v</code> this week?</p>
+<button data-opt="A"><code>-v</code> is required whenever a project has a <code>tests/</code> folder rather than a single test file</button>
+<button data-opt="B">With eight tests, seeing each one individually named as it passes is worth the extra verbosity</button>
+<button data-opt="C"><code>-v</code> makes <code>pytest</code> stop at the first failure instead of running the whole suite</button>
+<p class="why" hidden>Verbatim from the guide's Part 5 "Say to the class": "with eight tests, seeing each one individually named as it passes is worth the extra verbosity." <code>-v</code> changes only the reporting detail — it doesn't change which tests run or when the run stops.</p>
+</div>
+<aside class="notes">The guide's Part 5 Check for understanding is reflective, with no Q&amp;A parenthetical ("This is the fourth week running this ritual. What's changed about how you type it, compared to Week 4?"). Per the rollout convention for a CFU with no Q&amp;A, the quiz answer is taken verbatim from a same-segment line — here the Part 5 "Say to the class": "since with eight tests, seeing each one individually named as it passes is worth the extra verbosity."</aside>
+</section>
+
+<!-- 39. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>None new this week — this is pure repetition of an already-established sequence. The main thing worth watching for is students continuing to run it confidently without needing the steps spelled out, confirming the habit from Weeks 4–6 has genuinely stuck.</p>
+<p>Forgetting "lab 7" in the commit message — the same graded requirement pattern as every prior week; a quick final check before <code>git push</code>.</p>
+</div>
+<aside class="notes">Check for understanding: "Fourth week running this ritual — what's changed about how you type it?" Answer: reflective — most students report it's become noticeably faster and more automatic, which is the whole point of repeating it identically week after week.</aside>
+</section>
+
+<!-- 40. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:06–1:15</span>
+<h1>Doctest</h1>
+<aside class="notes">
+Frame as a quick, genuinely useful addition if the room reaches it.
+Say to the class (verbatim, the guide's one sentence of framing): "A <strong>doctest</strong> is a runnable example living directly inside a docstring — <code>&gt;&gt;&gt;</code> mimics what you'd type at a Python prompt, and the line below it is the <em>exact</em> expected output. <code>python3 -m doctest</code> runs every such example in the file and confirms the real output matches. This is worth knowing exists as a lightweight alternative to a full <code>pytest</code> file for simple, illustrative examples — genuinely useful for documentation that stays verified against reality, since a doctest that goes stale (no longer matches actual behavior) fails loudly, unlike a comment that can silently drift out of date."
+The <code>python3 -m doctest business_rules.py -v</code> command is a shell invocation and is shown static (no shell in the browser); the runnable block that follows drives the same doctest with <code>doctest.run_docstring_examples(...)</code> so it executes live.
+</aside>
+</section>
+
+<!-- 41. STRETCH static — the docstring + command -->
+<section class="s-code">
+<h3>Add a doctest to <code>calculate_total</code> — then run it on your own machine</h3>
+<pre><code class="language-python">def calculate_total(price: float, quantity: int) -&gt; float:
+    """
+    Return total cost including 7% tax.
+
+    &gt;&gt;&gt; calculate_total(100.0, 2)
+    214.0
+    """
+    return price * quantity * 1.07</code></pre>
+<pre><code class="language-bash">python3 -m doctest business_rules.py -v</code></pre>
+<p class="expect">Shown static — <code>python3 -m doctest ...</code> is a shell command with no browser runner. The <code>&gt;&gt;&gt;</code> line is what you'd type at a Python prompt; <code>214.0</code> directly below it is the <em>exact</em> expected output. The next slide runs the same doctest live from Python.</p>
+<aside class="notes">
+Line by line:
+- the triple-quoted docstring now contains a <code>&gt;&gt;&gt; calculate_total(100.0, 2)</code> line and, directly below, the expected result <code>214.0</code>.
+- <code>python3 -m doctest business_rules.py -v</code> — runs every <code>&gt;&gt;&gt;</code> example in the file and checks the real output matches; <code>-v</code> reports each example even on success.
+A doctest that goes stale fails loudly, unlike a comment that silently drifts out of date.
+</aside>
+</section>
+
+<!-- 42. STRETCH doctest pane (STATIC) -->
+<section class="s-out">
+<h3><code>python3 -m doctest business_rules.py -v</code> — not run here</h3>
+<pre>Trying:
+    calculate_total(100.0, 2)
+Expecting:
+    214.0
+ok
+1 tests in business_rules.calculate_total
+1 passed and 0 failed.
+Test passed.</pre>
+<p class="expect">Static — reproduced from the guide's "Verified output (abbreviated)" for the Stretch. Run <code>python3 -m doctest business_rules.py -v</code> on your own machine; the doctest passes because <code>calculate_total(100.0, 2)</code> really does return exactly <code>214.0</code>.</p>
+<aside class="notes">Reproduced from the guide's Stretch "Verified output (abbreviated)": the <code>Trying:</code> / <code>Expecting:</code> / <code>ok</code> block, then <code>1 tests in business_rules.calculate_total</code>, <code>1 passed and 0 failed.</code>, <code>Test passed.</code> This pane is not executed in the deck (no shell). Double-checked locally: <code>python3 -m doctest business_rules.py -v</code> prints this (plus a couple of "items had no tests" lines the guide abbreviates away) and exits 0.</aside>
+</section>
+
+<!-- 43. STRETCH live-logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The same doctest, run live from Python</h3>
+<div class="run" data-lang="python">
+def calculate_total(price: float, quantity: int) -&gt; float:
+    """
+    Return total cost including 7% tax.
+
+    &gt;&gt;&gt; calculate_total(100.0, 2)
+    214.0
+    """
+    return price * quantity * 1.07
+
+import doctest
+doctest.run_docstring_examples(
+    calculate_total, globals(), verbose=True, name='calculate_total'
+)
+</div>
+<p class="expect"><code>doctest.run_docstring_examples(...)</code> drives the same <code>&gt;&gt;&gt;</code> example the shell command would, straight from Python — so the doctest logic executes live even though <code>python3 -m doctest</code> itself needs a shell. <code>verbose=True</code> reports the example; no output after <code>ok</code> means it passed.</p>
+<aside class="notes">
+Line by line: <code>calculate_total</code> is defined with the doctest in its <code>"""..."""</code> docstring, exactly as the guide's Stretch shows it. <code>doctest.run_docstring_examples(calculate_total, globals(), verbose=True, name='calculate_total')</code> finds and runs the <code>&gt;&gt;&gt;</code> example. Because <code>calculate_total(100.0, 2)</code> returns exactly <code>214.0</code>, the example matches and <code>ok</code> is printed with no failure summary.
+</aside>
+</section>
+
+<!-- 44. STRETCH live-logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Finding tests in calculate_total
+Trying:
+    calculate_total(100.0, 2)
+Expecting:
+    214.0
+ok</pre>
+<p class="expect">The live <code>doctest</code> run prints the same <code>Trying:</code> / <code>Expecting:</code> / <code>ok</code> as the static <code>python3 -m doctest -v</code> pane — no failure lines, because the doctested example matches the real return value.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: <code>doctest.run_docstring_examples(..., verbose=True)</code> prints exactly these five lines (the <code>Finding tests in ...</code> header comes from <code>verbose=True</code>) and exits 0. It does not print a <code>1 passed and 0 failed.</code> summary — that line is specific to <code>doctest.testmod()</code> / the <code>-m doctest</code> CLI, which the static pane on the previous slide shows.</aside>
+</section>
+
+<!-- 45. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including <strong>"lab 7"</strong></li>
+<li><code>business_rules.py</code> contains all four functions, each with a docstring, type hints, and a <code>return</code> — <strong>no <code>print()</code></strong></li>
+<li><code>main.py</code> imports and calls all four functions, printing formatted results</li>
+<li><code>tests/test_business_rules.py</code> contains all eight tests, including at least two boundary cases, all passing</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. Verified this week: the provided <code>business_rules.py</code> and all eight tests pass cleanly as written — no hidden bugs, unlike Week 5's diagnostic detour. The featured idea to reinforce as they leave: comfortable true/false tests can give false confidence; a boundary test at the exact edge is what catches an off-by-one or a <code>&gt;</code>-vs-<code>&gt;=</code> mistake.</aside>
+</section>
+
+<!-- 46. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 8</h3>
+<p>Today's rule — no <code>print()</code> inside business logic — sets up next week directly: <strong>debugging skills and AI literacy</strong>, where reading a function's actual behavior (not just trusting it looks right) becomes the central skill, ahead of the midterm the following week.</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: functions that <code>return</code> instead of <code>print</code> are exactly what makes a function's behavior testable and inspectable — the habit that Week 8's debugging work depends on.</aside>
+</section>
+
+<!-- 47. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 7</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w07.md (Week 7 facilitation guide, "Functions, Modules &amp; pytest"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4. The <code>pytest -v</code> pane, the provided test file, and the <code>python3 -m doctest</code> pane are static (no <code>pytest</code> runner and no shell in the browser) — output reproduced verbatim from the guide's "Verified output"; double-checked locally with <code>python3 -m pytest -v</code> and <code>python3 -m doctest</code>. The setup and ritual shell blocks are read-only. Multi-file modules are combined into one runnable block per slide because each Pyodide block is a fresh namespace; the guide splits them across <code>business_rules.py</code>, <code>main.py</code>, and <code>tests/test_business_rules.py</code>. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
