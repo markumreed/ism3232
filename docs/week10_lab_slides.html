@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 10 — OOP I — Classes &amp; Objects</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; Module 10 &nbsp;·&nbsp; Unit 3 · Object-Oriented Design</p>
+<h1>OOP I — Classes &amp; Objects</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "bundling data and behavior together"</span>
+<span class="t-item"><strong>0:04–0:20</strong> Part 1 — Write the class</span>
+<span class="t-item"><strong>0:20–0:32</strong> Part 2 — Create instances</span>
+<span class="t-item"><strong>0:32–0:42</strong> Part 3 — Verify instance independence</span>
+<span class="t-item"><strong>0:42–0:58</strong> Part 4 — Seven pytest tests</span>
+<span class="t-item"><strong>0:58–1:06</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:06–1:15</strong> Stretch (<code>summary()</code>) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Live code-along, ending with the full submission ritual. The midterm (Week 9) is behind the class; this is the first lab of Unit 3, and it opens a genuinely new paradigm — object-oriented programming. Everything before this unit used functions operating on plain dictionaries (<code>records = [{...}, {...}]</code>, <code>def get_total(records): ...</code>); today, a <code>class</code> bundles data <em>and</em> the functions that operate on it into a single, reusable blueprint.
+The lab page's own warning deserves emphasis: <strong>no AI-generated classes</strong> — every line must be explainable, and any AI-assisted portion needs to be pasted verbatim with an explanatory comment. This is a stricter standard than prior weeks' general AI-use disclosure, worth stating explicitly at the start, since OOP syntax (especially <code>self</code> and <code>__init__</code>) is genuinely tempting to just paste from an AI tool without understanding.
+Say to the class (Intro, verbatim): "Every function you've written until now took data in as parameters and handed a result back — the data and the logic that worked on it lived in separate places. Today, a <code>class</code> bundles both together: the data (like a request's amount and status) and the functions that work on that specific data (approve it, reject it, check if it needs review) live in one blueprint. Every object you create from that blueprint carries its own independent copy of the data. That independence — not the syntax — is the actual idea to walk away with today."
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> at the top and then the code that instantiates/uses it — the guide splits this across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. <strong><code>pytest</code> has no runner in Pyodide</strong> — Part 4's test file and its <code>pytest</code> output are shown static ("not run here"), with a runnable block beside them running the same seven checks as bare <code>assert</code>s. The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Pyodide tracebacks show <code>&lt;exec&gt;</code> as the file and line numbers may differ from a real <code>python3 file.py</code> run — the error <em>type</em> and <em>message</em> are the load-bearing content.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 1–8: full Python foundations, functions, <code>pytest</code>, debugging discipline; Week 9 was the midterm</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (write the class) – Part 5 (ritual + push) + Stretch (<code>summary()</code> method)</span></div>
+<div><span class="k">Submission</span><span class="v">2 screenshots + Canvas URL, completion credit</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. Students start a fresh <code>~/ism3232/module06_oop/</code> project folder this week. Part 1 and Part 4 receive the most time — Part 1 because the new syntax (<code>class</code>, <code>__init__</code>, <code>self</code>) genuinely needs unhurried explanation, and Part 4 because "instance independence" is both a required test and a concept worth confirming lands solidly before students leave.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Define a class with <code>__init__</code>, and explain what <code>self</code> refers to and why every method needs it as its first parameter.</li>
+<li>Create multiple independent instances of a class, and explain concretely why changing one instance's state never affects another's.</li>
+<li>Write instance methods that read and modify an object's own attributes.</li>
+<li>Implement <code>__repr__</code> and explain how it changes what <code>print()</code> shows for an object.</li>
+<li>Write <code>pytest</code> tests for a class, including a boundary case and a dedicated <strong>instance-independence</strong> test.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 (<code>self</code>) is Part 1's central sticking point; objective 2 is Part 2–3's payoff; objective 3 is Part 1's methods; objective 4 is <code>__repr__</code>; objective 5 is Part 4, including the new independence test.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "bundling data and behavior together"</td><td>4</td></tr>
+<tr><td>0:04–0:20</td><td>Part 1 — Write the class</td><td>16</td></tr>
+<tr><td>0:20–0:32</td><td>Part 2 — Create instances</td><td>12</td></tr>
+<tr><td>0:32–0:42</td><td>Part 3 — Verify instance independence</td><td>10</td></tr>
+<tr><td>0:42–0:58</td><td>Part 4 — Seven pytest tests</td><td>16</td></tr>
+<tr><td>0:58–1:06</td><td>Part 5 — Ritual and push</td><td>8</td></tr>
+<tr><td>1:06–1:15</td><td>Stretch (<code>summary()</code> method) + wrap-up</td><td>9</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 1 and Part 4 receive the most time — Part 1 because the new syntax genuinely needs unhurried explanation, and Part 4 because "instance independence" is both a required test and a concept worth confirming lands solidly before students leave.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>class = blueprint, instance = one specific thing built from it</h1>
+<aside class="notes">
+Teaching goal: frame the unit — a <code>class</code> bundles data and the behaviour that works on that data into one reusable blueprint; every object built from it carries its own independent copy of the data.
+Say to the class (verbatim): "Every function you've written until now took data in as parameters and handed a result back — the data and the logic that worked on it lived in separate places. Today, a <code>class</code> bundles both together: the data (like a request's amount and status) and the functions that work on that specific data (approve it, reject it, check if it needs review) live in one blueprint. Every object you create from that blueprint carries its own independent copy of the data. That independence — not the syntax — is the actual idea to walk away with today."
+Do: write on the board <strong>class = blueprint, instance = one specific thing built from it.</strong> Leave it visible through Part 2, where it becomes concrete.
+Also state the "no AI-generated classes" bar explicitly and specifically now: could a student answer a cold-call question about any single line, unprompted? Any AI-assisted portion must be pasted verbatim with an explanatory comment.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:20</span>
+<h1>Write the Class</h1>
+<aside class="notes">
+Teaching goal: <code>class</code>, <code>__init__</code>, <code>self</code>, instance methods, and <code>__repr__</code> — five genuinely new pieces of syntax, each deserving individual explanation.
+Say to the class (verbatim): "One class, five new pieces of syntax. I'm going to slow down for every single one, because OOP syntax looks deceptively simple and is very easy to type without actually understanding — which is exactly what today's 'no AI-generated classes' rule is designed to prevent."
+Check for understanding (asked at the end of this part): "If I removed <code>self</code> entirely from <code>requires_review</code>'s parameter list, and called <code>req_101.requires_review()</code>, what would happen?" Answer: <code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it.
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>Five new pieces of syntax — one class</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>class BusinessRequest:</code></strong> — begins a class definition, like <code>def</code> begins a function. This is a <strong>blueprint</strong>, not yet a real object — nothing exists in memory as a "business request" until Part 2 builds one <em>from</em> it.</p>
+<p><strong><code>def __init__(self, ...):</code></strong> — the <strong>constructor</strong>. Never called directly by name; it runs automatically, once, whenever <code>BusinessRequest(...)</code> is called. Double underscores mark it a <strong>special method</strong> Python itself recognises.</p>
+<p><strong><code>self</code></strong> — the single most important word in this lab. It refers to <em>this specific object being created or acted on</em>. Every method takes it first, because that is how Python passes "which object is this method being called on" in automatically. Mechanically: <code>req_101.approve()</code> is secretly <code>BusinessRequest.approve(req_101)</code>.</p>
+<p><strong><code>self.request_id = request_id</code></strong> — stores a plain parameter as an <strong>attribute</strong> of this object. The parameter and the attribute share a name but are not the same thing: the parameter lives only while <code>__init__</code> runs; the attribute persists on the object.</p>
+<p><strong><code>def __repr__(self):</code></strong> — another special method, controlling what <code>print()</code> shows. Without it, printing an object shows <code>&lt;models.BusinessRequest object at 0x...&gt;</code> — a memory address, not useful information.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 1):
+- <code>class BusinessRequest:</code> — <code>class</code> begins a definition like <code>def</code>; a blueprint, nothing in memory yet.
+- <code>"""Represents a single business purchase or travel request."""</code> — a docstring for the class itself, same convention as Week 7's function docstrings, now at class level.
+- <code>def __init__(self, request_id, requester, category, amount):</code> — the constructor, called automatically the moment a new object is created. Not called directly by name anywhere in this lab. Double underscores = special method Python recognises and calls at a specific moment.
+- <strong><code>self</code></strong> — explain more than once, more than one way. <code>self</code> refers to <em>this specific object</em>; when Part 2 runs <code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code>, inside <code>__init__</code> <code>self</code> <em>is</em> <code>req_101</code>, even though it doesn't have that name yet. Mechanical framing: <code>req_101.approve()</code> == <code>BusinessRequest.approve(req_101)</code> — Python passes <code>req_101</code> in as <code>self</code>; dot-notation just hides that first argument. Write both forms on the board.
+- <code>self.request_id = request_id</code> (and the three below) — stores a parameter as an attribute of this object, later readable as <code>self.request_id</code> inside any method or <code>req_101.request_id</code> from outside. The parameter and the attribute are not the same thing despite the shared name.
+- <code>self.status = 'Pending'  # default</code> — takes no parameter; every new <code>BusinessRequest</code> starts with <code>status</code> = <code>'Pending'</code> unconditionally. This answers Part 3's reflection question 5 — flag that connection now.
+- <code>def approve(self):</code> — an instance method; still takes <code>self</code> first, no other parameters. <code>self.status = 'Approved'</code> modifies this specific object's <code>status</code>, permanently.
+- <code>def requires_review(self):</code> — <code>return self.amount &gt; 1000</code> reads (not modifies) this object's own <code>amount</code>, the same comparison as Week 7's standalone function, now living inside the object.
+- <code>def __repr__(self):</code> — special method controlling what <code>print()</code> shows; without it, a <code>BusinessRequest</code> prints as <code>&lt;models.BusinessRequest object at 0x...&gt;</code>. This <code>__repr__</code> builds a readable string from the object's current attribute values.
+Common mistakes: forgetting <code>self</code> as the first parameter (doesn't error at definition, fails confusingly on the call — <code>TypeError: ... takes 0 positional arguments but 1 was given</code>); confusing <code>self.amount</code> with a bare <code>amount</code>; writing <code>def __init__(self):</code> with no parameters and hardcoding values, producing identical instances.
+Check for understanding: see the Part 1 divider notes — removing <code>self</code> from <code>requires_review</code> then calling it raises <code>TypeError</code> about too many arguments.
+</aside>
+</section>
+
+<!-- 8. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Set up the project — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module06_oop
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
+touch models.py main.py &amp;&amp; mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_models.py
+code models.py</div>
+<p class="expect">Shown for reference — <code>venv</code>, <code>pip</code>, <code>source</code>, <code>code</code> can't execute in the browser. Run this on your own machine in a <em>fresh</em> <code>~/ism3232/module06_oop/</code> folder. Then write the class (next slide) into <code>models.py</code>.</p>
+<aside class="notes">
+Line by line: <code>cd</code> into a fresh project folder; create and activate the venv; install <code>pytest</code> + <code>ruff</code> and pin them; keep <code>.venv/</code> and <code>__pycache__/</code> out of Git; create <code>models.py</code> and <code>main.py</code> at the root plus <code>tests/__init__.py</code> and <code>tests/test_models.py</code> one level deeper; open <code>models.py</code> in the editor. Same setup ritual as every module since Week 7.
+</aside>
+</section>
+
+<!-- 9. PART 1 the class (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>models.py</code>: the <code>BusinessRequest</code> class</h3>
+<div class="run" data-lang="python"># models.py
+# Author: [Your Name]
+
+class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'  # default
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+# quick REPL-style check -- would live in main.py, never in models.py
+req = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+print(req)
+print(req.status)
+print(req.requires_review())</div>
+<p class="expect">Matches the guide's <code>models.py</code> verbatim, docstrings included. The three <code>print()</code> lines are a throwaway check that would live <strong>outside</strong> the module in real life — in <code>models.py</code> itself there is no such code. Run it to see the blueprint produce one real object.</p>
+<aside class="notes">
+Say to the class (verbatim): "One class, five new pieces of syntax. I'm going to slow down for every single one, because OOP syntax looks deceptively simple and is very easy to type without actually understanding — which is exactly what today's 'no AI-generated classes' rule is designed to prevent."
+Line by line: see the idea slide's notes — <code>class</code> (blueprint), class docstring, <code>__init__</code> (constructor, auto-called), <code>self</code> (this specific object), the four <code>self.x = x</code> attribute assignments, <code>self.status = 'Pending'</code> (no parameter, always the same), <code>approve</code>/<code>reject</code> (instance methods, <code>self</code> first, modify <code>self.status</code>), <code>requires_review</code> (reads <code>self.amount</code>), <code>__repr__</code> (controls <code>print()</code>).
+Common mistakes: forgetting <code>self</code> as the first parameter; confusing <code>self.amount</code> with a bare <code>amount</code>; a no-parameter <code>__init__</code> that hardcodes values so every instance is identical.
+Check for understanding: removing <code>self</code> from <code>requires_review</code>'s parameter list, then calling <code>req_101.requires_review()</code>, raises <code>TypeError</code> about too many arguments — Python still passes the object in; there is just no parameter slot for it.
+</aside>
+</section>
+
+<!-- 10. PART 1 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>BusinessRequest(101, Taylor, $1200, Pending)
+Pending
+True</pre>
+<p class="expect"><code>print(req)</code> fires <code>__repr__</code>, which builds the readable string from the object's own attributes. <code>req.status</code> is <code>Pending</code> — the unconditional default from <code>__init__</code>. <code>req.requires_review()</code> is <code>True</code> because <code>1200 &gt; 1000</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): the block prints exactly these three lines. Because this class defines <code>__repr__</code>, no <code>0x...</code> memory address appears — the readable string replaces it.</aside>
+</section>
+
+<!-- 11. PART 1 BROKEN (missing self) -->
+<section class="s-code">
+<h3>The missing-<code>self</code> bug on purpose — what the CFU asks about</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def requires_review():   # BUG: no self in the parameter list
+        return self.amount &gt; 1000
+
+req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+print(req_101.requires_review())</div>
+<p class="expect">This is the guide's Part 1 check-for-understanding, done live: <code>requires_review</code> is defined with <strong>no <code>self</code></strong>. The class still <em>defines</em> fine — the failure only happens on the call. Press <strong>Run</strong> and read the last line of the traceback.</p>
+<aside class="notes">
+The definition <code>def requires_review():</code> does not error — Python only checks the argument count when the method is <em>called</em>. <code>req_101.requires_review()</code> is secretly <code>BusinessRequest.requires_review(req_101)</code>, so Python passes one argument (<code>req_101</code>) into a method whose parameter list has zero slots. Make a student say "the call passes <code>self</code> in automatically; there's no parameter to catch it," not just "it broke."
+</aside>
+</section>
+
+<!-- 12. PART 1 broken traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  ...
+TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</pre>
+<p class="expect">Load-bearing: <code>TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</code> — this is the guide's CFU answer ("<code>TypeError</code>, complaining about too many arguments"). Pyodide shows <code>&lt;exec&gt;</code> as the file and its line number differs from a real <code>python3 models.py</code> run — neither is load-bearing; the error <em>type</em> and <em>message</em> are.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly this <code>TypeError</code> and exits 1. The "1 was given" argument is <code>req_101</code> itself — Python's automatic <code>self</code>-passing, meeting a parameter list with no slot for it. Fixed on the next slide.</aside>
+</section>
+
+<!-- 13. PART 1 FIXED -->
+<section class="s-code">
+<h3>Fixed — <code>self</code> restored as the first parameter</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def requires_review(self):   # fixed: self restored as the first parameter
+        return self.amount &gt; 1000
+
+req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+print(req_101.requires_review())</div>
+<p class="expect">The only change is <code>def requires_review():</code> &rarr; <code>def requires_review(self):</code>. Now there is a parameter slot for the object Python passes in automatically, and the method can read <code>self.amount</code>. Press <strong>Run</strong> — clean output.</p>
+<aside class="notes">The single change from the broken block is adding <code>self</code> back. Takeaway: every method inside a class takes <code>self</code> as its first parameter — not by developer choice, but because that is how Python hands the method "which object am I acting on."</aside>
+</section>
+
+<!-- 14. PART 1 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>True</pre>
+<p class="expect"><code>req_101.requires_review()</code> now returns <code>True</code> — <code>1200 &gt; 1000</code> — with <code>self</code> bound to <code>req_101</code> so <code>self.amount</code> is <code>1200</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly <code>True</code> and exits 0.</aside>
+</section>
+
+<!-- 15. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If I removed <code>self</code> entirely from <code>requires_review</code>'s parameter list, and called <code>req_101.requires_review()</code>, what would happen?</p>
+<button data-opt="A"><code>TypeError</code> — Python still passes <code>req_101</code> in automatically, and there's no parameter slot to receive it: "takes 0 positional arguments but 1 was given"</button>
+<button data-opt="B">Nothing unusual — <code>self</code> is optional; the method just wouldn't be able to read <code>self.amount</code></button>
+<button data-opt="C"><code>NameError: name 'self' is not defined</code>, raised the moment the class is defined</button>
+<p class="why" hidden><code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it. The class <em>defines</em> without error; the failure is on the call.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "<code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it." Verified live on the broken slide: <code>TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</code>.</aside>
+</section>
+
+<!-- 16. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>self</code> as the first parameter in a method definition — this doesn't error immediately, but calling the method later fails confusingly (<code>TypeError: approve() takes 0 positional arguments but 1 was given</code>, since Python still passes the object in automatically). Worth demonstrating live once if it comes up naturally.</p>
+<p>Confusing <code>self.amount</code> (an attribute, read inside a method) with a bare <code>amount</code> (a separate, undefined local variable in every method except <code>__init__</code>, which is the only one that receives <code>amount</code> as a parameter). Point at <code>requires_review</code>'s single line and ask "why <code>self.amount</code> and not just <code>amount</code>?"</p>
+<p>Writing <code>def __init__(self):</code> with no other parameters and hardcoding values — avoids the parameter confusion but produces a class where every instance is identical, defeating Part 2's point of three genuinely different requests.</p>
+</div>
+<aside class="notes">Check for understanding: removing <code>self</code> from <code>requires_review</code> and calling it raises <code>TypeError</code> about too many arguments — Python still passes the object in; there is just no parameter slot for it.</aside>
+</section>
+
+<!-- 17. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:20–0:32</span>
+<h1>Create Instances</h1>
+<aside class="notes">
+Teaching goal: create three genuinely independent objects from the same class, call methods on them, and witness — concretely, not just by assertion — that changing one never affects the others.
+Say to the class (verbatim): "Three requests, from the same blueprint, about to become three genuinely separate things in memory. Watch closely when we approve one and reject another — the third stays completely untouched. This is the payoff of everything in Part 1."
+Check for understanding (asked at the end of this part): "If I added a fourth line, <code>req_104 = req_101</code>, and then called <code>req_104.approve()</code>, would <code>req_101.status</code> also become <code>'Approved'</code>?" Answer: Yes — <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable. Contrast with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data.
+</aside>
+</section>
+
+<!-- 18. PART 2 idea -->
+<section class="s-idea">
+<h3>Three calls, three separate objects in memory</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> is where <code>__init__</code> actually runs — once, right now — with <code>self</code> bound to whatever <code>req_101</code> ends up naming. <strong>Three separate calls create three separate objects</strong>, each with its own independent set of attributes, even though all three come from the same blueprint.</p>
+<p><code>print(req_101)</code> fires <code>__repr__</code> automatically — <code>print()</code> on any object calls <code>__repr__</code> (or the related <code>__str__</code>, not covered today) to decide what to show. This isn't special handling for this class; it's general Python behaviour this class customises.</p>
+<p><code>req_101.approve()</code> and <code>req_102.reject()</code> touch <strong>only</strong> their own object. There is no code anywhere that could make them reach <code>req_103</code> — which is exactly why <code>req_103.status</code> is still <code>'Pending'</code> at the end.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 2):
+- <code>from models import BusinessRequest</code> — importing the class itself (not a function) from the local module; same import mechanics as Week 7.
+- <code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> — <code>__init__</code> runs here, once; <code>self</code> inside that run <em>is</em> whatever <code>req_101</code> refers to. Three calls, three separate objects with independent attributes.
+- <code>print(req_101)</code> (before any methods) — <code>__repr__</code> fires; a general Python behaviour, not something <code>print()</code> does specially for this class.
+- <code>req_101.requires_review()</code>, <code>req_102.requires_review()</code> — same method, two objects, two results (<code>True</code> for the $1,200 request, <code>False</code> for the $450 one) because each call's <code>self</code> is a different object with its own <code>amount</code>.
+- <code>req_101.approve()</code>, <code>req_102.reject()</code> — <strong>pause here dramatically.</strong> Neither call touches <code>req_103</code>; there is no code that could.
+- the three status prints — concrete proof of independence: <code>'Approved'</code>, <code>'Rejected'</code>, and <code>'Pending'</code> (unaffected).
+Say explicitly, pointing at the final two <code>__repr__</code> lines: "<code>__repr__</code> picks up the <em>current</em> status automatically — <code>req_101</code>'s printed representation now says <code>Approved</code>, not <code>Pending</code>, even though we never touched <code>__repr__</code>. It reads <code>self.status</code> fresh every time it's called."
+Common mistakes: expecting <code>req_103.status</code> to have changed from a vague sense that "something happened"; confusing the variable names (<code>req_101</code>…) with the <code>request_id</code> values (<code>101</code>…) — they correspond numerically here by deliberate readability choice, not a rule.
+Check for understanding: <code>req_104 = req_101</code> then <code>req_104.approve()</code> — yes, <code>req_101.status</code> also becomes <code>'Approved'</code>, because it is a second name for the same object, not a new one.
+</aside>
+</section>
+
+<!-- 19. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>main.py</code>: three instances from one class</h3>
+<div class="run" data-lang="python"># models.py  (guide: a separate file, imported by main.py)
+class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'  # default
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+# main.py  --  from models import BusinessRequest
+
+req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+req_102 = BusinessRequest(102, 'Jordan', 'Equipment', 450)
+req_103 = BusinessRequest(103, 'Morgan', 'Software', 3500)
+
+# Check initial state
+print(req_101)
+print(req_102)
+print(req_103)
+
+# Call methods
+print(req_101.requires_review())   # True
+print(req_102.requires_review())   # False
+
+req_101.approve()
+req_102.reject()
+
+# Verify independence
+print(req_101.status)   # Approved
+print(req_102.status)   # Rejected
+print(req_103.status)   # Pending -- unchanged
+
+# Repr
+print(req_101)
+print(req_102)</div>
+<p class="expect">Each Pyodide block is a fresh namespace, so <code>models.py</code>'s class and <code>main.py</code>'s code live in one block here — the guide splits them, with a real <code>from models import BusinessRequest</code> line standing in for the commented one. Run it: three objects, acted on independently.</p>
+<aside class="notes">
+Say to the class (verbatim): "Three requests, from the same blueprint, about to become three genuinely separate things in memory. Watch closely when we approve one and reject another — the third stays completely untouched. This is the payoff of everything in Part 1."
+Line by line: see the idea slide's notes. The load-bearing moment is <code>req_101.approve()</code> / <code>req_102.reject()</code> followed by the three status prints — <code>req_103</code> is never referenced between its creation and the final print.
+Common mistakes: expecting <code>req_103.status</code> to have changed; confusing the <code>req_10x</code> variable names with the <code>request_id</code> attribute values.
+Check for understanding: <code>req_104 = req_101</code>; <code>req_104.approve()</code> — yes, <code>req_101.status</code> becomes <code>'Approved'</code> too; a second name for the same object, not a new one.
+</aside>
+</section>
+
+<!-- 20. PART 2 verified output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>BusinessRequest(101, Taylor, $1200, Pending)
+BusinessRequest(102, Jordan, $450, Pending)
+BusinessRequest(103, Morgan, $3500, Pending)
+True
+False
+Approved
+Rejected
+Pending
+BusinessRequest(101, Taylor, $1200, Approved)
+BusinessRequest(102, Jordan, $450, Rejected)</pre>
+<p class="expect">Reproduces the guide's "Run it. Verified output" for Part 2 exactly. The last two lines are the point: <code>__repr__</code> picks up the <em>current</em> status automatically — <code>req_101</code> now prints <code>Approved</code>, <code>req_102</code> prints <code>Rejected</code> — because <code>__repr__</code> reads <code>self.status</code> fresh every time. <code>req_103</code> stays <code>Pending</code>, completely unaffected.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the combined block prints exactly these ten lines. Because <code>BusinessRequest</code> defines <code>__repr__</code>, no <code>&lt;...object at 0x...&gt;</code> address appears — the address would differ per run anyway; only the readable structure is load-bearing.</aside>
+</section>
+
+<!-- 21. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If I added a fourth line, <code>req_104 = req_101</code>, and then called <code>req_104.approve()</code>, would <code>req_101.status</code> also become <code>'Approved'</code>?</p>
+<button data-opt="A">No — <code>req_104</code> is a copy of <code>req_101</code>, so approving it leaves <code>req_101</code> at <code>'Pending'</code></button>
+<button data-opt="B">Yes — <code>req_104 = req_101</code> doesn't create a new object; it gives a <em>second name</em> to the <em>same</em> object, so the two calls are indistinguishable</button>
+<button data-opt="C">Yes, but only because both were built with <code>request_id</code> <code>101</code></button>
+<p class="why" hidden>Yes — <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable, since they're both acting on the identical object in memory. Contrast this with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "Yes — … <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable … Contrast this explicitly with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data."</aside>
+</section>
+
+<!-- 22. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Expecting <code>req_103.status</code> to have changed somehow, from a vague sense that "something happened to the requests" — take this seriously as a genuine point of early OOP confusion. Have the student trace the code line by line and identify <em>any</em> line that references <code>req_103</code> between its creation and the final print (there isn't one).</p>
+<p>Confusing the three variable names (<code>req_101</code>, <code>req_102</code>, <code>req_103</code>) with the <code>request_id</code> attribute values (<code>101</code>, <code>102</code>, <code>103</code>) — they correspond numerically here as a deliberate readability choice, not a rule. <code>req_101</code> is just a Python variable name; <code>101</code> is data stored inside the object.</p>
+</div>
+<aside class="notes">Check for understanding: <code>req_104 = req_101</code> then <code>req_104.approve()</code> — yes, <code>req_101.status</code> becomes <code>'Approved'</code> too (a second name for the same object).</aside>
+</section>
+
+<!-- 23. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:32–0:42</span>
+<h1>Verify Instance Independence</h1>
+<aside class="notes">
+Teaching goal: a required, written reflection — five questions, answered as a comment block — confirming Part 2's demonstration genuinely translated into conceptual understanding, not just observed output.
+Say to the class (verbatim): "Five questions, answered in your own words, as a comment block at the top of <code>main.py</code>. I want genuine answers, not restated code — if you can't answer one confidently, that's exactly the thing to ask about right now."
+Check for understanding: this entire part <em>is</em> the check for understanding — treat student answers to these five questions, read individually as you circulate, as your primary signal for whether Part 1–2's concepts landed, and address gaps directly and immediately rather than waiting for Part 4's tests to surface them indirectly.
+</aside>
+</section>
+
+<!-- 24. PART 3 idea -->
+<section class="s-idea">
+<h3>Five questions — answered in your own words</h3>
+<div class="concept">
+<div class="concept-lbl">Answer individually, before any discussion</div>
+<p><strong>1.</strong> After calling <code>req_101.approve()</code>, what is <code>req_102.status</code>? &rarr; <code>'Pending'</code> (unchanged) — a direct, checkable fact from Part 2's run.</p>
+<p><strong>2.</strong> Why doesn't approving <code>req_101</code> affect <code>req_102</code>? &rarr; Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that object's own data.</p>
+<p><strong>3.</strong> What does <code>self</code> refer to inside <code>approve()</code>? &rarr; <code>req_101</code> itself, at the moment <code>req_101.approve()</code> is called; <code>req_102.approve()</code> would have <code>self</code> refer to <code>req_102</code> instead.</p>
+<p><strong>4.</strong> What is the type of <code>req_101</code>? &rarr; <code>&lt;class 'models.BusinessRequest'&gt;</code> — run <code>print(type(req_101))</code> to confirm the exact formatting.</p>
+<p><strong>5.</strong> Where does the default status <code>'Pending'</code> come from? &rarr; <code>__init__</code>'s unconditional <code>self.status = 'Pending'</code> line — every object gets it on creation, regardless of what's passed in.</p>
+</div>
+<aside class="notes">
+The guide has students add this comment block at the top of <code>main.py</code> and answer it individually:
+<code># --- OOP Lab Questions ---</code>
+<code># 1. After calling req_101.approve(), what is req_102.status? ___</code>
+<code># 2. Why doesn't approving req_101 affect req_102? ___</code>
+<code># 3. What does 'self' refer to inside the approve() method? ___</code>
+<code># 4. What is the type of req_101? ___  (hint: use type())</code>
+<code># 5. Where does the default status 'Pending' come from? ___</code>
+Model strong answers (guide, verbatim): (1) <code>'Pending'</code> unchanged; (2) because they are separate objects, each with its own independent copy of every attribute, including <code>status</code>; (3) <code>req_101</code> itself, at the moment <code>req_101.approve()</code> is called; (4) <code>&lt;class 'models.BusinessRequest'&gt;</code> — have students run <code>print(type(req_101))</code>; (5) <code>__init__</code>'s unconditional <code>self.status = 'Pending'</code> line.
+Common mistakes: answering Q2 with <em>what</em> happens ("req_102 stays Pending") rather than <em>why</em> — redirect to the independence concept itself; answering Q3 vaguely ("self refers to the object") without connecting it to <em>which specific call</em> — push for "self refers to req_101, specifically because this line is <code>req_101.approve()</code>".
+</aside>
+</section>
+
+<!-- 25. PART 3 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Run the concrete checks behind questions 1 and 4</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+
+req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+req_102 = BusinessRequest(102, 'Jordan', 'Equipment', 450)
+
+req_101.approve()
+
+# Q1: after req_101.approve(), what is req_102.status?
+print(req_102.status)
+# Q4: what is the type of req_101?  (hint: use type())
+print(type(req_101))</div>
+<p class="expect">Approving <code>req_101</code> leaves <code>req_102.status</code> at <code>'Pending'</code> — question 1, checked. <code>type(req_101)</code> reports the class the object was built from — question 4. Run it and read the two lines.</p>
+<aside class="notes">
+Say to the class (verbatim): "Five questions, answered in your own words, as a comment block at the top of <code>main.py</code>. I want genuine answers, not restated code — if you can't answer one confidently, that's exactly the thing to ask about right now."
+Line by line: <code>BusinessRequest</code> is re-defined (fresh namespace); two instances are created; only <code>req_101</code> is approved; <code>req_102.status</code> is printed (still <code>Pending</code> — independence); <code>type(req_101)</code> is printed.
+<strong>Module-name note:</strong> the guide's model answer for question 4 is <code>&lt;class 'models.BusinessRequest'&gt;</code>, because the guide defines the class in <code>models.py</code> and imports it. In this standalone block the class is defined in the top-level script, so Python reports <code>&lt;class '__main__.BusinessRequest'&gt;</code> — same class object, different module qualifier (<code>__main__</code> for a script that's run directly, <code>models</code> once it lives in and is imported from <code>models.py</code>). Tell students their own run — from an imported <code>models.py</code> — will show <code>models.BusinessRequest</code>.
+Check for understanding: this whole part is the CFU — circulate and read the five written answers as the primary signal that Parts 1–2 landed.
+</aside>
+</section>
+
+<!-- 26. PART 3 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Pending
+&lt;class '__main__.BusinessRequest'&gt;</pre>
+<p class="expect"><code>req_102.status</code> is <code>Pending</code> — approving <code>req_101</code> never touched it (question 1). <code>type(req_101)</code> is <code>&lt;class '__main__.BusinessRequest'&gt;</code> here; when you run it from an imported <code>models.py</code> as the guide does, it reads <code>&lt;class 'models.BusinessRequest'&gt;</code> (question 4) — same class, the module qualifier just changes from <code>__main__</code> to <code>models</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: this standalone block prints exactly <code>Pending</code> then <code>&lt;class '__main__.BusinessRequest'&gt;</code>. The guide's model answer <code>&lt;class 'models.BusinessRequest'&gt;</code> is what students see because their class lives in <code>models.py</code> and is imported — <code>__main__</code> vs <code>models</code> is the only difference, and it is not a different type. Have students actually run <code>print(type(req_101))</code> rather than guess the formatting.</aside>
+</section>
+
+<!-- 27. PART 3 quiz (CFU — R-conv fallback) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Why doesn't approving <code>req_101</code> affect <code>req_102</code>?</p>
+<button data-opt="A">Because <code>approve()</code> only changes <code>status</code>, and <code>req_102</code>'s <code>status</code> was already <code>'Pending'</code> — a coincidence of starting values</button>
+<button data-opt="B">Because Python re-runs <code>__init__</code> on every other instance whenever a method is called, resetting them</button>
+<button data-opt="C">Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that object's own data</button>
+<p class="why" hidden>Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that specific object's own data. Answering with <em>what</em> happens ("<code>req_102</code> stays <code>Pending</code>") misses the point; the answer is about the independence itself.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding has no Q&amp;A parenthetical — the guide states "This entire part <em>is</em> the check for understanding." Per the rollout convention for a CFU with no Q&amp;A, this quiz is built on the guide's own reflection question 2 and the keyed option / <code>.why</code> are taken <strong>verbatim</strong> from the guide's "Model strong answers" #2: "Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that specific object's own data." Disclosed here as an R-conv fallback.</aside>
+</section>
+
+<!-- 28. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Answering question 2 with a description of <em>what</em> happens (restating "<code>req_102</code> stays <code>Pending</code>") rather than <em>why</em> — redirect explicitly toward the independence concept itself, not just the observed fact.</p>
+<p>Answering question 3 vaguely ("self refers to the object") without connecting it to <em>which specific call</em> — push for the more precise "self refers to <code>req_101</code>, specifically because this line is <code>req_101.approve()</code>" framing.</p>
+</div>
+<aside class="notes">This entire part is the check for understanding — read student answers individually as you circulate and address gaps immediately, not later via Part 4's tests.</aside>
+</section>
+
+<!-- 29. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:42–0:58</span>
+<h1>Seven <code>pytest</code> Tests — including an independence test</h1>
+<aside class="notes">
+Teaching goal: seven tests, including Week 7's now-familiar boundary case, plus a <strong>new kind of test unique to OOP</strong>: a dedicated independence test, directly encoding Part 2–3's central lesson as executable, permanent verification.
+Say to the class (verbatim): "Seven tests. Six of them check individual behaviors — status changes, review thresholds, the boundary case exactly like Week 7. The seventh is new: a test whose entire job is proving instance independence, in code, so it's never just something we observed once and trusted."
+Check for understanding (asked at the end of this part): "Could you write a test proving <code>req_103</code> from Part 2 was never touched by anything that happened to <code>req_101</code> or <code>req_102</code>, using this same pattern?" Answer: Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood.
+</aside>
+</section>
+
+<!-- 30. PART 4 idea -->
+<section class="s-idea">
+<h3>Six routine tests, one that is genuinely new</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>The first three tests each build their <strong>own fresh instance</strong> — never share one object across tests, since a shared object's state from one test could leak into and corrupt the next.</p>
+<p><code>test_requires_review_at_boundary</code> — Week 7's exact boundary discipline, now on a method: <code>requires_review(1000)</code> must be <code>False</code>, because the condition is <code>&gt; 1000</code>, strictly greater, not <code>&gt;=</code>.</p>
+<p><code>test_instances_are_independent</code> — <strong>the lab's new, central test.</strong> Two objects are created, only <code>req1</code> is approved, and the assertion checks <code>req2.status</code>. It doesn't just check that <code>approve()</code> works — it checks that <code>approve()</code>'s effect is correctly <em>scoped to exactly one object</em>, a different and arguably more important property than any single method's individual correctness.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 4):
+- The first three tests (<code>test_default_status_is_pending</code>, <code>test_approve_changes_status</code>, <code>test_reject_changes_status</code>) — each creates its own fresh instance; a shared object's state could leak between tests.
+- <code>test_requires_review_at_boundary</code> — Week 7's boundary discipline applied to a method: confirms <code>&gt; 1000</code>, not <code>&gt;= 1000</code>, at the exact threshold.
+- <code>test_instances_are_independent</code> — the lab's new central test. Two objects, only <code>req1</code> approved, assertion on <code>req2.status</code>. Checks that <code>approve()</code>'s effect is scoped to exactly one object.
+Optional live demo (guide): temporarily break independence by moving <code>self.status = 'Pending'</code> out of <code>__init__</code> to a class-level assignment (a real mutable-class-attribute bug) and watch <code>test_instances_are_independent</code> catch it — skip if it feels like too large a detour.
+Common mistakes: writing <code>test_instances_are_independent</code> with the <em>same</em> object for both actions (creating <code>req1</code> twice), making it tautological; treating all seven tests as equally routine without recognising the independence test as conceptually different — ask a student to categorise the seven into groups (state-changing behaviour, boundary condition, independence).
+Check for understanding: yes — generalise the pattern to three objects: create three, act on two, assert the third is unchanged.
+</aside>
+</section>
+
+<!-- 31. PART 4 provided test file (STATIC — no pytest runner in browser) -->
+<section class="s-code">
+<h3>Type the tests as provided — <code>tests/test_models.py</code></h3>
+<pre><code class="language-python">from models import BusinessRequest
+
+def test_default_status_is_pending():
+    req = BusinessRequest(1, 'Test', 'Travel', 500)
+    assert req.status == 'Pending'
+
+def test_approve_changes_status():
+    req = BusinessRequest(2, 'Test', 'Travel', 500)
+    req.approve()
+    assert req.status == 'Approved'
+
+def test_reject_changes_status():
+    req = BusinessRequest(3, 'Test', 'Travel', 500)
+    req.reject()
+    assert req.status == 'Rejected'
+
+def test_requires_review_over_limit():
+    req = BusinessRequest(4, 'Test', 'Travel', 1500)
+    assert req.requires_review() is True
+
+def test_requires_review_under_limit():
+    req = BusinessRequest(5, 'Test', 'Travel', 500)
+    assert req.requires_review() is False
+
+def test_requires_review_at_boundary():
+    req = BusinessRequest(6, 'Test', 'Travel', 1000)
+    assert req.requires_review() is False  # &gt; not &gt;=
+
+def test_instances_are_independent():
+    req1 = BusinessRequest(7, 'A', 'Travel', 500)
+    req2 = BusinessRequest(8, 'B', 'Travel', 500)
+    req1.approve()
+    assert req2.status == 'Pending'</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, so neither this file nor the <code>pytest -v</code> pane can execute in the browser. Type it into <code>tests/test_models.py</code> and run <code>pytest -v</code> on your own machine. Two slides on, the same seven assertions run live.</p>
+<aside class="notes">
+Line by line:
+- <code>from models import BusinessRequest</code> — tests import the class the same way any other code would.
+- the first three tests — each builds a brand-new <code>BusinessRequest</code> rather than sharing one, so state can't leak between tests.
+- <code>test_requires_review_at_boundary</code> — the required boundary case; its own comment states why: the condition is <code>&gt; 1000</code>, strict. A <code>&gt;=</code> bug would pass the over/under tests and fail only here.
+- <code>test_instances_are_independent</code> — the new central test: two objects, only <code>req1</code> approved, assert <code>req2.status == 'Pending'</code>. Verifies <code>approve()</code>'s effect is scoped to one object.
+Common mistakes: creating <code>req1</code> twice instead of <code>req1</code> and <code>req2</code> (tautological test); not recognising the independence test as different in kind from the other six.
+Check for understanding: yes — three instances, act on two, assert the third is unchanged.
+</aside>
+</section>
+
+<!-- 32. PART 4 pytest -v pane (STATIC) -->
+<section class="s-out">
+<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
+<pre>tests/test_models.py::test_default_status_is_pending PASSED
+tests/test_models.py::test_approve_changes_status PASSED
+tests/test_models.py::test_reject_changes_status PASSED
+tests/test_models.py::test_requires_review_over_limit PASSED
+tests/test_models.py::test_requires_review_under_limit PASSED
+tests/test_models.py::test_requires_review_at_boundary PASSED
+tests/test_models.py::test_instances_are_independent PASSED
+7 passed</pre>
+<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all seven pass". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. The next slide runs the same seven checks live.</p>
+<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output — all seven pass": the seven <code>PASSED</code> lines and the <code>7 passed</code> summary. This pane is <strong>not executed</strong> in the deck — <code>pytest</code> has no browser runner. Double-checked locally with <code>python3 -m pytest -v</code> on <code>python3</code> 3.12.2 against the provided <code>models.py</code> + test file: <code>7 passed</code>. The provided code is correct as written — no hidden bugs this week.</aside>
+</section>
+
+<!-- 33. PART 4 live-logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The same seven checks, run live</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+
+# the same seven checks tests/test_models.py makes, as bare asserts
+req = BusinessRequest(1, 'Test', 'Travel', 500)
+assert req.status == 'Pending';        print('test_default_status_is_pending PASSED')
+
+req = BusinessRequest(2, 'Test', 'Travel', 500)
+req.approve()
+assert req.status == 'Approved';       print('test_approve_changes_status PASSED')
+
+req = BusinessRequest(3, 'Test', 'Travel', 500)
+req.reject()
+assert req.status == 'Rejected';       print('test_reject_changes_status PASSED')
+
+req = BusinessRequest(4, 'Test', 'Travel', 1500)
+assert req.requires_review() is True;  print('test_requires_review_over_limit PASSED')
+
+req = BusinessRequest(5, 'Test', 'Travel', 500)
+assert req.requires_review() is False; print('test_requires_review_under_limit PASSED')
+
+req = BusinessRequest(6, 'Test', 'Travel', 1000)
+assert req.requires_review() is False; print('test_requires_review_at_boundary PASSED')
+
+req1 = BusinessRequest(7, 'A', 'Travel', 500)
+req2 = BusinessRequest(8, 'B', 'Travel', 500)
+req1.approve()
+assert req2.status == 'Pending';       print('test_instances_are_independent PASSED')
+
+print('7 passed')</div>
+<p class="expect">Where the guide's point is "the tests pass", this runs the same seven assertions with <code>assert</code> so the class logic executes live even though <code>pytest</code> itself is static. Each <code>assert</code> that holds prints its test name; a failing one would raise <code>AssertionError</code> and stop the block.</p>
+<aside class="notes">
+Say to the class (verbatim): "Seven tests. Six of them check individual behaviors — status changes, review thresholds, the boundary case exactly like Week 7. The seventh is new: a test whose entire job is proving instance independence, in code, so it's never just something we observed once and trusted."
+Line by line: <code>BusinessRequest</code> is re-defined (fresh namespace), then the seven assertions from <code>tests/test_models.py</code> run as bare <code>assert</code>s, each with its own fresh instance. The final assertion is the independence check: only <code>req1</code> is approved, <code>req2.status</code> is still <code>'Pending'</code>.
+Check for understanding: yes — generalise to three objects: create three, act on two, assert the third's state is unchanged.
+</aside>
+</section>
+
+<!-- 34. PART 4 live-logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>test_default_status_is_pending PASSED
+test_approve_changes_status PASSED
+test_reject_changes_status PASSED
+test_requires_review_over_limit PASSED
+test_requires_review_under_limit PASSED
+test_requires_review_at_boundary PASSED
+test_instances_are_independent PASSED
+7 passed</pre>
+<p class="expect">Every one of the seven assertions holds, so all seven names print followed by <code>7 passed</code> — the live equivalent of the static <code>pytest -v</code> pane. The last line proves the independence property: <code>req1</code> was approved, <code>req2.status</code> is still <code>'Pending'</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these eight lines and exits 0. Each <code>assert</code> corresponds one-to-one with a test in <code>tests/test_models.py</code>, so a clean run here means all seven <code>pytest</code> tests pass too.</aside>
+</section>
+
+<!-- 35. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Could you write a test proving <code>req_103</code> from Part 2 was never touched by anything that happened to <code>req_101</code> or <code>req_102</code>, using this same pattern?</p>
+<button data-opt="A">Yes — create three instances, act on two of them, assert the third's state is unchanged: a direct generalization of <code>test_instances_are_independent</code> to three objects</button>
+<button data-opt="B">No — <code>pytest</code> can only compare two objects per test; three would need a separate framework</button>
+<button data-opt="C">No — independence can only be observed by printing, never asserted in a test</button>
+<p class="why" hidden>Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood." (Appendix B's "Extra — a second independence test, three objects" is exactly this test.)</aside>
+</section>
+
+<!-- 36. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>test_instances_are_independent</code> using the <strong>same</strong> object for both actions (a copy-paste slip creating <code>req1</code> twice instead of <code>req1</code> and <code>req2</code>) — this makes the test tautological (of course an object's status matches itself) rather than actually testing independence. A good "does this test genuinely test what its name claims" check.</p>
+<p>Treating all seven tests as equally routine, without recognizing <code>test_instances_are_independent</code> as conceptually different from the other six — ask a student to categorize the seven into groups (state-changing behavior, boundary condition, independence) to confirm the distinction registered.</p>
+</div>
+<aside class="notes">Check for understanding: yes — three instances, act on two, assert the third's state is unchanged — a direct generalization of the two-object independence test.</aside>
+</section>
+
+<!-- 37. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:06</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: the established ritual, on genuinely new (OOP) content — confirming the habit transfers cleanly to a new unit, not just the unit it was originally taught in.
+Say to the class (verbatim): "Same ritual, new kind of code entirely. If this feels routine by now, that's the habit working exactly as intended."
+Common mistakes: none new this week — pure repetition; the main thing worth confirming is that the ritual runs without needing the steps spelled out, four units of new material after it was first introduced.
+Check for understanding (asked at the end of this part): "Commit message must include 'lab 10' — quick, what's yours?" (A fast, low-stakes final check before the push, same pattern as every prior week.)
+</aside>
+</section>
+
+<!-- 38. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 10: OOP I BusinessRequest class' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Format, lint, test, then commit and push. The commit message must include <strong>"lab 10"</strong>. Same ritual as every prior module, on genuinely new OOP code.</p>
+<aside class="notes">
+Say to the class (verbatim): "Same ritual, new kind of code entirely. If this feels routine by now, that's the habit working exactly as intended."
+Line by line: <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all seven tests named; <code>&amp;&amp;</code> chaining stops the chain on any failure. Then stage everything, commit with a message that includes "lab 10", push.
+Common mistakes: none new this week — pure repetition; forgetting "lab 10" in the commit message is the same graded requirement as every prior week.
+Check for understanding: "Commit message must include 'lab 10' — quick, what's yours?" — a fast, low-stakes final check before the push.
+</aside>
+</section>
+
+<!-- 39. PART 5 quiz (CFU — R-conv fallback) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Per the guide, what must your Part 5 commit message include?</p>
+<button data-opt="A">The full class name, <code>BusinessRequest</code>, and a list of every method</button>
+<button data-opt="B">The text <strong>"lab 10"</strong> — e.g. <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code></button>
+<button data-opt="C">Nothing specific — any message is accepted for completion credit</button>
+<p class="why" hidden>The guide's Part 5 check-for-understanding is "Commit message must include 'lab 10' — quick, what's yours?" and the live-coded ritual is <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code>. Including "lab 10" is the same graded requirement as every prior week.</p>
+</div>
+<aside class="notes">The guide's Part 5 Check for understanding is a quick classroom prompt with no Q&amp;A parenthetical ("Commit message must include 'lab 10' — quick, what's yours?" — described only as "a fast, low-stakes final check before the push"). Per the rollout convention for a CFU with no Q&amp;A, the keyed answer is taken <strong>verbatim</strong> from same-segment lines: the CFU line "Commit message must include 'lab 10'" and the Part 5 "Live-code this" ritual <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code>. Disclosed here as an R-conv fallback.</aside>
+</section>
+
+<!-- 40. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>None new this week — pure repetition of an already-established sequence. The main thing worth confirming is that the ritual runs without needing the steps spelled out, four units of new material after it was first introduced.</p>
+<p>Forgetting "lab 10" in the commit message — the same graded requirement pattern as every prior week; a quick final check before <code>git push</code>.</p>
+</div>
+<aside class="notes">Check for understanding: "Commit message must include 'lab 10' — quick, what's yours?" — a fast, low-stakes final check before the push, same pattern as every prior week.</aside>
+</section>
+
+<!-- 41. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:06–1:15</span>
+<h1>Add a <code>summary()</code> Method</h1>
+<aside class="notes">
+Frame as a genuinely good closer if the room reaches it — real practice adding a new method to an existing, working class.
+One thing worth naming if you demo this: <code>summary()</code> reads <code>self.request_id</code>, <code>self.requester</code>, <code>self.category</code>, <code>self.amount</code>, and <code>self.status</code> — <strong>all five of the object's attributes at once</strong> — a genuinely natural use for a method: pulling together everything an object knows about itself into one readable output, without needing any information from outside the object (no parameters beyond <code>self</code>).
+A test for it (guide, <code>tests/test_models.py</code>): <code>test_summary_includes_key_fields</code> creates a <code>BusinessRequest(101, 'Taylor', 'Travel', 1200)</code>, calls <code>approve()</code>, then asserts <code>'Taylor'</code>, <code>'Approved'</code>, and <code>'1,200.00'</code> are each <code>in</code> the returned string.
+</aside>
+</section>
+
+<!-- 42. STRETCH code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — add <code>summary()</code> to <code>BusinessRequest</code></h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def summary(self):
+        """Return a one-line, human-readable summary of this request."""
+        return f'Request {self.request_id} by {self.requester} | {self.category} | ${self.amount:,.2f} | {self.status}'
+
+
+req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
+req_101.approve()
+print(req_101.summary())</div>
+<p class="expect">A new method on an existing, working class. <code>summary()</code> reads <strong>all five</strong> of the object's attributes at once and formats them into one line — <code>${self.amount:,.2f}</code> gives a thousands separator and two decimals. Called after <code>approve()</code>, so the status reads <code>Approved</code>.</p>
+<aside class="notes">
+Line by line: <code>summary(self)</code> takes only <code>self</code> — no outside information needed. <code>f'Request {self.request_id} by {self.requester} | {self.category} | ${self.amount:,.2f} | {self.status}'</code> pulls together <code>request_id</code>, <code>requester</code>, <code>category</code>, <code>amount</code> (formatted <code>1,200.00</code>), and the current <code>status</code>. <code>req_101.approve()</code> runs first, so <code>self.status</code> is <code>'Approved'</code> when <code>summary()</code> reads it.
+This is a natural use for a method: pulling together everything an object knows about itself into one readable output.
+</aside>
+</section>
+
+<!-- 43. STRETCH output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>Request 101 by Taylor | Travel | $1,200.00 | Approved</pre>
+<p class="expect">Matches the guide's Stretch "Verified output" (called on <code>req_101</code>, after <code>approve()</code>) exactly. <code>${self.amount:,.2f}</code> turns <code>1200</code> into <code>$1,200.00</code>; <code>self.status</code> reads <code>Approved</code> because <code>approve()</code> ran first.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly this one line and exits 0. The guide's <code>test_summary_includes_key_fields</code> asserts <code>'Taylor'</code>, <code>'Approved'</code>, and <code>'1,200.00'</code> are each substrings of this output — all three are present.</aside>
+</section>
+
+<!-- 44. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including <strong>"lab 10"</strong></li>
+<li><code>models.py</code> contains <code>BusinessRequest</code> with <code>__init__</code>, four methods, and <code>__repr__</code></li>
+<li><code>main.py</code> creates three instances, calls methods, and answers all five reflection questions in a comment block</li>
+<li><code>tests/test_models.py</code> contains all seven tests, including the boundary case and the independence test, all passing</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. Completion credit — the bar is the checklist above, not a graded rubric on the code. The featured idea to reinforce as they leave: <em>class = blueprint, instance = one specific thing built from it</em>, and each instance carries its own independent copy of the data.</aside>
+</section>
+
+<!-- 45. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 11</h3>
+<p>"Today, one class stood alone. Next week: composition (one class containing objects of another class) and inheritance (one class building on another) — the two primary ways classes relate to each other in real object-oriented systems."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: a solid grasp of a single class in isolation — <code>__init__</code>, <code>self</code>, instance methods, independent instances — is exactly what Week 11's composition and inheritance build on.</aside>
+</section>
+
+<!-- 46. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 10</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w10.md (Week 10 facilitation guide, "OOP I — Classes &amp; Objects"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4. The <code>tests/test_models.py</code> file and the <code>pytest -v</code> pane are static (no <code>pytest</code> runner in the browser) — output reproduced verbatim from the guide's "Verified output — all seven pass"; double-checked locally with <code>python3 -m pytest -v</code> (7 passed). The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> at the top; the guide splits it across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. <code>type(req_101)</code> reads <code>&lt;class '__main__.BusinessRequest'&gt;</code> in a standalone block vs the guide's <code>&lt;class 'models.BusinessRequest'&gt;</code> once imported from <code>models.py</code> — same class, different module qualifier. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
