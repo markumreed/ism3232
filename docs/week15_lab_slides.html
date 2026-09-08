@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 15 — Streamlit Business Interface</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Module 15 &nbsp;·&nbsp; Unit 4 · Capstone Build</p>
+<h1>Streamlit Business Interface</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "the interface, wired to last week's data layer"</span>
+<span class="t-item"><strong>0:04–0:12</strong> Part 1 — Install Streamlit and first run</span>
+<span class="t-item"><strong>0:12–0:36</strong> Part 2 — Build the complete five-tab <code>app.py</code></span>
+<span class="t-item"><strong>0:36–0:52</strong> Part 3 — Test every feature</span>
+<span class="t-item"><strong>0:52–1:02</strong> Part 4 — Adapt to your capstone domain</span>
+<span class="t-item"><strong>1:02–1:08</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:08–1:15</strong> Stretch preview + wrap-up, submission checklist</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes for the lab portion. This week's session <em>also</em> includes a separate 60–90 minute FastAPI/REST API concept lecture with no lab deliverable — awareness only, budgeted outside this 75-minute plan; tell students where it fits in your section's schedule so nobody is confused about why the day feels longer. Format: live code-along, ending with the full submission ritual. Prerequisites: Week 14 — complete, tested <code>database.py</code> (all five functions, <code>?</code> placeholders, <code>db_file</code> parameters). This is the lab where the capstone becomes a real, clickable application — every one of today's five tabs calls directly into Week 14's <code>database.py</code> functions; nothing about the data layer changes today, only a real interface sits in front of it.
+Say to the class (Intro, verbatim): "Every function in last week's <code>database.py</code> gets a real, clickable front end today. No terminal, no <code>sqlite3</code> shell, no Python REPL — a genuine web interface anyone could use. One fact about Streamlit explains almost everything you'll see today, so I want to say it now, before any code: <strong>Streamlit re-runs your entire script, top to bottom, every single time you interact with anything</strong> — click a button, change a dropdown, type in a box. That's not a bug or something to work around — it's the whole model, and it's why today's code looks the way it does."
+<strong>NOTE ON THIS DECK — ISM3232 STREAMLIT WEEK, predominantly READ-ONLY.</strong> Streamlit cannot run in Pyodide / the browser deck. Every <code>import streamlit as st</code> / <code>st.*</code> snippet and the full <code>app.py</code> is a plain <code>&lt;pre&gt;&lt;code class="language-python"&gt;</code> block <em>outside</em> any <code>.run</code> div, each carrying an on-slide note: "run this with <code>streamlit run app.py</code> on your own machine — it can't execute here". Their paired <code>s-out</code> slides <em>describe</em> the rendered UI in prose (which widget, its label, the layout, what changes on interaction) — a screenshot can't be produced; the aside says "the app renders this live when you run it locally". The <code>streamlit run</code> and ritual shell blocks are <code>data-readonly</code> (no Streamlit server, <code>ruff</code>, or <code>git</code> in the browser) with an illustrative-terminal <code>s-out</code> (standard Streamlit / ruff / git output shown for realism — the guide gives no literal transcript, disclosed on each). <strong>Runnable blocks</strong> (genuine <code>data-lang="python"</code>, verified against local <code>python3</code> 3.12.2, which matches Pyodide 0.26.4) are the pure-Python / stdlib-<code>sqlite3</code> helpers the app is built from: Tab 3's list-comprehension filter, Tab 4's dictionary-comprehension label→id bridge, and a stdlib-<code>sqlite3</code> end-to-end that reproduces the guide's Appendix A "Verified end-to-end behavior" exactly; the Stretch's <code>pandas</code> DataFrame prep runs with <code>data-packages="pandas"</code>. ISM3232 style: SINGLE quotes in Python throughout, matching the guide (the one exception is Tab 4's dict-comprehension label, which the guide itself writes with double quotes because the key contains <code>'</code>). Quizzes: Parts 1–3 key the guide's own "Check for understanding" parenthetical verbatim; Parts 4 and 5 have no CFU in the guide, so per R-conv-3 their <code>data-answer</code> is a verbatim same-segment line stating a position the guide clearly takes (disclosed on each). Keyed letters: A, C, B, C, A.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 14: complete, tested <code>database.py</code> — all five functions, <code>?</code> placeholders, <code>db_file</code> parameters</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (install + first run) – Part 5 (test + ritual)</span></div>
+<div><span class="k">Submission</span><span class="v">3 screenshots, GitHub URL, Canvas, completion credit</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. A version-specific caution worth knowing before class: this guide's code (matching the lab page) uses <code>st.dataframe(..., use_container_width=True)</code>, a parameter Streamlit has deprecated in favour of <code>width='stretch'</code>. Depending on exactly which Streamlit version <code>pip install streamlit</code> pulls for your section, this may show a harmless deprecation warning or, in a sufficiently new version, may already require the updated syntax. Run this guide's Part 2 <code>app.py</code> yourself before class, note your version (<code>streamlit version</code>), and if the old parameter is fully removed, switch your live-coded version to <code>width='stretch'</code> from the start rather than hitting an unexpected error in front of the room.
+Before class also: understand Streamlit's core execution model cold — <strong>the entire script re-runs, top to bottom, every time a user interacts with any widget</strong> — and have a rehearsed way to state it. Confirm <code>streamlit run app.py</code> opens correctly on your demo machine and know the port (<code>localhost:8501</code> by default) in case a student's browser doesn't open automatically.
+Materials: terminal (zsh), VS Code, Python 3.10+, the existing <code>module07_final_project</code> venv with a working <code>database.py</code> from Week 14; a web browser for viewing the running app.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Install and run a Streamlit app, understanding that it re-executes the entire script top to bottom on every interaction.</li>
+<li>Build a multi-tab interface with <code>st.tabs()</code>, and use <code>st.text_input</code>, <code>st.selectbox</code>, <code>st.number_input</code>, and <code>st.button</code> to collect user input.</li>
+<li>Wire every UI action directly to a <code>database.py</code> function — submit calls <code>add_record</code>, view/filter call <code>get_all_records</code>, update calls <code>update_status</code>, report calls <code>get_status_report</code>.</li>
+<li>Test a full user workflow end to end through the running interface, not just by reading the code.</li>
+<li>Adapt a generic five-tab template to their own capstone's specific domain, categories, and status values.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is Part 1's first run and the re-run model; objective 2 is Part 2's widget syntax; objective 3 is the tab-to-function mapping that is "the entire structure of this file"; objective 4 is Part 3's guided test pass (this lab's actual verification step — there is no <code>pytest</code> for UI behaviour today); objective 5 is Part 4's domain adaptation.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes (lab portion only)</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "the interface, wired to last week's data layer"</td><td>4</td></tr>
+<tr><td>0:04–0:12</td><td>Part 1 — Install Streamlit and first run</td><td>8</td></tr>
+<tr><td>0:12–0:36</td><td>Part 2 — Build the complete five-tab <code>app.py</code></td><td>24</td></tr>
+<tr><td>0:36–0:52</td><td>Part 3 — Test every feature</td><td>16</td></tr>
+<tr><td>0:52–1:02</td><td>Part 4 — Adapt to your capstone domain</td><td>10</td></tr>
+<tr><td>1:02–1:08</td><td>Part 5 — Ritual and push</td><td>6</td></tr>
+<tr><td>1:08–1:15</td><td>Stretch preview + wrap-up, submission checklist</td><td>7</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 2 receives the most time of the whole lab — five tabs' worth of new widget syntax, each wired to a different database function, is genuinely the bulk of today's new content, worth walking tab by tab, unhurried. Part 3's guided testing pass is also given real time, since it is this lab's actual verification step (there is no <code>pytest</code> for UI behaviour today).</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>The interface, wired to last week's data layer</h1>
+<aside class="notes">
+Teaching goal: frame the day — every function in Week 14's <code>database.py</code> gets a real, clickable front end, and one fact about Streamlit explains almost everything students will see.
+Say to the class (verbatim): "Every function in last week's <code>database.py</code> gets a real, clickable front end today. No terminal, no <code>sqlite3</code> shell, no Python REPL — a genuine web interface anyone could use. One fact about Streamlit explains almost everything you'll see today, so I want to say it now, before any code: <strong>Streamlit re-runs your entire script, top to bottom, every single time you interact with anything</strong> — click a button, change a dropdown, type in a box. That's not a bug or something to work around — it's the whole model, and it's why today's code looks the way it does."
+This is the lab where the capstone becomes a real, if simple, business tool a non-programmer could actually use. Nothing about the data layer changes today — only a real interface sits in front of it.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:12</span>
+<h1>Install Streamlit and First Run</h1>
+<aside class="notes">
+Teaching goal: install Streamlit, run a minimal "hello world," and see the re-run model in action for the first time, concretely.
+Say to the class (verbatim): "Smallest possible Streamlit app first — two lines — just to confirm the pipeline works before building anything real."
+Line-by-line: <code>import streamlit as st</code> — same aliasing convention as <code>pandas as pd</code>; <code>st</code> is the near-universal community shorthand. <code>st.title('...')</code>, <code>st.write('...')</code> — say explicitly, these two lines are <strong>not</strong> <code>print()</code>: Streamlit functions like these don't send text to a terminal, they render actual formatted HTML elements in a browser tab. <code>streamlit run app.py</code> — <strong>not <code>python3 app.py</code></strong> — worth flagging explicitly, since it's a genuinely different way of running a Python file than every prior week: <code>streamlit run</code> starts a small local web server and opens a browser tab pointed at it (<code>http://localhost:8501</code> by default), rather than just executing the script and printing to the terminal.
+Common student mistakes: running <code>python3 app.py</code> out of habit — this runs without error but produces <strong>no visible output at all</strong>, since <code>st.title()</code>/<code>st.write()</code> need Streamlit's own server process to render anything; a good, low-stakes "why did nothing happen" moment. Forgetting <code>pip install streamlit</code> before running — <code>ModuleNotFoundError: No module named 'streamlit'</code>, the same familiar missing-import pattern from every prior module.
+Check for understanding: "If you closed the browser tab but left the terminal command running, would the app still be 'running'?" (Yes — the local server process (started by <code>streamlit run</code>) keeps running until you stop it in the terminal, typically with <code>Ctrl+C</code>; the browser tab is just a <em>view</em> onto that running server, and reopening <code>localhost:8501</code> in a new tab would show the same live app again. Worth stating explicitly, since Part 5 requires stopping the server before running the ritual.)
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea — <code>streamlit run</code>, and "the whole script re-runs"</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>streamlit run app.py</code>, not <code>python3 app.py</code></strong> — <code>streamlit run</code> starts a small local web server and opens a browser tab pointed at it (<code>http://localhost:8501</code> by default). Running the same file with <code>python3</code> executes without error but renders <em>nothing</em> — <code>st.title()</code> / <code>st.write()</code> need the Streamlit server process to draw anything.</p>
+<p><strong><code>st.title(...)</code> / <code>st.write(...)</code> are not <code>print()</code></strong> — they render formatted HTML elements in the browser, not terminal text.</p>
+</div>
+<div class="concept danger">
+<div class="concept-lbl">The one fact that explains everything today</div>
+<p><strong>Streamlit re-runs your entire script, top to bottom, every single time you interact with any widget</strong> — click a button, change a dropdown, type in a box. It is the whole model, not a bug to work around, and it is why today's code looks the way it does.</p>
+</div>
+<aside class="notes">The re-run model is the load-bearing idea for the whole lab — every later "why does this work" answer traces back to it. State it now, before any real code, and keep it visible. There is no runnable block here: this is Streamlit-only, so the hello-world file on the next slide is shown static.</aside>
+</section>
+
+<!-- 8. PART 1 hello-world (static Streamlit) -->
+<section class="s-code">
+<h3>The two-line hello world — <code>app.py</code></h3>
+<pre><code class="language-python">import streamlit as st
+st.title('Hello from Streamlit!')
+st.write('Database connected.')</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> Setup first: <code>cd ~/ism3232/module07_final_project</code>, <code>source .venv/bin/activate</code>, <code>pip install streamlit</code>, <code>pip freeze &gt; requirements.txt</code>, <code>touch app.py</code>, <code>code app.py</code>.</p>
+<aside class="notes">
+Say to the class (verbatim): "Smallest possible Streamlit app first — two lines — just to confirm the pipeline works before building anything real."
+Line-by-line: <code>import streamlit as st</code> — the near-universal community alias, same convention as <code>pandas as pd</code>. <code>st.title('Hello from Streamlit!')</code> — renders a large title element in the browser tab; not a <code>print()</code>. <code>st.write('Database connected.')</code> — renders body text; also not a <code>print()</code>. This whole file is Streamlit code and cannot run in the deck — students run it locally with <code>streamlit run app.py</code>.
+</aside>
+</section>
+
+<!-- 9. PART 1 hello-world UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Browser tab at http://localhost:8501:
+
+  Hello from Streamlit!      <- large page title (from st.title)
+  Database connected.        <- ordinary body text  (from st.write)
+
+Nothing prints to the terminal. If you ran `python3 app.py`
+instead, the script would exit with no error and no visible
+output at all.</pre>
+<p class="expect">A description, not a screenshot — Streamlit can't render inside this deck. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide's Part 1 "Verify": "a browser tab opens showing 'Hello from Streamlit!' as a large title and 'Database connected.' as body text." The "no output at all" contrast is the guide's first common-mistake note — running <code>python3 app.py</code> out of habit executes the script as plain Python and renders nothing, since <code>st.*</code> needs Streamlit's server process.</aside>
+</section>
+
+<!-- 10. PART 1 streamlit run (readonly shell) -->
+<section class="s-code">
+<h3>Run it — <code>streamlit run app.py</code> (your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module07_final_project
+source .venv/bin/activate
+pip install streamlit
+pip freeze &gt; requirements.txt
+streamlit run app.py</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no Streamlit server, no venv in the browser). <code>streamlit run</code> starts a local web server and opens a browser tab; it keeps running until you stop it with <code>Ctrl+C</code> (Part 5). Illustrative terminal output on the next slide.</p>
+<aside class="notes">
+Line-by-line (guide, Part 1): <code>cd</code> into the Week 13/14 capstone folder; activate the existing <code>module07_final_project</code> venv; <code>pip install streamlit</code>; <code>pip freeze &gt; requirements.txt</code> records the new dependency; <code>streamlit run app.py</code> — <strong>not <code>python3 app.py</code></strong> — starts the local server and opens the browser tab at <code>http://localhost:8501</code>.
+Read-only: the Streamlit server and the venv cannot run in the browser emulator.
+</aside>
+</section>
+
+<!-- 11. PART 1 illustrative terminal -->
+<section class="s-out">
+<h3>Illustrative terminal — not run here</h3>
+<pre>$ streamlit run app.py
+
+  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.1.20:8501</pre>
+<p class="expect">Illustrative — the guide gives no literal transcript for <code>streamlit run</code>; this is Streamlit's standard startup banner, shown for realism. A browser tab then opens automatically at <code>localhost:8501</code>; if it doesn't, type that URL in manually.</p>
+<aside class="notes">Disclosed: the guide states only the behaviour ("<code>streamlit run</code> starts a small local web server and opens a browser tab pointed at it (<code>http://localhost:8501</code> by default)") and the verify step, not a literal terminal transcript. The banner above is Streamlit's own standard output. The server process stays alive until <code>Ctrl+C</code> — the basis of this segment's check-for-understanding and of Part 5's "stop Streamlit first" step. Not run here — no Streamlit server in the browser.</aside>
+</section>
+
+<!-- 12. PART 1 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">You close the browser tab but leave the <code>streamlit run app.py</code> terminal command running. Is the app still "running"?</p>
+<button data-opt="A">Yes — the local server process started by <code>streamlit run</code> keeps running until you stop it with <code>Ctrl+C</code>; the browser tab is just a <em>view</em> onto it, and reopening <code>localhost:8501</code> shows the same live app again</button>
+<button data-opt="B">No — closing the tab sends a shutdown signal to the server, so the terminal command exits on its own a few seconds later</button>
+<button data-opt="C">Only if you ran it with <code>python3 app.py</code> — <code>streamlit run</code> stops the moment its browser tab closes</button>
+<p class="why" hidden>The guide's Part 1 "Check for understanding": "Yes — the local server process (started by <code>streamlit run</code>) keeps running until you stop it in the terminal, typically with <code>Ctrl+C</code>; the browser tab is just a <em>view</em> onto that running server, and reopening <code>localhost:8501</code> in a new tab would show the same live app again. Worth stating explicitly, since Part 5 requires stopping the server before running the ritual." Closing the tab sends nothing to the server (B is wrong); <code>python3 app.py</code> renders nothing at all (C is wrong).</p>
+</div>
+<aside class="notes">Guide's Part 1 "Check for understanding", verbatim answer: "Yes — the local server process (started by <code>streamlit run</code>) keeps running until you stop it in the terminal, typically with <code>Ctrl+C</code>; the browser tab is just a <em>view</em> onto that running server, and reopening <code>localhost:8501</code> in a new tab would show the same live app again." Keyed A. This directly sets up Part 5's genuinely-new "stop Streamlit first" step.</aside>
+</section>
+
+<!-- 13. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>python3 app.py</code> out of habit — this technically runs without error (it just executes the script as plain Python), but produces <strong>no visible output at all</strong>, since <code>st.title()</code>/<code>st.write()</code> need Streamlit's own server process to actually render anything. A good, low-stakes "why did nothing happen" moment worth resolving explicitly.</p>
+<p>Forgetting <code>pip install streamlit</code> before running — <code>ModuleNotFoundError: No module named 'streamlit'</code>, the same familiar missing-import error pattern from every prior module.</p>
+</div>
+<aside class="notes">Both are the guide's Part 1 "Common student mistakes to watch for", verbatim. The <code>python3 app.py</code> silent-no-output case is the memorable one — it looks like nothing happened because, from the terminal's point of view, nothing did.</aside>
+</section>
+
+<!-- 14. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:12–0:36</span>
+<h1>Build the Complete <code>app.py</code></h1>
+<aside class="notes">
+Teaching goal: five tabs, each wired to a different <code>database.py</code> function — the lab's central content, worth walking tab by tab, unhurried.
+Say to the class (verbatim): "Five tabs, one file, each one calling a function you already built and tested last week. I want you to notice, tab by tab, which specific <code>database.py</code> function each one calls — that mapping is the entire structure of this file."
+Line-by-line of the setup: <code>create_table()</code> — called once, at the very top, with no <code>db_file</code> argument, so it uses the real <code>DB_FILE</code> default. Say explicitly: <strong>because the entire script re-runs on every interaction (Part 1's core fact), <code>create_table()</code> runs again every single time.</strong> This is only safe because Week 14's function used <code>CREATE TABLE IF NOT EXISTS</code> — a design decision made a full week earlier paying off directly here. <code>st.set_page_config(page_title='Request Tracker', layout='wide')</code> — configures the browser-tab title and page width; <code>layout='wide'</code> uses the full browser width, worth it for a data-heavy app. <code>tab1, tab2, tab3, tab4, tab5 = st.tabs([...])</code> — <strong>tuple unpacking, again, from Weeks 1/7/10</strong> — <code>st.tabs()</code> returns five tab objects at once, matched by position to the five string labels.
+Tab-to-function mapping (the whole structure): Submit → <code>add_record</code>; View → <code>get_all_records</code>; Filter → <code>get_all_records</code> + a list comprehension; Update → <code>get_all_records</code> + <code>update_status</code>; Report → <code>get_status_report</code>.
+Common student mistakes: placing widgets or function calls <strong>outside</strong> the correct <code>with tabN:</code> block — Streamlit doesn't raise an error, it just renders the element in the wrong place. Forgetting that <code>import pandas as pd</code> is <strong>not</strong> needed for Tab 2/3's <code>st.dataframe(records, ...)</code> — a plain list of dicts works directly. Confusing Tab 1's <code>category</code> with Tab 4's <code>options</code>/<code>selected</code> — separate variables in separate <code>with</code> blocks.
+Check for understanding: "If a user clicks 'Submit Request' in Tab 1, does anything happen to what's currently displayed in Tab 2, without switching tabs or clicking anything else?" (Yes — since clicking any button triggers a full script re-run top to bottom, Tab 2's <code>get_all_records()</code> call also re-runs and picks up the newly added record, even though the user is still looking at Tab 1; if they switch to Tab 2, the new record will already be there. A concrete illustration of the whole-script re-run model's real consequence.)
+</aside>
+</section>
+
+<!-- 15. PART 2 idea -->
+<section class="s-idea">
+<h3>Five tabs, five functions — the whole structure</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>tab1, tab2, tab3, tab4, tab5 = st.tabs(['Submit', 'View', 'Filter', 'Update', 'Report'])</code></strong> — tuple unpacking (Weeks 1/7/10): <code>st.tabs()</code> returns five tab objects at once, matched by position to the five labels. Each <code>with tabN:</code> block scopes which widgets belong to that tab.</p>
+<p><strong><code>create_table()</code> at the very top</strong> — the whole script re-runs on every interaction, so this runs every time. Safe only because Week 14 wrote <code>CREATE TABLE IF NOT EXISTS</code>.</p>
+</div>
+<table class="grid">
+<thead><tr><th>Tab</th><th>Calls</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>1 · Submit</td><td><code>add_record</code></td><td>collect 4 widget values, insert one row</td></tr>
+<tr><td>2 · View</td><td><code>get_all_records</code></td><td>show every row in a table</td></tr>
+<tr><td>3 · Filter</td><td><code>get_all_records</code></td><td>list-comprehension filter by status</td></tr>
+<tr><td>4 · Update</td><td><code>get_all_records</code> + <code>update_status</code></td><td>pick a row by readable label, change its status</td></tr>
+<tr><td>5 · Report</td><td><code>get_status_report</code></td><td>count + total per status, as metric boxes</td></tr>
+</tbody>
+</table>
+<p class="expect">"I want you to notice, tab by tab, which specific <code>database.py</code> function each one calls — that mapping is the entire structure of this file."</p>
+<aside class="notes">The mapping table <em>is</em> the lesson — say the function name aloud for each tab as you build it. Every function was built and tested in Week 14; nothing about the data layer changes today. The runnable helper blocks in this segment isolate the pure-Python parts (Tab 3's filter, Tab 4's label→id dict) so students can see them work without a Streamlit server.</aside>
+</section>
+
+<!-- 16. PART 2 setup (static Streamlit) -->
+<section class="s-code">
+<h3>Top of <code>app.py</code> — imports, table, tabs</h3>
+<pre><code class="language-python">import streamlit as st
+from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+create_table()
+
+st.set_page_config(page_title='Request Tracker', layout='wide')
+st.title('Business Request Tracker')
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(['Submit', 'View', 'Filter', 'Update', 'Report'])</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> Replace <code>app.py</code>'s hello-world content entirely with this, then add the five tab blocks that follow.</p>
+<aside class="notes">
+Line-by-line: <code>from database import ...</code> pulls in all five Week 14 functions. <code>create_table()</code> — no <code>db_file</code> argument, so it uses the real <code>DB_FILE</code> default; re-runs on every interaction, safe because of <code>CREATE TABLE IF NOT EXISTS</code>. <code>st.set_page_config(page_title='Request Tracker', layout='wide')</code> — browser-tab title + full-width layout for a data-heavy app. <code>st.title('Business Request Tracker')</code> — the large page heading (this is the string Part 4 has students change to their own system name). <code>st.tabs([...])</code> with five-way tuple unpacking. Streamlit code — cannot run in the deck.
+</aside>
+</section>
+
+<!-- 17. PART 2 setup UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Browser tab titled "Request Tracker", full browser width:
+
+  Business Request Tracker                      <- st.title
+
+  [ Submit ] [ View ] [ Filter ] [ Update ] [ Report ]   <- st.tabs
+  ------------------------------------------------------
+  (the selected tab's content shows below the tab strip)</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide, Part 2 setup explanation: <code>layout='wide'</code> "uses the full browser width instead of a narrower centered column"; <code>st.tabs()</code> "returns five tab objects at once, matched by position to the five string labels given." Only the selected tab's widgets are visible at a time; the other four still exist and still re-run on every interaction.</aside>
+</section>
+
+<!-- 18. PART 2 Tab 1 (static Streamlit) -->
+<section class="s-code">
+<h3>Tab 1 — Submit → <code>add_record</code></h3>
+<pre><code class="language-python">with tab1:
+    st.header('Submit a New Request')
+    requester = st.text_input('Your name')
+    category  = st.selectbox('Category', ['Travel', 'Equipment', 'Software', 'Other'])
+    amount    = st.number_input('Amount ($)', min_value=0.0, step=10.0)
+    notes     = st.text_area('Notes (optional)')
+    if st.button('Submit Request'):
+        if requester and amount &gt; 0:
+            add_record(requester, category, amount, notes)
+            st.success(f'Request submitted for {requester}')
+        else:
+            st.error('Name and amount are required.')</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong></p>
+<aside class="notes">
+Line-by-line: <code>with tab1:</code> — Module 12's <code>with</code> pattern, here scoping which widgets belong to <em>this</em> tab. <code>st.text_input('Your name')</code> — a text box; <code>requester</code> holds whatever is currently typed, <strong>re-read fresh on every re-run</strong>. <code>st.selectbox</code>, <code>st.number_input('Amount ($)', min_value=0.0, step=10.0)</code> (<code>min_value=0.0</code> prevents negative amounts; <code>step=10.0</code> is the increment), <code>st.text_area</code> — four widget types, one line each. <code>if st.button('Submit Request'):</code> — <strong>explain most carefully</strong>: <code>st.button(...)</code> returns <code>True</code> only on the exact re-run triggered by clicking it, then reverts to <code>False</code>. The button's <code>True</code> is <strong>not sticky</strong> — so the <code>add_record()</code> call runs once per click, not continuously. <code>if requester and amount &gt; 0:</code> — Week 5 truthiness (a non-empty string is <code>True</code>) plus a comparison, gating whether <code>add_record()</code> runs. <code>add_record(requester, category, amount, notes)</code> — <strong>this is the entire wiring</strong>: four widget values handed straight to Week 14's function, unchanged from <code>test_script.py</code>. <code>st.success</code>/<code>st.error</code> — styled green/red feedback boxes, presentational only.
+</aside>
+</section>
+
+<!-- 19. PART 2 Tab 1 UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Tab 1 "Submit" selected:
+
+  Submit a New Request                       <- st.header
+  Your name          [ __________________ ]  <- text_input
+  Category           [ Travel        v ]     <- selectbox: Travel/Equipment/Software/Other
+  Amount ($)         [ 0.00      - + ]       <- number_input, min 0.0, steps of 10.0
+  Notes (optional)   [ ______________ ]      <- multi-line text_area
+                     [ Submit Request ]      <- button
+
+On click: if a name is filled AND amount > 0  -> green box
+          "Request submitted for {name}"  (add_record ran)
+        otherwise                         -> red box
+          "Name and amount are required." (add_record did NOT run)</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide, Tab 1: the button's <code>True</code> lasts exactly one script execution, so <code>add_record()</code> runs once per click. The validation <code>if requester and amount &gt; 0</code> is checked <em>inside</em> the button-click block. <code>st.success</code>/<code>st.error</code> are "no different in principle from Week 7's <code>print()</code> calls in <code>main.py</code>, just rendered as styled UI elements."</aside>
+</section>
+
+<!-- 20. PART 2 Tab 2 + Tab 3 (static Streamlit) -->
+<section class="s-code">
+<h3>Tab 2 — View, Tab 3 — Filter → <code>get_all_records</code></h3>
+<pre><code class="language-python">with tab2:
+    st.header('All Requests')
+    records = get_all_records()
+    if records:
+        st.dataframe(records, use_container_width=True)
+    else:
+        st.info('No records yet.')
+
+with tab3:
+    st.header('Filter Requests')
+    status_filter = st.selectbox('Filter by status', ['All', 'Pending', 'Approved', 'Rejected'])
+    records = get_all_records()
+    if status_filter != 'All':
+        records = [r for r in records if r['status'] == status_filter]
+    st.dataframe(records, use_container_width=True)
+    st.caption(f'{len(records)} record(s) shown')</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> The list-comprehension filter is plain Python — the next slide runs it for real.</p>
+<aside class="notes">
+Line-by-line: <code>records = get_all_records()</code> — the same call from every Week 14 test, now fresh on every re-run, always reflecting the database's current contents. <code>st.dataframe(records, use_container_width=True)</code> — <strong>Streamlit accepts a list of dictionaries directly</strong> and renders it as an interactive, sortable table; this is exactly the <code>[dict(row) for row in ...]</code> shape <code>get_all_records()</code> was designed to return, no conversion needed. <code>use_container_width=True</code> — the version-specific detail from the setup checklist: still works but emits a deprecation warning recommending <code>width='stretch'</code>; if your version removed it, replace every occurrence. <code>if records: ... else: st.info(...)</code> — a graceful empty state. Tab 3: <code>status_filter = st.selectbox(...)</code> — a second, independent dropdown; no cross-talk with Tab 1's <code>category</code>. <code>if status_filter != 'All': records = [r for r in records if r['status'] == status_filter]</code> — <strong>Week 6's exact list-comprehension filter</strong>, on live results; the <code>'All'</code> option deliberately skips filtering. <code>st.caption(f'{len(records)} record(s) shown')</code> — muted helper text confirming the filtered count.
+</aside>
+</section>
+
+<!-- 21. PART 2 Tab 2 + 3 UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Tab 2 "View":
+  All Requests
+  [ sortable table: one row per record, columns id / requester /
+    category / amount / status / notes ]   -- or, if empty:
+  (blue info box) "No records yet."
+
+Tab 3 "Filter":
+  Filter Requests
+  Filter by status  [ All   v ]   <- All / Pending / Approved / Rejected
+  [ sortable table, rows kept only where status == chosen value;
+    "All" shows everything ]
+  "3 record(s) shown"              <- st.caption, muted</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide: no <code>import pandas</code> is needed — <code>st.dataframe</code> takes the plain list of dicts directly. The empty-state <code>st.info</code> is "a small but genuinely good UX habit." The <code>'All'</code> option is "a genuinely common, reusable UI pattern: an explicit 'no filter' option alongside the real filter values."</aside>
+</section>
+
+<!-- 22. PART 2 RUNNABLE — Tab 3 filter logic -->
+<section class="s-code">
+<h3>Run it — Tab 3's filter is plain Python on a list of dicts</h3>
+<div class="run" data-lang="python">records = [
+    {'id': 3, 'requester': 'Morgan', 'amount': 3500.0, 'status': 'Pending'},
+    {'id': 2, 'requester': 'Jordan', 'amount': 450.0, 'status': 'Pending'},
+    {'id': 1, 'requester': 'Taylor', 'amount': 1200.0, 'status': 'Pending'},
+]
+
+def shown(records, status_filter):
+    if status_filter != 'All':
+        records = [r for r in records if r['status'] == status_filter]
+    return f'{len(records)} record(s) shown'
+
+print(shown(records, 'Pending'))
+print(shown(records, 'All'))</div>
+<p class="expect">Genuinely runnable — this is the exact filter expression from Tab 3, lifted out of Streamlit. <code>get_all_records()</code> returns a list of dicts (Week 14), so the comprehension is ordinary Python. Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>records</code> stands in for what <code>get_all_records()</code> returns — a list of dicts, newest first (<code>id DESC</code>). <code>shown(...)</code> wraps Tab 3's two real lines: the <code>if status_filter != 'All'</code> guard and the list comprehension <code>[r for r in records if r['status'] == status_filter]</code>, then the <code>f'{len(records)} record(s) shown'</code> caption string. With all three rows <code>Pending</code>, filtering by <code>'Pending'</code> keeps all three; <code>'All'</code> skips the filter and also shows all three.
+This mirrors the guide's Part 3 Tab 3 test: "Filter by 'Pending' — confirm the shown count matches (all three, if none have been updated yet — verified: <code>3 record(s) shown</code>). Filter by 'All' to restore the full view."
+</aside>
+</section>
+
+<!-- 23. PART 2 RUNNABLE out — Tab 3 filter -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>3 record(s) shown
+3 record(s) shown</pre>
+<p class="expect">All three rows are <code>Pending</code>, so filtering by <code>'Pending'</code> keeps all three; <code>'All'</code> skips filtering entirely and also shows three. Matches the guide's Part 3 "verified: <code>3 record(s) shown</code>."</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4): the block prints exactly these two lines and exits 0. Guide's Part 3, Tab 3: "verified: <code>3 record(s) shown</code>", and "Filter by 'All' to restore the full view."</aside>
+</section>
+
+<!-- 24. PART 2 Tab 4 (static Streamlit) -->
+<section class="s-code">
+<h3>Tab 4 — Update → <code>get_all_records</code> + <code>update_status</code></h3>
+<pre><code class="language-python">with tab4:
+    st.header('Update Request Status')
+    records = get_all_records()
+    if records:
+        options = {f"ID {r['id']}: {r['requester']} - ${r['amount']:,.2f}": r['id'] for r in records}
+        selected = st.selectbox('Select request', list(options.keys()))
+        new_status = st.selectbox('New status', ['Pending', 'Approved', 'Rejected'])
+        if st.button('Update Status'):
+            update_status(options[selected], new_status)
+            st.success(f'Updated to {new_status}')
+    else:
+        st.info('No records yet.')</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> The <code>options</code> dictionary comprehension is plain Python — the next slide runs it for real. (This is the one place the guide uses double quotes: the label contains a <code>'</code>-free apostrophe-safe format, and the key string holds single quotes inside <code>r['id']</code>.)</p>
+<aside class="notes">
+Line-by-line — the trickiest line in the whole file, slow down: <code>options = {f"ID {r['id']}: {r['requester']} - ${r['amount']:,.2f}": r['id'] for r in records}</code> — a <strong>dictionary comprehension</strong>: for every record, a human-readable label string is the <strong>key</strong>, that record's actual <code>id</code> is the <strong>value</strong>. Why: <code>st.selectbox</code> must show something readable to a human (a name and amount, not a bare id), but the code needs the real <code>id</code> back to call <code>update_status(...)</code>. This dict is the bridge between "what the user sees" and "what the database needs." <code>selected = st.selectbox('Select request', list(options.keys()))</code> — the dropdown shows the readable labels; <code>selected</code> holds the full label string picked. <strong>Ordering, echoing Week 14:</strong> <code>options</code> is built by iterating <code>get_all_records()</code>, which orders by <code>id DESC</code>, so the dropdown's first, default-selected option is the <strong>most recently added</strong> request. <code>if st.button('Update Status'): update_status(options[selected], new_status)</code> — <code>options[selected]</code> looks up the real <code>id</code> for the chosen label and passes it to Week 14's function, signature unchanged.
+</aside>
+</section>
+
+<!-- 25. PART 2 Tab 4 UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Tab 4 "Update":
+  Update Request Status
+  Select request  [ ID 3: Morgan - $3,500.00        v ]
+                    ^ first / default option = MOST RECENT
+                      (get_all_records orders by id DESC)
+                    other options: "ID 2: Jordan - $450.00",
+                                   "ID 1: Taylor - $1,200.00"
+  New status      [ Pending  v ]   <- Pending / Approved / Rejected
+                  [ Update Status ]
+  On click -> update_status(real_id_for_selected_label, new_status)
+             green box "Updated to {new_status}"
+  If there are no records yet -> blue info box "No records yet."</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide: the default-selected option being the most recently added (not the first typed) "is a direct continuation of last week's 'read the ordering carefully' lesson, now showing up as a real UI behavior." Part 3's Tab 4 test leans on it explicitly.</aside>
+</section>
+
+<!-- 26. PART 2 RUNNABLE — Tab 4 dict comprehension -->
+<section class="s-code">
+<h3>Run it — the label &rarr; id bridge is a dict comprehension</h3>
+<div class="run" data-lang="python">records = [
+    {'id': 3, 'requester': 'Morgan', 'amount': 3500.0},
+    {'id': 2, 'requester': 'Jordan', 'amount': 450.0},
+    {'id': 1, 'requester': 'Taylor', 'amount': 1200.0},
+]
+
+options = {f"ID {r['id']}: {r['requester']} - ${r['amount']:,.2f}": r['id'] for r in records}
+
+for label in options:
+    print(label)
+
+selected = list(options.keys())[0]
+print('selected id ->', options[selected])</div>
+<p class="expect">Genuinely runnable — Tab 4's <code>options</code> comprehension and its <code>options[selected]</code> lookup, lifted out of Streamlit. <code>records</code> is newest-first (<code>id DESC</code>), so <code>list(options.keys())[0]</code> is the default-selected dropdown option. Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>records</code> is what <code>get_all_records()</code> returns, ordered <code>id DESC</code> (newest first). The dict comprehension builds each readable label (<code>f"ID {r['id']}: {r['requester']} - ${r['amount']:,.2f}"</code>) as the key and the raw <code>r['id']</code> as the value — the "what the user sees" → "what the database needs" bridge. <code>list(options.keys())[0]</code> is the dropdown's default (first) option; <code>options[selected]</code> recovers the real <code>id</code> (<code>3</code>, Morgan — the most recent), which is exactly what <code>update_status(...)</code> would receive.
+</aside>
+</section>
+
+<!-- 27. PART 2 RUNNABLE out — Tab 4 dict -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>ID 3: Morgan - $3,500.00
+ID 2: Jordan - $450.00
+ID 1: Taylor - $1,200.00
+selected id -> 3</pre>
+<p class="expect">The labels are ordered newest-first, matching <code>get_all_records()</code>'s <code>id DESC</code>. The default-selected label maps back to <code>id 3</code> (Morgan, the most recently added) — the ordering behaviour Part 3's Tab 4 test calls out.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these four lines and exits 0. The <code>${r['amount']:,.2f}</code> format gives <code>$3,500.00</code> / <code>$450.00</code> / <code>$1,200.00</code>, matching the guide's label format in the Tab 4 code (guide, Part 2). Guide, Tab 4 ordering note: "the dropdown's <em>first, default-selected</em> option is the <strong>most recently added</strong> request, not the first one ever submitted."</aside>
+</section>
+
+<!-- 28. PART 2 Tab 5 (static Streamlit) -->
+<section class="s-code">
+<h3>Tab 5 — Report → <code>get_status_report</code></h3>
+<pre><code class="language-python">with tab5:
+    st.header('Status Report')
+    report = get_status_report()
+    if report:
+        for row in report:
+            col1, col2 = st.columns(2)
+            col1.metric(row[0], row[1], 'requests')
+            col2.metric('Total', f'${row[2]:,.2f}')
+    else:
+        st.info('No data yet.')</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> <code>get_status_report()</code> returns plain tuples <code>(status, count, total)</code> — hence <code>row[0]</code> / <code>row[1]</code> / <code>row[2]</code>.</p>
+<aside class="notes">
+Line-by-line: <code>report = get_status_report()</code> — Week 14's aggregate function, returning plain tuples <code>(status, count, total)</code>, exactly as designed — this is why positional <code>row[0]</code>/<code>row[1]</code>/<code>row[2]</code> access appears here, matching last week's deliberate choice not to use <code>row_factory</code> for this function. <code>col1, col2 = st.columns(2)</code> — <strong>inside the loop</strong>, a fresh two-column layout for <em>every</em> status row; each status gets its own pair of side-by-side metric boxes. <code>col1.metric(row[0], row[1], 'requests')</code> — <code>st.metric()</code> renders a large styled number; three args are a label (status name), the main value (the count), and a small caption (<code>'requests'</code>, used here as a unit label). <code>col2.metric('Total', f'${row[2]:,.2f}')</code> — a second metric box, same row, showing that status's total dollar amount.
+</aside>
+</section>
+
+<!-- 29. PART 2 Tab 5 UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Tab 5 "Report" (one row of the loop per status):
+
+  Approved                 Total
+  1                        $3,500.00
+  requests
+
+  Pending                  Total
+  2                        $1,650.00
+  requests
+
+Each status = a fresh st.columns(2): left metric box shows
+status name / count / "requests"; right box shows "Total" / $amount.
+No rows yet -> blue info box "No data yet."</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally. Numbers shown are the guide's Appendix A verified example data.</p>
+<aside class="notes">Guide, Tab 5: <code>st.columns(2)</code> is called inside the loop so "each status gets its own pair of side-by-side metric boxes, not one shared pair reused across all statuses." The third <code>st.metric</code> argument is normally a change/delta; here it is repurposed as a unit label (<code>'requests'</code>). The numbers match the guide's Appendix A "Verified end-to-end behavior" — reproduced for real by the runnable block in Part 3.</aside>
+</section>
+
+<!-- 30. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">A user clicks "Submit Request" in Tab 1. Without switching tabs or clicking anything else, does what's displayed in Tab 2 change?</p>
+<button data-opt="A">No — Tab 2's code only runs when Tab 2 is the visible tab, so it stays stale until the user clicks over to it</button>
+<button data-opt="B">No — <code>st.dataframe</code> caches its last result and only refreshes on a full browser reload (F5)</button>
+<button data-opt="C">Yes — clicking any button triggers a full top-to-bottom script re-run, so Tab 2's <code>get_all_records()</code> also re-runs and picks up the new record; switching to Tab 2 later, it's already there</button>
+<p class="why" hidden>The guide's Part 2 "Check for understanding": "Yes — since clicking any button triggers a full script re-run top to bottom, Tab 2's <code>get_all_records()</code> call also re-runs and picks up the newly added record, even though the user is still looking at Tab 1; if they switch to Tab 2, the new record will already be there. A good, concrete illustration of the whole-script re-run model's real consequence." Tab code is not lazy per-tab (A); there is no such caching (B).</p>
+</div>
+<aside class="notes">Guide's Part 2 "Check for understanding", verbatim answer: "Yes — since clicking any button triggers a full script re-run top to bottom, Tab 2's <code>get_all_records()</code> call also re-runs and picks up the newly added record, even though the user is still looking at Tab 1; if they switch to Tab 2, the new record will already be there." Keyed C. Options A and B are plausible-sounding mental models the re-run fact directly refutes.</aside>
+</section>
+
+<!-- 31. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Placing widgets or function calls <strong>outside</strong> the correct <code>with tabN:</code> block — Streamlit doesn't raise an error, it just renders the misplaced element in the wrong tab (or above/below the tabs entirely). A "does this look right" visual check, not something Python catches.</p>
+<p>Forgetting that <code>import pandas as pd</code> is <strong>not</strong> needed for Tab 2/3's <code>st.dataframe(records, ...)</code> — passing a plain list of dicts works directly; pandas only becomes necessary for the Stretch chart.</p>
+<p>Confusing Tab 1's <code>category</code> with Tab 4's <code>options</code>/<code>selected</code> — separate variables in separate <code>with</code> blocks, genuinely distinct in purpose even though both dropdowns are <code>st.selectbox</code>.</p>
+</div>
+<aside class="notes">All three are the guide's Part 2 "Common student mistakes to watch for", verbatim. The misplaced-widget case is the sneaky one — no error, just a wrong-looking layout.</aside>
+</section>
+
+<!-- 32. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:36–0:52</span>
+<h1>Test Every Feature</h1>
+<aside class="notes">
+Teaching goal: a guided, end-to-end test pass through the running application — this lab's actual verification step, since there's no <code>pytest</code> suite for UI behaviour today.
+Say to the class (verbatim): "No automated tests today — the interface itself is what we're verifying, by actually using it, deliberately, tab by tab."
+Walk through each tab, live, with students following on their own running app: <strong>Tab 1</strong> — add three test records with genuinely different amounts (one under $500, one $500–$2000, one over $2000; this range matters for Part 4's thresholds). Confirm the green success message each time. <strong>Tab 2</strong> — switch tabs, confirm all three appear; verified via direct simulation: after Taylor $1,200, Jordan $450, Morgan $3,500, the view table shows exactly three rows. <strong>Tab 3</strong> — filter by 'Pending' → all three (<code>3 record(s) shown</code>) if none updated; filter by 'All' to restore. <strong>Tab 4</strong> — select the first (default) option — <strong>remind the room this is the most recently submitted record, per Part 2's ordering note</strong> — change its status to 'Approved'; switch to Tab 3, filter by 'Approved', confirm exactly one record. <strong>Tab 5</strong> — confirm the metrics: continuing the three-record example, <code>Approved: 1, Total $3,500.00</code> and <code>Pending: 2, Total $1,650.00</code> (Taylor's $1,200 + Jordan's $450).
+Common student mistakes: testing tabs in isolation, refreshing the browser between each, losing track of what data is actually in the database — encourage one continuous session in the stated order. Being confused when Tab 4's default option doesn't match "the first thing I submitted" — this is the Part 2 ordering behaviour, a live instance of the lesson, not a bug.
+Check for understanding: "If you added a fourth record in Tab 1 right now, without touching any other tab, and then immediately checked Tab 5's Report — would the totals reflect it?" (Yes — the moment the button click triggers a re-run, every tab's code re-executes fresh, including Tab 5's <code>get_status_report()</code> call, even though Tab 5 wasn't the tab being interacted with. A good final reinforcement of the whole-script re-run model.)
+</aside>
+</section>
+
+<!-- 33. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea — using the app <em>is</em> the test suite this week</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>No <code>pytest</code> today — there is no automated test for UI behaviour. Verification is a deliberate, ordered walk through the running app: submit three records with different amounts, view them, filter, update the default-selected (most recent) record, check the report.</p>
+<p>Test in <strong>one continuous session</strong>, in order — each tab's expected state follows from the previous tab's actions. Refreshing the browser or testing tabs in isolation loses track of what's actually in the database.</p>
+</div>
+<aside class="notes">Guide, Part 3 teaching goal: "this lab's actual verification step, since there's no <code>pytest</code> suite for UI behavior today." The runnable block next reproduces the guide's Appendix A end-to-end verification using stdlib <code>sqlite3</code> — the data layer the app wires to, running for real without a Streamlit server.</aside>
+</section>
+
+<!-- 34. PART 3 RUNNABLE — sqlite3 end-to-end -->
+<section class="s-code">
+<h3>Run it — the data layer, end to end (stdlib <code>sqlite3</code>)</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.row_factory = sqlite3.Row
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+
+def add_record(requester, category, amount, notes=''):
+    conn.execute(
+        'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+        (requester, category, amount, notes)
+    )
+
+def get_all_records():
+    cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
+    return [dict(row) for row in cur.fetchall()]
+
+def update_status(record_id, new_status):
+    conn.execute('UPDATE requests SET status=? WHERE id=?', (new_status, record_id))
+
+def get_status_report():
+    cur = conn.execute(
+        'SELECT status, COUNT(*) as count, SUM(amount) as total '
+        'FROM requests GROUP BY status ORDER BY status'
+    )
+    return cur.fetchall()
+
+add_record('Taylor', 'Travel', 1200)
+add_record('Jordan', 'Equipment', 450)
+add_record('Morgan', 'Software', 3500)
+
+records = get_all_records()
+update_status(records[0]['id'], 'Approved')
+
+for row in get_status_report():
+    print(f'{row[0]}: {row[1]} requests | Total: ${row[2]:,.2f}')</div>
+<p class="expect">Genuinely runnable — <code>import sqlite3</code> is stdlib (CPython and Pyodide). This is the guide's Appendix A end-to-end flow: submit Taylor / Jordan / Morgan, approve the default-selected (most recent) record, print the Tab 5 report. Adapted to one <code>:memory:</code> connection; <code>ORDER BY status</code> added for a deterministic print order (disclosed). Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: one in-memory connection with <code>row_factory = sqlite3.Row</code>; the four functions are Week 14's bodies, here closing over <code>conn</code> instead of taking <code>db_file</code> (the <code>:memory:</code> adaptation — Pyodide's FS is ephemeral). <code>add_record</code> three times = Tab 1 submits. <code>records = get_all_records()</code> then <code>update_status(records[0]['id'], 'Approved')</code> = Tab 4 approving the default-selected option, which is the most recent (<code>id DESC</code> → Morgan, id 3). <code>get_status_report()</code> = Tab 5. The guide's <code>get_status_report</code> has no <code>ORDER BY</code>; <code>ORDER BY status</code> is added here only to guarantee the print order matches the guide's transcript (Approved before Pending) — SQLite's <code>GROUP BY</code> already tends to return group-key order, but the explicit clause removes all doubt.
+This reproduces the guide's Appendix A "Verified end-to-end behavior" exactly.
+Check for understanding: yes — a fourth submit triggers a re-run in which every tab's code, including Tab 5's <code>get_status_report()</code>, re-executes fresh.
+</aside>
+</section>
+
+<!-- 35. PART 3 RUNNABLE out — sqlite3 -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Approved: 1 requests | Total: $3,500.00
+Pending: 2 requests | Total: $1,650.00</pre>
+<p class="expect">Reproduces the guide's Appendix A "Verified end-to-end behavior" verbatim: approving the most-recent record (Morgan, $3,500) leaves one Approved and two Pending (Taylor $1,200 + Jordan $450 = $1,650).</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (<code>sqlite3</code> stdlib == Pyodide 0.26.4): the block prints exactly these two lines and exits 0. Guide, Appendix A: "submitting Taylor ($1,200), Jordan ($450), and Morgan ($3,500) via Tab 1, then approving the default-selected (most recent, per the <code>id DESC</code> ordering) record in Tab 4, produces exactly this Tab 5 report: <code>Approved: 1 requests | Total: $3,500.00</code> / <code>Pending: 2 requests | Total: $1,650.00</code>." Also the guide's Part 3, Tab 5 line: "<code>Approved: 1, Total $3,500.00</code> and <code>Pending: 2, Total $1,650.00</code>."</aside>
+</section>
+
+<!-- 36. PART 3 predict — the guided test pass -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>You submit Taylor $1,200, Jordan $450, Morgan $3,500 in Tab 1, then in Tab 4 you leave the dropdown on its <em>default</em> option and set status to "Approved". You switch to Tab 3 and filter by "Approved". How many records show, and which one?</p>
+<pre class="answer" hidden>Exactly one record: Morgan, $3,500.
+
+Tab 4's default (first) option is the MOST RECENTLY added record,
+because get_all_records() orders by id DESC. Morgan was submitted
+last, so Morgan is what got approved -- not Taylor, the first one
+typed. Tab 5 then reads: Approved 1 / $3,500.00, Pending 2 / $1,650.00.</pre>
+</div>
+<aside class="notes">Guide, Part 3, Tab 4: "Select the first (default) option in the dropdown — <strong>remind the room explicitly this is the most recently submitted record, per Part 2's ordering note, not necessarily the first one they typed</strong> — and change its status to 'Approved'. Switch to Tab 3, filter by 'Approved', and confirm exactly one record now appears there." The guide flags student confusion here as "a live, real instance of the lesson rather than treating it as a bug to fix."</aside>
+</section>
+
+<!-- 37. PART 3 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You add a fourth record in Tab 1 and, without touching any other tab, immediately check Tab 5's Report. Do the totals reflect the new record?</p>
+<button data-opt="A">No — Tab 5 only recomputes when you actually click onto the Report tab</button>
+<button data-opt="B">Yes — the button click triggers a re-run in which every tab's code re-executes fresh, including Tab 5's <code>get_status_report()</code>, even though Tab 5 wasn't the tab being interacted with</button>
+<button data-opt="C">Only if you call <code>st.rerun()</code> yourself after the submit</button>
+<p class="why" hidden>The guide's Part 3 "Check for understanding": "Yes — the moment the button click triggers a re-run, every tab's code re-executes fresh, including Tab 5's <code>get_status_report()</code> call, even though Tab 5 wasn't the tab being interacted with. A good final reinforcement of the whole-script re-run model." Tab code is not deferred per-tab (A); no manual <code>st.rerun()</code> is needed — the button click already caused the re-run (C).</p>
+</div>
+<aside class="notes">Guide's Part 3 "Check for understanding", verbatim answer: "Yes — the moment the button click triggers a re-run, every tab's code re-executes fresh, including Tab 5's <code>get_status_report()</code> call, even though Tab 5 wasn't the tab being interacted with." Keyed B. Same re-run model as Part 2's CFU, now applied to the aggregate report.</aside>
+</section>
+
+<!-- 38. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Testing tabs in isolation, refreshing the browser between each, and losing track of what data is actually in the database at each step — encourage testing in one continuous session, in the stated order, so each tab's expected state genuinely follows from the previous tab's actions.</p>
+<p>Being confused when Tab 4's default-selected dropdown option doesn't match "the first thing I submitted" — this is the exact ordering behaviour flagged in Part 2; use it as a live, real instance of the lesson rather than treating it as a bug to fix.</p>
+</div>
+<aside class="notes">Both are the guide's Part 3 "Common student mistakes to watch for", verbatim. The ordering confusion is a teaching opportunity — <code>id DESC</code> means newest-first, and that shows up as a real UI default here.</aside>
+</section>
+
+<!-- 39. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:52–1:02</span>
+<h1>Adapt to Your Capstone Domain</h1>
+<aside class="notes">
+Teaching goal: customize the generic five-tab template to match each student's own Week 13 proposal — genuinely making it <em>their</em> capstone, not a shared demo app with a different title.
+Say to the class (verbatim): "Four specific things to change, matching your own proposal from three weeks ago — not a rewrite, targeted edits."
+The four required changes (matching the lab page): <code>st.title()</code> → the student's own system name; category selectbox options → the student's own domain's categories; column names in the dataframe → must match the student's own database schema (from Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code>); status options → change if the student's system uses different status values than <code>Pending</code>/<code>Approved</code>/<code>Rejected</code>.
+Facilitation notes: the most common mismatch — a student who adapted <code>database.py</code>'s column names in Week 14 but forgot one of today's dropdown/label strings still references the old generic names (<code>requester</code>, <code>category</code>, <code>amount</code>); walk the room cross-checking today's <code>app.py</code> against each student's own <code>database.py</code> <code>CREATE TABLE</code>, field by field. Encourage re-running the full Part 3 test pass on the customized version — "a working script and a <em>correctly wired</em> script are different claims."
+Common student mistakes: changing the displayed category labels but not correspondingly updating anything in <code>database.py</code> that depends on specific category strings (today's changes are UI-layer only; logic differences belong in <code>database.py</code>). Leaving <code>st.title('Business Request Tracker')</code> unchanged — a generic, un-customized title is an easy, visible signal a submission wasn't genuinely adapted.
+Check for understanding: the guide gives no explicit CFU for Part 4. Per R-conv-3, the paired quiz keys a verbatim same-segment line stating a position the guide clearly takes: "Column names in the dataframe — must match the student's own database schema (from Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code>)."
+</aside>
+</section>
+
+<!-- 40. PART 4 idea -->
+<section class="s-idea">
+<h3>Four targeted edits — not a rewrite</h3>
+<div class="concept">
+<div class="concept-lbl">Change exactly these</div>
+<p><strong><code>st.title()</code></strong> — your own system name, not "Business Request Tracker".</p>
+<p><strong>Category selectbox options</strong> — your own domain's categories.</p>
+<p><strong>Column names in the dataframe</strong> — must match your own database schema (Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code>).</p>
+<p><strong>Status options</strong> — change if your system uses different status values than <code>Pending</code> / <code>Approved</code> / <code>Rejected</code>.</p>
+</div>
+<p class="expect">Today's changes are UI-layer only. Any actual business-logic difference (category-specific rules, say) belongs back in <code>database.py</code>, following Week 14's patterns.</p>
+<aside class="notes">The four bullets are the guide's Part 4 "four required changes explicitly, matching the lab page", verbatim. The load-bearing one is column names: a student who renamed columns in Week 14 but left a Week 15 label string on the old generic name has a subtly broken wiring that still runs without a Python error.</aside>
+</section>
+
+<!-- 41. PART 4 adapt sketch (static Streamlit) -->
+<section class="s-code">
+<h3>Illustrative — generic template &rarr; a capstone domain</h3>
+<pre><code class="language-python"># generic template (what you built in Part 2)
+st.title('Business Request Tracker')
+category   = st.selectbox('Category', ['Travel', 'Equipment', 'Software', 'Other'])
+new_status = st.selectbox('New status', ['Pending', 'Approved', 'Rejected'])
+
+# adapted to a campus event-registration capstone ("GalaTrack")
+st.title('GalaTrack — Event Registration')
+event_type = st.selectbox('Event type', ['Gala', 'Workshop', 'Mixer', 'Fundraiser'])
+new_status = st.selectbox('New status', ['Waitlisted', 'Confirmed', 'Cancelled'])
+# ...and every dataframe label / options-dict key that read 'requester' or
+# 'amount' must now read the column names from YOUR create_table().</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> Illustrative only — your domain, categories, and statuses come from your own Week 13 proposal.</p>
+<aside class="notes">
+Line-by-line: the three edited lines are <code>st.title()</code>, the category/event-type <code>st.selectbox</code> options, and the status <code>st.selectbox</code> options — plus (in comments) the dataframe column labels and the Tab 4 options-dict keys, which must track whatever <code>create_table()</code> actually named the columns. "GalaTrack" is an illustrative stand-in matching the Week 13 exemplar's worked example; every student substitutes their own approved proposal. Streamlit code — cannot run in the deck.
+</aside>
+</section>
+
+<!-- 42. PART 4 adapt UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>After adaptation, the same five tabs, but:
+
+  - the page title bar shows YOUR system name
+  - Tab 1's category dropdown lists YOUR domain's categories
+  - Tab 1 & Tab 4's status dropdowns list YOUR status values
+  - the Tab 2 / Tab 3 table headers are YOUR schema's column names
+  - Tab 4's "Select request" labels read from YOUR columns
+
+If a label still says "requester" / "amount" but your schema
+renamed those columns, the app still runs -- but a KeyError
+appears the moment that tab touches the missing key.</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally.</p>
+<aside class="notes">Guide: "walk the room specifically cross-checking today's <code>app.py</code> against each student's own <code>database.py</code> <code>CREATE TABLE</code> statement, field by field." A working script and a correctly wired script are different claims — only re-running the full Part 3 test pass confirms the second.</aside>
+</section>
+
+<!-- 43. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">When you adapt the template to your capstone, what must the dataframe column names match?</p>
+<button data-opt="A">The category labels you chose for the Tab 1 selectbox</button>
+<button data-opt="B">The four generic names in the guide (<code>requester</code>, <code>category</code>, <code>amount</code>, <code>notes</code>) — those are required and shouldn't change</button>
+<button data-opt="C">Your own database schema — from Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code></button>
+<p class="why" hidden>Per R-conv-3 (the guide gives no explicit Part 4 CFU): the guide's Part 4 states the four required changes verbatim, including "Column names in the dataframe — must match the student's own database schema (from Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code>)." The guide's facilitation note names the most common mismatch: a label still referencing the old generic names (<code>requester</code>, <code>category</code>, <code>amount</code>) after the schema was renamed in Week 14 — so B is exactly the bug to avoid, not the rule.</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: Part 4 has no "Check for understanding" parenthetical. The keyed answer (C) is a verbatim same-segment line — the guide's third required change: "Column names in the dataframe — must match the student's own database schema (from Week 13's <code>schema.sql</code> / Week 14's <code>create_table()</code>)." This is a position the guide clearly takes (it is one of four explicitly required edits, and the facilitation notes call the mismatch "the most common mismatch to watch for"). Keyed C.</aside>
+</section>
+
+<!-- 44. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Changing the displayed category <em>labels</em> in the selectbox but not correspondingly updating anything in <code>database.py</code> that might depend on specific category strings (if a student's own system has category-specific business logic) — today's changes are UI-layer only; any actual logic differences belong back in <code>database.py</code>, following Week 14's patterns.</p>
+<p>Leaving <code>st.title('Business Request Tracker')</code> unchanged — a small thing, but worth catching, since a generic, un-customized title is an easy, visible signal a submission wasn't genuinely adapted.</p>
+</div>
+<aside class="notes">Both are the guide's Part 4 "Common student mistakes to watch for", verbatim. The unchanged title is the quick tell a grader spots first; the UI-vs-logic split is the subtler point to make.</aside>
+</section>
+
+<!-- 45. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 1:02–1:08</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: stop the running Streamlit server before running the ritual — a genuinely new step this week — then the now-familiar format/lint/commit/push sequence.
+Say to the class (verbatim): "One new step before the usual ritual: stop Streamlit first. It's still running as a live server in your terminal — the ritual needs that terminal back."
+Do: in the terminal running Streamlit, press <code>Ctrl+C</code>. Then the ritual — <strong>note no <code>pytest</code> this week</strong>, since there's no test suite for the UI: <code>ruff format . &amp;&amp; ruff check .</code> then <code>git add . &amp;&amp; git commit -m 'lab 15: Streamlit five-feature interface' &amp;&amp; git push</code>.
+Common student mistakes: opening a <em>second</em> terminal tab to run the ritual while Streamlit is still running in the first, rather than stopping it — this works fine functionally, but the lab page's instruction is to stop it first, and a stopped, deliberate state is easier to reason about. Committing <code>data/requests.db</code> despite Week 13's <code>*.db</code> <code>.gitignore</code> entry — same check as every prior week: <code>git status</code> before <code>add</code>/<code>commit</code> catches an accidentally-tracked database file.
+Check for understanding: the guide gives no explicit CFU for Part 5. Per R-conv-3, the paired quiz keys a verbatim same-segment line stating a position the guide clearly takes: "stop Streamlit first. It's still running as a live server in your terminal — the ritual needs that terminal back", together with "note no <code>pytest</code> this week, since there's no test suite for the UI".
+</aside>
+</section>
+
+<!-- 46. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>Run in your own terminal — stop Streamlit, then the ritual</h3>
+<div class="run" data-lang="shell" data-readonly># In the terminal running Streamlit:
+Ctrl+C
+
+# Then the ritual -- no pytest this week (no UI test suite):
+ruff format . &amp;&amp; ruff check .
+git add . &amp;&amp; git commit -m 'lab 15: Streamlit five-feature interface' &amp;&amp; git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no Streamlit server, <code>ruff</code>, or <code>git</code> in the browser). <code>Ctrl+C</code> in the Streamlit terminal stops the live server and hands the terminal back. Illustrative terminal output on the next slide.</p>
+<aside class="notes">
+Line-by-line (guide, Part 5): <code>Ctrl+C</code> in the Streamlit terminal — the genuinely new step; Streamlit is a live server holding that terminal. <code>ruff format . &amp;&amp; ruff check .</code> — the familiar format-then-lint pair. <code>git add . &amp;&amp; git commit -m 'lab 15: Streamlit five-feature interface' &amp;&amp; git push</code> — the commit message must include "lab 15" (Canvas requirement). No <code>pytest</code> — there is no test suite for UI behaviour this week. Run <code>git status</code> before <code>add</code> to confirm <code>data/requests.db</code> is not being tracked (Week 13's <code>*.db</code> <code>.gitignore</code> entry should already exclude it).
+Read-only: no Streamlit server, <code>ruff</code>, or <code>git</code> in the browser emulator.
+</aside>
+</section>
+
+<!-- 47. PART 5 illustrative terminal -->
+<section class="s-out">
+<h3>Illustrative terminal — not run here</h3>
+<pre>^C
+  Stopping...
+
+$ ruff format . &amp;&amp; ruff check .
+2 files reformatted, 1 file left unchanged
+All checks passed!
+
+$ git add . &amp;&amp; git commit -m 'lab 15: Streamlit five-feature interface' &amp;&amp; git push
+[main 5c1a9f2] lab 15: Streamlit five-feature interface
+ 2 files changed, 61 insertions(+)
+To https://github.com/YOURUSERNAME/module07_final_project.git
+   e7b3d40..5c1a9f2  main -&gt; main</pre>
+<p class="expect">Illustrative — the guide gives no literal transcript; this is standard <code>Ctrl+C</code> / <code>ruff</code> / <code>git</code> output shown for realism. The short hash and file counts will differ for you.</p>
+<aside class="notes">Disclosed: the guide states the commands and the "no <code>pytest</code> this week" note, not a literal terminal transcript. The <code>^C</code> / <code>Stopping...</code> line is Streamlit's standard shutdown output; the <code>ruff</code> and <code>git</code> lines are those tools' standard output. Guide, Part 5: the commit message must include "lab 15"; <code>git status</code> before <code>add</code> catches an accidentally-tracked <code>data/requests.db</code>. Not run here — no <code>git</code>/<code>ruff</code> in the browser.</aside>
+</section>
+
+<!-- 48. PART 5 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What's the one new step this week before the usual format / lint / commit / push ritual?</p>
+<button data-opt="A">Stop Streamlit first with <code>Ctrl+C</code> — it's still running as a live server holding your terminal, and the ritual needs that terminal back; also, no <code>pytest</code> this week (there's no UI test suite)</button>
+<button data-opt="B">Run <code>pytest</code> against the five tabs before committing, the same as every prior week</button>
+<button data-opt="C">Delete <code>data/requests.db</code> by hand so the test records don't get committed</button>
+<p class="why" hidden>Per R-conv-3 (the guide gives no explicit Part 5 CFU): the guide's Part 5 "Say to the class" is verbatim "One new step before the usual ritual: stop Streamlit first. It's still running as a live server in your terminal — the ritual needs that terminal back," and the ritual note is verbatim "note no <code>pytest</code> this week, since there's no test suite for the UI." <code>pytest</code> (B) is explicitly skipped; deleting the DB by hand (C) isn't needed — Week 13's <code>*.db</code> <code>.gitignore</code> entry already excludes it, and <code>git status</code> before <code>add</code> is the check.</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: Part 5 has no "Check for understanding" parenthetical. The keyed answer (A) combines two verbatim same-segment lines — "stop Streamlit first. It's still running as a live server in your terminal — the ritual needs that terminal back" and "note no <code>pytest</code> this week, since there's no test suite for the UI" — both positions the guide clearly and explicitly takes. Keyed A.</aside>
+</section>
+
+<!-- 49. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Opening a <em>second</em> terminal tab to run the ritual while Streamlit is still running in the first, rather than stopping it — this actually works fine functionally (the two processes don't conflict), but the lab page's own instruction is to stop it first, and a stopped, deliberate state is easier to reason about than "several things running at once, hopefully not interfering."</p>
+<p>Committing <code>data/requests.db</code> despite Week 13's <code>*.db</code> <code>.gitignore</code> entry — same check as every prior week: <code>git status</code> before <code>add</code>/<code>commit</code> catches an accidentally-tracked database file.</p>
+</div>
+<aside class="notes">Both are the guide's Part 5 "Common student mistakes to watch for", verbatim. The <code>git status</code>-before-<code>add</code> habit is the same one from every prior week — the new wrinkle is just remembering to free the terminal from Streamlit first.</aside>
+</section>
+
+<!-- 50. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:08–1:12 · as time allows</span>
+<h1>Bar Chart in the Report Tab</h1>
+<aside class="notes">
+Frame as a quick, genuinely nice visual upgrade if the room reaches it.
+One sentence of framing, if you demo this (verbatim): "<code>report</code> is a list of plain tuples — <code>pd.DataFrame(report, columns=[...])</code> wraps it in a real DataFrame, exactly Unit 4's Module 13 skills from ISM2411-adjacent pandas work if your students have that background, or a light first taste if not. <code>.set_index('Status')['Total']</code> picks out just the <code>Total</code> column, indexed by status name, which is exactly the shape <code>st.bar_chart()</code> expects — one bar per status, height equal to that status's total revenue."
+Verified (guide): replaces the metric boxes with a two-bar chart (<code>Approved</code>: $3,500, <code>Pending</code>: $1,650) for the guide's running example data.
+</aside>
+</section>
+
+<!-- 51. STRETCH code (static Streamlit) -->
+<section class="s-code">
+<h3>In Tab 5, after getting the report</h3>
+<pre><code class="language-python">import pandas as pd
+df = pd.DataFrame(report, columns=['Status', 'Count', 'Total'])
+st.bar_chart(df.set_index('Status')['Total'])</code></pre>
+<p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong> <code>st.bar_chart(...)</code> is Streamlit; the <code>pd.DataFrame</code> prep it feeds is plain pandas — the next slide runs that part for real.</p>
+<aside class="notes">
+Line-by-line (guide, Stretch): <code>import pandas as pd</code> — pandas <em>is</em> needed here (unlike <code>st.dataframe</code>). <code>pd.DataFrame(report, columns=['Status', 'Count', 'Total'])</code> — wraps the list of plain tuples in a real DataFrame with named columns. <code>df.set_index('Status')['Total']</code> — a Series of just the <code>Total</code> column, indexed by status name — exactly the shape <code>st.bar_chart()</code> expects. <code>st.bar_chart(...)</code> — replaces the metric boxes with one bar per status, height = that status's total.
+</aside>
+</section>
+
+<!-- 52. STRETCH UI description -->
+<section class="s-out">
+<h3>What the app renders — run locally to see it</h3>
+<pre>Tab 5 "Status Report", metric boxes replaced by:
+
+  $ Total
+  3500 |=====================================  Approved
+  1650 |=================                      Pending
+       +-------------------------------------
+        (one bar per status, height = that status's total)</pre>
+<p class="expect">A description, not a screenshot. The app renders this live when you run it locally. Guide, verified: a two-bar chart — <code>Approved</code> $3,500, <code>Pending</code> $1,650 — for the running example data.</p>
+<aside class="notes">Guide, Stretch (verbatim): "Verified: replaces the metric boxes with a two-bar chart (<code>Approved</code>: $3,500, <code>Pending</code>: $1,650) for the guide's running example data." <code>st.bar_chart</code> can't render in the deck — the runnable block on the next slide verifies the DataFrame prep that feeds it.</aside>
+</section>
+
+<!-- 53. STRETCH RUNNABLE — pandas prep -->
+<section class="s-code">
+<h3>Run it — the DataFrame prep <code>st.bar_chart()</code> is fed</h3>
+<div class="run" data-lang="python" data-packages="pandas">import pandas as pd
+
+report = [('Approved', 1, 3500.0), ('Pending', 2, 1650.0)]
+
+df = pd.DataFrame(report, columns=['Status', 'Count', 'Total'])
+series = df.set_index('Status')['Total']
+print(series)</div>
+<p class="expect">Genuinely runnable (<code>data-packages="pandas"</code> — first Run preloads pandas). <code>report</code> is the guide's Appendix A verified data. The printed Series is exactly what <code>st.bar_chart()</code> plots — one value per status. Verified with <code>python3</code> 3.12.2 / pandas 2.2.0.</p>
+<aside class="notes">
+Line-by-line: <code>report</code> is <code>get_status_report()</code>'s output for the running example (the guide's Appendix A: <code>Approved: 1 / $3,500.00</code>, <code>Pending: 2 / $1,650.00</code>). <code>pd.DataFrame(report, columns=['Status', 'Count', 'Total'])</code> names the three tuple positions. <code>df.set_index('Status')['Total']</code> is a Series indexed by status name holding just the totals — the shape <code>st.bar_chart()</code> turns into one bar per status.
+</aside>
+</section>
+
+<!-- 54. STRETCH RUNNABLE out -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Status
+Approved    3500.0
+Pending     1650.0
+Name: Total, dtype: float64</pre>
+<p class="expect">A pandas Series indexed by status name, values = each status's total. <code>st.bar_chart()</code> plots this directly: an <code>Approved</code> bar at 3500 and a <code>Pending</code> bar at 1650 — the guide's verified two-bar result.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 with pandas 2.2.0: the block prints exactly these four lines and exits 0. The values match the guide's Stretch "Verified" note (<code>Approved</code>: $3,500, <code>Pending</code>: $1,650) and its Appendix A end-to-end report.</aside>
+</section>
+
+<!-- 55. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li><code>app.py</code> contains all five tabs, each correctly wired to its <code>database.py</code> function</li>
+<li><code>st.title()</code>, category options, column names, and status options all customized to the student's own capstone domain</li>
+<li>All five tabs tested end to end with real submitted data (Part 3's workflow)</li>
+<li>Git commit made, with a message including "lab 15"</li>
+<li>Full ritual run (Streamlit stopped, format, lint, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Reproduced verbatim from the guide's Wrap-Up "Review the submission checklist together". Review it on screen in the last ~3 minutes. The submission is 3 screenshots (Tab 1 success, Tab 4 after a status change, Tab 5 report with real data), the GitHub URL in Canvas, completion credit.</aside>
+</section>
+
+<!-- 56. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 16</h3>
+<p>"One feature remains from your Week 13 proposal: the GenAI feature. Next week wires an AI call into your interface, and is also the final capstone demo — everything from Week 1's <code>%</code> prompt check through today's Streamlit tabs comes together as one finished, presentable system."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: today's five-tab interface is the surface the Week 16 GenAI call plugs into, and Week 16 is the graded final demo of the whole capstone.</aside>
+</section>
+
+<!-- 57. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 15</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w15.md (Week 15 facilitation guide, "Streamlit Business Interface"). ISM3232 STREAMLIT WEEK — predominantly READ-ONLY: Streamlit cannot run in Pyodide, so every <code>st.*</code> / full-<code>app.py</code> snippet is a plain <code>&lt;pre&gt;&lt;code class="language-python"&gt;</code> block outside any <code>.run</code> div, each with an on-slide "run this with <code>streamlit run app.py</code> on your own machine — it can't execute here" note, and each paired with an <code>s-out</code> that <em>describes</em> the rendered UI (labelled "what the app renders — run locally to see it"; aside "the app renders this live when you run it locally"). The <code>streamlit run</code> and ritual shell blocks are <code>data-readonly</code> with an illustrative-terminal <code>s-out</code> (standard Streamlit / ruff / git output — the guide gives no literal transcript, disclosed on each). Three genuine <code>data-lang="python"</code> runnable blocks — Tab 3's list-comprehension filter, Tab 4's dictionary-comprehension label→id bridge, and a stdlib-<code>sqlite3</code> end-to-end reproducing the guide's Appendix A "Verified end-to-end behavior" verbatim — plus one <code>data-packages="pandas"</code> Stretch block for the bar-chart DataFrame prep; all four verified against local <code>python3</code> 3.12.2 (pandas 2.2.0), each stdout == its paired <code>s-out</code> == the guide's stated numbers. ISM3232 style: single quotes in Python throughout (the one double-quote is Tab 4's dict-comprehension label, matching the guide). Quizzes: Parts 1–3 key the guide's "Check for understanding" parenthetical verbatim; Parts 4 and 5 have no CFU, so per R-conv-3 they key a verbatim same-segment line stating a position the guide clearly takes (disclosed on each quiz slide). Keyed letters: A, C, B, C, A.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
