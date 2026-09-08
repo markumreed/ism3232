@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 11 — OOP II — Composition, Inheritance &amp; SQL Mapping</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 11 &nbsp;·&nbsp; Module 11 &nbsp;·&nbsp; Unit 3 · Object-Oriented Design</p>
+<h1>OOP II — Composition, Inheritance &amp; SQL Mapping</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "one class managing many of another"</span>
+<span class="t-item"><strong>0:04–0:20</strong> Part 1 — Write <code>RequestManager</code></span>
+<span class="t-item"><strong>0:20–0:30</strong> Part 2 — Wire the two classes</span>
+<span class="t-item"><strong>0:30–0:42</strong> Part 3 — OOP to SQL mapping</span>
+<span class="t-item"><strong>0:42–0:58</strong> Part 4 — Six pytest tests</span>
+<span class="t-item"><strong>0:58–1:06</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:06–1:15</strong> Stretch (light inheritance) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Live code-along, ending with the full submission ritual. Prerequisites: Week 10's <code>BusinessRequest</code> class, <code>__init__</code>, <code>self</code>, instance methods, <code>__repr__</code>. Week 10 built one class, standing alone. Today introduces <strong>composition</strong> — a <code>RequestManager</code> class whose entire job is to <em>hold and manage a collection</em> of <code>BusinessRequest</code> objects, not replace them. Composition is "has-a" (a manager <em>has</em> a list of requests); inheritance (today's Stretch) is "is-a" (a <code>TravelRequest</code> <em>is a</em> kind of <code>BusinessRequest</code>). Part 3's OOP-to-SQL mapping is this course's first explicit bridge toward Week 13–14's database content.
+Say to the class (Intro, verbatim): "Last week, one <code>BusinessRequest</code> stood alone. Today, a second class — <code>RequestManager</code> — whose entire job is holding a <em>collection</em> of <code>BusinessRequest</code> objects and answering questions about them: how many are pending, what's the total value, give me a report. This relationship — one class <em>containing</em> instances of another as an attribute — is called composition, and it's genuinely different from the inheritance you'll see briefly in today's Stretch section. Composition: a manager <em>has</em> requests. Inheritance, coming later: a travel request <em>is a</em> request. Both matter; they're not the same idea."
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> (Week 10) and <code>RequestManager</code> at the top and then the code that uses them — the guide splits this across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. This is the CONCEPTUAL SQL week: the <code>CREATE TABLE</code> / <code>SELECT</code> snippets are shown static, <strong>outside</strong> any runnable block — they do not execute this week (Week 14 runs real <code>sqlite3</code>). <strong><code>pytest</code> has no runner in Pyodide</strong> — Part 4's test file and its <code>pytest -v</code> output are shown static ("not run here"), with a runnable block beside them running the same six new checks as bare <code>assert</code>s. The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Pyodide tracebacks show <code>&lt;exec&gt;</code> as the file and line numbers may differ from a real <code>python3 file.py</code> run — the error <em>type</em> and <em>message</em> are the load-bearing content.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 10: <code>BusinessRequest</code> class, <code>__init__</code>, <code>self</code>, instance methods, <code>__repr__</code> — carried forward in the <em>same</em> <code>module06_oop/</code> folder</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (<code>RequestManager</code>) – Part 5 (ritual + push) + Stretch (light inheritance)</span></div>
+<div><span class="k">Submission</span><span class="v">2 screenshots + <code>README.md</code> with OOP-to-SQL mapping, GitHub URL, Canvas, completion credit</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. Confirm Week 10's <code>models.py</code> and <code>tests/test_models.py</code> are carried forward into the <em>same</em> <code>module06_oop/</code> directory, not a fresh one — Part 1 adds to the bottom of the existing <code>models.py</code>, and Part 4 explicitly says "keep your Week 10 tests." Part 1 and Part 4 receive the most time: new conceptual ground (composition, and testing a <em>composed</em> system) deserves unhurried treatment; Part 3's SQL mapping executes quickly but is genuinely important groundwork, not busywork.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Explain composition — one class holding instances of another as an attribute — and distinguish it from inheritance.</li>
+<li>Write manager-style methods that filter, aggregate, and report on a collection of objects using list comprehensions and generator expressions over object attributes.</li>
+<li>Map basic OOP concepts (class, instance, attribute, method) to their SQL equivalents (table, row, column, query).</li>
+<li>Write tests that verify a composed system — a manager holding multiple, independently-tracked objects — including a test that two manager instances are themselves independent.</li>
+<li>(Stretch) Write a subclass using <code>super().__init__(...)</code> and override an inherited method.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is the Intro + Part 1–2 framing (has-a vs is-a); objective 2 is Part 1's five methods; objective 3 is Part 3; objective 4 is Part 4, including <code>test_independent_managers</code>; objective 5 is the Stretch.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "one class managing many of another"</td><td>4</td></tr>
+<tr><td>0:04–0:20</td><td>Part 1 — Write <code>RequestManager</code></td><td>16</td></tr>
+<tr><td>0:20–0:30</td><td>Part 2 — Wire the two classes</td><td>10</td></tr>
+<tr><td>0:30–0:42</td><td>Part 3 — OOP to SQL mapping</td><td>12</td></tr>
+<tr><td>0:42–0:58</td><td>Part 4 — Six pytest tests</td><td>16</td></tr>
+<tr><td>0:58–1:06</td><td>Part 5 — Ritual and push</td><td>8</td></tr>
+<tr><td>1:06–1:15</td><td>Stretch (light inheritance) + wrap-up</td><td>9</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 1 and Part 4 receive the most time — new conceptual ground (composition, and testing a <em>composed</em> system) deserves unhurried treatment. Part 3's SQL mapping is comparatively quick to execute but worth framing as genuinely important groundwork, given its direct payoff in Weeks 13–14.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Composition: a manager <em>has</em> a list of requests</h1>
+<aside class="notes">
+Teaching goal: frame the day — one class <em>containing</em> instances of another as an attribute is composition ("has-a"), genuinely different from inheritance ("is-a", today's Stretch).
+Say to the class (verbatim): "Last week, one <code>BusinessRequest</code> stood alone. Today, a second class — <code>RequestManager</code> — whose entire job is holding a <em>collection</em> of <code>BusinessRequest</code> objects and answering questions about them: how many are pending, what's the total value, give me a report. This relationship — one class <em>containing</em> instances of another as an attribute — is called composition, and it's genuinely different from the inheritance you'll see briefly in today's Stretch section. Composition: a manager <em>has</em> requests. Inheritance, coming later: a travel request <em>is a</em> request. Both matter; they're not the same idea."
+Have a ready one-sentence contrast for each so the two ideas don't blur together if a student asks about both in the same breath.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:20</span>
+<h1>Write <code>RequestManager</code></h1>
+<aside class="notes">
+Teaching goal: a class whose primary attribute is a <strong>list of other objects</strong>, plus methods that filter and aggregate over that list using patterns from every prior week (list comprehensions, generator expressions) now applied to objects instead of dictionaries.
+Say to the class (verbatim): "Five methods. Watch specifically how much of this is genuinely new syntax versus patterns you already know from Weeks 6 and 7, just applied to <code>BusinessRequest</code> objects instead of dictionaries."
+Check for understanding (asked at the end of this part): "If <code>RequestManager</code> had a second attribute, <code>self.name</code>, set from a parameter in <code>__init__</code>, would that change anything about how <code>add_request</code> or <code>list_pending</code> work?" Answer: No — those methods only ever reference <code>self.requests</code>; an unrelated attribute like <code>self.name</code> would simply coexist on the same object, untouched by these methods. A good check that students see <code>self.requests</code> as <em>the specific attribute these methods care about</em>, not "everything about the object."
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>Composition, in one line</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>def __init__(self): self.requests = []</code></strong> — this is composition, in one line. <code>self.requests</code> is an attribute, exactly like Week 10's <code>self.status</code> — but instead of a string it holds a <strong>list</strong>, initially empty, that will come to hold actual <code>BusinessRequest</code> <strong>objects</strong>. A <code>RequestManager</code> doesn't inherit anything from <code>BusinessRequest</code> and shares no code with it — it simply <em>has</em> a list that contains instances of it.</p>
+<p><strong><code>add_request(self, request)</code></strong> — takes an <em>already-created</em> <code>BusinessRequest</code> object as a parameter and appends it. This method doesn't create a request; it receives one that already exists (Part 2 shows how) and adds it to the collection.</p>
+<p><strong><code>list_pending</code>, <code>get_by_status</code></strong> — list comprehensions filtering <code>self.requests</code>. Note <code>r.status</code>, not <code>r['status']</code> — these are real objects with <strong>attributes</strong>, read with dot notation, not dictionaries with keys. The <em>shape</em> <code>[r for r in collection if condition]</code> is identical to Week 6; only the access syntax changed.</p>
+<p><strong><code>total_amount</code></strong> — <code>sum(r.amount for r in self.requests)</code>, a generator expression, exactly Week 6's accumulator pattern, now summing an attribute across a collection of objects.</p>
+<p><strong><code>summary_report</code></strong> — calls <code>self.list_pending()</code> and <code>self.get_by_status('Approved')</code>: the manager calling its <em>own</em> other methods via <code>self</code>, reusing logic rather than duplicating it. <code>print(f'  {r}')</code> uses Week 10's <code>__repr__</code> automatically.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 1):
+- <code>def __init__(self): self.requests = []</code> — this is composition, in one line. <code>self.requests</code> holds a list, initially empty, that will hold <code>BusinessRequest</code> objects. A <code>RequestManager</code> doesn't inherit from or share code with <code>BusinessRequest</code>; it simply <em>has</em> a list of its instances.
+- <code>def add_request(self, request):</code> — takes an already-created <code>BusinessRequest</code> (parameter named <code>request</code>, distinct from <code>self</code>) and appends it to <code>self.requests</code>. Doesn't create a new request itself.
+- <code>list_pending</code>, <code>get_by_status</code> — list comprehensions filtering <code>self.requests</code>; note <code>r.status</code>, not <code>r['status']</code> — real objects with attributes, dot notation, not dictionary keys. Same comprehension shape as Week 6; only the item-access syntax changed.
+- <code>total_amount</code> — <code>sum(r.amount for r in self.requests)</code>, a generator expression, exactly Week 6's <code>test_accumulator</code> pattern, now over an attribute across objects.
+- <code>summary_report</code> — calls <code>self.list_pending()</code> and <code>self.get_by_status('Approved')</code>: methods can call other methods on the same object via <code>self</code>, reusing logic. <code>print(f'  {r}')</code> — <code>r</code> is a <code>BusinessRequest</code>; printed in an f-string it uses Week 10's <code>__repr__</code> automatically.
+Common mistakes: using <code>r['status']</code> (dictionary bracket access) out of Week 6 habit instead of <code>r.status</code> — raises <code>TypeError: 'BusinessRequest' object is not subscriptable</code>; forgetting <code>self.requests = []</code> in <code>__init__</code>, or initializing it to something other than an empty list — every downstream method assumes it is a list.
+Check for understanding: adding an unrelated <code>self.name</code> attribute would not change <code>add_request</code> or <code>list_pending</code> at all — those methods only ever reference <code>self.requests</code>.
+</aside>
+</section>
+
+<!-- 8. PART 1 the class (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>models.py</code>: add <code>RequestManager</code> below <code>BusinessRequest</code></h3>
+<div class="run" data-lang="python"># models.py  --  BusinessRequest is Week 10's class, unchanged
+class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'  # default
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        """Add a BusinessRequest to the collection."""
+        self.requests.append(request)
+
+    def list_pending(self):
+        """Return all requests with status Pending."""
+        return [r for r in self.requests if r.status == 'Pending']
+
+    def total_amount(self):
+        """Return the total value of all requests."""
+        return sum(r.amount for r in self.requests)
+
+    def get_by_status(self, status):
+        """Return requests matching the given status."""
+        return [r for r in self.requests if r.status == status]
+
+    def summary_report(self):
+        """Print a formatted summary of all requests by status."""
+        pending  = self.list_pending()
+        approved = self.get_by_status('Approved')
+        print(f'Total requests: {len(self.requests)} | Total: ${self.total_amount():,.2f}')
+        print(f'Pending: {len(pending)} | Approved: {len(approved)}')
+        print('Pending requests:')
+        for r in pending:
+            print(f'  {r}')
+
+
+# deck smoke test -- exercises all five RequestManager methods
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))
+mgr.add_request(BusinessRequest(102, 'Jordan', 'Equipment', 450))
+mgr.add_request(BusinessRequest(103, 'Morgan', 'Software', 3500))
+
+print(len(mgr.requests))
+print(mgr.total_amount())
+print(len(mgr.list_pending()))
+
+mgr.requests[0].approve()
+print([r.requester for r in mgr.get_by_status('Approved')])
+print(len(mgr.list_pending()))</div>
+<p class="expect"><code>RequestManager</code> matches the guide's Part 1 verbatim, docstrings included. The guide's Part 1 is class-definition only; the trailing block is a deck smoke test of the five methods — it would live outside <code>models.py</code> in real life. Each Pyodide block is a fresh namespace, so Week 10's <code>BusinessRequest</code> is re-defined at the top.</p>
+<aside class="notes">
+Say to the class (verbatim): "Five methods. Watch specifically how much of this is genuinely new syntax versus patterns you already know from Weeks 6 and 7, just applied to <code>BusinessRequest</code> objects instead of dictionaries."
+Line by line: see the idea slide's notes — <code>__init__</code> sets <code>self.requests = []</code> (composition in one line); <code>add_request</code> appends an already-built object; <code>list_pending</code>/<code>get_by_status</code> are Week 6-shaped comprehensions using <code>r.status</code> (dot, not brackets); <code>total_amount</code> is a generator-expression sum over <code>r.amount</code>; <code>summary_report</code> calls the manager's own methods via <code>self</code> and prints each request through Week 10's <code>__repr__</code>.
+Smoke-test output: 3 requests; total 5150 (1200 + 450 + 3500); 3 pending; after approving <code>requests[0]</code>, <code>get_by_status('Approved')</code> holds Taylor; 2 still pending.
+Common mistakes: <code>r['status']</code> instead of <code>r.status</code> (<code>TypeError: 'BusinessRequest' object is not subscriptable</code>); forgetting <code>self.requests = []</code> in <code>__init__</code>.
+Check for understanding: an unrelated <code>self.name</code> attribute would change nothing about <code>add_request</code> or <code>list_pending</code>.
+</aside>
+</section>
+
+<!-- 9. PART 1 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>3
+5150
+3
+['Taylor']
+2</pre>
+<p class="expect">Three requests added; <code>total_amount()</code> is <code>5150</code> (1200 + 450 + 3500); three pending initially. After <code>mgr.requests[0].approve()</code>, <code>get_by_status('Approved')</code> returns Taylor's request, and <code>list_pending()</code> drops to two.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): the block prints exactly these five lines and exits 0. The guide's Part 1 gives no "Expected output" (it is class-definition only); this pane is the deck's own smoke test of the five methods.</aside>
+</section>
+
+<!-- 10. PART 1 BROKEN (dictionary bracket access) -->
+<section class="s-code">
+<h3>The Week 6 habit on purpose — <code>r['status']</code> instead of <code>r.status</code></h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        self.requests.append(request)
+
+    def list_pending(self):
+        # BUG: r['status'] treats each BusinessRequest object like a dictionary
+        return [r for r in self.requests if r['status'] == 'Pending']
+
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))
+print(mgr.list_pending())</div>
+<p class="expect">This is the guide's Part 1 common mistake, done live: <code>r['status']</code> (bracket access, a Week 6 dictionary habit) instead of <code>r.status</code> (attribute access). The class <em>defines</em> fine; the failure happens when <code>list_pending()</code> runs. Press <strong>Run</strong> and read the last line of the traceback.</p>
+<aside class="notes">
+The comprehension body <code>r['status']</code> asks Python to subscript a <code>BusinessRequest</code> object with the key <code>'status'</code> — but the class defines no <code>__getitem__</code>, so objects of it are not subscriptable. This is the direct, concrete difference from Week 6's dictionary-based filtering: these are real objects with attributes, read with dot notation. Make a student say "it's an object, not a dictionary — <code>r.status</code>, not <code>r['status']</code>", not just "it broke".
+</aside>
+</section>
+
+<!-- 11. PART 1 broken traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  ...
+  File "&lt;exec&gt;", line 26, in list_pending
+    return [r for r in self.requests if r['status'] == 'Pending']
+                                        ~^^^^^^^^^^
+TypeError: 'BusinessRequest' object is not subscriptable</pre>
+<p class="expect">Load-bearing: <code>TypeError: 'BusinessRequest' object is not subscriptable</code> — the guide's own stated error for this mistake (Part 1, "Common student mistakes"). Pyodide shows <code>&lt;exec&gt;</code> as the file and its line number may differ from a real <code>python3 models.py</code> run — neither is load-bearing; the error <em>type</em> and <em>message</em> are.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly <code>TypeError: 'BusinessRequest' object is not subscriptable</code> and exits 1. The guide names this error verbatim in Part 1's "Common student mistakes to watch for" — "a good, specific error worth reading together, since it directly names the conceptual mix-up (treating an object like a dictionary)." Fixed on the next slide.</aside>
+</section>
+
+<!-- 12. PART 1 FIXED -->
+<section class="s-code">
+<h3>Fixed — <code>r.status</code>, attribute access with dot notation</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        self.requests.append(request)
+
+    def list_pending(self):
+        # fixed: r.status -- attribute access, not dictionary subscripting
+        return [r for r in self.requests if r.status == 'Pending']
+
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))
+mgr.add_request(BusinessRequest(102, 'Jordan', 'Equipment', 450))
+print(mgr.list_pending())</div>
+<p class="expect">The only change is <code>r['status']</code> &rarr; <code>r.status</code>. Both requests start <code>Pending</code>, so <code>list_pending()</code> returns both — printed via Week 10's <code>__repr__</code>. Press <strong>Run</strong> — clean output.</p>
+<aside class="notes">The single change from the broken block is bracket access &rarr; dot access. Takeaway: the comprehension's <em>shape</em> is identical to Week 6; only how you read each item's data changed, because these are objects with attributes, not dictionaries with keys.</aside>
+</section>
+
+<!-- 13. PART 1 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>[BusinessRequest(101, Taylor, $1200, Pending), BusinessRequest(102, Jordan, $450, Pending)]</pre>
+<p class="expect"><code>list_pending()</code> returns a list of both <code>BusinessRequest</code> objects — both are <code>Pending</code> — and the list prints using each object's <code>__repr__</code> from Week 10.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly this one line and exits 0. Because <code>BusinessRequest</code> defines <code>__repr__</code>, no <code>&lt;...object at 0x...&gt;</code> memory address appears inside the list.</aside>
+</section>
+
+<!-- 14. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>RequestManager</code> had a second attribute, <code>self.name</code>, set from a parameter in <code>__init__</code>, would that change anything about how <code>add_request</code> or <code>list_pending</code> work?</p>
+<button data-opt="A">No — those methods only ever reference <code>self.requests</code>; an unrelated attribute like <code>self.name</code> would simply coexist on the same object, untouched by these methods</button>
+<button data-opt="B">Yes — every method would need <code>self.name</code> added to its parameter list before it could run</button>
+<button data-opt="C">Yes — <code>list_pending</code> would now also filter on <code>self.name</code>, since all attributes are checked together</button>
+<p class="why" hidden>No — those methods only ever reference <code>self.requests</code>; an unrelated attribute like <code>self.name</code> would simply coexist on the same object, untouched by these methods. A good check that students see <code>self.requests</code> as <em>the specific attribute these methods care about</em>, not "everything about the object."</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "No — those methods only ever reference <code>self.requests</code>; an unrelated attribute like <code>self.name</code> would simply coexist on the same object, untouched by these methods. A good check that students see <code>self.requests</code> as <em>the specific attribute these methods care about</em>, not 'everything about the object.'"</aside>
+</section>
+
+<!-- 15. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>r['status']</code> (dictionary bracket access) out of Week 6 habit instead of <code>r.status</code> (attribute access) — raises <code>TypeError: 'BusinessRequest' object is not subscriptable</code>, a good, specific error worth reading together, since it directly names the conceptual mix-up (treating an object like a dictionary).</p>
+<p>Forgetting <code>self.requests = []</code> in <code>__init__</code>, or initializing it to something other than an empty list — every method that follows assumes <code>self.requests</code> is a list that can be appended to and iterated over; a wrong initial type breaks everything downstream in a way that's easy to trace back to this one line.</p>
+</div>
+<aside class="notes">Check for understanding: an unrelated <code>self.name</code> attribute would change nothing about <code>add_request</code> or <code>list_pending</code> — they reference only <code>self.requests</code>.</aside>
+</section>
+
+<!-- 16. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:20–0:30</span>
+<h1>Wire the Two Classes</h1>
+<aside class="notes">
+Teaching goal: create a manager, populate it with several <code>BusinessRequest</code> objects, and confirm the two classes work together correctly — composition made concrete.
+Say to the class (verbatim): "Now the two classes meet. A manager, four requests added to it one at a time, one approved, then a full report."
+Check for understanding (asked at the end of this part): "If you called <code>mgr.add_request(BusinessRequest(105, 'Alex', 'Travel', 2000))</code> right after this script's current last line, then re-ran <code>mgr.summary_report()</code>, would the earlier report's Taylor-approved status still be reflected?" Answer: Yes — <code>mgr</code> and every request already added to it persist for as long as the script keeps running; adding a fifth request doesn't reset or affect the earlier four in any way. A good check that students see the manager's list as accumulating state over the whole script's run, not resetting between operations.
+</aside>
+</section>
+
+<!-- 17. PART 2 idea -->
+<section class="s-idea">
+<h3>The two classes meet</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>from models import BusinessRequest, RequestManager</code> — importing <strong>two</strong> names from the same module now, both classes side by side. The import line itself is a visible signal of the two-class design.</p>
+<p><code>mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))</code> — read inside-out: <code>BusinessRequest(...)</code> creates a brand-new object first; that object, with no named variable of its own, is immediately passed into <code>mgr.add_request(...)</code>, which appends it to <code>mgr.requests</code>. An object doesn't need its own name to be used immediately as an argument.</p>
+<p><code>mgr.requests[0].approve()</code> — a <strong>double access</strong>: <code>mgr.requests</code> gets the list, <code>[0]</code> indexes into it (the first request added, Taylor), <code>.approve()</code> calls a method on <em>that specific</em> object. This line reaches <em>through</em> the manager, into its held collection, to act on one request directly — no <code>approve_first()</code> method needed.</p>
+<p><code>total_amount()</code> counts <em>every</em> request; <code>list_pending()</code> is filtered to one status. They answer different questions over the same data — neither is "more correct".</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 2):
+- <code>from models import BusinessRequest, RequestManager</code> — two classes imported side by side; the import line signals the two-class design.
+- <code>mgr = RequestManager()</code> — creates the initially-empty manager; no arguments, since <code>__init__(self)</code> takes none.
+- <code>mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))</code> — read inside-out: the <code>BusinessRequest</code> is created first, then passed straight into <code>add_request</code> with no variable of its own. Valid and common.
+- <code>mgr.requests[0].approve()</code> — <code>mgr.requests</code> &rarr; the list; <code>[0]</code> &rarr; the first request added (Taylor, ID 101); <code>.approve()</code> &rarr; a method on that specific object. Reaching through the manager into its collection.
+- <code>mgr.summary_report()</code> — the report method from Part 1.
+Point out: Taylor's request (101) is excluded from "Pending requests" (it was approved on the line above) but still counted in "Total requests: 4" and the "$5,239.00" total. Ask: "why does <code>total_amount()</code> include the approved request, but <code>list_pending()</code> doesn't show it?" (Different questions — a sum over everything vs a filtered view; deliberately different views over the same data.)
+Common mistakes: confusing <code>mgr.requests[0]</code> (first <em>added</em>) with "the request with <code>request_id == 101</code>" — they coincide here by accident; calling <code>BusinessRequest(...)</code> and forgetting to pass it into <code>add_request(...)</code> — the object is silently discarded, no error, and the report shows fewer requests than expected.
+Check for understanding: adding a fifth request later and re-running <code>summary_report()</code> — yes, the earlier Taylor-approved status persists; <code>mgr</code> accumulates state over the whole run.
+</aside>
+</section>
+
+<!-- 18. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>main.py</code>: a manager, four requests, one approved, a report</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'  # default
+
+    def approve(self):
+        """Mark this request as approved."""
+        self.status = 'Approved'
+
+    def reject(self):
+        """Mark this request as rejected."""
+        self.status = 'Rejected'
+
+    def requires_review(self):
+        """Return True if amount exceeds 1000."""
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        """Add a BusinessRequest to the collection."""
+        self.requests.append(request)
+
+    def list_pending(self):
+        """Return all requests with status Pending."""
+        return [r for r in self.requests if r.status == 'Pending']
+
+    def total_amount(self):
+        """Return the total value of all requests."""
+        return sum(r.amount for r in self.requests)
+
+    def get_by_status(self, status):
+        """Return requests matching the given status."""
+        return [r for r in self.requests if r.status == status]
+
+    def summary_report(self):
+        """Print a formatted summary of all requests by status."""
+        pending  = self.list_pending()
+        approved = self.get_by_status('Approved')
+        print(f'Total requests: {len(self.requests)} | Total: ${self.total_amount():,.2f}')
+        print(f'Pending: {len(pending)} | Approved: {len(approved)}')
+        print('Pending requests:')
+        for r in pending:
+            print(f'  {r}')
+
+
+# main.py  --  from models import BusinessRequest, RequestManager
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))
+mgr.add_request(BusinessRequest(102, 'Jordan', 'Equipment', 450))
+mgr.add_request(BusinessRequest(103, 'Morgan', 'Software', 3500))
+mgr.add_request(BusinessRequest(104, 'Riley',  'Travel', 89))
+
+# Approve one request
+mgr.requests[0].approve()
+
+# Print the full report
+mgr.summary_report()</div>
+<p class="expect">Each Pyodide block is a fresh namespace, so <code>models.py</code>'s two classes and <code>main.py</code>'s code live in one block here — the guide splits them, with a real <code>from models import BusinessRequest, RequestManager</code> line standing in for the commented one. <code>main.py</code> is guide-verbatim.</p>
+<aside class="notes">
+Say to the class (verbatim): "Now the two classes meet. A manager, four requests added to it one at a time, one approved, then a full report."
+Line by line: see the idea slide's notes. The load-bearing moment is <code>mgr.requests[0].approve()</code> reaching through the manager to Taylor's request, followed by <code>summary_report()</code> — which excludes Taylor from "Pending requests" but still counts it in the total.
+Common mistakes: confusing <code>mgr.requests[0]</code> (first added) with the request whose <code>request_id</code> is 101; forgetting to pass a freshly-built <code>BusinessRequest</code> into <code>add_request</code> (silently discarded, no error).
+Check for understanding: adding a fifth request after the last line and re-running <code>summary_report()</code> — yes, Taylor stays approved; <code>mgr</code> accumulates state over the whole run.
+</aside>
+</section>
+
+<!-- 19. PART 2 verified output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>Total requests: 4 | Total: $5,239.00
+Pending: 3 | Approved: 1
+Pending requests:
+  BusinessRequest(102, Jordan, $450, Pending)
+  BusinessRequest(103, Morgan, $3500, Pending)
+  BusinessRequest(104, Riley, $89, Pending)</pre>
+<p class="expect">Reproduces the guide's Part 2 "Run it. Verified output" exactly. Taylor's request (101) doesn't appear in "Pending requests" — approved on the line above — but it <em>is</em> counted in "Total requests: 4" and the "$5,239.00" total (1200 + 450 + 3500 + 89), which include every request regardless of status.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the combined block prints exactly these six lines and exits 0. <code>total_amount()</code> sums <em>everything</em>; <code>list_pending()</code> is filtered to one status — they answer different questions over the same data. Because <code>BusinessRequest</code> defines <code>__repr__</code>, no <code>0x...</code> address appears.</aside>
+</section>
+
+<!-- 20. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If you called <code>mgr.add_request(BusinessRequest(105, 'Alex', 'Travel', 2000))</code> right after this script's current last line, then re-ran <code>mgr.summary_report()</code>, would the earlier report's Taylor-approved status still be reflected?</p>
+<button data-opt="A">No — <code>summary_report()</code> rebuilds every request from scratch each time it runs, so Taylor would be back to <code>Pending</code></button>
+<button data-opt="B">Yes — <code>mgr</code> and every request already added to it persist for as long as the script keeps running; adding a fifth request doesn't reset or affect the earlier four in any way</button>
+<button data-opt="C">No — adding a new request replaces <code>mgr.requests</code> with a fresh list, discarding the earlier four</button>
+<p class="why" hidden>Yes — <code>mgr</code> and every request already added to it persist for as long as the script keeps running; adding a fifth request doesn't reset or affect the earlier four in any way. A good check that students see the manager's list as accumulating state over the whole script's run, not resetting between operations.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "Yes — <code>mgr</code> and every request already added to it persist for as long as the script keeps running; adding a fifth request doesn't reset or affect the earlier four in any way. A good check that students see the manager's list as accumulating state over the whole script's run, not resetting between operations."</aside>
+</section>
+
+<!-- 21. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Confusing <code>mgr.requests[0]</code> (the first <em>added</em> request) with "the request with <code>request_id == 101</code>" — these coincide here (Taylor was both added first and has ID 101), but they're conceptually different: list position versus a data field's value. A genuinely robust "find by ID" method isn't built today, only positional access.</p>
+<p>Calling <code>BusinessRequest(...)</code> and forgetting to pass it into <code>add_request(...)</code> — creates an object that's immediately discarded (no variable holds it, it was never added), silently vanishing with no error; a good "the report shows fewer requests than expected" debugging scenario.</p>
+</div>
+<aside class="notes">Check for understanding: adding a fifth request later and re-running <code>summary_report()</code> — yes, the earlier four (Taylor approved) persist unchanged; <code>mgr</code> accumulates state.</aside>
+</section>
+
+<!-- 22. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:30–0:42</span>
+<h1>OOP to SQL Mapping</h1>
+<aside class="notes">
+Teaching goal: explicitly map today's OOP vocabulary to SQL vocabulary — genuine groundwork for Weeks 13–14's database content, not a tangential exercise.
+Say to the class (verbatim): "This table looks simple, but I want you to take it seriously — in three weeks, you're building real SQL databases, and every single row of this table is a concept you already understand today, just under a different name. Getting comfortable with the translation now makes Week 13 dramatically easier."
+This is the CONCEPTUAL SQL week — the <code>CREATE TABLE</code> / <code>SELECT</code> snippets are shown static, outside any runnable block; they do not execute this week (Week 14 runs real <code>sqlite3</code>).
+Check for understanding (asked at the end of this part): "If you needed to add a new business rule — say, requests over $5,000 need a 'Director' approval tier — what would change in the Python class, and what would change in a hypothetical SQL version?" Answer: In Python: likely a new method, or an update to an existing one, checking the amount against a new threshold. In SQL: likely a new <code>WHERE</code> clause or <code>CASE</code> expression in a query, not a change to the table structure itself, unless a new column were needed to store the tier explicitly. A good, forward-looking question that previews the kind of thinking Week 13's database design will require.
+</aside>
+</section>
+
+<!-- 23. PART 3 idea (mapping table) -->
+<section class="s-idea">
+<h3>Every row is a concept you already know — under a different name</h3>
+<table class="grid">
+<thead><tr><th>OOP concept</th><th>SQL equivalent</th><th>This system (model answer)</th></tr></thead>
+<tbody>
+<tr><td>class <code>BusinessRequest</code></td><td>table: <code>requests</code></td><td><code>requests(id, requester, category, amount, status)</code></td></tr>
+<tr><td>instance (one object)</td><td>row (one record)</td><td><code>(101, 'Taylor', 'Travel', 1200.00, 'Approved')</code></td></tr>
+<tr><td>attribute: <code>amount</code></td><td>column: <code>amount REAL</code></td><td><code>amount REAL NOT NULL</code></td></tr>
+<tr><td><code>list_pending()</code></td><td><code>SELECT WHERE status=?</code></td><td><code>SELECT * FROM requests WHERE status = 'Pending'</code></td></tr>
+<tr><td><code>total_amount()</code></td><td><code>SELECT SUM(amount)</code></td><td><code>SELECT SUM(amount) FROM requests</code></td></tr>
+</tbody>
+</table>
+<p class="expect">Built live in <code>README.md</code> as a Markdown table. The "This system" column is the guide's Appendix model answer — push students for <em>genuinely specific</em> field names and example values from their own <code>models.py</code>, not placeholder text.</p>
+<aside class="notes">
+Line-by-line (guide, Part 3), filling in a model "This system" column live:
+- <code>class BusinessRequest</code> &rarr; <code>table: requests</code> — a class definition is a blueprint describing what fields every instance has; a <code>CREATE TABLE requests (...)</code> statement is the same idea — a fixed set of named, typed columns every row has.
+- <code>instance</code> &rarr; <code>row</code> — <code>req_101</code> from Week 10 corresponds to one specific row, e.g. <code>(101, 'Taylor', 'Travel', 1200.00, 'Approved')</code>.
+- <code>attribute: amount</code> &rarr; <code>column: amount REAL</code> — one named piece of data, one type, present on every instance/row. <code>REAL</code> is SQLite's floating-point type name (Week 14 covers SQLite specifically); Python's <code>float</code> and SQL's <code>REAL</code> are the same idea, different vocabulary.
+- <code>list_pending()</code> &rarr; <code>SELECT WHERE status=?</code> — the mapping worth dwelling on most: a method that filters a Python list does conceptually the same job as a SQL <code>WHERE</code> clause. <code>[r for r in self.requests if r.status == 'Pending']</code> and <code>SELECT * FROM requests WHERE status = 'Pending'</code> answer the identical question in two paradigms.
+- <code>total_amount()</code> &rarr; <code>SELECT SUM(amount)</code> — <code>sum(r.amount for r in self.requests)</code> and <code>SELECT SUM(amount) FROM requests</code> both aggregate a numeric column/attribute across every row/instance.
+Common mistakes: vague/generic "This system" answers instead of specific ones from their own <code>models.py</code>; treating the table as disconnected from today's code — connect each row to a specific line already written in Part 1 ("which line of <code>RequestManager</code> does <code>list_pending()</code>'s SQL row correspond to?").
+Check for understanding: a "Director tier over $5,000" rule &rarr; Python: a new/updated method checking a threshold; SQL: a new <code>WHERE</code> / <code>CASE</code> in a query, not a table-structure change unless a new column is needed.
+</aside>
+</section>
+
+<!-- 24. PART 3 code (RUNNABLE) -->
+<section class="s-code">
+<h3>The Python side of two mapping rows — run it</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        self.status = 'Approved'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        self.requests.append(request)
+
+    def list_pending(self):
+        return [r for r in self.requests if r.status == 'Pending']
+
+    def total_amount(self):
+        return sum(r.amount for r in self.requests)
+
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(101, 'Taylor', 'Travel', 1200))
+mgr.add_request(BusinessRequest(102, 'Jordan', 'Equipment', 450))
+mgr.add_request(BusinessRequest(103, 'Morgan', 'Software', 3500))
+mgr.add_request(BusinessRequest(104, 'Riley',  'Travel', 89))
+mgr.requests[0].approve()
+
+# list_pending()  <->  SELECT * FROM requests WHERE status = 'Pending'
+for r in mgr.list_pending():
+    print(r)
+
+# total_amount()  <->  SELECT SUM(amount) FROM requests
+print(mgr.total_amount())</div>
+<p class="expect">The Python half of two rows in the mapping table. <code>list_pending()</code> is a <code>WHERE</code> clause; <code>total_amount()</code> is <code>SELECT SUM(amount)</code>. The next slide shows the SQL half — static, because SQL doesn't execute this week.</p>
+<aside class="notes">
+Line by line: <code>BusinessRequest</code> and <code>RequestManager</code> are re-defined (fresh namespace), four requests added, Taylor approved, then <code>list_pending()</code> and <code>total_amount()</code> printed. This is the "identical question, two paradigms" point from the guide — the Python filter/aggregate beside the SQL <code>WHERE</code>/<code>SUM</code> on the next slide.
+</aside>
+</section>
+
+<!-- 25. PART 3 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>BusinessRequest(102, Jordan, $450, Pending)
+BusinessRequest(103, Morgan, $3500, Pending)
+BusinessRequest(104, Riley, $89, Pending)
+5239</pre>
+<p class="expect"><code>list_pending()</code> returns the three still-<code>Pending</code> requests (Taylor was approved); <code>total_amount()</code> is <code>5239</code> (1200 + 450 + 3500 + 89) — the un-formatted sum. <code>summary_report()</code> formats the same number as <code>$5,239.00</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these four lines and exits 0. This is the Python side of the <code>SELECT ... WHERE status = 'Pending'</code> and <code>SELECT SUM(amount)</code> rows in the mapping table.</aside>
+</section>
+
+<!-- 26. PART 3 SQL static (outside .run) -->
+<section class="s-out">
+<h3>The SQL side — static this week, real <code>sqlite3</code> in Week 14</h3>
+<pre><code class="language-sql">-- class BusinessRequest  ->  table: requests   (the instructor's prepared model)
+CREATE TABLE requests (
+    id        INTEGER PRIMARY KEY,
+    requester TEXT NOT NULL,
+    category  TEXT NOT NULL,
+    amount    REAL NOT NULL,
+    status    TEXT NOT NULL DEFAULT 'Pending'
+);
+
+-- one instance  ->  one row
+INSERT INTO requests VALUES (101, 'Taylor', 'Travel', 1200.00, 'Approved');
+
+-- list_pending()   ->  a WHERE clause over rows
+SELECT * FROM requests WHERE status = 'Pending';
+
+-- total_amount()   ->  an aggregate over a column
+SELECT SUM(amount) FROM requests;</code></pre>
+<pre>illustrative result of  SELECT * FROM requests WHERE status = 'Pending'
+(matches list_pending() on the Part 2 data):
+
+  requester | category  | amount | status
+  ----------+-----------+--------+--------
+  Jordan    | Equipment |    450 | Pending
+  Morgan    | Software   |   3500 | Pending
+  Riley     | Travel     |     89 | Pending
+
+illustrative result of  SELECT SUM(amount) FROM requests :  5239</pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — this is the conceptual SQL week; these statements do not execute here. Week 14 runs real <code>sqlite3</code>. The result blocks are labelled <em>illustrative</em> — they mirror <code>list_pending()</code> and <code>total_amount()</code> on Part 2's four requests.</p>
+<aside class="notes">SQL snippets reproduced from the guide's Appendix A model "This system" column (the Markdown mapping table) and the Before-Class checklist's prepared <code>CREATE TABLE requests (...)</code> / <code>SELECT * FROM requests WHERE status = 'Pending'</code>. The <code>INSERT</code> row is the guide's "instance &rarr; row" example <code>(101, 'Taylor', 'Travel', 1200.00, 'Approved')</code>. Nothing on this slide is executed — <code>pre code.language-sql</code> is highlighted by highlight.js only. The two result blocks are illustrative, derived from the Part 2 dataset (three pending requests; total 1200 + 450 + 3500 + 89 = 5239).</aside>
+</section>
+
+<!-- 27. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">To add a new business rule — requests over $5,000 need a "Director" approval tier — what changes in the Python class, and what changes in a hypothetical SQL version?</p>
+<button data-opt="A">Both need a brand-new table / class — the rule can't be expressed by changing existing code</button>
+<button data-opt="B">Python: nothing changes. SQL: the <code>requests</code> table must be dropped and recreated with every rule</button>
+<button data-opt="C">Python: likely a new method, or an update to an existing one, checking the amount against a new threshold. SQL: likely a new <code>WHERE</code> clause or <code>CASE</code> expression in a query, not a change to the table structure itself — unless a new column were needed to store the tier explicitly</button>
+<p class="why" hidden>In Python: likely a new method, or an update to an existing one, checking the amount against a new threshold. In SQL: likely a new <code>WHERE</code> clause or <code>CASE</code> expression in a query, not a change to the table structure itself, unless a new column were needed to store the tier explicitly. A good, forward-looking question that previews the kind of thinking Week 13's database design will require.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: "In Python: likely a new method, or an update to an existing one, checking the amount against a new threshold. In SQL: likely a new <code>WHERE</code> clause or <code>CASE</code> expression in a query, not a change to the table structure itself, unless a new column were needed to store the tier explicitly. A good, forward-looking question that previews the kind of thinking Week 13's database design will require."</aside>
+</section>
+
+<!-- 28. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Filling in the "This system" column with vague or generic answers instead of genuinely specific ones drawn from their own <code>models.py</code> — push for actual field names and actual example values, not placeholder text; this table is meant to be a real, useful reference students can look back at in Week 13, not a completed-for-completion's-sake formality.</p>
+<p>Treating this table as disconnected from today's actual code — explicitly connect each row back to a specific line already written in Part 1: "which line of <code>RequestManager</code> does <code>list_pending()</code>'s SQL row correspond to?"</p>
+</div>
+<aside class="notes">Check for understanding: a "Director tier over $5,000" rule &rarr; Python: a new/updated method checking a threshold; SQL: a new <code>WHERE</code> / <code>CASE</code> in a query, not a table-structure change unless a new column is needed.</aside>
+</section>
+
+<!-- 29. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:42–0:58</span>
+<h1>Six <code>pytest</code> Tests — including a manager-independence test</h1>
+<aside class="notes">
+Teaching goal: six new tests covering the composed system — <code>RequestManager</code> holding and filtering <code>BusinessRequest</code> objects — including, again, a dedicated independence test, now for <em>managers</em> rather than individual requests.
+Say to the class (verbatim): "Six new tests, added to last week's file — keep your Week 10 tests, don't delete them. And notice: the very last test is independence again, but one level up — not 'are two requests independent,' but 'are two <em>managers</em> independent.'"
+Check for understanding (asked at the end of this part): "How is <code>test_independent_managers</code> similar to, and different from, Week 10's <code>test_instances_are_independent</code>?" Answer: Similar: both prove that acting on one object doesn't affect a separate object of the same class. Different: Week 10's test operated on two <code>BusinessRequest</code>s directly; today's operates on two <code>RequestManager</code>s, checking that each manager's own <em>held collection</em> — not a simple attribute like <code>status</code> — is independently tracked. Getting a student to articulate this parallel-but-not-identical relationship confirms genuine understanding of composition's implications, not just pattern-matching the test's shape.
+</aside>
+</section>
+
+<!-- 30. PART 4 idea -->
+<section class="s-idea">
+<h3>Five routine tests, one that is a level up</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>test_manager_starts_empty</code> — confirms <code>__init__</code>'s <code>self.requests = []</code>. Simple, but the <em>foundation</em> every other manager test depends on.</p>
+<p><code>test_list_pending_filters_correctly</code> — the richest test, worth walking slowly: two requests added, <code>req1</code> approved, and it asserts <em>two</em> things — the pending list has exactly one item (<code>len(pending) == 1</code>) <strong>and</strong> that item is specifically <code>req2</code> (<code>pending[0].requester == 'B'</code>). A subtly wrong filter might still return length 1 by coincidence on this data; checking <em>which</em> request survived is a stronger verification.</p>
+<p><code>test_independent_managers</code> — the composition-level independence test, directly parallel to Week 10's <code>test_instances_are_independent</code>, one level up: two separate <code>RequestManager</code> objects, a request added to only one, confirming the other's <code>self.requests</code> stays empty. Same underlying Python behavior — every object has its own separate attributes — demonstrated at a different level of the design.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 4):
+- <code>test_manager_starts_empty</code> — confirms <code>self.requests = []</code> in <code>__init__</code>; the foundation every other manager test depends on.
+- <code>test_add_increases_count</code> — one <code>add_request</code> call, <code>len(mgr.requests) == 1</code>.
+- <code>test_list_pending_filters_correctly</code> — the richest test: two requests, <code>req1</code> approved; asserts <code>len(pending) == 1</code> <em>and</em> <code>pending[0].requester == 'B'</code>. The second assertion matters: a subtly wrong filter could return length 1 by coincidence; checking which request survived is stronger.
+- <code>test_total_amount_correct</code> — 500 + 750, asserts <code>mgr.total_amount() == 1250</code>.
+- <code>test_get_by_status</code> — one request, approved, <code>get_by_status('Approved')</code> has length 1.
+- <code>test_independent_managers</code> — the composition-level independence test: two managers, a request added to only <code>mgr1</code>, assert <code>len(mgr2.requests) == 0</code>. Confirms <code>RequestManager</code> objects are independent of each other exactly as <code>BusinessRequest</code> objects were last week.
+Common mistakes: deleting/overwriting Week 10's seven tests while adding today's (the lab page says "keep your Week 10 tests" — a scroll should show all thirteen); in <code>test_list_pending_filters_correctly</code>, checking <code>pending[0].requester == 'A'</code> instead of <code>'B'</code> — <code>req1</code> (A) was approved, so <code>req2</code> (B) is the one still pending.
+Check for understanding: <code>test_independent_managers</code> vs <code>test_instances_are_independent</code> — same proof (acting on one object doesn't touch another of the same class), different level (two managers and their held collections, not two requests and a plain <code>status</code> attribute).
+</aside>
+</section>
+
+<!-- 31. PART 4 provided test file (STATIC — no pytest runner in browser) -->
+<section class="s-code">
+<h3>Type the six new tests — added below Week 10's in <code>tests/test_models.py</code></h3>
+<pre><code class="language-python">from models import BusinessRequest, RequestManager
+
+def test_manager_starts_empty():
+    mgr = RequestManager()
+    assert len(mgr.requests) == 0
+
+def test_add_increases_count():
+    mgr = RequestManager()
+    mgr.add_request(BusinessRequest(1, 'A', 'Travel', 500))
+    assert len(mgr.requests) == 1
+
+def test_list_pending_filters_correctly():
+    mgr = RequestManager()
+    req1 = BusinessRequest(1, 'A', 'Travel', 500)
+    req2 = BusinessRequest(2, 'B', 'Travel', 600)
+    mgr.add_request(req1); mgr.add_request(req2)
+    req1.approve()
+    pending = mgr.list_pending()
+    assert len(pending) == 1
+    assert pending[0].requester == 'B'
+
+def test_total_amount_correct():
+    mgr = RequestManager()
+    mgr.add_request(BusinessRequest(1, 'A', 'T', 500))
+    mgr.add_request(BusinessRequest(2, 'B', 'T', 750))
+    assert mgr.total_amount() == 1250
+
+def test_get_by_status():
+    mgr = RequestManager()
+    req1 = BusinessRequest(1, 'A', 'T', 500)
+    mgr.add_request(req1)
+    req1.approve()
+    approved = mgr.get_by_status('Approved')
+    assert len(approved) == 1
+
+def test_independent_managers():
+    mgr1 = RequestManager()
+    mgr2 = RequestManager()
+    mgr1.add_request(BusinessRequest(1, 'A', 'T', 500))
+    assert len(mgr2.requests) == 0</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, so neither this file nor the <code>pytest -v</code> pane can execute in the browser. Add these below your seven Week 10 tests (don't delete them) and run <code>pytest -v</code> on your own machine. Two slides on, the same six new checks run live.</p>
+<aside class="notes">
+Line by line:
+- <code>from models import BusinessRequest, RequestManager</code> — the test file imports both classes now.
+- <code>test_manager_starts_empty</code> / <code>test_add_increases_count</code> — the empty-list foundation and a single append.
+- <code>test_list_pending_filters_correctly</code> — the richest: asserts both the count and <em>which</em> request (<code>req2</code>, requester 'B') survived the filter.
+- <code>test_total_amount_correct</code> — 500 + 750 == 1250.
+- <code>test_get_by_status</code> — one approved request shows up under <code>'Approved'</code>.
+- <code>test_independent_managers</code> — the composition-level independence check: <code>mgr2.requests</code> stays empty when only <code>mgr1</code> gets a request.
+Common mistakes: overwriting Week 10's tests; using <code>'A'</code> instead of <code>'B'</code> in the <code>test_list_pending_filters_correctly</code> assertion.
+Check for understanding: <code>test_independent_managers</code> mirrors Week 10's independence test one level up — two managers and their held collections.
+</aside>
+</section>
+
+<!-- 32. PART 4 pytest -v pane (STATIC) -->
+<section class="s-out">
+<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
+<pre>tests/test_models.py::test_default_status_is_pending PASSED
+tests/test_models.py::test_approve_changes_status PASSED
+tests/test_models.py::test_reject_changes_status PASSED
+tests/test_models.py::test_requires_review_over_limit PASSED
+tests/test_models.py::test_requires_review_under_limit PASSED
+tests/test_models.py::test_requires_review_at_boundary PASSED
+tests/test_models.py::test_instances_are_independent PASSED
+tests/test_models.py::test_manager_starts_empty PASSED
+tests/test_models.py::test_add_increases_count PASSED
+tests/test_models.py::test_list_pending_filters_correctly PASSED
+tests/test_models.py::test_total_amount_correct PASSED
+tests/test_models.py::test_get_by_status PASSED
+tests/test_models.py::test_independent_managers PASSED
+13 passed</pre>
+<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all tests (Week 10's seven plus today's six) pass". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. The next slide runs the six new checks live.</p>
+<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output": the thirteen <code>PASSED</code> lines (seven from Week 10, six new) and the <code>13 passed</code> summary. This pane is <strong>not executed</strong> in the deck. Double-checked locally with <code>python3 -m pytest -v</code> on <code>python3</code> 3.12.2 against Week 10's <code>models.py</code> + <code>RequestManager</code> + the full thirteen-test file: <code>13 passed</code>. The provided code is correct as written — no hidden bugs this week.</aside>
+</section>
+
+<!-- 33. PART 4 live-logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The six new checks, run live</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        self.status = 'Approved'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class RequestManager:
+    """Manages a collection of business requests."""
+
+    def __init__(self):
+        self.requests = []
+
+    def add_request(self, request):
+        self.requests.append(request)
+
+    def list_pending(self):
+        return [r for r in self.requests if r.status == 'Pending']
+
+    def total_amount(self):
+        return sum(r.amount for r in self.requests)
+
+    def get_by_status(self, status):
+        return [r for r in self.requests if r.status == status]
+
+
+# the six NEW tests from tests/test_models.py, run here as bare asserts
+mgr = RequestManager()
+assert len(mgr.requests) == 0
+print('test_manager_starts_empty PASSED')
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(1, 'A', 'Travel', 500))
+assert len(mgr.requests) == 1
+print('test_add_increases_count PASSED')
+
+mgr = RequestManager()
+req1 = BusinessRequest(1, 'A', 'Travel', 500)
+req2 = BusinessRequest(2, 'B', 'Travel', 600)
+mgr.add_request(req1); mgr.add_request(req2)
+req1.approve()
+pending = mgr.list_pending()
+assert len(pending) == 1
+assert pending[0].requester == 'B'
+print('test_list_pending_filters_correctly PASSED')
+
+mgr = RequestManager()
+mgr.add_request(BusinessRequest(1, 'A', 'T', 500))
+mgr.add_request(BusinessRequest(2, 'B', 'T', 750))
+assert mgr.total_amount() == 1250
+print('test_total_amount_correct PASSED')
+
+mgr = RequestManager()
+req1 = BusinessRequest(1, 'A', 'T', 500)
+mgr.add_request(req1)
+req1.approve()
+approved = mgr.get_by_status('Approved')
+assert len(approved) == 1
+print('test_get_by_status PASSED')
+
+mgr1 = RequestManager()
+mgr2 = RequestManager()
+mgr1.add_request(BusinessRequest(1, 'A', 'T', 500))
+assert len(mgr2.requests) == 0
+print('test_independent_managers PASSED')
+
+print('6 passed')</div>
+<p class="expect">Where the guide's point is "the tests pass", this runs the six <em>new</em> assertions with <code>assert</code> so the manager logic executes live even though <code>pytest</code> itself is static. The static pane above shows all thirteen — the seven Week 10 tests still pass alongside these. Each <code>assert</code> that holds prints its test name; a failing one would raise <code>AssertionError</code> and stop the block.</p>
+<aside class="notes">
+Say to the class (verbatim): "Six new tests, added to last week's file — keep your Week 10 tests, don't delete them. And notice: the very last test is independence again, but one level up — not 'are two requests independent,' but 'are two <em>managers</em> independent.'"
+Line by line: <code>BusinessRequest</code> and <code>RequestManager</code> are re-defined (fresh namespace), then the six new tests from <code>tests/test_models.py</code> run as bare <code>assert</code>s, each with its own fresh manager. The final assertion is the manager-independence check: a request added to <code>mgr1</code> only, <code>mgr2.requests</code> still empty.
+Check for understanding: <code>test_independent_managers</code> mirrors Week 10's <code>test_instances_are_independent</code> one level up — two managers and their held collections, not two requests and a plain attribute.
+</aside>
+</section>
+
+<!-- 34. PART 4 live-logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>test_manager_starts_empty PASSED
+test_add_increases_count PASSED
+test_list_pending_filters_correctly PASSED
+test_total_amount_correct PASSED
+test_get_by_status PASSED
+test_independent_managers PASSED
+6 passed</pre>
+<p class="expect">Every one of the six new assertions holds, so all six names print followed by <code>6 passed</code> — the live equivalent of the six new rows in the static <code>pytest -v</code> pane. The last line proves the manager-independence property: only <code>mgr1</code> got a request, <code>mgr2.requests</code> is still empty.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these seven lines and exits 0. Each <code>assert</code> corresponds one-to-one with a new test in <code>tests/test_models.py</code>; a clean run here means all six new <code>pytest</code> tests pass, and the seven Week 10 tests are unchanged, giving the guide's <code>13 passed</code>.</aside>
+</section>
+
+<!-- 35. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">How is <code>test_independent_managers</code> similar to, and different from, Week 10's <code>test_instances_are_independent</code>?</p>
+<button data-opt="A">Similar: both prove that acting on one object doesn't affect a separate object of the same class. Different: Week 10's test operated on two <code>BusinessRequest</code>s directly; today's operates on two <code>RequestManager</code>s, checking that each manager's own <em>held collection</em> — not a simple attribute like <code>status</code> — is independently tracked</button>
+<button data-opt="B">They're identical — both create two <code>BusinessRequest</code> objects and check one <code>status</code> attribute</button>
+<button data-opt="C">They're unrelated — Week 10's tests an attribute; today's tests whether <code>pytest</code> itself isolates test functions</button>
+<p class="why" hidden>Similar: both prove that acting on one object doesn't affect a separate object of the same class. Different: Week 10's test operated on two <code>BusinessRequest</code>s directly; today's operates on two <code>RequestManager</code>s, checking that each manager's own <em>held collection</em> — not a simple attribute like <code>status</code> — is independently tracked. Getting a student to articulate this parallel-but-not-identical relationship confirms genuine understanding of composition's implications, not just pattern-matching the test's shape.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "Similar: both prove that acting on one object doesn't affect a separate object of the same class. Different: Week 10's test operated on two <code>BusinessRequest</code>s directly; today's operates on two <code>RequestManager</code>s, checking that each manager's own <em>held collection</em> — not a simple attribute like <code>status</code> — is independently tracked. Getting a student to articulate this parallel-but-not-identical relationship confirms genuine understanding of composition's implications, not just pattern-matching the test's shape."</aside>
+</section>
+
+<!-- 36. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Accidentally deleting or overwriting Week 10's tests while adding today's — the lab page's own explicit instruction is "keep your Week 10 tests"; a quick scroll through <code>test_models.py</code> before running confirms all thirteen are present.</p>
+<p>In <code>test_list_pending_filters_correctly</code>, checking <code>pending[0].requester == 'A'</code> instead of <code>'B'</code> — a natural mix-up: <code>req1</code> (requester 'A') was the one <em>approved</em>, so it's <code>req2</code> (requester 'B') that remains pending and should be the sole item in the filtered list.</p>
+</div>
+<aside class="notes">Check for understanding: <code>test_independent_managers</code> vs <code>test_instances_are_independent</code> — same proof, one level up (two managers and their held collections, not two requests and a plain <code>status</code>).</aside>
+</section>
+
+<!-- 37. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:06</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: the established ritual, now verifying thirteen accumulated tests across two weeks of OOP content.
+Say to the class (verbatim): "Same ritual — and notice <code>pytest -v</code> now confirms thirteen tests, not six or seven — everything from last week is still being verified alongside today's new content, every single run."
+Common mistakes: none new; the main thing worth confirming is that the growing test suite (thirteen tests now) still runs quickly and cleanly as a single <code>pytest -v</code> call — a genuine, practical benefit of the testing discipline built since Week 4: the suite scales without extra effort.
+Check for understanding (asked at the end of this part): "If a future week's change to <code>BusinessRequest</code> accidentally broke <code>requires_review()</code>, would today's <code>test_list_pending_filters_correctly</code> test catch that?" Answer: No — that test doesn't call <code>requires_review()</code> at all; it only exercises <code>status</code>-based filtering. A good reminder that a large, passing test suite doesn't mean <em>everything</em> is verified — only the specific behaviors each individual test actually checks.
+</aside>
+</section>
+
+<!-- 38. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 11: OOP II RequestManager composition' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Format, lint, test, then commit and push. The commit message must include <strong>"lab 11"</strong>. <code>pytest -v</code> now confirms <strong>thirteen</strong> tests — seven from Week 10, six new — every run.</p>
+<aside class="notes">
+Say to the class (verbatim): "Same ritual — and notice <code>pytest -v</code> now confirms thirteen tests, not six or seven — everything from last week is still being verified alongside today's new content, every single run."
+Line by line: <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all thirteen tests; <code>&amp;&amp;</code> chaining stops on any failure. Then stage everything, commit with a message that includes "lab 11", push.
+Common mistakes: none new — pure repetition; forgetting "lab 11" in the commit message is the same graded requirement as every prior week.
+Check for understanding: a broken <code>requires_review()</code> would <em>not</em> be caught by <code>test_list_pending_filters_correctly</code> — that test never calls it; it only exercises <code>status</code>-based filtering.
+</aside>
+</section>
+
+<!-- 39. PART 5 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If a future week's change to <code>BusinessRequest</code> accidentally broke <code>requires_review()</code>, would today's <code>test_list_pending_filters_correctly</code> test catch that?</p>
+<button data-opt="A">Yes — every test implicitly exercises every method on the class, so any break is caught by any test</button>
+<button data-opt="B">No — that test doesn't call <code>requires_review()</code> at all; it only exercises <code>status</code>-based filtering. A large, passing test suite doesn't mean <em>everything</em> is verified — only the specific behaviors each individual test actually checks</button>
+<button data-opt="C">Yes — <code>list_pending()</code> calls <code>requires_review()</code> internally, so a break there propagates into the filter</button>
+<p class="why" hidden>No — that test doesn't call <code>requires_review()</code> at all; it only exercises <code>status</code>-based filtering. A good reminder that a large, passing test suite doesn't mean <em>everything</em> is verified — only the specific behaviors each individual test actually checks.</p>
+</div>
+<aside class="notes">Guide's Part 5 Check for understanding, verbatim answer: "No — that test doesn't call <code>requires_review()</code> at all; it only exercises <code>status</code>-based filtering. A good reminder that a large, passing test suite doesn't mean <em>everything</em> is verified — only the specific behaviors each individual test actually checks."</aside>
+</section>
+
+<!-- 40. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>None new this week — pure repetition of an already-established sequence. The main thing worth confirming is that the growing test suite (thirteen tests now, likely more in coming weeks) still runs quickly and cleanly as a single <code>pytest -v</code> call — a genuine, practical benefit of the testing discipline built since Week 4: the suite scales without extra effort on the developer's part.</p>
+<p>Forgetting "lab 11" in the commit message — the same graded requirement pattern as every prior week; a quick final check before <code>git push</code>.</p>
+</div>
+<aside class="notes">Check for understanding: a broken <code>requires_review()</code> would not be caught by <code>test_list_pending_filters_correctly</code> — it only exercises <code>status</code>-based filtering, never calling that method.</aside>
+</section>
+
+<!-- 41. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:06–1:15</span>
+<h1>Light Inheritance — <code>TravelRequest(BusinessRequest)</code></h1>
+<aside class="notes">
+Frame as a genuine preview of Week 12's deeper inheritance content, worth real attention if the room reaches it. This is "is-a": a <code>TravelRequest</code> <em>is a</em> kind of <code>BusinessRequest</code> — as opposed to today's <code>RequestManager</code>, which <em>has</em> a list of them (composition).
+Say to the class (verbatim, one sentence of framing): "This is inheritance in miniature — reuse what already works, override only what's genuinely different for this specific kind of request. Week 12 goes much deeper into when this is the right design choice versus composition, which is what today's <code>RequestManager</code> used instead."
+The two classic inheritance errors are shown as broken/fixed pairs on the next slides: forgetting <code>super().__init__()</code> (the child is missing the parent's attributes &rarr; <code>AttributeError</code>), and an argument mismatch in the <code>super().__init__(...)</code> call &rarr; <code>TypeError</code>.
+</aside>
+</section>
+
+<!-- 42. STRETCH idea -->
+<section class="s-idea">
+<h3>Reuse what works; override only what differs</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>class TravelRequest(BusinessRequest):</code> — the parentheses specify a <strong>parent class</strong>. <code>TravelRequest</code> <em>is a</em> <code>BusinessRequest</code>, inheriting everything it already has (<code>approve()</code>, <code>reject()</code>, <code>__repr__</code>, …) automatically, without redefining any of it.</p>
+<p><code>super().__init__(request_id, requester, 'Travel', amount)</code> — calls the <strong>parent's</strong> <code>__init__</code> directly, running <code>BusinessRequest</code>'s original constructor logic (setting <code>request_id</code>, <code>requester</code>, <code>category</code> hardcoded to <code>'Travel'</code>, <code>amount</code>, and the default <code>status = 'Pending'</code>) — all without retyping those four lines.</p>
+<p><code>self.destination = destination</code> — a genuinely <strong>new</strong> attribute, specific to <code>TravelRequest</code>, that plain <code>BusinessRequest</code> objects don't have at all.</p>
+<p><code>def requires_review(self):</code> — this name <strong>already exists on the parent</strong>. Redefining it here <strong>overrides</strong> the inherited version for <code>TravelRequest</code> objects: their <code>.requires_review()</code> uses <em>this</em> $500 threshold, not <code>BusinessRequest</code>'s $1,000 — while ordinary <code>BusinessRequest</code> objects keep using $1,000.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Stretch):
+- <code>class TravelRequest(BusinessRequest):</code> — the parentheses name a parent class; <code>TravelRequest</code> <em>is a</em> <code>BusinessRequest</code>, inheriting <code>approve()</code>, <code>reject()</code>, <code>__repr__</code>, etc. automatically.
+- <code>super().__init__(request_id, requester, 'Travel', amount)</code> — calls the parent's constructor; sets <code>request_id</code>, <code>requester</code>, <code>category</code> (hardcoded <code>'Travel'</code>), <code>amount</code>, and default <code>status = 'Pending'</code> without retyping Week 10's four lines.
+- <code>self.destination = destination</code> — a new attribute, specific to <code>TravelRequest</code>.
+- <code>def requires_review(self):</code> — overrides the inherited method for <code>TravelRequest</code> only: <code>return self.amount &gt; 500</code>. Ordinary <code>BusinessRequest</code> objects are unaffected and keep the $1,000 threshold.
+One sentence of framing (verbatim): "This is inheritance in miniature — reuse what already works, override only what's genuinely different for this specific kind of request. Week 12 goes much deeper into when this is the right design choice versus composition, which is what today's <code>RequestManager</code> used instead."
+</aside>
+</section>
+
+<!-- 43. STRETCH verified behavior (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>TravelRequest</code> and its verified behavior</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        self.status = 'Approved'
+
+    def requires_review(self):
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class TravelRequest(BusinessRequest):
+    def __init__(self, request_id, requester, amount, destination):
+        super().__init__(request_id, requester, 'Travel', amount)
+        self.destination = destination
+
+    def requires_review(self):
+        return self.amount &gt; 500
+
+
+t = TravelRequest(201, 'Alex', 600, 'NYC')
+print(t.requires_review())   # True  -- $600 > $500, TravelRequest's own threshold
+print(t.category)            # Travel -- set automatically via super().__init__
+print(t.destination)         # NYC   -- new attribute, not on BusinessRequest at all</div>
+<p class="expect">Guide-verbatim <code>TravelRequest</code>. <code>super().__init__(...)</code> runs the parent constructor (setting <code>category</code> to <code>'Travel'</code>); <code>requires_review</code> is overridden to a $500 threshold; <code>destination</code> is brand-new. Press <strong>Run</strong>.</p>
+<aside class="notes">
+Line by line: <code>BusinessRequest</code> is re-defined (fresh namespace) with the Week 10 methods the Stretch relies on; <code>TravelRequest(BusinessRequest)</code> inherits from it. <code>super().__init__(request_id, requester, 'Travel', amount)</code> sets the four parent attributes plus the default status; <code>self.destination</code> is added; <code>requires_review</code> overrides the parent's version with <code>&gt; 500</code>.
+Verified behavior (guide): <code>t.requires_review()</code> &rarr; <code>True</code> ($600 &gt; $500); <code>t.category</code> &rarr; <code>Travel</code> (from <code>super().__init__</code>); <code>t.destination</code> &rarr; <code>NYC</code> (the new attribute).
+</aside>
+</section>
+
+<!-- 44. STRETCH verified output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>True
+Travel
+NYC</pre>
+<p class="expect">Matches the guide's Stretch "Verified behavior" exactly. <code>True</code> because <code>600 &gt; 500</code> (the overridden threshold); <code>Travel</code> because <code>super().__init__</code> set it; <code>NYC</code> because <code>self.destination</code> is a new <code>TravelRequest</code>-only attribute.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these three lines and exits 0. An ordinary <code>BusinessRequest(201, 'Alex', 'Travel', 600)</code> would report <code>requires_review()</code> as <code>False</code> — <code>600 &gt; 1000</code> is false — since the override is scoped to <code>TravelRequest</code> only.</aside>
+</section>
+
+<!-- 45. STRETCH broken A — no super().__init__() -->
+<section class="s-code">
+<h3>Classic error 1 — forgetting <code>super().__init__()</code></h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class TravelRequest(BusinessRequest):
+    def __init__(self, request_id, requester, amount, destination):
+        # BUG: no super().__init__(...) call --
+        # request_id, requester, category, amount, status are never set
+        self.destination = destination
+
+    def requires_review(self):
+        return self.amount &gt; 500
+
+
+t = TravelRequest(201, 'Alex', 600, 'NYC')
+print(t.destination)
+print(t.category)</div>
+<p class="expect">The child's <code>__init__</code> sets only <code>self.destination</code> and never calls <code>super().__init__(...)</code>, so none of the parent's attributes exist on the object. <code>t.destination</code> prints fine; <code>t.category</code> fails. Press <strong>Run</strong> and read the last line.</p>
+<aside class="notes">
+Without <code>super().__init__(...)</code>, <code>BusinessRequest</code>'s constructor never runs, so <code>request_id</code>, <code>requester</code>, <code>category</code>, <code>amount</code>, and <code>status</code> are never assigned on the object. Attribute access falls through the class hierarchy, finds nothing, and raises <code>AttributeError</code>. Make a student say "the parent constructor never ran, so <code>category</code> was never set" — not just "it broke". <code>t.requires_review()</code> would fail the same way (it reads <code>self.amount</code>).
+</aside>
+</section>
+
+<!-- 46. STRETCH broken A output -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>NYC
+Traceback (most recent call last):
+  ...
+  File "&lt;exec&gt;", line 28, in &lt;module&gt;
+    print(t.category)
+AttributeError: 'TravelRequest' object has no attribute 'category'</pre>
+<p class="expect">Load-bearing: <code>AttributeError: 'TravelRequest' object has no attribute 'category'</code>. <code>t.destination</code> printed <code>NYC</code> first — the child <em>did</em> set that — but every attribute that <code>BusinessRequest.__init__</code> would have set is missing, because <code>super().__init__(...)</code> was never called. Pyodide shows <code>&lt;exec&gt;</code> for the file; the line number is not load-bearing.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> prints <code>NYC</code>, then raises exactly <code>AttributeError: 'TravelRequest' object has no attribute 'category'</code> and exits 1. This is the classic "child missing the parent's attributes" symptom of a forgotten <code>super().__init__()</code>. Fixed on slide 49.</aside>
+</section>
+
+<!-- 47. STRETCH broken B — arg mismatch -->
+<section class="s-code">
+<h3>Classic error 2 — wrong arguments to <code>super().__init__(...)</code></h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class TravelRequest(BusinessRequest):
+    def __init__(self, request_id, requester, amount, destination):
+        # BUG: BusinessRequest.__init__ needs (request_id, requester, category, amount)
+        # -- the 'category' argument is missing from this call
+        super().__init__(request_id, requester, amount)
+        self.destination = destination
+
+
+t = TravelRequest(201, 'Alex', 600, 'NYC')
+print(t.destination)</div>
+<p class="expect">The <code>super().__init__(...)</code> call passes only three positional arguments; <code>BusinessRequest.__init__</code> needs four (<code>request_id</code>, <code>requester</code>, <code>category</code>, <code>amount</code>). Press <strong>Run</strong> and read the last line — a <code>TypeError</code>, raised while constructing the object.</p>
+<aside class="notes">
+Positionally, <code>request_id</code> &rarr; <code>request_id</code>, <code>requester</code> &rarr; <code>requester</code>, <code>600</code> &rarr; <code>category</code>, and then <code>amount</code> has no value left — so Python reports <code>amount</code> as the missing required argument. The fix is to pass the category explicitly: <code>super().__init__(request_id, requester, 'Travel', amount)</code>. Make a student connect the message to the parent signature, not just "wrong number of args".
+</aside>
+</section>
+
+<!-- 48. STRETCH broken B output -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  ...
+  File "&lt;exec&gt;", line 18, in __init__
+    super().__init__(request_id, requester, amount)
+TypeError: BusinessRequest.__init__() missing 1 required positional argument: 'amount'</pre>
+<p class="expect">Load-bearing: <code>TypeError: BusinessRequest.__init__() missing 1 required positional argument: 'amount'</code>. The <code>600</code> meant as <code>amount</code> was bound to <code>category</code> instead, leaving <code>amount</code> unfilled. Pyodide shows <code>&lt;exec&gt;</code> for the file; the line number is not load-bearing.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly <code>TypeError: BusinessRequest.__init__() missing 1 required positional argument: 'amount'</code> during <code>TravelRequest(201, 'Alex', 600, 'NYC')</code> and exits 1. The error names <code>amount</code> because the three supplied positionals fill <code>request_id</code>, <code>requester</code>, <code>category</code> — leaving <code>amount</code> with nothing. Fixed on the next slide.</aside>
+</section>
+
+<!-- 49. STRETCH fixed -->
+<section class="s-code">
+<h3>Fixed — <code>super().__init__(...)</code> called with all four parent arguments</h3>
+<div class="run" data-lang="python">class BusinessRequest:
+    """Represents a single business purchase or travel request."""
+
+    def __init__(self, request_id, requester, category, amount):
+        self.request_id = request_id
+        self.requester  = requester
+        self.category   = category
+        self.amount     = amount
+        self.status     = 'Pending'
+
+    def approve(self):
+        self.status = 'Approved'
+
+    def requires_review(self):
+        return self.amount &gt; 1000
+
+    def __repr__(self):
+        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+
+
+class TravelRequest(BusinessRequest):
+    def __init__(self, request_id, requester, amount, destination):
+        # fixed: super().__init__ runs the parent constructor with all four args,
+        # category hardcoded to 'Travel'
+        super().__init__(request_id, requester, 'Travel', amount)
+        self.destination = destination
+
+    def requires_review(self):
+        return self.amount &gt; 500
+
+
+t = TravelRequest(201, 'Alex', 600, 'NYC')
+print(t.destination)
+print(t.category)
+print(t.status)</div>
+<p class="expect">Both classic errors resolved in one correct version: <code>super().__init__(request_id, requester, 'Travel', amount)</code> is called (fixing error 1) with all four parent arguments (fixing error 2). Now <code>destination</code>, <code>category</code>, and <code>status</code> all exist. Press <strong>Run</strong> — clean output.</p>
+<aside class="notes">The single fix — a correct <code>super().__init__(request_id, requester, 'Travel', amount)</code> call — resolves both broken slides: the call exists (error 1) and passes the four arguments <code>BusinessRequest.__init__</code> requires (error 2). Takeaway: a subclass's <code>__init__</code> must call the parent's, with exactly the arguments the parent's signature expects.</aside>
+</section>
+
+<!-- 50. STRETCH fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>NYC
+Travel
+Pending</pre>
+<p class="expect"><code>destination</code> is <code>NYC</code> (child-set); <code>category</code> is <code>Travel</code> (hardcoded in the <code>super().__init__</code> call); <code>status</code> is <code>Pending</code> (the parent constructor's unconditional default). All three attributes now exist on the object.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly these three lines and exits 0. With <code>super().__init__(...)</code> correctly called, the object carries the parent's five attributes plus the child's <code>destination</code>.</aside>
+</section>
+
+<!-- 51. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including <strong>"lab 11"</strong></li>
+<li><code>models.py</code> contains both <code>BusinessRequest</code> (Week 10) and <code>RequestManager</code> (today), unmodified from each other</li>
+<li><code>main.py</code> creates a manager, adds four requests, approves one, and prints the report</li>
+<li><code>README.md</code> contains the completed OOP-to-SQL mapping table, with genuine "This system" answers</li>
+<li><code>tests/test_models.py</code> contains all thirteen tests (seven from Week 10, six new), all passing</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. Completion credit — the bar is the checklist above, not a graded rubric on the code. The featured idea to reinforce as they leave: composition is "has-a" (a <code>RequestManager</code> <em>has</em> a list of <code>BusinessRequest</code>s); inheritance is "is-a" (a <code>TravelRequest</code> <em>is a</em> <code>BusinessRequest</code>) — the two are different relationships between classes.</aside>
+</section>
+
+<!-- 52. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 12</h3>
+<p>"Today's Stretch — <code>TravelRequest</code> inheriting from <code>BusinessRequest</code> — becomes the main event next week: OOP design decisions, when to choose inheritance versus composition, and enough hands-on practice with both to be genuinely comfortable before Unit 4's database work begins."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: a solid grasp of composition (today's <code>RequestManager</code>) plus a first taste of inheritance (today's Stretch) is exactly what Week 12's "inheritance vs composition" design decisions build on.</aside>
+</section>
+
+<!-- 53. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 11</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w11.md (Week 11 facilitation guide, "OOP II — Composition, Inheritance &amp; SQL Mapping"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4. This is the CONCEPTUAL SQL week — the <code>CREATE TABLE</code> / <code>INSERT</code> / <code>SELECT</code> snippets and their illustrative result blocks are static, outside any <code>.run</code> div; they do not execute (Week 14 runs real <code>sqlite3</code>). The <code>tests/test_models.py</code> file and the <code>pytest -v</code> pane are static (no <code>pytest</code> runner in the browser) — output reproduced verbatim from the guide's "Verified output — all tests (Week 10's seven plus today's six) pass"; double-checked locally with <code>python3 -m pytest -v</code> (13 passed). The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> (Week 10) and <code>RequestManager</code> at the top; the guide splits it across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. Broken slides: <code>r['status']</code> &rarr; <code>TypeError: 'BusinessRequest' object is not subscriptable</code>; a forgotten <code>super().__init__()</code> &rarr; <code>AttributeError: 'TravelRequest' object has no attribute 'category'</code>; a short <code>super().__init__(...)</code> call &rarr; <code>TypeError: BusinessRequest.__init__() missing 1 required positional argument: 'amount'</code> — all verified against CPython 3.12.2; Pyodide shows <code>&lt;exec&gt;</code> as the file and line numbers may differ. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
