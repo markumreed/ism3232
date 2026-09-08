@@ -167,7 +167,7 @@ Only <code>tree</code> runs in the browser emulator; the <code>rg</code> and <co
 <!-- 10. PART 1 — tree (RUNNABLE) -->
 <section class="s-code">
 <h3>Live-code — <code>tree</code> runs here</h3>
-<div class="run" data-lang="shell" data-fs='{"~/ism3232":{"module01_setup":{"hello_ism3232.py":"weekly_hours = 3 * 2\n","README.md":"# Module 01 setup\n"},"module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n","requirements.txt":"pytest==9.1.1\nruff==0.16.4\n","notes.txt":"week 2 navigation practice\n","tests":{"__init__.py":"","test_week4.py":"def test_always_passes():\n    assert 2 + 2 == 4\n"}},"module03_git_github":{"README.md":"# Module 03 git\n"},"module04_programming":{}}}'>cd ~/ism3232
+<div class="run" data-lang="shell" data-fs='{"~/ism3232":{"module01_setup":{"hello_ism3232.py":"print(\"Hello, ISM3232\")\n","README.md":"# Module 01 setup\n"},"module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n","requirements.txt":"pytest==9.1.1\nruff==0.16.4\n","notes.txt":"week 2 navigation practice\n","tests":{"__init__.py":"","test_week4.py":"def test_always_passes():\n    assert 2 + 2 == 4\n"}},"module03_git_github":{"README.md":"# Module 03 git\n"},"module04_programming":{}}}'>cd ~/ism3232
 tree -L 3</div>
 <p class="expect">The first <code>cd</code> just puts the emulator where the guide's Part 1 starts (<code>~/ism3232</code>). <code>tree -L 3</code> then draws the project structure three levels deep — appropriate now that several modules have their own subfolders (<code>tests/</code>, <code>.venv/</code>, etc.).</p>
 <aside class="notes">
@@ -225,7 +225,7 @@ Read-only: <code>rg</code> is not one of the emulator's commands.
 <pre>Illustrative — reconstructed from the seeded tree; rg does not run here.
 
 rg 'print'      &rarr; each matching line, prefixed  file:line:
-                  e.g.  module01_setup/hello_ism3232.py:1:...print(...)
+                  e.g.  module01_setup/hello_ism3232.py:1:print("Hello, ISM3232")
 rg 'def '       &rarr; only lines that begin a function definition
                   e.g.  module02_zsh/tests/test_week4.py:1:def test_always_passes():
 rg -l 'import'  &rarr; just the FILENAMES that contain a match,
@@ -344,7 +344,7 @@ Check for understanding: "If <code>test_path_segments</code> used <code>path.spl
 <p><code>assert EXPR</code> is new syntax today: it checks that <code>EXPR</code> is <code>True</code>. If it isn't, the test is marked <strong>failed</strong>; if it holds, nothing visible happens — the test passes silently. That is the entire mechanism of automated testing.</p>
 <p><code>path.split('/')</code> breaks a path string into a list of its segments at every <code>/</code>; <code>'ism3232' in parts</code> checks whether that exact string appears anywhere in the resulting list.</p>
 </div>
-<aside class="notes"><code>mkdir -p tests</code> — <code>-p</code> means "don't error if it already exists, and create any needed parents" — safe and idempotent. <code>touch tests/__init__.py tests/test_week4.py</code> — two files at once; <code>__init__.py</code>, even empty, marks <code>tests/</code> as a proper Python package, which helps pytest's discovery. <code>test_string_is_lowercase</code>: <code>'ism3232' == 'ism3232'.lower()</code> holds because the string is already lowercase — ask "what if <code>name</code> were <code>'ISM3232'</code>?" (still passes: <code>.lower()</code> converts it <em>to</em> <code>'ism3232'</code>).</aside>
+<aside class="notes"><code>mkdir -p tests</code> — <code>-p</code> means "don't error if it already exists, and create any needed parents" — safe and idempotent. <code>touch tests/__init__.py tests/test_week4.py</code> — two files at once; <code>__init__.py</code>, even empty, marks <code>tests/</code> as a proper Python package, which helps pytest's discovery. <code>test_string_is_lowercase</code>: <code>'ism3232' == 'ism3232'.lower()</code> holds because the string is already lowercase. If <code>name</code> were <code>'ISM3232'</code> the assertion would be <code>'ISM3232' == 'ism3232'</code>, which is <code>False</code> — the test would <strong>fail</strong>. (The guide's L178 parenthetical says "it would still pass"; that is imprecise — <code>name == name.lower()</code> holds only when <code>name</code> is already lowercase. Slide 28's predict and aside carry the same correction.)</aside>
 </section>
 
 <!-- 22. PART 2 — setup (RUNNABLE) -->
