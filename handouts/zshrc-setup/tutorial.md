@@ -1,7 +1,7 @@
 # ISM3232 — How to Set Up Your `.zshrc`
 
 *Companion to Week 3 (Module 2C & 2D — Virtual Environments and `.zshrc`).*
-*Reference file: [`.zshrc`](./.zshrc) in this same folder.*
+*Reference file: [`.zshrc`](./.zshrc) in this same folder (also downloadable from the [.zshrc Setup Guide](../../docs/zshrc_setup_guide.html) on the course site).*
 
 ---
 

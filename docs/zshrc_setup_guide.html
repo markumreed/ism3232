@@ -222,6 +222,12 @@ body{min-height:100vh;width:100%;}
   .tq-text, .ta-text { font-size:12px; color:var(--text-body); line-height:1.6; }
   .tq-text code, .ta-text code { font-size:.82em; }
 
+  .dl-btn { display:inline-flex; align-items:center; gap:6px; margin-top:8px;
+            font-family:'Courier New',Courier,monospace; font-size:11px; letter-spacing:.04em;
+            padding:7px 14px; border-radius:20px; background:var(--accent); color:#fff !important;
+            text-decoration:none; }
+  .dl-btn:hover { opacity:.88; }
+
 </style>
 
 <link rel="stylesheet" href="../site.css">
@@ -297,6 +303,8 @@ body{min-height:100vh;width:100%;}
 <!-- ═══════════════════════════════════════════════ -->
 <div class="section-divider"><div class="line"></div><div class="label">Step 4 &mdash; Paste the Required Block</div><div class="line"></div></div>
 <div class="step-block"><div class="step-circle">1</div><div class="step-inner"><div class="step-title">Add these lines to the bottom of ~/.zshrc</div><p>Read every line before you paste it &mdash; you'll need to explain each one.</p></div></div>
+
+<div class="callout ok"><div class="callout-icon">&#x2B07;&#xFE0F;</div><div><div class="callout-label">Prefer a file over copy-paste?</div><div class="callout-body">Download the same block below as a plain text file, then open it next to your own <code>~/.zshrc</code> and copy the lines in yourself &mdash; downloading it doesn't skip Step 3 or 5.<br><a class="dl-btn" href="../handouts/zshrc-setup/zshrc-ism3232.txt" download=".zshrc">&#x2B07; Download .zshrc reference file</a></div></div></div>
 
 <div class="code-block">
 <div class="cb-label">~/.zshrc &mdash; required block</div>
