@@ -1,0 +1,168 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createShell, run, prompt } from './lab-shell.mjs';
+
+const seed = () => ({
+  '~/ism3232': {
+    module01_setup: { 'hello_ism3232.py': "print('hi')\n", 'README.md': '# m1\n' },
+    module02_zsh: { week2_lab: {} },
+    data: {}, screenshots: {},
+  },
+});
+
+test('pwd starts at home and cd ~ returns there', () => {
+  const sh = createShell(seed());
+  assert.equal(run(sh, 'pwd').out.trim(), '/Users/student');
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  assert.equal(run(sh, 'pwd').out.trim(), '/Users/student/ism3232/module02_zsh/week2_lab');
+  run(sh, 'cd ~');
+  assert.equal(run(sh, 'pwd').out.trim(), '/Users/student');
+});
+
+test('mkdir + cd .. + relative multi-segment cd', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh');
+  run(sh, 'mkdir week2_lab/practice');            // week2_lab exists
+  run(sh, 'cd week2_lab/practice');
+  assert.equal(run(sh, 'pwd').out.trim(), '/Users/student/ism3232/module02_zsh/week2_lab/practice');
+  run(sh, 'cd ../..');
+  assert.equal(run(sh, 'pwd').out.trim(), '/Users/student/ism3232/module02_zsh');
+});
+
+test('touch multi-arg then ls and ls -la ordering', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch notes.txt commands.txt hello_week2.py');
+  assert.equal(run(sh, 'ls').out.trim(), 'commands.txt  hello_week2.py  notes.txt');
+  const la = run(sh, 'ls -la').out;
+  assert.match(la, /^total /m);
+  assert.match(la, /\.\n/);        // "." entry present
+  assert.match(la, /\.\.\n/);      // ".." entry present
+});
+
+test('ls / tree fold case but keep codepoint order for punctuation', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch README.md alpha.txt Beta.txt hello.py');
+  // raw codepoint sort would give "Beta.txt  README.md  alpha.txt  hello.py"
+  assert.equal(
+    run(sh, 'ls').out.trim(),
+    'alpha.txt  Beta.txt  hello.py  README.md',
+  );
+  // '.' must still sort before '_' — notes.txt before notes_backup.txt
+  run(sh, 'touch notes.txt notes_backup.txt');
+  assert.equal(
+    run(sh, 'ls').out.trim(),
+    'alpha.txt  Beta.txt  hello.py  notes.txt  notes_backup.txt  README.md',
+  );
+  run(sh, 'cd ~/ism3232');
+  const t2 = run(sh, 'tree -L 2').out;
+  const m1 = t2.slice(t2.indexOf('module01_setup'));
+  // hello_ism3232.py must list before README.md inside module01_setup
+  assert.ok(m1.indexOf('hello_ism3232.py') < m1.indexOf('README.md'));
+});
+
+test('echo > overwrites, echo >> appends, cat concatenates', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, "echo 'Week 2 navigation practice' > notes.txt");
+  assert.equal(run(sh, 'cat notes.txt').out, 'Week 2 navigation practice\n');
+  run(sh, "echo 'extra line' >> notes.txt");
+  assert.equal(run(sh, 'cat notes.txt').out, 'Week 2 navigation practice\nextra line\n');
+  assert.equal(run(sh, 'wc -l notes.txt').out.trim(), '2 notes.txt');
+  assert.equal(run(sh, 'head -1 notes.txt').out, 'Week 2 navigation practice\n');
+});
+
+test('cp keeps original, mv does not', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, "echo 'x' > notes.txt");
+  run(sh, 'cp notes.txt notes_backup.txt');
+  assert.match(run(sh, 'ls').out, /notes.txt/);
+  assert.match(run(sh, 'ls').out, /notes_backup.txt/);
+  run(sh, 'touch hello_week2.py');
+  run(sh, 'mv hello_week2.py week2_script.py');
+  const ls = run(sh, 'ls').out;
+  assert.doesNotMatch(ls, /hello_week2\.py/);
+  assert.match(ls, /week2_script\.py/);
+});
+
+test('rm is permanent; ls reflects removal', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch a.txt b.txt');
+  run(sh, 'rm a.txt');
+  assert.equal(run(sh, 'ls').out.trim(), 'b.txt');
+  assert.match(run(sh, 'rm missing.txt').err, /no such file or directory/i);
+});
+
+test('tree -L limits depth', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232');
+  const t1 = run(sh, 'tree -L 1').out;
+  assert.match(t1, /module01_setup/);
+  assert.doesNotMatch(t1, /hello_ism3232\.py/);   // depth 1 hides file inside module01_setup
+  const t2 = run(sh, 'tree -L 2').out;
+  assert.match(t2, /hello_ism3232\.py/);
+});
+
+test('single pipe: ls -la | head -5', () => {
+  const sh = createShell(seed());
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch f1 f2 f3 f4 f5 f6');
+  const out = run(sh, 'ls -la | head -5').out;
+  assert.equal(out.split('\n').filter(Boolean).length, 5);
+});
+
+test('unknown command uses zsh phrasing', () => {
+  const sh = createShell(seed());
+  assert.equal(run(sh, 'frobnicate x').err.trim(), 'zsh: command not found: frobnicate');
+});
+
+test('prompt shows basename or ~', () => {
+  const sh = createShell(seed());
+  assert.equal(prompt(sh), 'student@MacBook-Pro ~ %');
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  assert.equal(prompt(sh), 'student@MacBook-Pro week2_lab %');
+});
+
+test('python3 uses injected pythonRunner when set', async () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => 'Week 2 complete\n';
+  run(sh, 'cd ~/ism3232/module02_zsh/week2_lab');
+  run(sh, 'touch week2_script.py');
+  const r = run(sh, 'python3 week2_script.py');
+  // when a runner is present, run() returns a Promise-like marker the widget awaits
+  assert.ok(r.async instanceof Promise);
+  assert.equal((await r.async).out, 'Week 2 complete\n');
+});
+
+test('python3 -c routes the code string to the runner (no FS lookup)', async () => {
+  const sh = createShell(seed());
+  let seen = null;
+  sh.pythonRunner = async (src) => { seen = src; return { out: '2\n', err: '' }; };
+  const r = run(sh, 'python3 -c "print(1+1)"');
+  assert.equal(r.err, '');
+  assert.ok(r.async instanceof Promise);
+  assert.equal(seen, 'print(1+1)');
+  assert.deepEqual(await r.async, { out: '2\n', err: '' });
+});
+
+test('python3 surfaces the runner stderr as err', async () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => ({ out: '', err: 'Traceback…\nNameError: x\n' });
+  const r = run(sh, 'python3 -c "x"');
+  assert.equal((await r.async).err, 'Traceback…\nNameError: x\n');
+});
+
+test('python3 on a missing file is a synchronous can\'t-open error', () => {
+  const sh = createShell(seed());
+  sh.pythonRunner = async () => ({ out: 'should not run', err: '' });
+  const r = run(sh, 'python3 nope.py');
+  assert.equal(r.out, '');
+  assert.equal(
+    r.err,
+    "python3: can't open file 'nope.py': [Errno 2] No such file or directory\n",
+  );
+  assert.equal(r.async, undefined);
+});

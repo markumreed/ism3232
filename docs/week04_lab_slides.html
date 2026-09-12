@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 4 — Search Tools, the Submission Ritual &amp; Git</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 4 &nbsp;·&nbsp; Module 04 &nbsp;·&nbsp; Unit 1</p>
+<h1>Search Tools, the Submission Ritual &amp; Git</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "the most important lab of Unit 1"</span>
+<span class="t-item"><strong>0:04–0:16</strong> Part 1 — Search tools</span>
+<span class="t-item"><strong>0:16–0:28</strong> Part 2 — Write a test file</span>
+<span class="t-item"><strong>0:28–0:46</strong> Part 3 — Pre-submission ritual</span>
+<span class="t-item"><strong>0:46–1:04</strong> Part 4 — First GitHub push + verify commit log</span>
+<span class="t-item"><strong>1:04–1:15</strong> Stretch (fzf/zoxide) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+This is the most important lab of Unit 1. Everything from here forward — every remaining module's submission — runs through the exact five-step ritual practiced today: confirm location, format, lint, test, then stage/commit/push. Instructors check the Git log, and a missing <code>ruff</code> or <code>pytest</code> step is visible there, not hideable. Protect real, unhurried time for Part 3's ritual — it is short to type but is meant to become the single most repeated sequence of commands in the entire course, and it deserves to be executed carefully today, once, correctly, rather than rushed through as a formality.
+Full class period, 75 minutes. Live terminal code-along.
+NOTE ON THIS DECK: ISM3232 shell week, predominantly read-only. The in-browser zsh emulator supports <code>pwd cd ls mkdir touch cat echo rm cp mv tree head tail wc clear whoami which history code python3</code> and nothing else. It cannot run <code>rg</code> / <code>ripgrep</code>, <code>find</code>, <code>fzf</code>, <code>ruff</code>, <code>pytest</code>, <code>source</code>, or <code>git</code>. Every search-tool and <code>git</code> sequence is shown read-only ("run this on your own machine — it can't execute here") with the guide's output or a clearly-labelled illustrative reconstruction beside it. The runnable blocks — <code>tree</code>, <code>ls -la</code>, <code>mkdir</code>/<code>touch</code>, and one <code>python3</code> block — confirm the files and structure those steps operate on, on a seeded filesystem.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live terminal code-along</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 1–3: verified environment, <code>ism3232/</code> structure, navigation, venv + <code>.gitignore</code> + <code>.zshrc</code> aliases (marked Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (search tools) – Part 4 (first GitHub push) + Stretch (fzf / zoxide)</span></div>
+<div><span class="k">Submission</span><span class="v">3 screenshots + <code>tests/test_week4.py</code>, GitHub repo URL pasted into Canvas, completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. Students need their existing <code>ism3232/module02_zsh/</code> folder with <code>.venv/</code>, <code>.gitignore</code>, and <code>.zshrc</code> aliases from Week 3 — if a section didn't reach that far, create it live before demonstrating. A GitHub account and internet access are required for Part 4. Before class: rehearse the full ritual (Part 3) yourself end to end; confirm your own GitHub account and a scratch repo are ready to demo Part 4's remote-connection steps live (create a Private repo with no README — so students see exactly what "no README" avoids: a merge conflict on the very first push); decide your policy on commit-message quality in advance and be ready to reject a vague one live.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Search a codebase's contents with <code>ripgrep</code> (<code>rg</code>), locate files by name/pattern with <code>find</code>, and visualize structure with <code>tree</code>.</li>
+<li>Write and run a <code>pytest</code> test file, and read <code>pytest -v</code>'s pass/fail output.</li>
+<li>Execute the complete pre-submission ritual — confirm location, format, lint, test, stage, commit, push — in the correct order, and explain why each step exists.</li>
+<li>Connect a local repository to a new GitHub repo and push for the first time.</li>
+<li>Write a descriptive Git commit message, and read <code>git log --oneline</code> to verify a session's commit history.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 3 (the ritual, in the correct order, with each step explained) is the spine of the whole session — Parts 3 and 4 both return to it. Write the five ritual steps on the board — Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push — and leave it visible through Part 3.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "the most important lab of Unit 1"</td><td>4</td></tr>
+<tr><td>0:04–0:16</td><td>Part 1 — Search tools</td><td>12</td></tr>
+<tr><td>0:16–0:28</td><td>Part 2 — Write a test file</td><td>12</td></tr>
+<tr><td>0:28–0:46</td><td>Part 3 — Pre-submission ritual</td><td>18</td></tr>
+<tr><td>0:46–1:04</td><td>Part 4 — First GitHub push + verify commit log</td><td>18</td></tr>
+<tr><td>1:04–1:10</td><td>Stretch preview (fzf / zoxide)</td><td>6</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-up, submission checklist</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Four required parts fill the class period; Part 3 and Part 4 are deliberately given the most time, since they are both sequential, multi-step processes where a single skipped or misordered step causes real, confusing downstream failures — worth moving through carefully rather than quickly.</aside>
+</section>
+
+<!-- 5. INTRO — divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>"The most important lab of Unit 1"</h1>
+<aside class="notes">
+Teaching goal: frame why this lab matters more than any other in Unit 1, and put the one sequence every remaining submission reuses on the board before touching a command.
+Say to the class (verbatim): "This is the most important lab of Unit 1, and I want you to actually hear that, not just read it in passing. Today you learn a five-step ritual — location, format, lint, test, commit-and-push — that you will run, in some form, before nearly every submission for the rest of this course. I check the Git log. A missing <code>ruff</code> step or a missing <code>pytest</code> run is visible there, every time. Get this right today, once, carefully, and it becomes automatic."
+Do (verbatim): "Write the five ritual steps on the board — Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push — and leave it visible through Part 3."
+Note for this deck: <code>rg</code>, <code>find</code>, <code>ruff</code>, <code>pytest</code>, <code>source</code>, <code>git</code>, <code>fzf</code> cannot run in the browser emulator. Those blocks are read-only and paired with the guide's output or a labelled illustrative reconstruction — students run them in their own terminal.
+</aside>
+</section>
+
+<!-- 6. INTRO — idea -->
+<section class="s-idea">
+<h3>The idea — one ritual, five ordered steps</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push.</strong> This exact sequence, or something extremely close to it, runs before every major submission for the rest of the semester.</p>
+<p>The order is not arbitrary. <strong>Format</strong> first, so <strong>lint</strong> runs against already-clean formatting rather than flagging style issues alongside real problems. <strong>Test</strong> before <strong>commit/push</strong>, so a broken or unformatted submission never goes out before it is actually verified. Each step is a gate the next one assumes has already passed.</p>
+</div>
+<aside class="notes">The board diagram is the single most important artifact of the day — leave it up all through Part 3. Students should be able to recite the five steps, in order, and say one sentence about why each exists, by the end of class.</aside>
+</section>
+
+<!-- 7. INTRO — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">The board shows the ritual as five ordered steps. In order, they are:</p>
+<button data-opt="A">Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push</button>
+<button data-opt="B">Format &rarr; Confirm &rarr; Test &rarr; Lint &rarr; Commit/Push</button>
+<button data-opt="C">Confirm &rarr; Test &rarr; Lint &rarr; Format &rarr; Commit/Push</button>
+<p class="why" hidden>The guide's Intro writes it on the board exactly this way: Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push. Format before lint so linting runs against already-clean formatting; test before commit/push so a broken or unformatted submission never goes out.</p>
+</div>
+<aside class="notes">The guide's Intro has no Check-for-understanding question, so per the rollout convention this quiz's keyed answer (A) is a verbatim same-segment line — the guide's Intro "Do": "Write the five ritual steps on the board — Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push." Options B and C scramble that order.</aside>
+</section>
+
+<!-- 8. PART 1 — divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:16</span>
+<h1>Search Tools</h1>
+<aside class="notes">
+Teaching goal: three complementary search tools — <code>ripgrep</code> for searching file <em>contents</em>, <code>find</code> for locating files by <em>name</em>, <code>tree</code> for visualizing <em>structure</em> — each answering a genuinely different question.
+Say to the class (verbatim): "Three tools, three different questions. <code>ripgrep</code> searches <em>inside</em> files for text. <code>find</code> searches for files <em>by name</em>. <code>tree</code> shows you the <em>shape</em> of a project. Confusing these three is the most common mistake — I want you leaving today knowing exactly which one to reach for."
+Point out explicitly, comparing the three tools directly (verbatim): "If I asked you to find every place in this project where the word <code>TODO</code> appears, which tool? [<code>rg 'TODO'</code>]. If I asked you to find a file but you only remembered it was named something like <code>report</code>? [<code>find . -name '*report*'</code>]. If I asked you to just get oriented in an unfamiliar project for the first time? [<code>tree</code>]."
+Check for understanding: "If you needed to find every Python file that contains the word <code>TODO</code>, name the single ripgrep command that does both jobs at once, without a separate <code>find</code> step." (<code>rg -l 'TODO' --glob '*.py'</code>, or simply <code>rg 'TODO'</code> restricted implicitly to text files it can search — the point isn't precise flag syntax so much as recognizing that <code>rg</code> alone can often answer "which files have this content" without needing <code>find</code> at all.)
+Only <code>tree</code> runs in the browser emulator; the <code>rg</code> and <code>find</code> blocks are read-only.
+</aside>
+</section>
+
+<!-- 9. PART 1 — idea -->
+<section class="s-idea">
+<h3>The idea — three tools, three questions</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>rg 'text'</code> — searches the <em>contents</em> of every file for that text, printing each matching line with its filename and line number. Respects <code>.gitignore</code> by default, so it never wastes time inside <code>.venv/</code>.</p>
+<p><code>find . -name '*.py'</code> — searches for files <em>by name pattern</em>, not by contents. <code>.</code> means "starting here"; <code>*</code> is a wildcard. It cannot tell you what is <em>inside</em> a file.</p>
+<p><code>tree -L 3</code> — draws the folder structure as a text diagram, depth-limited to 3 levels. The fastest way to get oriented in an unfamiliar project.</p>
+</div>
+<aside class="notes">The core distinction to drill: <code>rg</code> answers "which lines / files contain this text"; <code>find</code> answers "which files are named like this"; <code>tree</code> answers "what shape is this project." <code>rg 'def '</code> with a trailing space matches function <em>definitions</em>, not every occurrence of the substring <code>def</code> — a concrete illustration that a pattern's exact text matters. <code>rg -l</code> switches output to just the filenames that contain a match.</aside>
+</section>
+
+<!-- 10. PART 1 — tree (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>tree</code> runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232":{"module01_setup":{"hello_ism3232.py":"print(\"Hello, ISM3232\")\n","README.md":"# Module 01 setup\n"},"module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n","requirements.txt":"pytest==9.1.1\nruff==0.16.4\n","notes.txt":"week 2 navigation practice\n","tests":{"__init__.py":"","test_week4.py":"def test_always_passes():\n    assert 2 + 2 == 4\n"}},"module03_git_github":{"README.md":"# Module 03 git\n"},"module04_programming":{}}}'>cd ~/ism3232
+tree -L 3</div>
+<p class="expect">The first <code>cd</code> just puts the emulator where the guide's Part 1 starts (<code>~/ism3232</code>). <code>tree -L 3</code> then draws the project structure three levels deep — appropriate now that several modules have their own subfolders (<code>tests/</code>, <code>.venv/</code>, etc.).</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism3232</code> — an absolute-from-home jump; everything in Part 1 runs from here.
+- <code>tree -L 3</code> — Week 2's <code>tree</code>, now at depth 3 instead of 2, appropriate for <code>ism3232/</code>'s deeper nested structure now that several modules have their own subfolders.
+Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches the next pane exactly. The emulator labels the tree root <code>.</code> rather than <code>ism3232/</code> — that is exactly what real <code>tree</code> prints when run from inside the folder. The seed shows a representative project; a real student's tree also lists <code>.venv/</code> (hidden; real <code>tree</code> needs <code>-a</code> to show it) and whatever else they have built.
+</aside>
+</section>
+
+<!-- 11. PART 1 — tree expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>.
+├── module01_setup
+│   ├── hello_ism3232.py
+│   └── README.md
+├── module02_zsh
+│   ├── tests
+│   │   ├── __init__.py
+│   │   └── test_week4.py
+│   ├── notes.txt
+│   ├── README.md
+│   └── requirements.txt
+├── module03_git_github
+│   └── README.md
+└── module04_programming
+</pre>
+<p class="expect">Directories sort before files at each level. <code>module02_zsh/tests/</code> is where Part 2's test file will land; <code>module04_programming/</code> is still empty this early.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly. Run it live; confirm every student sees this shape (their file names inside each module will vary by what they have built so far).</aside>
+</section>
+
+<!-- 12. PART 1 — ripgrep (readonly) -->
+<section class="s-code">
+<h3><code>ripgrep</code> — run this on your own machine — it can't execute here</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232
+
+# ripgrep searches file CONTENTS
+rg 'print'              # every print statement in all Python files
+rg 'def '               # every function definition (note the trailing space)
+rg -l 'import'          # list only the FILENAMES that contain 'import'</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (the emulator has no <code>rg</code> / <code>ripgrep</code>). Illustrative shape on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>rg 'print'</code> — ripgrep searches the <em>contents</em> of every file (respecting <code>.gitignore</code> by default, so it won't waste time inside <code>.venv/</code>) for the literal text <code>print</code>, printing every matching line along with its filename and line number.
+- <code>rg 'def '</code> — same tool, different search term; the trailing space in <code>'def '</code> specifically matches function <em>definitions</em>, not every occurrence of the substring <code>def</code> anywhere. A concrete illustration that a search pattern's exact text matters.
+- <code>rg -l 'import'</code> — the <code>-l</code> flag changes ripgrep's output mode: instead of every matching line, it lists just the <strong>filenames</strong> that contain at least one match — useful when you want to know <em>which</em> files are relevant without being flooded by every line.
+Read-only: <code>rg</code> is not one of the emulator's commands.
+</aside>
+</section>
+
+<!-- 13. PART 1 — ripgrep illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — reconstructed from the seeded tree; rg does not run here.
+
+rg 'print'      &rarr; each matching line, prefixed  file:line:
+                  e.g.  module01_setup/hello_ism3232.py:1:print("Hello, ISM3232")
+rg 'def '       &rarr; only lines that begin a function definition
+                  e.g.  module02_zsh/tests/test_week4.py:1:def test_always_passes():
+rg -l 'import'  &rarr; just the FILENAMES that contain a match,
+                  one per line — no line content shown</pre>
+<p class="expect">The guide gives no literal <code>rg</code> transcript — only the described behaviour. The shapes above are reconstructed from the guide's own example commands and this deck's seeded tree, and are labelled illustrative. Your real output depends on what is in your project.</p>
+<aside class="notes">The guide states the output <em>format</em> verbatim — "printing every matching line along with its filename and line number" (<code>rg 'print'</code>), function <em>definitions</em> only (<code>rg 'def '</code>), and "it lists just the <strong>filenames</strong> that contain at least one match" (<code>rg -l</code>). The two concrete <code>file:line:</code> examples are drawn from the seeded tree shown on the runnable <code>tree</code> slide, not from a guide-provided transcript — disclosed here so nothing unsourced is presented as real match output.</aside>
+</section>
+
+<!-- 14. PART 1 — find (readonly) -->
+<section class="s-code">
+<h3><code>find</code> — run this on your own machine — it can't execute here</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232
+
+# find searches file NAMES, not contents
+find . -name '*.py'     # all Python files in the project tree
+find . -name '*.md'     # all Markdown / README files
+find . -name '*.txt'    # all text files</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (the emulator has no <code>find</code>). Illustrative shape on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>find . -name '*.py'</code> — <code>find</code> is a fundamentally different tool: it searches for files <strong>by name pattern</strong>, not by their contents. <code>.</code> means "starting from the current directory"; <code>-name '*.py'</code> matches any filename ending in <code>.py</code>, using <code>*</code> as a wildcard. Say explicitly: <code>find . -name '*.py'</code> cannot tell you what is <em>inside</em> those files — for that you would combine it with <code>rg</code>, or use <code>rg</code> alone.
+- <code>find . -name '*.md'</code> / <code>find . -name '*.txt'</code> — same tool, different name patterns.
+Read-only: <code>find</code> is not one of the emulator's commands.
+</aside>
+</section>
+
+<!-- 15. PART 1 — find illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — reconstructed from the seeded tree; find does not run here.
+
+find . -name '*.py'   &rarr; ./module01_setup/hello_ism3232.py
+                        ./module02_zsh/tests/__init__.py
+                        ./module02_zsh/tests/test_week4.py
+find . -name '*.md'   &rarr; ./module01_setup/README.md
+                        ./module02_zsh/README.md
+                        ./module03_git_github/README.md
+find . -name '*.txt'  &rarr; ./module02_zsh/notes.txt
+                        ./module02_zsh/requirements.txt</pre>
+<p class="expect">The guide gives no literal <code>find</code> transcript. These paths are exactly what <code>find</code> would print over this deck's seeded tree (from the runnable <code>tree</code> slide), reconstructed and labelled illustrative — a real project's list will differ.</p>
+<aside class="notes">The guide states only the intent per line ("all Python files in the project tree", "all README files", "all text files"). The path lists here are derived from the seeded <code>data-fs</code> tree shown on the runnable slide — <code>find</code> prints matching paths relative to <code>.</code>, one per line — and are disclosed as reconstructed, not quoted from the guide.</aside>
+</section>
+
+<!-- 16. PART 1 — predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>Before running: what does <code>find . -name '*print*'</code> return in this project?</p>
+<pre class="answer" hidden>Nothing — it returns no results.
+
+find matches file NAMES, not file contents, and no file
+in the project is literally named something with "print"
+in it. To find the word "print" INSIDE files you need
+rg 'print'. This is the classic "wrong tool for the
+question" mistake.</pre>
+</div>
+<aside class="notes">Guide, common student mistakes: "trying <code>find . -name '*print*'</code> to locate print statements, which searches <em>filenames</em>, not code, and correctly finds nothing (since no file is literally named 'print'). A good, concrete 'wrong tool for the question' moment worth letting play out rather than correcting immediately."</aside>
+</section>
+
+<!-- 17. PART 1 — quiz (which tool) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You need a file but only remember it was named something like <code>report</code>. Which tool?</p>
+<button data-opt="A"><code>rg 'report'</code></button>
+<button data-opt="B"><code>find . -name '*report*'</code></button>
+<button data-opt="C"><code>tree -L 3</code></button>
+<p class="why" hidden>Locating a file by a partial <em>name</em> is exactly what <code>find</code> does — <code>find . -name '*report*'</code>, with wildcards around the fragment you remember. <code>rg 'report'</code> would search file <em>contents</em> for the text; <code>tree</code> just shows structure. (Finding every place the word <code>TODO</code> <em>appears</em> is the <code>rg 'TODO'</code> job; getting oriented in an unfamiliar project is the <code>tree</code> job.)</p>
+</div>
+<aside class="notes">From the guide's "Point out explicitly, comparing the three tools directly": "If I asked you to find a file but you only remembered it was named something like <code>report</code>? [<code>find . -name '*report*'</code>]." Getting the room to answer these quickly, out loud, is a better check than more explanation.</aside>
+</section>
+
+<!-- 18. PART 1 — quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Name the single ripgrep command that finds every Python file containing <code>TODO</code> — no separate <code>find</code> step.</p>
+<button data-opt="A"><code>find . -name '*.py' --contains 'TODO'</code></button>
+<button data-opt="B"><code>tree -L 3 | rg 'TODO'</code></button>
+<button data-opt="C"><code>rg -l 'TODO' --glob '*.py'</code> &nbsp;(or simply <code>rg 'TODO'</code>)</button>
+<p class="why" hidden><code>rg -l 'TODO' --glob '*.py'</code>, or simply <code>rg 'TODO'</code> restricted implicitly to text files it can search — the point isn't precise flag syntax so much as recognizing that <code>rg</code> alone can often answer "which files have this content" without needing <code>find</code> at all, since content search and filename filtering combine in one tool.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "(<code>rg -l 'TODO' --glob '*.py'</code>, or simply <code>rg 'TODO'</code> restricted implicitly to text files it can search — the point isn't precise flag syntax so much as recognizing that <code>rg</code> alone can often answer 'which files have this content' without needing <code>find</code> at all.)" Option A invents a non-existent <code>find</code> flag; B is a needless pipe.</aside>
+</section>
+
+<!-- 19. PART 1 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Reaching for <code>find</code> when the actual goal is searching file <em>contents</em> — e.g. trying <code>find . -name '*print*'</code> to locate print statements, which searches <em>filenames</em>, not code, and correctly finds nothing. A good "wrong tool for the question" moment worth letting play out.</p>
+<p>Forgetting quotes around the search pattern (<code>rg def</code> instead of <code>rg 'def '</code>) — often still works for a single word with no special characters, but breaks the moment the pattern includes a space or special character, as <code>'def '</code> does here. Establish quoting as a default habit now.</p>
+<p>Running these commands from the wrong directory (not <code>~/ism3232</code>) — produces a much smaller or empty result set, not an error; a good <code>pwd</code> check if a student's output looks suspiciously thin compared to a neighbour's.</p>
+</div>
+<aside class="notes">Check for understanding: "If you needed to find every Python file that contains the word <code>TODO</code>, name the single ripgrep command that does both jobs at once, without a separate <code>find</code> step." Answer: <code>rg -l 'TODO' --glob '*.py'</code>, or simply <code>rg 'TODO'</code> — the point is recognizing that <code>rg</code> alone can answer "which files have this content" without <code>find</code>.</aside>
+</section>
+
+<!-- 20. PART 2 — divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:16–0:28</span>
+<h1>Write a Test File</h1>
+<aside class="notes">
+Teaching goal: write a real <code>pytest</code> file with three test functions, and run it — a first, genuine exposure to automated testing, ahead of this course's Unit 2 programming modules.
+Say to the class (verbatim): "Three tests, each checking something simple and true, so you can see what a <em>passing</em> test suite looks like before you ever have to debug a <em>failing</em> one."
+Check for understanding: "If <code>test_path_segments</code> used <code>path.split('\\')</code> (a backslash) instead of <code>'/'</code>, on this specific <code>path</code> string, would the test still pass?" (No — the path uses forward slashes; splitting on a backslash that never appears would return the whole string as one single "segment," and <code>'ism3232' in parts</code> would then check whether the string <code>'ism3232'</code> matches that one giant segment exactly, which it wouldn't — the assertion would fail. A good check that students are tracing what <code>.split()</code> actually does with the specific character given, not just pattern-matching the method name.)
+<code>pytest</code> itself cannot run in the emulator; the folder setup (<code>mkdir</code>/<code>touch</code>) and a plain <code>python3</code> harness over the same three assertions do run here.
+</aside>
+</section>
+
+<!-- 21. PART 2 — idea -->
+<section class="s-idea">
+<h3>The idea — <code>test_</code> naming + <code>assert</code></h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>pytest</code> automatically discovers any function whose name starts with <code>test_</code> — a naming <em>convention</em>, not a decorator. That is why the filename (<code>test_week4.py</code>) and every function in it are prefixed <code>test_</code>.</p>
+<p><code>assert EXPR</code> is new syntax today: it checks that <code>EXPR</code> is <code>True</code>. If it isn't, the test is marked <strong>failed</strong>; if it holds, nothing visible happens — the test passes silently. That is the entire mechanism of automated testing.</p>
+<p><code>path.split('/')</code> breaks a path string into a list of its segments at every <code>/</code>; <code>'ism3232' in parts</code> checks whether that exact string appears anywhere in the resulting list.</p>
+</div>
+<aside class="notes"><code>mkdir -p tests</code> — <code>-p</code> means "don't error if it already exists, and create any needed parents" — safe and idempotent. <code>touch tests/__init__.py tests/test_week4.py</code> — two files at once; <code>__init__.py</code>, even empty, marks <code>tests/</code> as a proper Python package, which helps pytest's discovery. <code>test_string_is_lowercase</code>: <code>'ism3232' == 'ism3232'.lower()</code> holds because the string is already lowercase. If <code>name</code> were <code>'ISM3232'</code> the assertion would be <code>'ISM3232' == 'ism3232'</code>, which is <code>False</code> — the test would <strong>fail</strong>. (The guide's L178 parenthetical says "it would still pass"; that is imprecise — <code>name == name.lower()</code> holds only when <code>name</code> is already lowercase. Slide 28's predict and aside carry the same correction.)</aside>
+</section>
+
+<!-- 22. PART 2 — setup (RUNNABLE) -->
+<section class="s-code">
+<h3>Create the test folder — this runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n","requirements.txt":"pytest==9.1.1\nruff==0.16.4\n",".venv":{"bin":{"activate":""}}}}'>cd ~/ism3232/module02_zsh
+mkdir -p tests
+touch tests/__init__.py tests/test_week4.py
+ls -la tests</div>
+<p class="expect">On your own machine you would <code>source .venv/bin/activate</code> first, then <code>code tests/test_week4.py</code> to edit it. The emulator can't activate a venv or open VS Code, but <code>mkdir -p</code> / <code>touch</code> / <code>ls -la</code> all run here — confirming the two files exist and are empty, ready to fill in.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism3232/module02_zsh</code> — the guide's Part 2 starting point.
+- <code>mkdir -p tests</code> — creates <code>tests/</code>; <code>-p</code> (from Week 3's <code>mkcd</code>) means "don't error if it already exists, and create any needed parents."
+- <code>touch tests/__init__.py tests/test_week4.py</code> — two files at once; <code>__init__.py</code>, even empty, marks <code>tests/</code> as a Python package that helps pytest's discovery.
+- <code>ls -la tests</code> — confirms both files landed and are empty (size 0).
+Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches the next pane exactly. On a real machine the guide's next steps are <code>source .venv/bin/activate</code> then <code>code tests/test_week4.py</code>, neither of which the emulator runs.
+</aside>
+</section>
+
+<!-- 23. PART 2 — setup expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total 4
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+-rw-r--r--  1 student  staff  0  Sep  5 10:00 __init__.py
+-rw-r--r--  1 student  staff  0  Sep  5 10:00 test_week4.py</pre>
+<p class="expect">Both files exist, both empty (size <code>0</code>) — <code>touch</code> only creates them. The contents get typed in the editor next.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly. The permission / size / timestamp columns are emulator stand-ins; only the two file names and the fact that they are empty are load-bearing.</aside>
+</section>
+
+<!-- 24. PART 2 — python3 harness (RUNNABLE) -->
+<section class="s-code">
+<h3>The three tests — run the assertions here with <code>python3</code></h3>
+<div class="run" data-lang="python">
+# tests/test_week4.py  — the three functions from the guide
+
+def test_always_passes():
+    assert 2 + 2 == 4
+
+def test_string_is_lowercase():
+    name = 'ism3232'
+    assert name == name.lower()
+
+def test_path_segments():
+    path = '/Users/yourname/ism3232/module02_zsh'
+    parts = path.split('/')
+    assert 'ism3232' in parts
+
+# pytest is not in the browser — this tiny harness runs the same
+# assertions and prints PASSED for each one that does not raise.
+for check in (test_always_passes, test_string_is_lowercase, test_path_segments):
+    check()
+    print(check.__name__, "PASSED")
+
+print("3 checks passed")
+</div>
+<p class="expect">This is <em>not</em> how you'd run tests for real — that's <code>pytest -v</code>, on the next slides. It's a stand-in so you can watch all three <code>assert</code>s actually hold. If any assertion were false, the loop would raise <code>AssertionError</code> and stop at that line.</p>
+<aside class="notes">
+Line by line:
+- The three functions are copied verbatim from the guide's <code>tests/test_week4.py</code>.
+- <code>assert 2 + 2 == 4</code> — checks the expression is <code>True</code>; if not, raises <code>AssertionError</code> and the test fails. If it holds, nothing visible happens.
+- <code>test_string_is_lowercase</code> — <code>'ism3232' == 'ism3232'.lower()</code> holds because the string is already lowercase.
+- <code>test_path_segments</code> — <code>path.split('/')</code> makes <code>['', 'Users', 'yourname', 'ism3232', 'module02_zsh']</code>; <code>'ism3232' in parts</code> is <code>True</code>.
+- The <code>for</code> loop is a hand-rolled runner — pytest's real discovery/reporting is shown on the <code>pytest -v</code> slides. Verified with local <code>python3</code> 3.12.2 (== Pyodide 0.26.4): prints the four lines in the next pane.
+</aside>
+</section>
+
+<!-- 25. PART 2 — harness expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>test_always_passes PASSED
+test_string_is_lowercase PASSED
+test_path_segments PASSED
+3 checks passed</pre>
+<aside class="notes">Verified with system <code>python3</code> 3.12.2. This is the harness's own <code>print</code> output, not pytest's — the real pytest run and its distinctive output are on the next two slides. Run it live; confirm every student sees exactly this.</aside>
+</section>
+
+<!-- 26. PART 2 — pytest -v (readonly) -->
+<section class="s-code">
+<h3>Run it for real — <code>pytest -v</code> — on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module02_zsh
+source .venv/bin/activate
+pytest -v</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (the emulator has no <code>source</code> and no <code>pytest</code>). The guide's verified output is on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>source .venv/bin/activate</code> — Week 3's habit; <code>pytest</code> must run inside the project's venv. If <code>pytest</code> isn't found at all (<code>command not found: pytest</code>), the venv was not activated.
+- <code>pytest -v</code> — <code>-v</code> means <strong>verbose</strong>: without it, pytest prints a compact line of dots; <code>-v</code> names each test individually alongside its result, which makes the connection between a named test function and its pass/fail status immediately visible while learning.
+Read-only: neither <code>source</code> nor <code>pytest</code> is an emulator command.
+</aside>
+</section>
+
+<!-- 27. PART 2 — pytest verified output (verbatim) -->
+<section class="s-out">
+<h3>Verified output — not run here</h3>
+<pre>tests/test_week4.py::test_always_passes PASSED
+tests/test_week4.py::test_string_is_lowercase PASSED
+tests/test_week4.py::test_path_segments PASSED
+3 passed in 0.00s</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 2 verbatim. Each test is named individually (that's what <code>-v</code> adds), then a one-line summary: <code>3 passed</code>.</p>
+<aside class="notes">Guide's Part 2 "Verified output", quoted verbatim (guide lines: <code>tests/test_week4.py::test_always_passes PASSED</code> through <code>3 passed in 0.00s</code>). The <code>0.00s</code> timing varies run to run; the load-bearing facts are the three <code>PASSED</code> lines and <code>3 passed</code>.</aside>
+</section>
+
+<!-- 28. PART 2 — predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>You rename <code>test_always_passes</code> to <code>check_always_passes</code> and re-run <code>pytest -v</code>. How many tests does it report?</p>
+<pre class="answer" hidden>Two.
+
+pytest only discovers functions whose name starts with
+test_. check_always_passes is silently skipped — no error,
+no warning, it just never runs. The summary line would
+read "2 passed" instead of "3 passed".
+
+If your test count is ever lower than you expect, check
+the function names against the test_ naming convention
+first.</pre>
+</div>
+<aside class="notes">Guide, Part 2 common student mistakes, verbatim: "Naming a test function without the <code>test_</code> prefix (e.g., <code>check_always_passes</code>) — <code>pytest</code> simply won't discover or run it at all, silently — no error, just zero output for that function; if a student's test count doesn't match what they expect, checking function names against the naming convention is the first thing to verify." (This predict is used in place of the guide's <code>name = 'ISM3232'</code> aside, whose parenthetical claims the test "would still pass" — read literally, <code>assert name == name.lower()</code> with <code>name = 'ISM3232'</code> is <code>'ISM3232' == 'ism3232'</code>, i.e. <code>False</code>, so it would fail; that discrepancy is flagged in the task report rather than rendered as a student-facing answer.)</aside>
+</section>
+
+<!-- 29. PART 2 — quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>test_path_segments</code> used <code>path.split('\\')</code> (a backslash) instead of <code>'/'</code>, on this <code>path</code> string, would the test still pass?</p>
+<button data-opt="A">No — the path has no backslash, so <code>split</code> returns the whole string as one segment; <code>'ism3232' in parts</code> is then <code>False</code> and the assertion fails</button>
+<button data-opt="B">Yes — <code>.split()</code> ignores its argument when that character never appears</button>
+<button data-opt="C">Yes — <code>split('\\')</code> and <code>split('/')</code> are equivalent on macOS paths</button>
+<p class="why" hidden>No — the path uses forward slashes; splitting on a backslash that never appears returns the whole string as one single "segment," and <code>'ism3232' in parts</code> then checks whether <code>'ism3232'</code> matches that one giant segment exactly, which it wouldn't — the assertion fails. A check that students trace what <code>.split()</code> actually does with the specific character given.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "(No — the path uses forward slashes; splitting on a backslash that never appears would return the whole string as one single 'segment,' and <code>'ism3232' in parts</code> would then check whether the string <code>'ism3232'</code> matches that one giant segment exactly, which it wouldn't — the assertion would fail.)"</aside>
+</section>
+
+<!-- 30. PART 2 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Naming a test function without the <code>test_</code> prefix (e.g. <code>check_always_passes</code>) — <code>pytest</code> simply won't discover or run it, silently: no error, just zero output for that function. If a student's test count doesn't match what they expect, check function names against the naming convention first.</p>
+<p>Using <code>==</code> inside the <code>assert</code> where a typo or logic error makes the comparison always false — walk through reading a failure's actual output together if this happens naturally; a genuine failing test is a better first exposure to pytest's failure format than any staged example.</p>
+<p>Running <code>pytest -v</code> <strong>without</strong> activating the venv first — <code>command not found: pytest</code> is the tell; a direct callback to Week 3's "was the venv actually activated" habit.</p>
+</div>
+<aside class="notes">Check for understanding: "If <code>test_path_segments</code> used <code>path.split('\\')</code> instead of <code>'/'</code>, would the test still pass?" Answer: No — splitting on a character that never appears returns the whole string as one segment, so <code>'ism3232' in parts</code> is false and the assertion fails.</aside>
+</section>
+
+<!-- 31. PART 3 — divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:28–0:46</span>
+<h1>Pre-Submission Ritual</h1>
+<aside class="notes">
+Teaching goal: the single most important sequence in this entire course — confirm location, format, lint, test, then stage/commit/push, in that exact order, every time, for the rest of the semester.
+Say to the class (verbatim): "This is the ritual. I am going to run it slowly, once, all the way through, narrating why each step exists — and then every one of you runs it yourselves, on your own machine, before we move to Part 4. This exact sequence, or something extremely close to it, is what you'll run before every major submission this semester."
+Ritual complete when (state this checklist out loud, have every student confirm all three): <code>ruff check</code> returns <strong>no errors</strong>; <code>pytest</code> returns <strong>all passed</strong>; <code>git status</code>, run again after the push, says <strong>"nothing to commit"</strong>.
+Check for understanding: "If <code>ruff check</code> reported an error, would you fix it before or after running <code>pytest</code>?" (Before — the ritual's stated order runs format/lint ahead of tests specifically so obvious code-quality issues are caught and resolved first, before spending time investigating whether a test failure is a real logic bug or just a symptom of messy, unchecked code. Getting a student to articulate <em>why</em> the order matters, not just recite it, is the real check here.)
+Only Step 1 (<code>pwd</code> + <code>tree -L 3</code>) runs in the emulator; Steps 2–5 are read-only.
+</aside>
+</section>
+
+<!-- 32. PART 3 — idea (danger) -->
+<section class="s-idea">
+<h3>The idea — the order is a chain of gates</h3>
+<div class="concept danger">
+<div class="concept-lbl">Ritual</div>
+<p><strong>1. Confirm</strong> (<code>pwd</code>, <code>tree -L 3</code>) &rarr; <strong>2. Activate</strong> (<code>source .venv/bin/activate</code>) &rarr; <strong>3. Format then Lint</strong> (<code>ruff format .</code>, <code>ruff check .</code>) &rarr; <strong>4. Test</strong> (<code>pytest</code>) &rarr; <strong>5. Stage / Commit / Push</strong> (<code>git status</code>, <code>git add .</code>, <code>git commit -m '...'</code>, <code>git push</code>).</p>
+<p><code>ruff format .</code> actually <strong>rewrites files on disk</strong>; <code>ruff check .</code> only reports. Format first, so lint runs against already-clean formatting. <code>pytest</code> here runs <strong>without</strong> <code>-v</code> — a fast pass/fail gate, not a detailed report.</p>
+<p>The commit message matters: <code>'lab 4: search ritual and git'</code> is specific and descriptive; <code>'final'</code> or <code>'update'</code> are not, and this course's grading looks at commit-message quality directly.</p>
+</div>
+<aside class="notes">Each step is a gate the next one assumes has already passed. Running the steps out of order — most commonly committing/pushing <em>before</em> running <code>ruff</code>/<code>pytest</code> — means a broken or unformatted submission goes out before it is verified. <code>git push</code> uploads the commit to GitHub; Part 4 sets up exactly where it goes for the very first time.</aside>
+</section>
+
+<!-- 33. PART 3 — step 1 (RUNNABLE) -->
+<section class="s-code">
+<h3>Step 1 — confirm location and structure — this runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n","requirements.txt":"pytest==9.1.1\nruff==0.16.4\n","hello_ism3232.py":"print(1)\n","tests":{"__init__.py":"","test_week4.py":"def test_always_passes():\n    assert 2 + 2 == 4\n"}}}'>cd ~/ism3232/module02_zsh
+pwd
+tree -L 3</div>
+<p class="expect">Step 1 of the ritual: confirm exactly where you are and what's actually here, before doing anything — the same location-first discipline as Week 2's <code>rm</code> safety ritual, now applied to an entire submission process.</p>
+<aside class="notes">
+Line by line:
+- <code>pwd</code> — confirms you are in the folder you think you are in; catches an earlier <code>cd</code> that didn't do what you expected.
+- <code>tree -L 3</code> — confirms the structure: <code>tests/</code> with the test file from Part 2, plus <code>requirements.txt</code> and <code>README.md</code>.
+Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches the next pane exactly. The emulator's <code>pwd</code> prints <code>/Users/student/...</code>; on a real machine the line shows the student's own username. A real machine's tree also lists <code>.venv/</code> (hidden; needs <code>tree -a</code>).
+</aside>
+</section>
+
+<!-- 34. PART 3 — step 1 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>/Users/student/ism3232/module02_zsh
+.
+├── tests
+│   ├── __init__.py
+│   └── test_week4.py
+├── hello_ism3232.py
+├── README.md
+└── requirements.txt
+</pre>
+<p class="expect"><code>pwd</code> confirms the location; <code>tree -L 3</code> confirms <code>tests/test_week4.py</code> is in place before the ritual formats, lints, tests, and commits it.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly.</aside>
+</section>
+
+<!-- 35. PART 3 — steps 2-5 (readonly) -->
+<section class="s-code">
+<h3>Steps 2–5 — run this on your own machine — it can't execute here</h3>
+<div class="run" data-lang="shell" data-readonly># 2. Activate the virtual environment
+source .venv/bin/activate
+
+# 3. Format and lint
+ruff format .
+ruff check .
+
+# 4. Run tests
+pytest
+
+# 5. Stage, commit, and push
+git status
+git add .
+git commit -m 'lab 4: search ritual and git'
+git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no <code>source</code>, <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the emulator). Do not skip or reorder any step. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line, one step at a time:
+- <strong>Step 2 — <code>source .venv/bin/activate</code>.</strong> Everything from here (<code>ruff</code>, <code>pytest</code>) needs the project's isolated environment.
+- <strong>Step 3 — <code>ruff format .</code> then <code>ruff check .</code>.</strong> <code>ruff format .</code> automatically <em>rewrites</em> your code to a consistent style — it changes files on disk. <code>ruff check .</code> then <em>lints</em> — scans for real problems (unused imports, undefined names) without changing anything. Format first, so linting runs against already-clean formatting.
+- <strong>Step 4 — <code>pytest</code>.</strong> Run <strong>without</strong> <code>-v</code> here, unlike Part 2 — the ritual's version is a fast pass/fail gate; if something fails, <code>-v</code> is the natural next step.
+- <strong>Step 5 — <code>git status</code>, <code>git add .</code>, <code>git commit -m '...'</code>, <code>git push</code>.</strong> <code>git status</code> shows what's changed; <code>git add .</code> <strong>stages</strong> every changed file in the current directory and below; <code>git commit -m '...'</code> <strong>records</strong> a permanent snapshot labeled with a message — <code>'lab 4: search ritual and git'</code> is specific and descriptive; <code>'final'</code> or <code>'update'</code> are not, and grading looks at commit-message quality directly. <code>git push</code> uploads the commit to GitHub — Part 4 sets up where it goes.
+Read-only: none of these are emulator commands.
+</aside>
+</section>
+
+<!-- 36. PART 3 — ritual illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — ruff / pytest / git do not run in the browser.
+The guide states each step's success condition, not a transcript:
+
+ruff format .   &rarr;  rewrites files to a consistent style (changes files on disk)
+ruff check .    &rarr;  returns NO ERRORS          &lt;- guide's completion criterion
+pytest          &rarr;  ALL PASSED                 &lt;- guide's completion criterion
+git status      &rarr;  "nothing to commit"        &lt;- guide's completion criterion
+                    (run again AFTER the push)</pre>
+<p class="expect">The guide gives no literal transcript for the ritual — it gives the "Ritual complete when" checklist: <code>ruff check</code> returns no errors, <code>pytest</code> returns all passed, and <code>git status</code> after the push says "nothing to commit." Those three lines are quoted from the guide; the arrows and framing are reconstruction, labelled illustrative.</p>
+<aside class="notes">Guide's "Ritual complete when", verbatim: "<code>ruff check</code> returns <strong>no errors</strong>"; "<code>pytest</code> returns <strong>all passed</strong>"; "<code>git status</code>, run again after the push, says <strong>'nothing to commit'</strong>." No specific tool output (file counts, ruff's exact banner, pytest's dots) is invented — only the guide's stated success conditions are shown.</aside>
+</section>
+
+<!-- 37. PART 3 — quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>ruff check</code> reported an error, would you fix it before or after running <code>pytest</code>?</p>
+<button data-opt="A">After — run the whole test suite first, then clean up style issues</button>
+<button data-opt="B">Before — the ritual runs format/lint ahead of tests so code-quality issues are resolved first, before you investigate whether a test failure is a real bug or just messy code</button>
+<button data-opt="C">It doesn't matter — the steps are independent and can run in any order</button>
+<p class="why" hidden>Before — the ritual's stated order runs format/lint ahead of tests specifically so obvious code-quality issues are caught and resolved first, before spending time investigating whether a test failure is a real logic bug or just a symptom of messy, unchecked code. Articulating <em>why</em> the order matters, not just reciting it, is the real check.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: "(Before — the ritual's stated order runs format/lint ahead of tests specifically so obvious code-quality issues are caught and resolved first, before spending time investigating whether a test failure is a real logic bug or just a symptom of messy, unchecked code.)"</aside>
+</section>
+
+<!-- 38. PART 3 — quiz (order) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Which sequence is the ritual's correct order?</p>
+<button data-opt="A">Confirm &rarr; Commit/Push &rarr; Format &rarr; Lint &rarr; Test</button>
+<button data-opt="B">Format &rarr; Lint &rarr; Confirm &rarr; Commit/Push &rarr; Test</button>
+<button data-opt="C">Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push</button>
+<p class="why" hidden>Confirm &rarr; Format &rarr; Lint &rarr; Test &rarr; Commit/Push. The order isn't arbitrary — each step is a gate the next one assumes has already passed. The most common mistake is committing/pushing <em>before</em> running <code>ruff</code>/<code>pytest</code>, which sends a broken or unformatted submission out before it's verified.</p>
+</div>
+<aside class="notes">From the guide's Part 3 common mistakes: "Running the steps out of order — most commonly, committing/pushing <em>before</em> running <code>ruff</code>/<code>pytest</code>... Say explicitly: the order isn't arbitrary — each step is a gate the next one assumes has already passed." Options A and B put commit/push or confirm in the wrong place.</aside>
+</section>
+
+<!-- 39. PART 3 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running the steps out of order — most commonly committing/pushing <em>before</em> running <code>ruff</code>/<code>pytest</code>, so a broken or unformatted submission goes out before it's verified. The order isn't arbitrary — each step is a gate the next one assumes has already passed.</p>
+<p><code>ruff check</code> reporting real errors and the student pushing anyway without fixing them — stop and actually read what <code>ruff</code> flagged together; a genuine "was the code actually checked" moment worth not skipping past under time pressure.</p>
+<p>A vague commit message, discovered only when reviewing <code>git log</code> later — catch this live, in Part 3, before the push. It's much easier to fix a not-yet-pushed commit message (<code>git commit --amend -m '...'</code>) than to leave a vague one in permanent history.</p>
+</div>
+<aside class="notes">Check for understanding: "If <code>ruff check</code> reported an error, would you fix it before or after running <code>pytest</code>?" Answer: Before — format/lint run ahead of tests so obvious code-quality issues are resolved first, before you spend time deciding whether a test failure is a real bug or a symptom of messy code.</aside>
+</section>
+
+<!-- 40. PART 4 — divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:46–1:04</span>
+<h1>First GitHub Push</h1>
+<aside class="notes">
+Teaching goal: create a new GitHub repository and connect the local project to it for the first time — completing the loop the ritual's final step (<code>git push</code>) assumed already existed.
+Say to the class (verbatim): "Part 3's <code>git push</code> only works once there's actually somewhere to push <em>to</em>. If you haven't connected this project to GitHub yet, here's exactly how, one time, for this project."
+Do, live, in the browser first (verbatim): Create a new repository on github.com — name it <code>ism3232-module02</code>, set it Private, and do not initialize it with a README. Say explicitly why "no README": if GitHub creates a README automatically, and your local repo also already has its own initial commit, the two histories diverge immediately and your very first <code>git push</code> fails with a conflict.
+Say explicitly, restating the lab page's own grading note (verbatim): "The commit log is part of your grade, every week from here forward. <code>git log --oneline</code> should show real, descriptive messages — not <code>'final'</code>, not <code>'update'</code>. Instructors read this log; it's not a private implementation detail, it's a visible record of how carefully you worked."
+Check for understanding: "After today's <code>-u</code> flag, what does a plain <code>git push</code> (no arguments) do on this specific project, next week and beyond?" (Pushes the current branch to the already-linked <code>origin main</code> automatically — get a student to state explicitly that this is <em>why</em> the ritual's Step 5 can just say <code>git push</code>, with no arguments, and it still works correctly every week after this one.)
+Every command in this part is <code>git</code> — all read-only in the browser.
+</aside>
+</section>
+
+<!-- 41. PART 4 — idea -->
+<section class="s-idea">
+<h3>The idea — connect local to remote, once</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>git remote add origin https://github.com/YOURUSERNAME/ism3232-module02.git</code> — tells your <strong>local</strong> repo about a <strong>remote</strong> location (<code>origin</code> is just a conventional name). Up to now <code>git commit</code> has only made <em>local</em> history; this line gives <code>git push</code> an actual destination.</p>
+<p><code>git branch -M main</code> — renames the current branch to <code>main</code> (the modern default), <code>-M</code> forcing the rename.</p>
+<p><code>git push -u origin main</code> — pushes <code>main</code> to <code>origin</code>; <code>-u</code> (<code>--set-upstream</code>) links this local branch to that remote branch <strong>permanently</strong>, so every <em>future</em> push can just be <code>git push</code> alone. This is a one-time setup step precisely because of <code>-u</code>.</p>
+</div>
+<aside class="notes">Create the GitHub repo as <strong>Private</strong> with <strong>no README</strong> — if GitHub auto-creates a README and the local repo also has its own initial commit, the two histories diverge and the first <code>git push</code> fails with a conflict. Without <code>-u</code> on this first push, every future push would need <code>origin main</code> spelled out again.</aside>
+</section>
+
+<!-- 42. PART 4 — remote add / branch / push (readonly) -->
+<section class="s-code">
+<h3>Connect and push — run this on your own machine — it can't execute here</h3>
+<div class="run" data-lang="shell" data-readonly>git remote add origin https://github.com/YOURUSERNAME/ism3232-module02.git
+git branch -M main
+git push -u origin main</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no <code>git</code> and no network in the emulator). Replace <code>YOURUSERNAME</code> with your actual GitHub username. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>git remote add origin https://github.com/...</code> — tells your local Git repository about a remote location (<code>origin</code> is a conventional name for "the primary remote," not a required keyword). Up to this point <code>git commit</code> has only ever created <em>local</em> history; this line is what makes <code>git push</code> have an actual destination.
+- <code>git branch -M main</code> — renames the current branch to <code>main</code> (the modern default), with <code>-M</code> forcing the rename. <code>main</code>, not the older <code>master</code>, is what this course and most current GitHub repos standardize on.
+- <code>git push -u origin main</code> — pushes the <code>main</code> branch to the <code>origin</code> remote; <code>-u</code> (short for <code>--set-upstream</code>) links this local branch to that specific remote branch <strong>permanently</strong>, so every future <code>git push</code> from this project can be <code>git push</code> alone.
+Read-only: <code>git</code> is not an emulator command.
+</aside>
+</section>
+
+<!-- 43. PART 4 — push illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — git does not run in the browser; hashes shown are placeholders.
+
+git remote add origin ...    &rarr;  (no output on success)
+git branch -M main           &rarr;  (no output on success)
+git push -u origin main      &rarr;  uploads the commit, then links the branch:
+                                "branch 'main' set up to track 'origin/main'"
+
+Then: open the repo on github.com and confirm the pushed files are visible.</pre>
+<p class="expect">The guide gives no literal transcript here. The guide's stated facts: <code>git remote add</code> "is what makes <code>git push</code> have an actual destination"; <code>-u</code> "links this local branch to that specific remote branch permanently"; then "open the GitHub repository in a browser and confirm the pushed files are visible." Framing reconstructed, labelled illustrative.</p>
+<aside class="notes">Guide, Part 4: "Verify: open the GitHub repository in a browser and confirm the pushed files are visible." The upstream-tracking confirmation line is <code>git</code>'s standard output shown for realism, disclosed as not quoted from the guide — no commit hashes or byte counts are invented as if real.</aside>
+</section>
+
+<!-- 44. PART 4 — verify log (readonly) -->
+<section class="s-code">
+<h3>Then verify the commit log — run this on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>git log --oneline    # should show your commits
+git status           # should say 'nothing to commit'</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong>. The commit log is part of your grade every week from here forward. Illustrative result on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>git log --oneline</code> — <code>git log</code> shows the repo's full commit history, most recent first; <code>--oneline</code> condenses each commit to a short hash plus its message — a scannable format for a quick check.
+- <code>git status</code> — after a successful push, should report "nothing to commit."
+Say explicitly, restating the lab page's grading note: "<code>git log --oneline</code> should show real, descriptive messages — not <code>'final'</code>, not <code>'update'</code>. Instructors read this log."
+Read-only: <code>git</code> is not an emulator command.
+</aside>
+</section>
+
+<!-- 45. PART 4 — log illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — git does not run in the browser; the hash is a placeholder.
+
+git log --oneline   &rarr;  a1b2c3d lab 4: search ritual and git
+git status          &rarr;  nothing to commit, working tree clean</pre>
+<p class="expect">The commit message <code>lab 4: search ritual and git</code> is verbatim from Part 3's ritual; the short hash <code>a1b2c3d</code> is a placeholder — every student's will differ, and that's expected. <code>git status</code> saying "nothing to commit" is the guide's own stated check.</p>
+<aside class="notes">Guide, Part 4: <code>git log --oneline</code> "# should show your commits" and <code>git status</code> "# should say 'nothing to commit'". The single log line reuses the exact commit message the guide's Part 3 ritual creates (<code>git commit -m 'lab 4: search ritual and git'</code>); the hash is disclosed as a placeholder, not a real value.</aside>
+</section>
+
+<!-- 46. PART 4 — predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>On this very first push, you run a plain <code>git push</code> (without <code>-u origin main</code>). What happens?</p>
+<pre class="answer" hidden>It fails:
+  fatal: The current branch main has no upstream branch
+
+Git's own error message suggests the fix, something like:
+  git push --set-upstream origin main
+
+That is exactly what git push -u origin main does. The -u
+links the branch once, so every LATER git push works with
+no arguments — which is why the ritual's Step 5 is just
+"git push".</pre>
+</div>
+<aside class="notes">Guide, Part 4 common mistakes: "Running <code>git push</code> (without <code>-u origin main</code>) on this very first push, before the upstream link is established — fails with a <code>fatal: The current branch main has no upstream branch</code> error that explicitly suggests the correct fix in its own output — worth having a student read that suggested fix aloud rather than you supplying it immediately."</aside>
+</section>
+
+<!-- 47. PART 4 — quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">After today's <code>-u</code> flag, what does a plain <code>git push</code> (no arguments) do on this project next week?</p>
+<button data-opt="A">Pushes the current branch to the already-linked <code>origin main</code> automatically — which is why the ritual's Step 5 can just say <code>git push</code></button>
+<button data-opt="B">Nothing — you must type <code>git push -u origin main</code> in full every time</button>
+<button data-opt="C">Creates a brand-new remote branch on each push</button>
+<p class="why" hidden>Pushes the current branch to the already-linked <code>origin main</code> automatically. That is <em>why</em> the ritual's Step 5 can just say <code>git push</code>, with no arguments, and it still works correctly every week after this one — the <code>-u</code> on the first push established the link permanently.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "(Pushes the current branch to the already-linked <code>origin main</code> automatically — get a student to state explicitly that this is <em>why</em> the ritual's Step 5 can just say <code>git push</code>, with no arguments, and it still works correctly every week after this one.)"</aside>
+</section>
+
+<!-- 48. PART 4 — pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Creating the GitHub repo <strong>with</strong> a README, despite the explicit instruction not to — the resulting push conflict is a genuinely good, low-stakes teaching moment about <em>why</em> the instruction existed; walk through <code>git pull --rebase</code> or deleting and recreating the GitHub repo cleanly.</p>
+<p>Forgetting to replace <code>YOURUSERNAME</code> with their actual GitHub username in the remote URL — produces <code>remote: Repository not found</code>, a good specific error worth reading together.</p>
+<p>Running <code>git push</code> (without <code>-u origin main</code>) on this very first push, before the upstream link is established — fails with <code>fatal: The current branch main has no upstream branch</code>, which explicitly suggests the correct fix in its own output; have a student read that suggested fix aloud.</p>
+</div>
+<aside class="notes">Check for understanding: "After today's <code>-u</code> flag, what does a plain <code>git push</code> (no arguments) do on this specific project, next week and beyond?" Answer: Pushes the current branch to the already-linked <code>origin main</code> automatically — which is why the ritual's Step 5 can just say <code>git push</code>.</aside>
+</section>
+
+<!-- 49. STRETCH — divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:04–1:10</span>
+<h1>fzf or zoxide</h1>
+<aside class="notes">
+Frame as a genuine bonus, worth showing even briefly since both tools are broadly useful beyond this course.
+One sentence each, if you demo this live (verbatim): "<code>fzf</code> opens an interactive, type-to-filter search over files in the current directory — genuinely faster than <code>find</code> once a project has many files and you only remember part of a name. <code>z</code> (from the <code>zoxide</code> tool) is a smarter <code>cd</code> — it learns which folders you visit most often and lets you jump to them by typing just part of the name, from <em>anywhere</em>, not just from a parent directory the way plain <code>cd</code> requires." Neither is required for this course's ritual, but both are the kind of tool that, once discovered, tends to stick with a working developer for years.
+Neither <code>fzf</code> nor <code>z</code> runs in the emulator — this segment is read-only.
+</aside>
+</section>
+
+<!-- 50. STRETCH — code (readonly) -->
+<section class="s-code">
+<h3>Stretch — run this on your own machine — it can't execute here</h3>
+<div class="run" data-lang="shell" data-readonly>fzf                  # interactive fuzzy file search
+z ism3232            # jump to course folder from anywhere
+z module02           # jump to module02_zsh</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (neither <code>fzf</code> nor <code>zoxide</code> is installed in the emulator). Illustrative behaviour on the next slide.</p>
+<aside class="notes">
+Line by line:
+- <code>fzf</code> — opens an interactive, type-to-filter search over files in the current directory — faster than <code>find</code> once a project has many files and you only remember part of a name.
+- <code>z ism3232</code> / <code>z module02</code> — <code>z</code> (from the <code>zoxide</code> tool) is a smarter <code>cd</code>: it learns which folders you visit most often and lets you jump by typing part of the name, from <em>anywhere</em>.
+Read-only: neither tool is an emulator command.
+</aside>
+</section>
+
+<!-- 51. STRETCH — illustrative -->
+<section class="s-out">
+<h3>Illustrative — not run here</h3>
+<pre>Illustrative — reconstructed from the guide's one-sentence descriptions.
+
+fzf         &rarr;  opens an interactive, type-to-filter list of the files
+                in the current directory; you type a fragment, arrow to
+                a match, Enter selects it
+z ism3232   &rarr;  jumps straight to ~/ism3232 from anywhere
+z module02  &rarr;  jumps to the module02_zsh folder you visit most</pre>
+<p class="expect">The guide gives one descriptive sentence per tool, no transcript. The lines above are reconstructed from those descriptions and labelled illustrative.</p>
+<aside class="notes">Guide, Stretch: "<code>fzf</code> opens an interactive, type-to-filter search over files in the current directory... <code>z</code> (from the <code>zoxide</code> tool) is a smarter <code>cd</code> — it learns which folders you visit most often and lets you jump to them by typing just part of the name, from <em>anywhere</em>." No invented match lists — only the described behaviour.</aside>
+</section>
+
+<!-- 52. STRETCH — quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">What is <code>z</code> (from the <code>zoxide</code> tool)?</p>
+<button data-opt="A">A faster alias for <code>ls</code> that also shows hidden files</button>
+<button data-opt="B">A smarter <code>cd</code> that learns which folders you visit most often and lets you jump to them by typing just part of the name, from anywhere</button>
+<button data-opt="C">An interactive, type-to-filter search over files in the current directory</button>
+<p class="why" hidden><code>z</code> is a smarter <code>cd</code> — it learns which folders you visit most often and lets you jump to them by typing just part of the name, from <em>anywhere</em>, not just from a parent directory the way plain <code>cd</code> requires. Option C describes <code>fzf</code>, the other Stretch tool.</p>
+</div>
+<aside class="notes">The Stretch has no Check-for-understanding question, so per the rollout convention this quiz's keyed answer (B) is a verbatim same-segment line — the guide's Stretch description: "<code>z</code> (from the <code>zoxide</code> tool) is a smarter <code>cd</code> — it learns which folders you visit most often and lets you jump to them by typing just part of the name, from <em>anywhere</em>." Option C is the guide's <code>fzf</code> description, used as a distractor.</aside>
+</section>
+
+<!-- 53. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li><strong>Screenshot 1:</strong> Two <code>rg</code> commands and <code>tree -L 3</code> output</li>
+<li><strong>Screenshot 2:</strong> The complete pre-submission ritual — all steps in one terminal session</li>
+<li><strong>Screenshot 3:</strong> GitHub repository page showing committed files</li>
+<li><strong>File upload:</strong> <code>module02_zsh/tests/test_week4.py</code></li>
+<li><strong>Also paste:</strong> GitHub repository URL into the Canvas text box</li>
+<li>All uploaded to Canvas by end of class</li>
+</ul>
+<aside class="notes">Review the submission checklist together, on screen, in the last few minutes. Completion credit — the bar is "did you do the work and document it," not a graded rubric. Instructors still read the Git log; a missing <code>ruff</code> or <code>pytest</code> step is visible there.</aside>
+</section>
+
+<!-- 54. WRAP — next week -->
+<section class="s-wrap">
+<h3>Next week</h3>
+<p>Everything through Week 4 has been about the environment and the workflow around code — search tools, testing infrastructure, the submission ritual, Git. Starting next week, the course turns to Python itself: variables, data types, and operators — the actual programming content this workflow exists to support.</p>
+<aside class="notes">Week 5: variables, data types, and operators. The ritual practiced today is what every remaining module's submission runs through — this was the last "workflow" lab before the Python content begins.</aside>
+</section>
+
+<!-- 55. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 4</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w04.md (Week 4 facilitation guide — "Search Tools, the Submission Ritual &amp; Git").</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

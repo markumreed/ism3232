@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 8 — Debugging, AI Literacy &amp; Midterm Review</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 8 &nbsp;·&nbsp; Module 08 &nbsp;·&nbsp; Unit 2</p>
+<h1>Debugging, AI Literacy &amp; Midterm Review</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:03</strong> Welcome: "Debug First, Then Ask"</span>
+<span class="t-item"><strong>0:03–0:18</strong> Part 1 — Read the first traceback</span>
+<span class="t-item"><strong>0:18–0:30</strong> Part 2 — Fix Bug 1 (KeyError)</span>
+<span class="t-item"><strong>0:30–0:42</strong> Part 3 — Fix Bug 2 (TypeError)</span>
+<span class="t-item"><strong>0:42–0:55</strong> Part 4 — Write tests</span>
+<span class="t-item"><strong>0:55–1:07</strong> Part 5 — AI reflection + push</span>
+<span class="t-item"><strong>1:07–1:15</strong> Stretch + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+The lab page's own rule, stated as a heading, is the entire lesson of this lab: <strong>Debug First, Then Ask.</strong> Attempt each bug yourself, using the traceback and <code>print()</code>, before touching any AI tool — and document the attempt in <code>debug_log.md</code> <em>before</em> asking AI anything. Say explicitly to the class: <strong>this is graded on process, not just working code.</strong> A student who pastes an error into an AI tool immediately and gets working code back, with no documented independent attempt, has not actually done this lab, even if their script runs correctly at the end. This is also the last lab before Week 9's midterm.
+Each runnable block here is a complete standalone script (the guide builds one <code>week8_buggy.py</code> incrementally across parts; a fresh Pyodide namespace can't carry state, so every block re-states the records + functions). Pyodide traceback file paths show <code>&lt;exec&gt;</code> and line numbers may differ from a real <code>python3 file.py</code> run — the error type and message are the load-bearing content.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, structured around a documented debug log</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 7: functions, modules, <code>pytest</code>, type hints (Midterm-Eligible; last lab before Week 9's midterm)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (read the traceback) – Part 5 (AI reflection + push) + Stretch (a third bug)</span></div>
+<div><span class="k">Submission</span><span class="v">2 screenshots + <code>debug_log.md</code>, GitHub URL, Canvas, completion credit</span></div>
+</ul>
+<aside class="notes">Parts 1–3 (the actual debugging work) get the most protected time of the whole lab — rushing the traceback-reading and rubber-duck steps to "get to the fix faster" defeats the entire point.</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<ul>
+<li>Read a Python traceback from the bottom up, identifying the error type, the file/line, and what that error type means.</li>
+<li>Use <code>print()</code> debugging to inspect a variable's actual runtime value when the code alone doesn't make it obvious.</li>
+<li>Diagnose and fix a <code>KeyError</code> (a typo'd dictionary key) and a <code>TypeError</code> (comparing incompatible types).</li>
+<li>Apply rubber duck debugging — narrating code out loud, literally, line by line — as a genuine diagnostic technique.</li>
+<li>Use AI tools narrowly and after independent effort, and write an honest, specific AI-use disclosure.</li>
+</ul>
+<aside class="notes">Verbs lifted from the guide's Learning Objectives. Objective 5 (AI use narrowly + honest disclosure) is graded seriously — see Part 5.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:03</td><td>Welcome: "Debug First, Then Ask"</td><td>3</td></tr>
+<tr><td>0:03–0:18</td><td>Part 1 — Set up and read the first traceback</td><td>15</td></tr>
+<tr><td>0:18–0:30</td><td>Part 2 — Fix Bug 1</td><td>12</td></tr>
+<tr><td>0:30–0:42</td><td>Part 3 — Fix Bug 2</td><td>12</td></tr>
+<tr><td>0:42–0:55</td><td>Part 4 — Write tests for the fixed code</td><td>13</td></tr>
+<tr><td>0:55–1:07</td><td>Part 5 — AI reflection and push</td><td>12</td></tr>
+<tr><td>1:07–1:11</td><td>Stretch preview (a third bug)</td><td>4</td></tr>
+<tr><td>1:11–1:15</td><td>Wrap-up, submission checklist</td><td>4</td></tr>
+</tbody>
+</table>
+<aside class="notes">Parts 1–3 are given the most protected time deliberately.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:03</span>
+<h1>Debug First, Then Ask</h1>
+<aside class="notes">
+Say to the class: "One rule today, and it's graded seriously: Debug First, Then Ask. You will hit two bugs in a script I give you. Before any AI tool, you read the traceback, you try <code>print()</code> debugging, and — genuinely — you explain the suspect code out loud to a rubber duck. Document all of that in <code>debug_log.md</code> <em>before</em> you ask an AI anything. I'm not grading whether you fixed the bugs — I'm grading whether you can show me <em>how</em> you got there."
+Have a genuine rubber duck, or announce that any object on a desk will do. The technique's real source is Hunt &amp; Thomas, <em>The Pragmatic Programmer</em>, 1999 — naming it helps students take it seriously.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:03–0:18</span>
+<h1>Set Up and Read the First Traceback</h1>
+<aside class="notes">
+Teaching goal: copy a genuinely broken script exactly as given, run it, and read the resulting traceback methodically — bottom-up, extracting the error type, location, and meaning — before attempting any fix.
+Say to the class: "Type this exactly as shown — bugs included, on purpose. Do not fix anything yet. Run it, and we're going to read the error together, slowly, before touching a single line of code."
+</aside>
+</section>
+
+<!-- 7. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Set up — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module05_functions
+source .venv/bin/activate
+touch week8_buggy.py debug_log.md</div>
+<p class="expect">Shown for reference — <code>source</code> (venv activation) can't run in the browser. Reuse the <code>module05_functions</code> venv from Week 7. Then type the buggy script (next slide) into <code>week8_buggy.py</code> exactly as shown, bugs and all.</p>
+<aside class="notes"><code>touch</code> creates the two empty files; <code>source .venv/bin/activate</code> reuses Week 7's virtual environment.</aside>
+</section>
+
+<!-- 8. PART 1 the buggy script (runnable, broken) -->
+<section class="s-code">
+<h3>Type this into <code>week8_buggy.py</code> exactly as shown — bugs included</h3>
+<div class="run" data-lang="python"># week8_buggy.py  -- three bugs -- do not fix yet
+
+records = [
+    {'id': 1, 'name': 'Taylor', 'amout': 1200},
+    {'id': 2, 'name': 'Jordan', 'amount': 450},
+    {'id': 3, 'name': 'Morgan', 'amount': 3500},
+]
+
+def get_total(records):
+    total = 0
+    for rec in records:
+        total += rec['amount']
+    return total
+
+def is_over_limit(amount):
+    return amount > '1000'
+
+def format_summary(total, count):
+    return f'Total: ${total:.2f} across {count} records'
+
+total = get_total(records)
+print(format_summary(total, len(records)))
+print(is_over_limit(total))</div>
+<p class="expect">Press <strong>Run</strong>. It crashes — that is the point. Read the traceback on the next slide before touching any code.</p>
+<aside class="notes">
+The three "bugs": record 1's key is misspelled <code>'amout'</code> (Bug 1, a <code>KeyError</code>); <code>is_over_limit</code> compares to the string <code>'1000'</code> (Bug 2, a <code>TypeError</code>, only visible after Bug 1 is fixed); and the Stretch invites a third. Type it, do not paste — noticing your own typos is part of the skill.
+</aside>
+</section>
+
+<!-- 9. PART 1 traceback -->
+<section class="s-out">
+<h3>Verified traceback</h3>
+<pre>Traceback (most recent call last):
+  File "week8_buggy.py", line 19, in &lt;module&gt;
+    total = get_total(records)
+            ^^^^^^^^^^^^^^^^^^
+  File "week8_buggy.py", line 10, in get_total
+    total += rec['amount']
+             ~~~^^^^^^^^^^
+KeyError: 'amount'</pre>
+<p class="expect">The load-bearing content is the last line: <code>KeyError: 'amount'</code>. Pyodide's file path shows <code>&lt;exec&gt;</code> and its line numbers may differ from the guide's <code>week8_buggy.py</code> line 10 / 19 — the guide's numbering is shown here; the error <em>type</em> and <em>message</em> are what matter.</p>
+<aside class="notes">
+Read it together, from the bottom up, exactly as the three questions ask:
+1. "What is the error type on the last line?" — <code>KeyError</code>, specifically <code>KeyError: 'amount'</code>.
+2. "Which file and line number is highlighted?" — <code>week8_buggy.py</code>, line 10, inside <code>get_total()</code>, at <code>total += rec['amount']</code>. The traceback shows a whole chain — line 19 (where <code>get_total</code> was <em>called</em>) and line 10 (where the actual failure <em>happened</em>) — both matter, but line 10 is where the bug physically lives.
+3. "What does that error type mean?" — <code>KeyError</code> means: code tried to access a dictionary using a key (<code>'amount'</code>) that doesn't exist in that specific dictionary. The error doesn't say the key is <em>always</em> missing — it says the key is missing from <em>this specific</em> dictionary, on <em>this specific</em> pass through the loop. Three records exist; only one is broken; the traceback alone doesn't tell you which — that's what Part 2's <code>print()</code> debugging is for.
+Common mistakes: reading the traceback top-down and getting stuck on the "Traceback (most recent call last):" boilerplate; skipping the rubber-duck step as "silly"; guessing at "what the error means" instead of decomposing <code>KeyError: 'amount'</code> literally.
+</aside>
+</section>
+
+<!-- 10. PART 1 rubber duck + debug_log -->
+<section class="s-idea">
+<h3>Rubber duck it — genuinely, not as a formality</h3>
+<div class="concept">
+<div class="concept-lbl">Technique</div>
+<p>Explain <code>get_total()</code> out loud, to the duck, one line at a time. Not what it <em>should</em> do — what it <em>literally</em> does. "This line sets <code>total</code> to zero. This line starts a loop over <code>records</code>. This line adds <code>rec['amount']</code> to <code>total</code>." Say it.</p>
+<p>What you catch yourself hesitating on — "this adds the amount field… assuming it's called 'amount' in every record" — is the diagnostic insight arriving. That hesitation becomes your next two log entries.</p>
+</div>
+<pre class="tmpl" data-readonly># debug_log.md
+# Author: [Your Name]
+
+## Bug 1
+Error type: KeyError
+File + line: week8_buggy.py, line 10 (inside get_total)
+What the error means: code tried to access a dictionary key
+  ('amount') that doesn't exist in one of the records
+What I told the duck: [student's own words]
+What I tried: [to be filled in during Part 2]
+How I fixed it: [to be filled in during Part 2]</pre>
+<aside class="notes">Fill in the Bug 1 section of <code>debug_log.md</code> before touching any code. Circulate and listen for a student narrating <code>rec['amount']</code> — "assuming it's called 'amount' in every record" is the actual insight; reinforce it if you hear it.</aside>
+</section>
+
+<!-- 11. PART 1 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">The traceback names line 10, inside <code>get_total()</code>. Does that mean line 10 itself is <em>wrong</em>, or could the bug actually be somewhere else?</p>
+<button data-opt="A">Line 10 is definitely wrong — the traceback points there, so that's the bug</button>
+<button data-opt="B">The bug is in <code>get_total()</code>'s logic — probably the <code>for</code> loop or the <code>+=</code></button>
+<button data-opt="C">The bug is elsewhere: line 10's code is correct in general; the real problem is the typo'd <code>'amout'</code> key back in the <code>records</code> data</button>
+<p class="why" hidden>The bug could be — and in this case, is — somewhere else. Line 10's code is <em>correct</em> in general; the actual problem is in the <em>data</em> being fed into it, back at the typo'd <code>'amout'</code> key. A traceback shows you where the failure was <em>detected</em>, not necessarily where the mistake was <em>made</em>.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer. The distinction — failure detected vs mistake made — is the genuinely important takeaway.</aside>
+</section>
+
+<!-- 12. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Reading the traceback top-down and getting stuck on the "Traceback (most recent call last):" line — that line is boilerplate, always identical, never the actual information. The real content is at the bottom.</p>
+<p>Skipping the rubber-duck step as "silly" and going straight to fixing — the exercise's grading explicitly values the documented process; skipping it produces a thinner, less honest <code>debug_log.md</code>.</p>
+<p>Guessing at "what the error means" rather than decomposing the literal words: <em>Key</em>Error, about the key <code>'amount'</code> specifically.</p>
+</div>
+<aside class="notes">This lab is graded on process, not just working code.</aside>
+</section>
+
+<!-- 13. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:18–0:30</span>
+<h1>Fix Bug 1 — the KeyError</h1>
+<aside class="notes">
+Teaching goal: use <code>print()</code> debugging to inspect the actual data flowing through the loop, spot the typo, and fix it at its source.
+Say to the class: "The traceback told us <em>where</em> the failure happened, not <em>why</em> the data was wrong. Now we look at the data itself, directly, with a debug print."
+</aside>
+</section>
+
+<!-- 14. PART 2 DEBUG print (runnable, broken) -->
+<section class="s-code">
+<h3>Live-code — add one <code>print()</code> inside <code>get_total()</code></h3>
+<div class="run" data-lang="python">records = [
+    {'id': 1, 'name': 'Taylor', 'amout': 1200},
+    {'id': 2, 'name': 'Jordan', 'amount': 450},
+    {'id': 3, 'name': 'Morgan', 'amount': 3500},
+]
+
+def get_total(records):
+    total = 0
+    for rec in records:
+        print(f'DEBUG: rec = {rec}')   # add this
+        total += rec['amount']
+    return total
+
+def format_summary(total, count):
+    return f'Total: ${total:.2f} across {count} records'
+
+total = get_total(records)
+print(format_summary(total, len(records)))</div>
+<p class="expect">Press <strong>Run</strong>. The <code>DEBUG</code> line prints once, then the same <code>KeyError</code> crashes it — but now you can see the record it choked on.</p>
+<aside class="notes">The <code>DEBUG</code> print shows each record's actual contents before the key access that was failing. This is the "inspect the data directly" step.</aside>
+</section>
+
+<!-- 15. PART 2 DEBUG output -->
+<section class="s-out">
+<h3>Verified output — before the crash</h3>
+<pre>DEBUG: rec = {'id': 1, 'name': 'Taylor', 'amout': 1200}
+Traceback (most recent call last):
+  ...
+KeyError: 'amount'</pre>
+<p class="expect">There it is, in plain sight: <code>{'id': 1, 'name': 'Taylor', 'amout': 1200}</code> — read the key names out loud. <code>'amout'</code>, not <code>'amount'</code>. One missing letter.</p>
+<aside class="notes">Say explicitly, pointing at the printed dictionary: "A single missing letter, and Python has no way to know it was a typo rather than a deliberately different key — it just faithfully reports that <code>'amount'</code> isn't there, because it genuinely isn't, under that exact spelling."</aside>
+</section>
+
+<!-- 16. PART 2 the fix (still shows Bug 2) -->
+<section class="s-code">
+<h3>Fix it at the source — correct the typo in <code>records</code>, remove the DEBUG print</h3>
+<div class="run" data-lang="python">records = [
+    {'id': 1, 'name': 'Taylor', 'amount': 1200},   # fixed: was 'amout'
+    {'id': 2, 'name': 'Jordan', 'amount': 450},
+    {'id': 3, 'name': 'Morgan', 'amount': 3500},
+]
+
+def get_total(records):
+    total = 0
+    for rec in records:
+        total += rec['amount']
+    return total
+
+def is_over_limit(amount):
+    return amount > '1000'
+
+def format_summary(total, count):
+    return f'Total: ${total:.2f} across {count} records'
+
+total = get_total(records)
+print(format_summary(total, len(records)))
+print(is_over_limit(total))</div>
+<p class="expect">Bug 1 is fixed at the <em>data source</em>, not by matching the typo in the access. The DEBUG print is gone (Week 7's "no <code>print()</code> in business logic" rule). Press <strong>Run</strong> — a <em>new, different</em> error appears. That's Bug 2, which was always there, hidden behind Bug 1 crashing first.</p>
+<aside class="notes">
+Fixing the typo by changing <code>rec['amount']</code> to <code>rec['amout']</code> instead would "work" narrowly but breaks the moment any correctly-spelled record is processed — fix the data source, not the access point.
+Update <code>debug_log.md</code>'s Bug 1 section: "What I tried: added a DEBUG print inside get_total() to see each record's actual contents…"; "How I fixed it: corrected the typo 'amout' to 'amount' in the first record's dictionary; removed the DEBUG print afterward."
+</aside>
+</section>
+
+<!-- 17. PART 2 output -> Bug 2 -->
+<section class="s-out">
+<h3>Verified output — Bug 1 gone, Bug 2 surfaces</h3>
+<pre>Total: $5150.00 across 3 records
+Traceback (most recent call last):
+  File "week8_buggy.py", line 21, in &lt;module&gt;
+    print(is_over_limit(total))
+          ^^^^^^^^^^^^^^^^^^^^
+  File "week8_buggy.py", line 14, in is_over_limit
+    return amount > '1000'
+           ^^^^^^^^^^^^^^^
+TypeError: '&gt;' not supported between instances of 'int' and 'str'</pre>
+<p class="expect">The <em>first</em> line printed correctly — <code>Total: $5150.00 across 3 records</code> — confirming Bug 1's fix is solid. The crash is on the <em>next</em> line, in a completely different function. Load-bearing: <code>TypeError: '&gt;' not supported between instances of 'int' and 'str'</code>.</p>
+<aside class="notes">Say explicitly: fixing one bug doesn't mean the whole program is correct — it means that <em>specific</em> bug is gone.</aside>
+</section>
+
+<!-- 18. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If all three records had used <code>'amout'</code> consistently — the <em>same</em> typo everywhere — would the original <code>KeyError</code> have looked any different?</p>
+<button data-opt="A">No — same <code>KeyError: 'amount'</code>, just on the first record instead of one specific one; <code>print()</code> debugging would be just as necessary</button>
+<button data-opt="B">Yes — a consistent typo produces a different error, like <code>NameError</code> or <code>AttributeError</code></button>
+<button data-opt="C">No error at all — if every record is spelled the same way, Python accepts it</button>
+<p class="why" hidden>No — it would still fail with the exact same <code>KeyError: 'amount'</code>, on the very first record instead of just one specific one. The <code>print()</code> debugging step would have been just as necessary, since the traceback alone never shows the dictionary's actual keys — only names the one it was looking for and failed to find.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer. The point: the traceback never reveals the dictionary's real keys.</aside>
+</section>
+
+<!-- 19. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Fixing the typo by changing <code>rec['amount']</code> (the <em>access</em>) to match <code>rec['amout']</code> (the <em>typo</em>) instead of fixing the data — it stops crashing on record 1 but produces a new <code>KeyError</code> the moment <code>Jordan</code>'s or <code>Morgan</code>'s correctly-spelled record is processed.</p>
+<p>Leaving the <code>DEBUG</code> print in place after the fix — walk the room checking it's removed, per the explicit instruction and the Week 7 callback.</p>
+</div>
+<aside class="notes">Fix the data source, not the access point.</aside>
+</section>
+
+<!-- 20. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:30–0:42</span>
+<h1>Fix Bug 2 — the TypeError</h1>
+<aside class="notes">
+Teaching goal: a <code>TypeError</code> from comparing incompatible types — diagnose it the same disciplined way (read, duck, document) before fixing, reinforcing that the process from Bug 1 generalizes to a genuinely different kind of bug.
+Say to the class: "New error, new type entirely. Same process: read it, explain it to the duck, document before fixing."
+</aside>
+</section>
+
+<!-- 21. PART 3 idea (duck the comparison) -->
+<section class="s-idea">
+<h3>Rubber duck the comparison itself</h3>
+<div class="concept">
+<div class="concept-lbl">Ask the duck</div>
+<p>What type is <code>amount</code> at this point in the program? What type is <code>'1000'</code>? Is <code>&gt;</code> defined between those two types?</p>
+<p>"<code>amount</code> is <code>total</code>, which came from <code>get_total()</code> — that returns a number. <code>'1000'</code> has quotes, so it's a string. Comparing a number to a string with <code>&gt;</code> — Python doesn't know how to say a number is 'greater than' a piece of text." That reasoning, said out loud, <em>is</em> the fix arriving.</p>
+</div>
+<pre class="tmpl" data-readonly>## Bug 2
+Error type: TypeError
+File + line: week8_buggy.py, line 14 (inside is_over_limit)
+What the error means: Python cannot compare an int and a string
+  with > -- the two sides of the comparison are different types
+How I fixed it: [to be filled in below]</pre>
+<aside class="notes">Update <code>debug_log.md</code>'s Bug 2 section before fixing. A student narrating this correctly arrives at the fix on their own.</aside>
+</section>
+
+<!-- 22. PART 3 the fix (runnable, works) -->
+<section class="s-code">
+<h3>Fix it — remove the quotes around <code>1000</code></h3>
+<div class="run" data-lang="python">records = [
+    {'id': 1, 'name': 'Taylor', 'amount': 1200},
+    {'id': 2, 'name': 'Jordan', 'amount': 450},
+    {'id': 3, 'name': 'Morgan', 'amount': 3500},
+]
+
+def get_total(records):
+    total = 0
+    for rec in records:
+        total += rec['amount']
+    return total
+
+def is_over_limit(amount):
+    return amount > 1000   # fixed: '1000' (string) -> 1000 (int)
+
+def format_summary(total, count):
+    return f'Total: ${total:.2f} across {count} records'
+
+total = get_total(records)
+print(format_summary(total, len(records)))
+print(is_over_limit(total))</div>
+<p class="expect">Both bugs fixed. Press <strong>Run</strong> — clean output, no traceback.</p>
+<aside class="notes">
+Converting <code>amount</code> to a string instead (<code>str(amount) &gt; '1000'</code>) runs without error but compares <strong>alphabetically</strong>, not numerically — e.g. <code>'9' &gt; '1000'</code> is <code>True</code> alphabetically even though <code>9 &lt; 1000</code>. A "technically works, but quietly wrong" fix worth flagging.
+Bug 1 was about a <em>missing</em> piece of data (wrong key name); Bug 2 is about <em>mismatched types</em> being compared — different diagnostic categories.
+</aside>
+</section>
+
+<!-- 23. PART 3 final output -->
+<section class="s-out">
+<h3>Verified final output</h3>
+<pre>Total: $5150.00 across 3 records
+True</pre>
+<p class="expect">Matches the lab page's own stated expected result exactly. <code>debug_log.md</code> Bug 2: "How I fixed it: removed the quotes around 1000 so is_over_limit compares two integers instead of an int and a string."</p>
+<aside class="notes">Verified with CPython 3.12.2 (the version Pyodide 0.26.4 bundles).</aside>
+</section>
+
+<!-- 24. PART 3 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>is_over_limit</code> were called with a <em>float</em> instead of an int — say <code>is_over_limit(1500.50)</code> — would the fixed version still work correctly?</p>
+<button data-opt="A">No — the fix only handles <code>int</code>; a <code>float</code> would raise the same <code>TypeError</code></button>
+<button data-opt="B">Yes — <code>1500.50 &gt; 1000</code> compares a float to an int fine; Python allows numeric comparisons across <code>int</code>/<code>float</code> freely</button>
+<button data-opt="C">Yes, but only because <code>1500.50</code> happens to round to <code>1500</code></button>
+<p class="why" hidden>Yes — <code>1500.50 &gt; 1000</code> compares a float to an int just fine, since Python allows numeric comparisons across <code>int</code>/<code>float</code> freely. The type mismatch that actually caused Bug 2 was specifically between a number and <em>text</em>, not between two different numeric types.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer. A check that the fix's scope is understood precisely, not over-generalized.</aside>
+</section>
+
+<!-- 25. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Converting <code>amount</code> to a string instead of converting <code>'1000'</code> to an integer — <code>str(amount) &gt; '1000'</code> runs, but compares alphabetically, not numerically. Quietly wrong for many inputs.</p>
+<p>Treating this as the "same bug" as Bug 1 — Bug 1 was a <em>missing</em> piece of data; Bug 2 is <em>mismatched types</em>. Different diagnostic categories, both worth recognizing by name.</p>
+</div>
+<aside class="notes">Same disciplined process (read, duck, document, fix) — genuinely different error.</aside>
+</section>
+
+<!-- 26. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:42–0:55</span>
+<h1>Write Tests for the Fixed Code</h1>
+<aside class="notes">
+Teaching goal: five <code>pytest</code> tests verifying the now-fixed functions, including a boundary case for <code>is_over_limit</code> — direct reinforcement of Week 7's boundary-testing lesson, applied to code that was, minutes ago, genuinely broken.
+Say to the class: "Now that both bugs are fixed, let's prove it stays fixed — five tests, including the exact boundary-case discipline from last week."
+</aside>
+</section>
+
+<!-- 27. PART 4 the test file (static, outside .run) -->
+<section class="s-code">
+<h3><code>tests/test_week8.py</code> — five tests</h3>
+<pre class="tmpl" data-readonly>from week8_buggy import get_total, is_over_limit, format_summary
+
+def test_get_total_correct():
+    recs = [{'amount': 100}, {'amount': 200}]
+    assert get_total(recs) == 300
+
+def test_is_over_limit_true():
+    assert is_over_limit(1500) is True
+
+def test_is_over_limit_false():
+    assert is_over_limit(500) is False
+
+def test_is_over_limit_boundary():
+    assert is_over_limit(1000) is False
+
+def test_format_summary():
+    result = format_summary(1234.56, 3)
+    assert '1234.56' in result
+    assert '3' in result</pre>
+<p class="expect">Shown for reference — <code>pytest</code> has no runner in the browser. The next slide runs the same five assertions live; the one after shows the real <code>pytest -v</code> output.</p>
+<aside class="notes">
+Line by line:
+- <code>from week8_buggy import …</code> — imports directly from the (now-fixed) file; the name still says "buggy" even though the bugs are gone, since renaming isn't part of today's task.
+- <code>test_get_total_correct</code> — a fresh, independent test list, not reusing the module-level <code>records</code>; tests define their own isolated input data.
+- <code>test_is_over_limit_boundary</code> — the required boundary case: <code>is_over_limit(1000)</code> should be <code>False</code>, since the fixed condition is <code>amount &gt; 1000</code>, strictly greater. If Bug 2's fix had accidentally used <code>&gt;=</code>, this test specifically would catch it.
+- <code>test_format_summary</code> — uses <code>in</code> to check substrings, not an exact <code>==</code>, so it's robust to minor formatting details while still confirming the dollar amount and the count are present.
+</aside>
+</section>
+
+<!-- 28. PART 4 run the assertions live -->
+<section class="s-code">
+<h3>Run the same five checks live</h3>
+<div class="run" data-lang="python">def get_total(records):
+    total = 0
+    for rec in records:
+        total += rec['amount']
+    return total
+
+def is_over_limit(amount):
+    return amount > 1000
+
+def format_summary(total, count):
+    return f'Total: ${total:.2f} across {count} records'
+
+recs = [{'amount': 100}, {'amount': 200}]
+assert get_total(recs) == 300;            print('test_get_total_correct PASSED')
+assert is_over_limit(1500) is True;       print('test_is_over_limit_true PASSED')
+assert is_over_limit(500) is False;       print('test_is_over_limit_false PASSED')
+assert is_over_limit(1000) is False;      print('test_is_over_limit_boundary PASSED')
+result = format_summary(1234.56, 3)
+assert '1234.56' in result and '3' in result; print('test_format_summary PASSED')
+print('5 passed')</div>
+<p class="expect">This runs the fixed functions against the same five assertions <code>pytest</code> would. On your machine you run <code>pytest -v</code> instead (next slide).</p>
+<aside class="notes">An <code>assert</code> that holds is silent; if it fails, an <code>AssertionError</code> stops the block there. All five hold here because both bugs are fixed.</aside>
+</section>
+
+<!-- 29. PART 4 pytest -v output (static) -->
+<section class="s-out">
+<h3>Verified <code>pytest -v</code> output — run on your own machine</h3>
+<pre>tests/test_week8.py::test_get_total_correct PASSED
+tests/test_week8.py::test_is_over_limit_true PASSED
+tests/test_week8.py::test_is_over_limit_false PASSED
+tests/test_week8.py::test_is_over_limit_boundary PASSED
+tests/test_week8.py::test_format_summary PASSED
+5 passed</pre>
+<p class="expect">Reproduced verbatim from the guide's "Verified output — all five pass." Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those.</p>
+<aside class="notes">
+<code>week8_buggy.py</code> has module-level code (<code>total = get_total(records)</code>, <code>print(...)</code>) that runs the moment it's imported — a curious student may notice the script's own output when <code>pytest</code> runs. <code>pytest</code> captures output from passing tests by default, so it's hidden unless a test fails or <code>-s</code> is passed. This is a real reason Week 7's "keep business-logic files free of module-level side effects" discipline matters once tests import those files directly.
+</aside>
+</section>
+
+<!-- 30. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Which of the five tests would have caught Bug 1 (the <code>KeyError</code>), if it had run <em>before</em> the fix?</p>
+<button data-opt="A"><code>test_get_total_correct</code> — it exercises <code>get_total()</code>, so it would have shown the typo</button>
+<button data-opt="B"><code>test_format_summary</code> — the total was wrong, so the formatted string would be wrong</button>
+<button data-opt="C">None of them — Bug 1 was a typo in the module-level <code>records</code> <em>data</em>, not in any function's logic; these tests verify logic on their own isolated inputs</button>
+<p class="why" hidden><code>test_get_total_correct</code> exercises <code>get_total()</code> on data with correctly-spelled keys, so it wouldn't itself have shown the typo bug — which was in the original <code>records</code> list's <em>data</em>, not in <code>get_total()</code>'s logic. This test verifies <code>get_total()</code>'s logic is correct; a typo in a different list literal is a data-entry mistake this specific test was never designed to catch. Logic correctness vs. data correctness.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer — a slightly tricky question. The valuable takeaway: logic correctness vs. data correctness are different things tests must be designed for separately.</aside>
+</section>
+
+<!-- 31. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common pitfalls</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting that <code>week8_buggy.py</code> has module-level code that runs the moment it's imported — its <code>print()</code> output appears when <code>pytest</code> runs (captured for passing tests, visible on failure or with <code>-s</code>). The cause — importing a file with top-level executable code runs that code — is worth naming.</p>
+</div>
+<aside class="notes">This is exactly why Week 7's "no module-level side effects in business-logic files" rule matters once tests import them.</aside>
+</section>
+
+<!-- 32. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:55–1:07</span>
+<h1>AI Reflection and Push</h1>
+<aside class="notes">
+Teaching goal: complete <code>debug_log.md</code>'s AI Literacy Reflection honestly, and run the now-familiar ritual — closing the loop on today's central "Debug First, Then Ask" discipline.
+Say to the class: "Every section of <code>debug_log.md</code> needs to be finished now, honestly — including the AI reflection. If you didn't use AI today, say so, and say why you didn't need to. If you did, at any point, name the exact prompt and be specific about what you changed yourself afterward, in your own words."
+</aside>
+</section>
+
+<!-- 33. PART 5 the reflection template -->
+<section class="s-idea">
+<h3>Finish every section of <code>debug_log.md</code> — honestly</h3>
+<div class="concept danger">
+<div class="concept-lbl">Graded on process</div>
+<p>"Can I explain every fixed line? Yes / No" is the section's real test. A student who can't honestly answer "Yes" has a gap worth closing <em>now</em>, in class — not during the Week 9 midterm.</p>
+<p>If you used AI, "what AI explained" and "what I changed myself" must be <em>genuinely different content</em>, not the same thing restated twice.</p>
+</div>
+<pre class="tmpl" data-readonly>## After Fixing Both Bugs
+Final output: Total: $5150.00 across 3 records / True
+Did pytest pass? Yes
+
+## AI Literacy Reflection
+Did I use AI? Yes / No
+If yes -- exact prompt I used: ___
+What AI explained: ___
+What I changed myself: ___
+Can I explain every fixed line? Yes / No
+
+## What I learned
+[2-3 sentences -- specific to today's two bugs, not "debugging is important"]</pre>
+<aside class="notes">
+"What I learned" — encourage something specific to today's two bugs: the distinction between the two error categories (missing/mistyped data vs. mismatched types), or the value of the print-debugging / duck-explaining steps specifically. An AI Use Statement that's technically true but vague ("used AI a little") doesn't meet the bar — specific and honest, like every prior module's disclosure requirement.
+</aside>
+</section>
+
+<!-- 34. PART 5 the ritual (readonly) -->
+<section class="s-code">
+<h3>The full ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest
+git add . &amp;&amp; git commit -m 'lab 8: debugging ai literacy' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> run in your terminal, not the browser. Format, lint, test, then commit and push. A quick visual scan of <code>debug_log.md</code> first — no blank sections, no placeholder underscores.</p>
+<aside class="notes">Same ritual as every prior module. The commit message must include "lab 8".</aside>
+</section>
+
+<!-- 35. PART 5 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If a classmate read only your <code>debug_log.md</code>, with no access to your code, could they understand what went wrong and how you found it?</p>
+<button data-opt="A">That is exactly the bar the log is meant to meet — it's a genuine record of your reasoning, not paperwork to complete</button>
+<button data-opt="B">No — a debug log is just for the grader; it's not meant to stand on its own</button>
+<button data-opt="C">Only if they also have the traceback screenshots attached</button>
+<p class="why" hidden>This is the actual bar the log is meant to meet — a good closing question, since it reframes the log from "paperwork to complete" to "a genuine record of your reasoning," which is the entire point of the exercise.</p>
+</div>
+<aside class="notes">Guide's Part 5 Check for understanding. The guide poses this as a reflective closer with no single parenthetical answer; the keyed option and <code>.why</code> are the guide's own framing (guide Part 5, "This is the actual bar the log is meant to meet…"), disclosed here as an R-conv fallback.</aside>
+</section>
+
+<!-- 36. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:07–1:11</span>
+<h1>Write a Third Bug Yourself</h1>
+<aside class="notes">Frame as a genuinely valuable inversion of today's exercise: "Introduce a third, deliberate bug into a copy of the script yourself — then document and fix it using the exact same workflow: traceback, duck, log, fix. Writing a bug on purpose and then debugging it is a surprisingly different skill from debugging one you stumbled into by accident — it requires understanding precisely what makes code fail, not just recognizing failure after the fact."</aside>
+</section>
+
+<!-- 37. STRETCH the example bug (runnable, broken) -->
+<section class="s-code">
+<h3>A verified example third bug — an invalid format spec</h3>
+<div class="run" data-lang="python">def format_summary(total, count):
+    return f'Total: ${total:.2f%} across {count} records'   # invalid: .2f%
+
+print(format_summary(5150.0, 3))</div>
+<p class="expect">A third error <em>category</em> — neither a <code>KeyError</code> nor a <code>TypeError</code>. Press <strong>Run</strong> and read it the same way: bottom line first.</p>
+<aside class="notes">Changing <code>{total:.2f}</code> to <code>{total:.2f%}</code> — a good third category, reinforcing that the diagnostic process (read, duck, document, fix) generalizes across error types the student hasn't been walked through today.</aside>
+</section>
+
+<!-- 38. STRETCH output -->
+<section class="s-out">
+<h3>Verified traceback</h3>
+<pre>Traceback (most recent call last):
+  ...
+ValueError: Invalid format specifier '.2f%' for object of type 'float'</pre>
+<p class="expect">Load-bearing: <code>ValueError: Invalid format specifier '.2f%' for object of type 'float'</code>. Same workflow — read it, duck it, log it, fix it (remove the stray <code>%</code>).</p>
+<aside class="notes">A <code>ValueError</code> here, from an invalid format spec inside the f-string — a distinct category from the day's <code>KeyError</code> and <code>TypeError</code>.</aside>
+</section>
+
+<!-- 39. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including "lab 8"</li>
+<li><code>week8_buggy.py</code> runs cleanly, both bugs fixed</li>
+<li><code>tests/test_week8.py</code> contains all five tests, all passing</li>
+<li><code>debug_log.md</code> fully completed, including an honest AI Literacy Reflection</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Completion credit — the bar is process + documentation, not a graded rubric on the code.</aside>
+</section>
+
+<!-- 40. WRAP — next week -->
+<section class="s-wrap">
+<h3>Next week — the midterm</h3>
+<p>Everything from Weeks 1 through 8 — the shell, venvs, Git, variables, conditionals, loops, dicts, functions, and today's debugging discipline — is fair game. If anything from today, or from the last three weeks, still feels shaky, this is the week to ask, not the night before.</p>
+<aside class="notes">Week 9 is the midterm. Fold in brief review of anything from Weeks 5–7 that feels shaky, without letting it encroach on Parts 1–3's debugging work.</aside>
+</section>
+
+<!-- 41. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 8</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w08.md (Week 8 facilitation guide).</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Slides Component Harness</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. Title -->
+<section class="s-title">
+<p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Framework Gate</p>
+<h1>Interactive Component Test Harness</h1>
+<div class="t-bar">
+<span class="t-item"><strong>Python</strong> run + stdin</span>
+<span class="t-item"><strong>Shell</strong> zsh emulator</span>
+<span class="t-item"><strong>Quiz</strong> single + multi</span>
+<span class="t-item"><strong>Predict</strong> reveal</span>
+<span class="t-item"><strong>Draw</strong> overlay</span>
+</div>
+<p style="font-size:.38em;color:var(--mu);margin-top:.7em;">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">Harness deck — one slide per interactive component. Walk the Task 6 verification checklist here before authoring any real lab deck.</aside>
+</section>
+
+<!-- 2. Python .run — cold start prints 4 -->
+<section class="s-code">
+<h3>Python runner &mdash; cold start</h3>
+<p>Press <strong>Run &#9654;</strong>: expect <code>starting Python…</code>, then <code>4</code>. A second Run is instant.</p>
+<div class="run" data-lang="python">print(2 + 2)</div>
+<aside class="notes">First Run triggers the Pyodide cold boot (~10 MB from the jsDelivr CDN). The button shows "starting Python…" then prints 4. Re-running is instant because the runtime is cached.</aside>
+</section>
+
+<!-- 3. Python .run — input() program, stdin box should appear -->
+<section class="s-code">
+<h3>Python runner &mdash; stdin</h3>
+<p>A <em>stdin</em> box appears because the code calls <code>input()</code>. Type two lines, Run &mdash; prompts and values echo. Empty the box and Run &mdash; expect an <code>EOFError</code> traceback.</p>
+<div class="run" data-lang="python">first = input("First name: ")
+last = input("Last name: ")
+print("Hello,", first, last)</div>
+<aside class="notes">Two input() calls. Feeding "Ada" then "Lovelace" echoes "First name: Ada", "Last name: Lovelace", then "Hello, Ada Lovelace". Clearing the stdin box makes input() raise EOFError — a real Python traceback, not a JS error.</aside>
+</section>
+
+<!-- 4. Shell .run — seeded filesystem -->
+<section class="s-code">
+<h3>zsh terminal &mdash; seeded filesystem</h3>
+<p><code>pwd</code> &rarr; <code>/Users/student/demo</code> &nbsp;·&nbsp; <code>ls</code> &rarr; <code>a.txt</code> &nbsp;·&nbsp; <code>cat a.txt</code> &rarr; <code>hello</code> &nbsp;·&nbsp; unknown command &rarr; <code>zsh: command not found</code> &nbsp;·&nbsp; <strong>Run all</strong> replays the seeded lines.</p>
+<div class="run" data-lang="shell" data-fs='{"~/demo":{"a.txt":"hello\n"}}'>cd demo
+pwd
+ls
+cat a.txt</div>
+<aside class="notes">The data-fs attribute seeds ~/demo/a.txt. The shell starts at $HOME (/Users/student), so the first seeded line is "cd demo". Type an unknown command such as "frobnicate" to see the not-found error. Run all replays cd demo / pwd / ls / cat a.txt.</aside>
+</section>
+
+<!-- 5. Quiz — single + multi -->
+<section class="s-quiz">
+<h3>Quiz &mdash; single &amp; multi answer</h3>
+<div class="quiz" data-answer="B">
+<p>Which command prints the current working directory?</p>
+<button data-opt="A">cd</button>
+<button data-opt="B">pwd</button>
+<button data-opt="C">ls</button>
+<p class="why"><code>pwd</code> = &ldquo;print working directory.&rdquo; A wrong pick turns red and shows this note; the right pick turns green.</p>
+</div>
+<div class="quiz" data-answer="A,C">
+<p>Which of these change or report your location? (pick all)</p>
+<button data-opt="A">cd</button>
+<button data-opt="B">rm</button>
+<button data-opt="C">pwd</button>
+<button data-opt="D">chmod</button>
+<p class="why">Only <code>cd</code> and <code>pwd</code> deal with location. The multi-answer quiz needs the exact set via <strong>Check</strong>.</p>
+</div>
+<aside class="notes">Single-answer grades on first click. Multi-answer toggles .chosen on each button and grades when Check is pressed; it is correct only for exactly {A, C}.</aside>
+</section>
+
+<!-- 6. Predict — hidden <pre> -->
+<section class="s-out">
+<h3>Predict &mdash; hidden answer</h3>
+<div class="predict">
+<p>What does this print?</p>
+<pre><code class="language-python">nums = [1, 2, 3]
+print(sum(nums))</code></pre>
+<pre class="answer" hidden><code class="language-python">6</code></pre>
+</div>
+<aside class="notes">Reveal answer ▾ unhides the &lt;pre class="answer"&gt; and runs highlight.js over it so it is syntax-coloured.</aside>
+</section>
+
+<!-- 7. Warn card -->
+<section class="s-warn">
+<h3>Warning card sample</h3>
+<div class="warn-card">
+<div class="warn-lbl">Warning</div>
+<p><code>rm</code> is permanent &mdash; there is no Trash and no undo. Always run <code>pwd</code> and <code>ls</code> before you delete.</p>
+</div>
+<aside class="notes">Sample s-warn slide: amber outline on the section, warn-card with warn-lbl inside.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

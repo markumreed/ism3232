@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 16 — GenAI Feature &amp; Final Demo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 16 &nbsp;·&nbsp; Module 16 &nbsp;·&nbsp; Unit 4 · Capstone Build</p>
+<h1>GenAI Feature &amp; Final Demo</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "the six required controls, and the last lab"</span>
+<span class="t-item"><strong>0:04–0:16</strong> Part 1 — Build <code>ai_feature.py</code></span>
+<span class="t-item"><strong>0:16–0:36</strong> Part 2 — Wire the feature into <code>app.py</code> (incl. the button-state bug)</span>
+<span class="t-item"><strong>0:36–0:50</strong> Part 3 — Mocked test and README</span>
+<span class="t-item"><strong>0:50–0:58</strong> Part 4 — Final checklist and push</span>
+<span class="t-item"><strong>0:58–1:15</strong> Part 5 — Final demo presentations</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes — the final session of the semester. Format: live code-along (Parts 1–3), independent polish (Part 4), live presentations (Part 5). Prerequisites: Week 15 — a complete, tested, five-tab Streamlit app wired to <code>database.py</code>. Submission: 2 screenshots, GitHub URL, Canvas, completion credit, live presentation.
+Say to the class (Intro, verbatim): "Last lab of the semester. Today you add one final feature to your capstone — a controlled AI integration — and then present the whole thing. Six controls are required for the AI feature, and I want to name all six right now, because missing even one fails this specific rubric item: a disclosure label, a human review step before anything AI-generated gets saved, no personal information sent to the API, a test using a mocked API call, documented limitations in your README, and — the one that matters most — you personally being able to explain every single line, without notes."
+<strong>NOTE ON THIS DECK — ISM3232 GenAI WEEK, predominantly READ-ONLY.</strong> LLM API calls cannot run in Pyodide / the browser deck: there is no API key, CSP blocks the network, and the <code>anthropic</code> package is not bundled. So every <code>import anthropic</code> / <code>client.messages.create(...)</code> snippet, the full <code>ai_feature.py</code>, the <code>app.py</code> wiring, and the mocked <code>pytest</code> file are plain <code>&lt;pre&gt;&lt;code class="language-python"&gt;</code> blocks <em>outside</em> any <code>.run</code> div, each with an on-slide note "needs an API key and network access — run this on your own machine". Their <code>s-out</code> slides are an <em>illustrative model response</em> or a prose description, labelled "illustrative model response — the real call runs on your machine; wording varies per run". The manual-test and final-push shell blocks are <code>data-readonly</code> (no <code>anthropic</code>, <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser) with an illustrative / guide-quoted terminal <code>s-out</code>. <strong>Genuinely runnable</strong> <code>data-lang="python"</code> blocks (verified against local <code>python3</code> 3.12.2 == Pyodide 0.26.4) are the pure-Python helpers with no network: Part 1's prompt-string builder, Part 2's plain-Python simulation of Streamlit's re-run model (nested-button vs <code>session_state</code>), Part 3's assertion mirror of the mocked test on a canned response shape, and the Stretch's Appendix-B demonstration that a user-supplied name in the free-text description reaches the prompt. ISM3232 style: SINGLE quotes in Python throughout, matching the guide. <strong>Security:</strong> no real API key anywhere — the deck uses <code>anthropic.Anthropic()</code>'s default <code>ANTHROPIC_API_KEY</code> environment-variable lookup exactly as the guide does; the prompt-injection discussion (Appendix B) presents the limitation and the defense, not an exploit. Quizzes: Parts 1 and 2 key the guide's own "Check for understanding" parenthetical verbatim; the Intro, Part 3, Part 4, Part 5 and Stretch quizzes have no CFU in the guide, so per R-conv-3 their <code>data-answer</code> is a verbatim same-segment line stating a position the guide clearly takes (disclosed on each). Keyed letters: A, B, C, A, B, C, A, B.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along (Parts 1–3), independent polish (Part 4), live presentations (Part 5)</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 15: complete, tested, five-tab Streamlit app wired to <code>database.py</code></span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (<code>ai_feature.py</code>) – Part 4 (final checklist + push), Part 5 (demo presentations)</span></div>
+<div><span class="k">Submission</span><span class="v">2 screenshots, GitHub URL, Canvas, completion credit, live presentation</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. This is the final lab of the semester. The lab page's own warning, worth reading to the class exactly as written: <strong>all six GenAI controls are required, and missing any one fails the feature on the capstone rubric.</strong>
+Before class: read this guide's Part 2 in full and rehearse the corrected <code>st.session_state</code> version yourself — the lab page's provided "Looks good — save with this summary" button, nested inside the "Generate AI Summary" button's <code>if</code> block, does not fire correctly on the next interaction (verified with Streamlit's <code>AppTest</code>). Decide whether to demonstrate the bug live (recommended, matching this course's debugging culture) or present the corrected version directly. Obtain a real <code>ANTHROPIC_API_KEY</code> before class only if you intend to demonstrate Part 1's live call; students' mocked tests do not need one. Plan Part 5's presentation logistics — roughly 5 minutes per student as a starting point, adjusted to your section size. This is the last class of the semester — budget a genuine moment for it at the end.
+Materials: terminal (zsh), VS Code, Python 3.10+, the existing <code>module07_final_project</code> venv with a complete, working <code>app.py</code> and <code>database.py</code> from Weeks 14–15.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Call the Anthropic API from Python, with a prompt containing only the minimum data needed — no personally identifiable information.</li>
+<li>Explain and implement all six required GenAI controls: disclosure, human review, no-PII, mocked testing, documented limitations, and full code comprehension.</li>
+<li>Understand why <code>st.session_state</code> is necessary to persist data (like an AI-generated summary) across Streamlit's automatic script re-runs, and why a naive nested-button pattern fails.</li>
+<li>Write a <code>pytest</code> test that mocks an external API call, verifying application logic without making a real network request or requiring a real API key.</li>
+<li>Present a complete, working capstone project, covering business problem, developer workflow, OOP design, SQL, the live interface, the GenAI feature, testing, and an honest AI-use disclosure.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is Part 1's <code>ai_feature.py</code>; objective 2 is the six-controls frame that runs through the whole session; objective 3 is Part 2's <code>st.session_state</code> fix for the nested-button bug; objective 4 is Part 3's mocked <code>pytest</code>; objective 5 is Part 5's eight-topic capstone presentation.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "the six required controls, and the last lab"</td><td>4</td></tr>
+<tr><td>0:04–0:16</td><td>Part 1 — Build <code>ai_feature.py</code></td><td>12</td></tr>
+<tr><td>0:16–0:36</td><td>Part 2 — Wire the feature into <code>app.py</code> (incl. the button-state bug)</td><td>20</td></tr>
+<tr><td>0:36–0:50</td><td>Part 3 — Mocked test and README</td><td>14</td></tr>
+<tr><td>0:50–0:58</td><td>Part 4 — Final checklist and push</td><td>8</td></tr>
+<tr><td>0:58–1:15</td><td>Part 5 — Final demo presentations</td><td>17</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 2 receives extra time specifically to properly diagnose and fix the button-nesting issue rather than rushing past it. Part 5's actual duration depends heavily on section size — treat the 17 minutes as a starting allocation for a small section or a first wave of presenters, and plan realistically for a larger class (the guide's Part 5 notes cover scaling beyond one class period: office hours, an asynchronous video submission, or a second class meeting).</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>The six required controls, and the last lab</h1>
+<aside class="notes">
+Teaching goal: name all six required GenAI controls up front and keep them visible, because missing even one fails this specific capstone rubric item.
+Say to the class (verbatim): "Last lab of the semester. Today you add one final feature to your capstone — a controlled AI integration — and then present the whole thing. Six controls are required for the AI feature, and I want to name all six right now, because missing even one fails this specific rubric item: a disclosure label, a human review step before anything AI-generated gets saved, no personal information sent to the API, a test using a mocked API call, documented limitations in your README, and — the one that matters most — you personally being able to explain every single line, without notes."
+Do: write the six controls on the board, numbered, and leave them visible through Part 3.
+No "Check for understanding" in the guide's Intro. The paired quiz keys the verbatim same-segment line "missing even one fails this specific rubric item" (R-conv-3, disclosed on the quiz slide).
+</aside>
+</section>
+
+<!-- 6. INTRO idea -->
+<section class="s-idea">
+<h3>The idea — six controls, all required</h3>
+<div class="concept">
+<div class="concept-lbl">The six GenAI controls</div>
+<p><strong>1 · Disclosure</strong> — AI-generated content is labelled clearly in the UI.</p>
+<p><strong>2 · Human review</strong> — a person approves any AI output before it is saved (the most safety-critical one — see Part 2).</p>
+<p><strong>3 · No PII</strong> — no names, IDs, or dollar amounts sent to the API.</p>
+<p><strong>4 · Mocked testing</strong> — a <code>pytest</code> test that mocks the API, no real key or network needed.</p>
+<p><strong>5 · Documented limitations</strong> — an honest Limitations section in the README.</p>
+<p><strong>6 · Full code comprehension</strong> — you can explain every single line, without notes.</p>
+</div>
+<p class="expect">Missing even one of the six fails the feature on the capstone rubric. Controls #1, #2 and #3 are built in Parts 1–2; #4 and #5 in Part 3; #6 is demonstrated live in Part 5.</p>
+<aside class="notes">The six-name list is the guide's Learning Objective 2, verbatim: "disclosure, human review, no-PII, mocked testing, documented limitations, and full code comprehension." Keep it on the board through Part 3. Control #3 is engineered structurally in Part 1 (the function signature simply never accepts a name/ID/amount). Control #2 is the one the lab page's provided code gets subtly wrong — Part 2 confronts it directly.</aside>
+</section>
+
+<!-- 7. INTRO quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Your AI feature nails five of the six controls perfectly but skips the mocked test. On the capstone rubric, how does the feature score?</p>
+<button data-opt="A">It fails the feature — missing even one of the six required controls fails this specific rubric item</button>
+<button data-opt="B">It scores 5/6 — partial credit is given per control implemented</button>
+<button data-opt="C">It passes — the mocked test is a "nice to have," not one of the strictly required six</button>
+<p class="why" hidden>Per R-conv-3 (the guide's Intro has no "Check for understanding"): the guide's Intro "Say to the class" is verbatim "missing even one fails this specific rubric item," and the Session Snapshot states "all six GenAI controls are required, and missing any one fails the feature on the capstone rubric." Mocked testing is Control #4 — one of the six, not optional (B and C are wrong).</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: the Intro has no CFU parenthetical. Keyed answer (A) is a verbatim same-segment line — "missing even one fails this specific rubric item" (guide, Intro "Say to the class"), reinforced by the Session Snapshot's "all six GenAI controls are required, and missing any one fails the feature on the capstone rubric." Keyed A.</aside>
+</section>
+
+<!-- 8. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:16</span>
+<h1>Build <code>ai_feature.py</code></h1>
+<aside class="notes">
+Teaching goal: a single, narrowly-scoped function calling the Anthropic API — deliberately minimal in what data it sends, setting up Control #3 (no PII) before any UI wiring happens.
+Say to the class (verbatim): "One function, one job: take a category and a description, return a one-sentence summary. Notice what's <em>not</em> a parameter here — no name, no ID, no dollar amount. That's deliberate, and it's Control #3 built in from the very first line, not bolted on afterward."
+Line-by-line (guide): <code>def summarise_request(category: str, description: str) -&gt; str:</code> — exactly two parameters, both business-relevant, neither identifying a person; the signature <em>is</em> Control #3 — a <code>requester</code> name parameter was never added, so there's no code path by which it could leak into a prompt. The docstring's second line documents an intentional privacy constraint (documentation, not enforcement). <code>client = anthropic.Anthropic()</code> — reads the key from the <code>ANTHROPIC_API_KEY</code> environment variable automatically; nothing is hardcoded, which matters because a hardcoded key would be committed to a public repo. <code>prompt = f'...'</code> — an f-string building the instruction; <code>\n</code> is a literal newline separating instruction from description. <code>client.messages.create(model=..., max_tokens=150, messages=[...])</code> — the API call; <code>max_tokens=150</code> caps response length for a one-sentence summary; <code>messages=[{'role': 'user', 'content': prompt}]</code> is the standard message shape, a common convention across current LLM APIs. <code>return message.content[0].text</code> — extracts just the generated text from a larger response object (metadata, usage stats are discarded).
+Common student mistakes: adding <code>requester</code> (or any identifying field) as a third parameter "just in case" — redirect firmly to Control #3; the fix for a missing detail is expanding <code>description</code>, not adding structured PII. Hardcoding an API key in the file instead of the environment variable — flag immediately and seriously.
+Check for understanding: "If this function's docstring didn't include that second line about what's sent, would the function's actual behavior be any different?" (No — the docstring is documentation, not enforcement; the actual privacy guarantee comes from the function signature genuinely not accepting a name/ID/amount parameter at all. A good check that students distinguish <em>documenting</em> a property from <em>guaranteeing</em> it structurally.)
+</aside>
+</section>
+
+<!-- 9. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea — one function, two parameters, Control #3 built in</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>The signature <em>is</em> the privacy control.</strong> <code>summarise_request(category: str, description: str) -&gt; str</code> — two parameters, both business-relevant, neither identifying a person. A <code>requester</code> name parameter was never added, so there is no code path by which a name could accidentally reach a prompt later. Preventing a class of mistake <em>structurally</em> beats remembering to avoid it every time.</p>
+<p><strong>The docstring documents; the signature enforces.</strong> The line "Only category and description are sent -- no names, IDs, or amounts." records an intentional design constraint for a future reader — but it is documentation, not a guarantee. The guarantee comes from the parameters themselves.</p>
+</div>
+<aside class="notes">Guide, Part 1 line-by-line: "this function signature <em>is</em> Control #3 ... Preventing a class of mistake structurally, rather than remembering to avoid it every time, is worth naming as a genuinely good engineering habit." And: "a docstring stating a security/privacy property is itself part of good practice — it documents an intentional design constraint for any future reader (including the student themselves, months from now)." The distinction between the two is exactly this segment's check-for-understanding.</aside>
+</section>
+
+<!-- 10. PART 1 ai_feature.py (static API code) -->
+<section class="s-code">
+<h3><code>ai_feature.py</code> — the whole file</h3>
+<pre><code class="language-python">import anthropic
+
+def summarise_request(category: str, description: str) -&gt; str:
+    """
+    Return a one-sentence AI summary of a business request.
+    Only category and description are sent -- no names, IDs, or amounts.
+    """
+    client = anthropic.Anthropic()
+    prompt = f'Summarise this {category} business request in one clear sentence:\n{description}'
+    message = client.messages.create(
+        model='claude-haiku-4-5-20251001',
+        max_tokens=150,
+        messages=[{'role': 'user', 'content': prompt}]
+    )
+    return message.content[0].text</code></pre>
+<p class="expect"><strong>Needs an API key and network access — run this on your own machine.</strong> It cannot execute in this deck (no key, the network is blocked, the <code>anthropic</code> package is not bundled). Setup first: <code>cd ~/ism3232/module07_final_project</code>, <code>source .venv/bin/activate</code>, <code>pip install anthropic</code>, <code>pip freeze &gt; requirements.txt</code>, <code>touch ai_feature.py &amp;&amp; code ai_feature.py</code>.</p>
+<aside class="notes">
+Line-by-line (guide): <code>import anthropic</code> — the SDK, installed with <code>pip install anthropic</code>. <code>def summarise_request(category: str, description: str) -&gt; str:</code> — two parameters, neither identifying a person; the signature is Control #3. The docstring's second line documents the privacy constraint. <code>client = anthropic.Anthropic()</code> — reads <code>ANTHROPIC_API_KEY</code> from the environment automatically; no key is hardcoded, for the same reason <code>.gitignore</code> excludes <code>.venv/</code> — a committed key is a real, common security mistake. <code>prompt = f'Summarise this {category} business request in one clear sentence:\n{description}'</code> — an f-string; <code>\n</code> is a literal newline. <code>client.messages.create(model='claude-haiku-4-5-20251001', max_tokens=150, messages=[{'role': 'user', 'content': prompt}])</code> — the API call; <code>max_tokens=150</code> caps how long the response can be, appropriate for a one-sentence summary; the list-of-role/content-dictionaries shape is a common LLM-API convention. <code>return message.content[0].text</code> — returns only the generated text; the response also carries metadata and usage stats this line intentionally drops.
+API code — cannot run in the deck. Students run the manual test (next slide) locally with a real key, or rely on Part 3's mocked test, which needs neither key nor network.
+</aside>
+</section>
+
+<!-- 11. PART 1 illustrative model response -->
+<section class="s-out">
+<h3>What comes back — illustrative model response</h3>
+<pre>&gt;&gt;&gt; result = summarise_request('Travel', 'Flight and hotel for Q4 sales conference')
+&gt;&gt;&gt; print(result)
+A Travel request covering flight and hotel bookings for
+attendance at the Q4 sales conference.</pre>
+<p class="expect"><strong>Illustrative model response — the real call runs on your machine; wording varies per run.</strong> <code>message.content[0].text</code> is a single string, roughly one sentence, because <code>max_tokens=150</code> caps the length. The exact phrasing changes every call; only category and description were sent — no name, ID, or amount.</p>
+<aside class="notes">The guide does not print a literal completion (a real API call is required to produce one). The sentence above is a plausible Claude Haiku completion for the guide's own example inputs <code>('Travel', 'Flight and hotel for Q4 sales conference')</code>, shown so the class can see the <em>shape</em> of what <code>summarise_request</code> returns: one short string, no PII, wording non-deterministic. Labelled illustrative on the slide.</aside>
+</section>
+
+<!-- 12. PART 1 manual test (readonly shell) -->
+<section class="s-code">
+<h3>Test it manually — your own machine, real key</h3>
+<div class="run" data-lang="shell" data-readonly>python3
+&gt;&gt;&gt; from ai_feature import summarise_request
+&gt;&gt;&gt; result = summarise_request('Travel', 'Flight and hotel for Q4 sales conference')
+&gt;&gt;&gt; print(result)
+&gt;&gt;&gt; exit()</div>
+<p class="expect">Read-only — <strong>requires a real <code>ANTHROPIC_API_KEY</code> to succeed; it cannot run here.</strong> Set the key as an environment variable before starting <code>python3</code>. Without it, <code>anthropic.Anthropic()</code> raises an authentication error the moment a real call is attempted — see the next slide.</p>
+<aside class="notes">
+Guide, Part 1 "Test it manually, exactly as the lab page specifies (requires a real <code>ANTHROPIC_API_KEY</code> to succeed)". Route students without a working key to your course's shared key-provisioning process; do not let this block Part 1 for long, since Part 3's tests do not need a real key at all.
+Read-only: no <code>anthropic</code> package, no network, no key in the browser emulator.
+</aside>
+</section>
+
+<!-- 13. PART 1 no-key failure -->
+<section class="s-out">
+<h3>If your key isn't set — the SDK's actual error</h3>
+<pre>TypeError: Could not resolve authentication method. Expected one of api_key,
+auth_token, or credentials to be set. Or for one of the `X-Api-Key` or
+`Authorization` headers to be explicitly omitted</pre>
+<p class="expect">Quoted verbatim from the guide's "verified exact failure." This is <strong>not a bug in your code</strong> — it is the SDK correctly refusing to make a request with no credentials. Part 3's mocked tests do not need a key at all.</p>
+<aside class="notes">Guide, Part 1: "If a student's <code>ANTHROPIC_API_KEY</code> isn't set, verified exact failure:" then this <code>TypeError</code>, and "Say explicitly if this comes up: 'This isn't a bug in your code — it's the SDK correctly refusing to make a request with no credentials. Route students without a working key to whatever your course's shared key-provisioning process is; don't let this block Part 1 for long, since Part 3's tests don't need a real key at all.'"</aside>
+</section>
+
+<!-- 14. PART 1 RUNNABLE — prompt builder -->
+<section class="s-code">
+<h3>Run it — building the prompt string is plain Python</h3>
+<div class="run" data-lang="python">def build_prompt(category, description):
+    return f'Summarise this {category} business request in one clear sentence:\n{description}'
+
+prompt = build_prompt('Travel', 'Flight and hotel for Q4 sales conference')
+print(prompt)
+print('---')
+import inspect
+print('parameters:', list(inspect.signature(build_prompt).parameters))</div>
+<p class="expect">Genuinely runnable — this is <code>ai_feature.py</code>'s exact f-string, lifted out of the API call. No network, no key. It shows the literal <code>\n</code> newline in the built prompt, and confirms Control #3 structurally: the only parameters are <code>category</code> and <code>description</code>. Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>build_prompt</code> is the same f-string body as <code>ai_feature.py</code>'s <code>prompt = f'...'</code> line. Calling it with the guide's own example inputs prints the two-line prompt (instruction, then the description on its own line — that is the <code>\n</code>). <code>inspect.signature(...).parameters</code> lists exactly <code>['category', 'description']</code> — there is no <code>requester</code>, no <code>amount</code>, no <code>id</code>: Control #3 is enforced by the signature, which is the segment's check-for-understanding point (the docstring only <em>documents</em> that; the signature <em>guarantees</em> it).
+</aside>
+</section>
+
+<!-- 15. PART 1 RUNNABLE out — prompt builder -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Summarise this Travel business request in one clear sentence:
+Flight and hotel for Q4 sales conference
+---
+parameters: ['category', 'description']</pre>
+<p class="expect">The prompt is two lines because of the literal <code>\n</code>. The parameter list has no name, ID, or amount field — Control #3 is structural, not a promise.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4): the block prints exactly these four lines and exits 0. The f-string is character-for-character the one in <code>ai_feature.py</code> (guide, Part 1). The <code>parameters</code> line is the concrete evidence for this segment's CFU answer: "the actual privacy guarantee comes from the function signature genuinely not accepting a name/ID/amount parameter at all."</aside>
+</section>
+
+<!-- 16. PART 1 quiz A (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>summarise_request</code>'s docstring didn't include the line "Only category and description are sent -- no names, IDs, or amounts," would the function's actual behavior be any different?</p>
+<button data-opt="A">Yes — the docstring is read at call time and its text is appended to the system prompt, so removing it changes what the model sees</button>
+<button data-opt="B">No — the docstring is documentation, not enforcement; the privacy guarantee comes from the signature genuinely not accepting a name/ID/amount parameter at all</button>
+<button data-opt="C">Yes — without the docstring line, Python allows extra keyword arguments through, so a <code>requester=</code> could then be passed</button>
+<p class="why" hidden>The guide's Part 1 "Check for understanding": "No — the docstring is documentation, not enforcement; the actual privacy guarantee comes from the function signature genuinely not accepting a name/ID/amount parameter at all. A good check that students distinguish <em>documenting</em> a property from <em>guaranteeing</em> it structurally." A docstring is never executed as instruction text (A is wrong); a fixed <code>def</code> signature rejects unknown keyword arguments regardless of the docstring (C is wrong).</p>
+</div>
+<aside class="notes">Guide's Part 1 "Check for understanding", verbatim answer: "No — the docstring is documentation, not enforcement; the actual privacy guarantee comes from the function signature genuinely not accepting a name/ID/amount parameter at all." Keyed B. The runnable block two slides back is the evidence: <code>parameters: ['category', 'description']</code>.</aside>
+</section>
+
+<!-- 17. PART 1 quiz B (model / cost) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">The call passes <code>model='claude-haiku-4-5-20251001'</code> and <code>max_tokens=150</code>. Why <code>max_tokens=150</code>?</p>
+<button data-opt="A">It is the minimum the API accepts; any lower value is rejected with a <code>ValueError</code></button>
+<button data-opt="B">It guarantees the response is exactly 150 characters, so the UI layout never overflows</button>
+<button data-opt="C">It caps how long the response can be — appropriate for a one-sentence summary, and it keeps the (billed) output short</button>
+<p class="why" hidden>Per R-conv-3 (Part 1's only CFU is the docstring one): the guide's Part 1 line-by-line states verbatim "<code>max_tokens=150</code> caps how long the response can be, appropriate for a one-sentence summary." <code>max_tokens</code> is an upper bound on <em>tokens</em>, not characters, and is not a required minimum (A and B are wrong). A small cap on a lightweight model (Haiku) is the cost-conscious choice for a one-sentence job.</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: the keyed answer (C) is the guide's verbatim Part 1 line-by-line note — "<code>max_tokens=150</code> caps how long the response can be, appropriate for a one-sentence summary." Pairing a small token cap with Claude Haiku (the lightweight, low-cost model) is the sensible choice for a short summarisation task. Keyed C.</aside>
+</section>
+
+<!-- 18. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Adding <code>requester</code> (or any other identifying field) as a third parameter "just in case it's useful for the summary" — redirect firmly back to Control #3. If a genuinely business-relevant detail seems missing, the fix is expanding <code>description</code> itself, written by the user — not adding new structured PII fields.</p>
+<p>Hardcoding an API key directly in the file instead of relying on the environment variable — flag this immediately and seriously if you see it, given the real security consequences of a committed key.</p>
+</div>
+<aside class="notes">Both are the guide's Part 1 "Common student mistakes to watch for", verbatim. The hardcoded-key case is the serious one — a key committed to a public GitHub repo is a genuine real-world incident, the same reason <code>.gitignore</code> excludes <code>.venv/</code> and (this week) <code>.env</code>.</aside>
+</section>
+
+<!-- 19. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:16–0:36</span>
+<h1>Wire the Feature into <code>app.py</code></h1>
+<aside class="notes">
+Teaching goal: add the AI feature to Tab 1 with disclosure and human review — and confront, directly, a genuine bug in the lab's own provided wiring code.
+Say to the class (verbatim): "I'm going to type this exactly as given first, and then we're going to test the review step specifically, carefully — because I want you to see something for yourselves before I explain it."
+The bug (guide): Streamlit re-runs the entire script top to bottom on every interaction. Clicking "Generate AI Summary" makes <code>st.button('Generate AI Summary')</code> return <code>True</code> for that one run, and inside that run the whole block executes — including the line that <em>defines</em> the "Looks good" button for the first time. But clicking "Looks good" triggers a new, separate re-run from the top. On that run, <code>st.button('Generate AI Summary')</code> is <code>False</code>, so the entire <code>if</code> block — including the line that defines the "Looks good" button — never runs. The click on a button that, from Streamlit's perspective, no longer exists on this run has nowhere to register. That is why it vanishes and nothing saves. This is the human review gate — Control #2, the most safety-critical of the six.
+The fix (guide): store the summary in <code>st.session_state</code> (a dict-like object that persists across re-runs for the life of the browser session), and move the <code>if 'ai_summary' in st.session_state:</code> check <em>outside</em> the Generate button's <code>if</code> block, at the same indentation level. After a successful save, <code>del st.session_state['ai_summary']</code> so the summary and review button do not keep reappearing on future re-runs.
+Common student mistakes: copying the lab's nested-button version verbatim and testing only "does the summary generate" (which works fine) without testing the <em>save</em> step — the first half of the flow works perfectly, so the bug goes unnoticed. After applying the fix, forgetting the <code>del st.session_state['ai_summary']</code> cleanup line — a confusing UX where an old summary keeps showing up.
+Check for understanding: "Why didn't the <em>first</em> required control — the disclosure label — have this same bug, but the <em>second</em> one — human review — did?" (Because the disclosure label (<code>st.info(...)</code>) is defined and shown within the <em>same</em> re-run as clicking 'Generate' — it doesn't need to persist to a <em>different</em>, later re-run the way the review button's click-and-save action does. Anything that needs to survive across two separate user interactions needs <code>st.session_state</code>; anything that only needs to exist within one single interaction's re-run doesn't.)
+</aside>
+</section>
+
+<!-- 20. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea — the whole script re-runs, so a nested button vanishes</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Streamlit re-runs your entire script, top to bottom, on every interaction</strong> (Week 15's core fact). Clicking "Generate AI Summary" makes <code>st.button('Generate AI Summary')</code> return <code>True</code> for that one run — and only during that run is the "Looks good" button ever <em>defined</em>.</p>
+</div>
+<div class="concept danger">
+<div class="concept-lbl">The bug in the lab's own provided code</div>
+<p>Clicking "Looks good" triggers a <strong>new, separate re-run from the top</strong>. Now <code>st.button('Generate AI Summary')</code> is <code>False</code>, so its entire <code>if</code> block — <em>including the line that defines the "Looks good" button</em> — never runs. The click has nowhere to register: the button vanishes and nothing saves. This is Control #2, the human review gate — the most safety-critical of the six.</p>
+</div>
+<aside class="notes">Guide, Part 2: "This is exactly the kind of bug this course has trained you to catch — read the code, understand the model it's built on (Streamlit's re-run behavior), and don't just trust that code labeled 'required' automatically does what its comment says." Treat it like Week 5's floating-point / chained-comparison bugs: a genuine teaching opportunity, not something to quietly route around.</aside>
+</section>
+
+<!-- 21. PART 2 broken wiring (static) -->
+<section class="s-code">
+<h3>As the lab page gives it — added to Tab 1, after the form fields</h3>
+<pre><code class="language-python"># AI summary feature
+description = st.text_area('Request description (for AI summary)')
+
+if description:
+    if st.button('Generate AI Summary'):
+        with st.spinner('Generating summary...'):
+            from ai_feature import summarise_request
+            ai_summary = summarise_request(category, description)
+        # Required: disclosure label
+        st.info(f'AI-generated summary (review before saving):\n\n{ai_summary}')
+        st.caption('AI output generated by Claude. Review before saving.')
+
+        # Required: human review gate
+        if st.button('Looks good -- save with this summary'):
+            add_record(requester, category, amount, notes=ai_summary)
+            st.success('Record saved with AI summary.')</code></pre>
+<p class="expect"><strong>Needs an API key and network access — run this on your own machine.</strong> Type it exactly as given first. The disclosure label (Control #1) and the review button (Control #2) both <em>look</em> present — the next two slides test the save step specifically.</p>
+<aside class="notes">
+Line-by-line (guide): <code>description = st.text_area(...)</code> — the free-text box for the summary input. <code>if description:</code> — only offer the feature once there is something to summarise. <code>if st.button('Generate AI Summary'):</code> — <code>True</code> only on the run that click triggers. <code>with st.spinner(...)</code> — a progress indicator during the API call. <code>ai_summary = summarise_request(category, description)</code> — the Part 1 function, called with the tab's category and the new description. <code>st.info(...)</code> — Control #1, the disclosure label, shown in this same run. <code>st.caption(...)</code> — the "generated by Claude. Review before saving." disclosure caption. <code>if st.button('Looks good -- save with this summary'):</code> — <strong>defined here, nested inside the Generate block</strong> — this is the bug. <code>add_record(requester, category, amount, notes=ai_summary)</code> — would save the reviewed summary. API code — cannot run in the deck.
+</aside>
+</section>
+
+<!-- 22. PART 2 predict -->
+<section class="s-out">
+<h3>Predict</h3>
+<div class="predict">
+<p>You enter a description, click "Generate AI Summary" (the summary and the disclosure caption appear correctly), then click <strong>"Looks good — save with this summary."</strong> Predict exactly what you'll see.</p>
+<pre class="answer" hidden>Nothing saves. No success message appears. The "Looks good"
+button itself DISAPPEARS from the screen entirely. No error,
+no crash -- the click simply has no effect, and the review
+button vanishes.
+
+Why: clicking "Looks good" starts a NEW re-run from the top.
+On that run st.button('Generate AI Summary') is False, so its
+whole if-block -- including the line that defines the "Looks
+good" button -- never runs. The click lands on a button that,
+from Streamlit's view, no longer exists on this run.</pre>
+</div>
+<aside class="notes">Guide, Part 2: "Say explicitly, before revealing what happens: 'Watch closely. Predict what you'll see.' Verified, actual behavior: nothing saves. No success message appears. The 'Looks good' button itself disappears from the screen entirely. No error, no crash — the click simply has no effect, and the review button vanishes." Then the full re-run explanation, which is the hidden answer's second paragraph, compressed.</aside>
+</section>
+
+<!-- 23. PART 2 broken behavior description -->
+<section class="s-out">
+<h3>What the app does — verified behavior of the nested version</h3>
+<pre>Click "Generate AI Summary":
+  - blue st.info box with the AI summary        <- Control #1 OK
+  - caption "AI output generated by Claude..."  <- Control #1 OK
+  - a "Looks good -- save with this summary" button appears
+
+Click "Looks good -- save with this summary":
+  - NO st.success message
+  - the record is NOT saved (add_record never runs)
+  - the "Looks good" button DISAPPEARS
+  - no error, no traceback
+
+=> Control #2 (human review gate) does not actually work
+   as written in the lab's own provided code.</pre>
+<p class="expect">A description of verified behavior, not a screenshot — Streamlit can't render in this deck. Confirmed with Streamlit's <code>AppTest</code> simulation (guide, Appendix A).</p>
+<aside class="notes">Guide, Part 2, and Appendix A "Verified end-to-end" (via <code>streamlit.testing.v1.AppTest</code> with a mocked Anthropic client): "the lab's originally-provided nested-button version, tested identically, produces no success message and the review button silently disappears on the save click." Say seriously: this is the last checkpoint before AI-generated text is permanently saved, and as written it does not work.</aside>
+</section>
+
+<!-- 24. PART 2 fixed wiring (static) -->
+<section class="s-code">
+<h3>The fix — persist the summary in <code>st.session_state</code></h3>
+<pre><code class="language-python"># AI summary feature
+description = st.text_area('Request description (for AI summary)')
+
+if description:
+    if st.button('Generate AI Summary'):
+        with st.spinner('Generating summary...'):
+            from ai_feature import summarise_request
+            st.session_state['ai_summary'] = summarise_request(category, description)
+
+    if 'ai_summary' in st.session_state:
+        # Required: disclosure label
+        st.info(f"AI-generated summary (review before saving):\n\n{st.session_state['ai_summary']}")
+        st.caption('AI output generated by Claude. Review before saving.')
+
+        # Required: human review gate
+        if st.button('Looks good -- save with this summary'):
+            add_record(requester, category, amount, notes=st.session_state['ai_summary'])
+            st.success('Record saved with AI summary.')
+            del st.session_state['ai_summary']</code></pre>
+<p class="expect"><strong>Needs an API key and network access — run this on your own machine.</strong> This is the guide's Appendix A corrected wiring. Re-testing the full flow: the success message now appears correctly after clicking "Looks good."</p>
+<aside class="notes">
+Line-by-line (guide): <code>st.session_state</code> — a dict-like object that <strong>persists across re-runs</strong> for as long as the browser session stays open, unlike ordinary script variables (recreated fresh every run). <code>st.session_state['ai_summary'] = summarise_request(...)</code> — the summary is stored in session state, so it survives the <em>next</em> re-run even though that run is triggered by a different button. <code>if 'ai_summary' in st.session_state:</code> — <strong>this check now lives outside the Generate button's <code>if</code> block, at the same indentation level</strong>. This is the structural fix: showing the summary and review button no longer depends on <em>this</em> run being the one where "Generate" was clicked — only on whether a summary is currently stored. <code>del st.session_state['ai_summary']</code> — after a successful save, the stored summary is explicitly removed, or the summary and review button would keep reappearing on every future re-run, even for a new, unrelated submission. The one double-quoted f-string is the guide's own — its key <code>st.session_state['ai_summary']</code> already contains single quotes.
+</aside>
+</section>
+
+<!-- 25. PART 2 fixed behavior description -->
+<section class="s-out">
+<h3>What the app does — verified behavior of the corrected version</h3>
+<pre>Click "Generate AI Summary":
+  - summary stored in st.session_state['ai_summary']
+  - blue st.info box + disclosure caption           <- Control #1
+  - "Looks good -- save with this summary" button
+
+Click "Looks good -- save with this summary":
+  - the if-block runs (its condition is now
+    "is a summary stored?", which is still True)
+  - add_record(...) runs
+  - green st.success: "Record saved with AI summary." <- Control #2 WORKS
+  - del st.session_state['ai_summary'] clears it so
+    it does not reappear on the next re-run</pre>
+<p class="expect">A description of verified behavior, not a screenshot. Guide, Appendix A: the corrected version "produces the success message <code>'Record saved with AI summary.'</code>" when "Looks good" is clicked.</p>
+<aside class="notes">Guide, Part 2: "Re-run the corrected version and re-test the full flow. Verified: the success message now appears correctly after clicking 'Looks good.'" Appendix A: "generating a summary and clicking 'Looks good — save with this summary' against the corrected version produces the success message <code>'Record saved with AI summary.'</code>".</aside>
+</section>
+
+<!-- 26. PART 2 RUNNABLE — re-run simulation -->
+<section class="s-code">
+<h3>Run it — simulating Streamlit's re-run model in plain Python</h3>
+<div class="run" data-lang="python"># Simulating Streamlit's re-run model with plain Python.
+# st.button(name) returns True ONLY on the run triggered by clicking `name`.
+def st_button(name, clicked):
+    return name == clicked
+
+# --- BROKEN: 'Looks good' button nested inside the 'Generate' button's if-block ---
+def broken_run(clicked, state, saved):
+    if st_button('Generate AI Summary', clicked):
+        summary = 'AI summary text'
+        state['review_button_drawn'] = True
+        if st_button('Looks good', clicked):
+            saved.append(summary)
+
+broken_state, broken_saved = {}, []
+broken_run('Generate AI Summary', broken_state, broken_saved)   # 1st click: generate
+broken_run('Looks good', broken_state, broken_saved)            # 2nd click: try to save
+print('BROKEN  saved:', broken_saved)
+
+# --- FIXED: summary kept in st.session_state, review gate un-nested ---
+def fixed_run(clicked, session_state, saved):
+    if st_button('Generate AI Summary', clicked):
+        session_state['ai_summary'] = 'AI summary text'
+    if 'ai_summary' in session_state:
+        if st_button('Looks good', clicked):
+            saved.append(session_state['ai_summary'])
+            del session_state['ai_summary']
+
+session_state, fixed_saved = {}, []
+fixed_run('Generate AI Summary', session_state, fixed_saved)
+fixed_run('Looks good', session_state, fixed_saved)
+print('FIXED   saved:', fixed_saved)</div>
+<p class="expect">Genuinely runnable — no Streamlit, no network. <code>st_button</code> models Streamlit's fact that a button is <code>True</code> only on the run its own click triggered. Two calls = two re-runs (Generate, then Looks good). Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>st_button(name, clicked)</code> is <code>True</code> only when this run's click was on <code>name</code> — exactly Streamlit's behavior. <code>broken_run</code> nests the "Looks good" check inside the "Generate" check: on run 2 the click is "Looks good", so <code>st_button('Generate AI Summary', 'Looks good')</code> is <code>False</code>, the whole block is skipped, the review button is never drawn, nothing is appended — <code>broken_saved</code> stays <code>[]</code>. <code>fixed_run</code> stores the summary in <code>session_state</code> (which persists between the two calls) and checks <code>'ai_summary' in session_state</code> <em>outside</em> the Generate block, so on run 2 that check is still <code>True</code>, the "Looks good" click registers, the summary is appended, and <code>del</code> clears it. This is the guide's Part 2 lesson, reduced to runnable Python. It is a simulation of the control flow, not the real Streamlit runtime — disclosed here and on the slide.
+</aside>
+</section>
+
+<!-- 27. PART 2 RUNNABLE out — simulation -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>BROKEN  saved: []
+FIXED   saved: ['AI summary text']</pre>
+<p class="expect">The nested version saves nothing on the second re-run (the review button is never re-drawn); the <code>session_state</code> version saves correctly. This mirrors the guide's verified result — no success message for the nested version, <code>'Record saved with AI summary.'</code> for the corrected one.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4): the block prints exactly these two lines and exits 0. It reproduces, in plain Python, the guide's Appendix A finding: the nested-button version "produces no success message and the review button silently disappears on the save click," while the corrected <code>st.session_state</code> version "produces the success message <code>'Record saved with AI summary.'</code>".</aside>
+</section>
+
+<!-- 28. PART 2 quiz A (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Why did the <em>disclosure label</em> (Control #1) work fine in the nested version, while the <em>human review gate</em> (Control #2) did not?</p>
+<button data-opt="A">The disclosure label is defined and shown within the <em>same</em> re-run as clicking "Generate"; the review button's click-and-save must survive to a <em>different</em>, later re-run, and only that needs <code>st.session_state</code></button>
+<button data-opt="B"><code>st.info</code> is a Streamlit "static" widget that is exempt from the re-run model, whereas <code>st.button</code> is re-evaluated every run</button>
+<button data-opt="C">The disclosure label was placed outside the <code>if description:</code> block, so it always renders; the review button was inside it</button>
+<p class="why" hidden>The guide's Part 2 "Check for understanding": "Because the disclosure label (<code>st.info(...)</code>) is defined and shown within the <em>same</em> re-run as clicking 'Generate' — it doesn't need to persist to a <em>different</em>, later re-run the way the review button's click-and-save action does. Anything that needs to survive across two separate user interactions needs <code>st.session_state</code>; anything that only needs to exist within one single interaction's re-run doesn't." No widget is exempt from the re-run model (B); both elements are inside <code>if description:</code> (C).</p>
+</div>
+<aside class="notes">Guide's Part 2 "Check for understanding", verbatim answer: "Because the disclosure label (<code>st.info(...)</code>) is defined and shown within the <em>same</em> re-run as clicking 'Generate' — it doesn't need to persist to a <em>different</em>, later re-run the way the review button's click-and-save action does. Anything that needs to survive across two separate user interactions needs <code>st.session_state</code>; anything that only needs to exist within one single interaction's re-run doesn't." Keyed A.</aside>
+</section>
+
+<!-- 29. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Copying the lab's provided nested-button version verbatim and testing only "does the summary generate" (which works fine) without specifically testing the <em>save</em> step — this is why the bug can go unnoticed: the first half of the flow works perfectly, and only clicking all the way through to save reveals the problem.</p>
+<p>After applying the <code>session_state</code> fix, forgetting the <code>del st.session_state['ai_summary']</code> cleanup line — not a functional bug exactly, but a confusing UX where an old summary keeps showing up unexpectedly on later re-runs, even for a new submission.</p>
+</div>
+<aside class="notes">Both are the guide's Part 2 "Common student mistakes to watch for", verbatim. Part 4's checklist facilitation note repeats the first one: re-test the <em>save</em> step, not just the <em>generate</em> step, for every student.</aside>
+</section>
+
+<!-- 30. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:36–0:50</span>
+<h1>Mocked Test and README</h1>
+<aside class="notes">
+Teaching goal: a <code>pytest</code> test that verifies the AI feature's logic <strong>without</strong> making a real API call — Control #4 — using <code>unittest.mock</code>.
+Say to the class (verbatim): "Testing code that calls a real, paid, network-dependent API is a genuine problem — you don't want your test suite to cost money or fail because of network issues, and you don't want tests that only pass if everyone has a valid API key. The fix: mock the API call entirely, replacing it with a stand-in that returns a fake, predictable response."
+Line-by-line (guide): <code>from unittest.mock import MagicMock, patch</code> — standard library, no install. <code>with patch('ai_feature.anthropic.Anthropic') as mock_client:</code> — <code>patch(...)</code> temporarily replaces the real <code>anthropic.Anthropic</code> class <em>as it is referenced inside <code>ai_feature.py</code></em> (the string <code>'ai_feature.anthropic.Anthropic'</code> — patching where a thing is <em>used</em>, not just where it is defined, is a genuine, important detail of how <code>patch</code> works correctly) with a fake stand-in, for the <code>with</code> block only. <code>mock_message = MagicMock()</code> then <code>mock_message.content = [MagicMock(text='AI summary.')]</code> — a fake response object mimicking the real API's shape closely enough for <code>message.content[0].text</code> to work. <code>mock_client.return_value.messages.create.return_value = mock_message</code> — so calling <code>client.messages.create(...)</code> returns <code>mock_message</code>, no network. <code>result = summarise_request(...)</code> — called completely normally; the function does not know it is talking to a fake client. <code>test_prompt_does_not_include_name</code> — its name promises more than its assertions check: it only confirms literal names are absent from the <em>returned mock text</em>, not from the <em>prompt sent</em>; a stronger version would inspect <code>call_args</code> (Appendix B).
+Common student mistakes: testing only the happy path and not empty / very long descriptions. A vague AI Use Statement rather than a specific one — hold the same standard as every prior week.
+No "Check for understanding" parenthetical in the guide's Part 3. The paired quiz keys the verbatim same-segment line "patching where a thing is <em>used</em>, not just where it's originally defined, is a genuine, important detail of how <code>patch</code> works correctly" (R-conv-3, disclosed).
+</aside>
+</section>
+
+<!-- 31. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea — replace the API with a predictable stand-in</h3>
+<div class="concept">
+<div class="concept-lbl">Concept — Control #4</div>
+<p><strong>Mock the API call entirely.</strong> A real, paid, network-dependent API is a bad thing for a test suite to touch: tests would cost money, fail on flaky wifi, and only pass for people with a valid key. Instead, <code>patch</code> swaps in a fake client that returns a fixed, predictable response.</p>
+<p><strong>Patch where the name is <em>used</em>, not where it's defined.</strong> <code>patch('ai_feature.anthropic.Anthropic')</code> — the string points at <code>anthropic.Anthropic</code> <em>as referenced inside <code>ai_feature.py</code></em>. This is a genuine, important detail of how <code>patch</code> works correctly.</p>
+</div>
+<aside class="notes">Guide, Part 3 teaching goal and line-by-line. The mocked test is Control #4; it needs neither a real key nor the network, which is exactly why students who could not run Part 1's manual test are not blocked. The runnable block two slides on mirrors the two tests' assertions on a canned response shape, with no <code>anthropic</code> import at all.</aside>
+</section>
+
+<!-- 32. PART 3 test file (static) -->
+<section class="s-code">
+<h3><code>tests/test_ai_feature.py</code></h3>
+<pre><code class="language-python">from unittest.mock import MagicMock, patch
+from ai_feature import summarise_request
+
+def test_summarise_returns_string():
+    with patch('ai_feature.anthropic.Anthropic') as mock_client:
+        mock_message = MagicMock()
+        mock_message.content = [MagicMock(text='AI summary.')]
+        mock_client.return_value.messages.create.return_value = mock_message
+        result = summarise_request('Travel', 'Flight to Atlanta for client meeting')
+        assert isinstance(result, str)
+        assert len(result) &gt; 0
+
+def test_prompt_does_not_include_name():
+    with patch('ai_feature.anthropic.Anthropic') as mock_client:
+        mock_message = MagicMock()
+        mock_message.content = [MagicMock(text='Short summary.')]
+        mock_client.return_value.messages.create.return_value = mock_message
+        result = summarise_request('Software', 'License renewal for design tools')
+        assert 'Taylor' not in str(result)
+        assert 'Jordan' not in str(result)</code></pre>
+<p class="expect"><strong>Run this with <code>pytest -v</code> on your own machine.</strong> It imports <code>ai_feature</code> (which imports <code>anthropic</code>, not bundled here), so it cannot execute in this deck — but it needs <strong>no real API key and makes no network call</strong>. The next slide runs a plain-Python mirror of its assertions.</p>
+<aside class="notes">
+Line-by-line (guide): <code>from unittest.mock import MagicMock, patch</code> — stdlib. <code>with patch('ai_feature.anthropic.Anthropic') as mock_client:</code> — replaces the class where <code>ai_feature.py</code> references it, for the <code>with</code> block only; patching where a thing is <em>used</em>, not where it is defined, is the key detail. <code>mock_message.content = [MagicMock(text='AI summary.')]</code> — a fake response shaped just enough for <code>message.content[0].text</code>. <code>mock_client.return_value.messages.create.return_value = mock_message</code> — <code>client.messages.create(...)</code> now returns the fake, no network. <code>result = summarise_request(...)</code> — called normally; it cannot tell the client is fake. <code>test_prompt_does_not_include_name</code> only checks the <em>returned</em> mock text, which is a fixed string — it does not really test the prompt sent; a stronger version inspects <code>call_args</code> (Appendix B / Stretch).
+</aside>
+</section>
+
+<!-- 33. PART 3 pytest out -->
+<section class="s-out">
+<h3>Verified output — <code>pytest -v</code></h3>
+<pre>tests/test_ai_feature.py::test_summarise_returns_string PASSED
+tests/test_ai_feature.py::test_prompt_does_not_include_name PASSED
+2 passed</pre>
+<p class="expect">Quoted verbatim from the guide's "Verified output — both pass, with no real API key required, no network call made."</p>
+<aside class="notes">Guide, Part 3: "Run it: <code>pytest -v</code>. Verified output — both pass, with no real API key required, no network call made:" then exactly these three lines. This is Control #4 satisfied.</aside>
+</section>
+
+<!-- 34. PART 3 RUNNABLE — assertion mirror -->
+<section class="s-code">
+<h3>Run it — the same assertions, on a canned response shape</h3>
+<div class="run" data-lang="python"># Mirror of tests/test_ai_feature.py's ASSERTIONS -- no pytest, no network, no key.
+# The real API response exposes .content[0].text; the mocked test fakes exactly
+# that shape. Here we build the same fake shape and run ai_feature.py's own
+# extraction line against it.
+class FakeBlock:
+    def __init__(self, text):
+        self.text = text
+
+class FakeMessage:
+    def __init__(self, text):
+        self.content = [FakeBlock(text)]
+
+def extract_summary(message):
+    return message.content[0].text          # the real ai_feature.py line
+
+# test_summarise_returns_string
+result = extract_summary(FakeMessage('AI summary.'))
+assert isinstance(result, str)
+assert len(result) &gt; 0
+
+# test_prompt_does_not_include_name
+result2 = extract_summary(FakeMessage('Short summary.'))
+assert 'Taylor' not in str(result2)
+assert 'Jordan' not in str(result2)
+
+print('both assertion sets pass')
+print('extracted:', repr(result), '/', repr(result2))</div>
+<p class="expect">Genuinely runnable — no <code>anthropic</code>, no <code>pytest</code>, no network. <code>FakeMessage</code> is the same <code>.content[0].text</code> shape the guide's <code>MagicMock(text=...)</code> builds; <code>extract_summary</code> is <code>ai_feature.py</code>'s own return line. If any assertion failed the block would raise <code>AssertionError</code>. Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>FakeBlock</code> / <code>FakeMessage</code> reproduce the real API response's relevant shape — a <code>.content</code> list whose first element has a <code>.text</code> attribute — which is all <code>ai_feature.py</code>'s <code>message.content[0].text</code> reads, and all the guide's <code>mock_message.content = [MagicMock(text='AI summary.')]</code> builds. <code>extract_summary</code> is that exact line. The four <code>assert</code>s are the guide's two tests' bodies: <code>isinstance(result, str)</code>, <code>len(result) &gt; 0</code>, and the two "name not in the returned text" checks. All pass, so the block prints the two confirmation lines and exits 0.
+</aside>
+</section>
+
+<!-- 35. PART 3 RUNNABLE out — assertion mirror -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>both assertion sets pass
+extracted: 'AI summary.' / 'Short summary.'</pre>
+<p class="expect">Both assertion sets pass — the same result the guide's <code>pytest -v</code> reports (<code>2 passed</code>), reached here with plain Python and no mock library.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4): the block prints exactly these two lines and exits 0. It is the assertion mirror the deck rules call for when the guide ships a <code>pytest</code> test that mocks the API: the static test file above plus this runnable <code>assert</code> mirror on a hardcoded canned response.</aside>
+</section>
+
+<!-- 36. PART 3 README (static) -->
+<section class="s-code">
+<h3>The required README AI Feature section</h3>
+<pre><code class="language-markdown">## AI Feature
+
+**What it does:** [one sentence]
+
+**Controls implemented:**
+- AI-generated content is labelled clearly in the UI
+- Human review required before any AI output is saved
+- No personally identifiable information is sent to the API
+
+**Limitations:**
+- [limitation 1]
+- [limitation 2]
+
+**AI use during development:**
+[Describe honestly what AI tools you used and how]</code></pre>
+<p class="expect">Control #5 (documented limitations) + the AI use statement. Push for <strong>genuine, specific</strong> limitations: "the summary quality depends entirely on how detailed the user's description is," "there's no retry logic if the API call fails or times out," "the summary is not validated for factual accuracy against the original description." A generic "AI can make mistakes" is not specific enough for this deliverable.</p>
+<aside class="notes">Guide, Part 3: the README template verbatim, and the facilitation note on "Limitations" — the three good examples above are the guide's, and "A generic 'AI can make mistakes' is technically true but not a specific enough limitation for this deliverable." Hold the AI Use Statement to the same specificity standard as every prior week's disclosure.</aside>
+</section>
+
+<!-- 37. PART 3 quiz B -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">The test patches <code>'ai_feature.anthropic.Anthropic'</code> — not <code>'anthropic.Anthropic'</code>. Why that path?</p>
+<button data-opt="A">Either string works identically; <code>'ai_feature.anthropic.Anthropic'</code> is just more explicit and readable</button>
+<button data-opt="B"><code>patch</code> must replace the name <em>where it is used</em> — as referenced inside <code>ai_feature.py</code> — not only where it is originally defined; that is how <code>patch</code> works correctly</button>
+<button data-opt="C">Patching <code>'anthropic.Anthropic'</code> would delete the class permanently for the rest of the test session</button>
+<p class="why" hidden>Per R-conv-3 (the guide gives no Part 3 CFU): the guide's Part 3 line-by-line states verbatim that <code>patch('ai_feature.anthropic.Anthropic')</code> replaces the class "<em>as it's referenced inside <code>ai_feature.py</code></em> (note the string <code>'ai_feature.anthropic.Anthropic'</code> — patching where a thing is <em>used</em>, not just where it's originally defined, is a genuine, important detail of how <code>patch</code> works correctly)." The two strings are not interchangeable (A); <code>patch</code> restores the original at the end of the <code>with</code> block (C).</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: Part 3 has no "Check for understanding" parenthetical. Keyed answer (B) is a verbatim same-segment line — "patching where a thing is <em>used</em>, not just where it's originally defined, is a genuine, important detail of how <code>patch</code> works correctly." Keyed B.</aside>
+</section>
+
+<!-- 38. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Testing only the "happy path" (a normal-looking description) and not considering what <code>summarise_request</code> does with an empty or very long description — not required by today's two tests, but worth a passing mention as the kind of edge case a more thorough test suite would cover.</p>
+<p>An AI Use Statement that's vague rather than specific, echoing every prior week's disclosure requirement — hold the same standard as always.</p>
+</div>
+<aside class="notes">Both are the guide's Part 3 "Common student mistakes to watch for", verbatim. The <code>test_prompt_does_not_include_name</code> weakness — it only checks the canned return value, not the prompt actually sent — is the guide's own honest limitation of that test, and Appendix B (the Stretch) is where a stronger version is built.</aside>
+</section>
+
+<!-- 39. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:50–0:58</span>
+<h1>Final Checklist and Push</h1>
+<aside class="notes">
+Teaching goal: a comprehensive, explicit final review before the capstone is considered complete — the last checkpoint before Part 5's live presentation.
+Say to the class (verbatim): "Every item on this list, checked honestly, before you present. I will ask about anything that looks unchecked."
+Work through the full 11-item checklist together, on screen. Two items to double-check personally as you circulate: <strong>"GenAI feature shows disclosure label and human review button"</strong> — given Part 2's bug, specifically re-test the <em>save</em> step, not just the <em>generate</em> step, for every student; a summary that generates correctly but never actually saves would incorrectly read as "working" on a quick glance. <strong>".gitignore includes .venv/, __pycache__/, *.db, .env"</strong> — <code>.env</code> is new to this checklist; a <code>.env</code> file is a common convention for storing an API key locally, and excluding it preemptively is good practice even though today's <code>ai_feature.py</code> uses <code>os.environ</code> instead.
+Then the final push: <code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v</code> then <code>git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push</code>.
+Common student mistakes: treating the checklist as a formality and checking boxes without genuinely re-verifying — this is the actual, final review before public presentation.
+No "Check for understanding" parenthetical in the guide's Part 4. The paired quiz keys the verbatim same-segment line about specifically re-testing the <em>save</em> step, not just the <em>generate</em> step (R-conv-3, disclosed).
+</aside>
+</section>
+
+<!-- 40. PART 4 checklist idea -->
+<section class="s-idea">
+<h3>The final checklist — every item, checked honestly</h3>
+<div class="tmpl">[ ] All 5 database functions pass tests.
+[ ] All 5 Streamlit features work end-to-end.
+[ ] GenAI feature shows disclosure label and human review button.
+[ ] README complete with AI feature section and limitations.
+[ ] requirements.txt current from pip freeze.
+[ ] .gitignore includes .venv/, __pycache__/, *.db, .env.
+[ ] ruff format and ruff check pass.
+[ ] All tests pass.
+[ ] Repository accessible to instructor.
+[ ] Screenshots/ folder has at least 2 images of the running app.
+[ ] You can explain every file and every function without reading notes.</div>
+<p class="expect">Verbatim from the guide's Part 4. "I will ask about anything that looks unchecked." The last item is Control #6.</p>
+<aside class="notes">Guide, Part 4: "Work through the full checklist together, on screen." All eleven items reproduced verbatim. Do not treat it as a formality — this is the actual final review before public presentation.</aside>
+</section>
+
+<!-- 41. PART 4 two-items idea -->
+<section class="s-idea">
+<h3>Two items worth double-checking personally</h3>
+<div class="concept danger">
+<div class="concept-lbl">Re-test the SAVE step</div>
+<p>"GenAI feature shows disclosure label and human review button" — given Part 2's bug, specifically re-test the <em>save</em> step, not just the <em>generate</em> step. A summary that generates correctly but never actually saves would incorrectly read as "working" on a quick glance.</p>
+</div>
+<div class="concept">
+<div class="concept-lbl"><code>.env</code> is new to the .gitignore list</div>
+<p>".gitignore includes .venv/, __pycache__/, *.db, .env" — <code>.env</code> is new to this specific checklist. A <code>.env</code> file is a common convention for storing an API key locally; excluding it preemptively is good practice even though today's <code>ai_feature.py</code> uses <code>os.environ</code> / the <code>ANTHROPIC_API_KEY</code> environment variable instead.</p>
+</div>
+<aside class="notes">Guide, Part 4 "Facilitation notes on the two items most worth double-checking personally", verbatim. The save-step re-test connects straight back to Part 2's nested-button bug — the same failure the guide flags again in Part 5's Topic 6 notes.</aside>
+</section>
+
+<!-- 42. PART 4 push (readonly shell) -->
+<section class="s-code">
+<h3>The final push — your own terminal</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push</div>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser). The commit message must include "lab 16" (Canvas requirement). Run <code>git status</code> before <code>add</code> to confirm <code>*.db</code> and <code>.env</code> are not tracked. Illustrative terminal output on the next slide.</p>
+<aside class="notes">
+Line-by-line (guide, Part 4): <code>ruff format .</code> then <code>ruff check .</code> then <code>pytest -v</code> — this week <code>pytest</code> <em>is</em> in the ritual, because Part 3 added the mocked test suite. <code>git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push</code> — the message includes "lab 16". <code>git status</code> before <code>add</code> catches an accidentally-tracked <code>*.db</code> or <code>.env</code>.
+Read-only: no <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser emulator.
+</aside>
+</section>
+
+<!-- 43. PART 4 illustrative terminal -->
+<section class="s-out">
+<h3>Illustrative terminal — not run here</h3>
+<pre>$ ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+3 files left unchanged
+All checks passed!
+tests/test_ai_feature.py::test_summarise_returns_string PASSED
+tests/test_ai_feature.py::test_prompt_does_not_include_name PASSED
+2 passed
+
+$ git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push
+[main a1f3c9d] lab 16: GenAI feature + final submission
+ 4 files changed, 47 insertions(+)
+To https://github.com/YOURUSERNAME/module07_final_project.git
+   5c1a9f2..a1f3c9d  main -&gt; main</pre>
+<p class="expect">Illustrative — the guide gives no literal transcript; this is standard <code>ruff</code> / <code>pytest</code> / <code>git</code> output shown for realism. The <code>2 passed</code> line is the guide's verified Part 3 result; the short hash and file counts will differ for you.</p>
+<aside class="notes">Disclosed: the guide states the commands and the "lab 16" message requirement, not a literal terminal transcript. The <code>pytest</code> lines are the guide's verified Part 3 output; the <code>ruff</code> and <code>git</code> lines are those tools' standard output. Not run here — no <code>git</code> / <code>ruff</code> / <code>pytest</code> in the browser.</aside>
+</section>
+
+<!-- 44. PART 4 quiz C -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Circulating during Part 4, which single check best confirms the "GenAI feature shows disclosure label and human review button" box is honestly ticked?</p>
+<button data-opt="A">Confirm the <code>st.info</code> disclosure box and the caption both render after clicking "Generate AI Summary"</button>
+<button data-opt="B">Confirm <code>ai_feature.py</code> imports <code>anthropic</code> and defines <code>summarise_request</code> with exactly two parameters</button>
+<button data-opt="C">Specifically re-test the <em>save</em> step — click "Looks good — save with this summary" and confirm the record actually persists — not just the <em>generate</em> step</button>
+<p class="why" hidden>Per R-conv-3 (the guide gives no Part 4 CFU): the guide's Part 4 facilitation note states verbatim "given Part 2's bug, specifically re-test the <em>save</em> step, not just the <em>generate</em> step, for every student — a summary that generates correctly but never actually saves would incorrectly read as 'working' on a quick glance." A and B check things that pass even in the buggy nested-button version.</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: Part 4 has no "Check for understanding" parenthetical. Keyed answer (C) is a verbatim same-segment line — "specifically re-test the <em>save</em> step, not just the <em>generate</em> step ... a summary that generates correctly but never actually saves would incorrectly read as 'working' on a quick glance." Keyed C.</aside>
+</section>
+
+<!-- 45. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Treating the checklist as a formality and checking boxes without genuinely re-verifying — this is worth being direct about: this is the actual, final review before public presentation, worth taking seriously rather than rushing through in the last few minutes.</p>
+</div>
+<aside class="notes">The guide's Part 4 "Common student mistakes to watch for", verbatim. Pair it with the two-items slide: the save-step re-test and the <code>.env</code> entry are the two most likely to be checked without being true.</aside>
+</section>
+
+<!-- 46. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:15 · scale to section size</span>
+<h1>Final Demo Presentations</h1>
+<aside class="notes">
+Teaching goal: each student presents their complete capstone, covering all eight required topics — the culmination of the entire semester.
+Say to the class (verbatim): "Eight topics, in order. I will stop you if you skip one — not to be strict for its own sake, but because each of these eight represents a real, distinct part of what you built this semester, and a strong presentation shows all eight, not just the flashiest parts."
+Facilitation: set and announce a firm per-student time limit before starting — 5 minutes per student is a reasonable floor; do the arithmetic against your section size before class and decide honestly whether one 75-minute period accommodates everyone or whether presentations split across today and a follow-up (office hours, an asynchronous video submission, or a second class meeting). Topic 2 (developer workflow) is a genuine "does this actually work" check, live. Topic 6 (GenAI feature) is the most likely place to see whether Part 2's bug was genuinely caught and fixed — watch for whether the student demonstrates the <em>full</em> flow (generate, then save) or only the generate step. Topic 8 (AI use statement) deserves the same seriousness as every prior week's disclosure.
+Common issues: a student skipping straight to the "impressive" parts and rushing or omitting the less visual ones — enforce "I will stop you if you skip one" consistently across all students. Presentations that read code silently rather than explaining it aloud — redirect: "tell me what this class does, in your own words, as if I've never seen it."
+No "Check for understanding" parenthetical in the guide's Part 5. The paired quiz keys the verbatim same-segment line "Eight topics, in order. I will stop you if you skip one" (R-conv-3, disclosed).
+</aside>
+</section>
+
+<!-- 47. PART 5 eight topics idea -->
+<section class="s-idea">
+<h3>The eight required topics — in order</h3>
+<table class="grid">
+<thead><tr><th>#</th><th>Topic</th><th>What to show</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Business problem + user workflow</td><td>Describe the problem and walk through a user session</td></tr>
+<tr><td>2</td><td>Developer workflow</td><td>Terminal: venv active, <code>ruff</code> passing, <code>pytest</code> green, <code>git log</code></td></tr>
+<tr><td>3</td><td>OOP design</td><td>Walk through <code>models.py</code>: classes, attributes, methods</td></tr>
+<tr><td>4</td><td>SQL schema + key queries</td><td><code>CREATE TABLE</code>, a filter query, the <code>GROUP BY</code> report</td></tr>
+<tr><td>5</td><td>Streamlit demo</td><td>Live: submit, view, filter, update status, show report</td></tr>
+<tr><td>6</td><td>GenAI feature</td><td>Show disclosure label, review step, explain the prompt</td></tr>
+<tr><td>7</td><td>Testing + limitations</td><td><code>pytest</code> passing, name one limitation</td></tr>
+<tr><td>8</td><td>AI use statement</td><td>Honest account of what AI tools were used and how</td></tr>
+</tbody>
+</table>
+<p class="expect">"I will stop you if you skip one." Topic 6 is where Part 2's bug shows: watch for the <em>full</em> flow — generate <em>then save</em> — not just generate.</p>
+<aside class="notes">The table is the guide's Part 5 "eight required topics explicitly, exactly as the lab page specifies", verbatim. Topic 2 is a live "does this actually work" check; Topic 6 reveals whether the nested-button bug was fixed; Topic 8 holds the semester's AI-disclosure standard. Enforce the "stop if you skip one" rule consistently, not selectively.</aside>
+</section>
+
+<!-- 48. PART 5 quiz A -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">A student's demo jumps straight to the live Streamlit app and the AI feature, skipping the OOP-design and developer-workflow walkthroughs. What does the guide say to do?</p>
+<button data-opt="A">Stop them — "eight topics, in order. I will stop you if you skip one," because each of the eight is a real, distinct part of what they built, and this is enforced consistently across all students</button>
+<button data-opt="B">Let it go if the visible parts are strong — the OOP and workflow topics are optional depth, not required coverage</button>
+<button data-opt="C">Deduct points silently and move on, so the presentation isn't interrupted</button>
+<p class="why" hidden>Per R-conv-3 (the guide gives no Part 5 CFU): the guide's Part 5 "Say to the class" is verbatim "Eight topics, in order. I will stop you if you skip one — not to be strict for its own sake, but because each of these eight represents a real, distinct part of what you built this semester, and a strong presentation shows all eight, not just the flashiest parts," and the common-issues note says to "enforce it consistently across all students, not selectively." All eight topics are required (B is wrong); the guide's approach is to stop and redirect, not silent deduction (C).</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: Part 5 has no "Check for understanding" parenthetical. Keyed answer (A) is a verbatim same-segment line — "Eight topics, in order. I will stop you if you skip one" — with the common-issues note "enforce it consistently across all students, not selectively." Keyed A.</aside>
+</section>
+
+<!-- 49. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common issues to watch for during presentations</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A student skipping straight to the "impressive" parts (the live Streamlit demo, the AI feature) and rushing or omitting the less visually interesting ones (the OOP design walkthrough, the developer workflow) — this is exactly what the "I will stop you if you skip one" framing exists to prevent; enforce it consistently across all students, not selectively.</p>
+<p>Presentations that read code silently rather than explaining it aloud — a good, gentle redirect: "tell me what this class does, in your own words, as if I've never seen it" — directly testing the final checklist item ("can explain every file and function without reading notes").</p>
+</div>
+<aside class="notes">Both are the guide's Part 5 "Common issues to watch for during presentations", verbatim. Topic 2's live <code>ruff</code> / <code>pytest</code> run is the honest check that a checklist claim holds up; Topic 6's save step is the check that Part 2's bug was caught.</aside>
+</section>
+
+<!-- 50. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · Appendix B · finished-early only</span>
+<h1>A Genuinely Stronger PII Test</h1>
+<aside class="notes">
+Frame as extra practice only if a student finishes the checklist before presentations begin.
+One sentence of framing (guide): "<code>test_prompt_does_not_include_name</code> only checks the mock's canned return value, not what was actually sent to the API. A stronger version inspects <code>mock_client.return_value.messages.create.call_args</code> to see the real prompt string — and finds that if a user's own <code>description</code> text contains a name, that name legitimately <em>is</em> sent."
+The point (guide, verbatim): "the function's <em>code</em> never adds a name, but if a user's own <code>description</code> text happens to <em>contain</em> one, that name would legitimately be sent to the API — a real limitation worth naming explicitly in the README's Limitations section, and a good final example of the difference between a control enforced by <em>code structure</em> versus one that depends on <em>user behavior</em>." Present it as open-ended discussion, not a clean answer.
+Security note: this is the prompt-injection / uncontrolled-input discussion. Present the <strong>defense</strong> — name the limitation in the README, and the structural control (the function signature) that <em>does</em> hold — not an exploit.
+</aside>
+</section>
+
+<!-- 51. STRETCH idea -->
+<section class="s-idea">
+<h3>The idea — code-structure control vs. user-behavior limitation</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Control #3 by code structure holds:</strong> <code>summarise_request</code> never adds a name — its signature only accepts <code>category</code> and <code>description</code>, so no <em>structured</em> PII field can leak.</p>
+<p><strong>But user behavior can't be fully prevented by code:</strong> if a user types a name into their own free-text <code>description</code>, that text legitimately goes into the prompt. The defense is to <em>name this honestly</em> in the README's Limitations section — not to pretend the code stops it.</p>
+</div>
+<aside class="notes">Guide, Appendix B: "a real limitation worth naming explicitly in the README's Limitations section, and a good final example of the difference between a control enforced by <em>code structure</em> versus one that depends on <em>user behavior</em>." The structural control (the signature) is real and worth trusting; the residual risk (free-text input) is real and worth documenting. No exploit — the takeaway is the README disclosure and input awareness.</aside>
+</section>
+
+<!-- 52. STRETCH stronger test (static) -->
+<section class="s-code">
+<h3>Appendix B — the stronger test</h3>
+<pre><code class="language-python">def test_prompt_does_not_include_name_stronger():
+    with patch('ai_feature.anthropic.Anthropic') as mock_client:
+        mock_message = MagicMock()
+        mock_message.content = [MagicMock(text='Short summary.')]
+        mock_client.return_value.messages.create.return_value = mock_message
+        summarise_request('Software', 'License renewal for Taylor\'s design tools')
+        call_kwargs = mock_client.return_value.messages.create.call_args.kwargs
+        sent_prompt = call_kwargs['messages'][0]['content']
+        assert 'Software' in sent_prompt          # category IS sent -- expected
+        assert 'Taylor' in sent_prompt            # and so is this, unexpectedly!
+        # summarise_request only controls the PROMPT STRUCTURE, not whether a
+        # user pastes a name into their own free-text description -- a real,
+        # code-cannot-fully-prevent limitation worth naming in the README.</code></pre>
+<p class="expect"><strong>Run this with <code>pytest -v</code> on your own machine.</strong> It imports <code>ai_feature</code> / <code>anthropic</code> and uses <code>unittest.mock</code>, so it can't run in this deck — but the runnable block on the next slide shows the same fact with plain Python.</p>
+<aside class="notes">
+Line-by-line (guide, Appendix B): <code>mock_client.return_value.messages.create.call_args.kwargs</code> — the keyword arguments the mocked <code>create</code> was actually called with (visible but unused in the lab's own test). <code>call_kwargs['messages'][0]['content']</code> — the real prompt string that would have gone to the API. <code>assert 'Software' in sent_prompt</code> — the category is sent, as designed. <code>assert 'Taylor' in sent_prompt</code> — the name in the user's <em>own description</em> is also sent: the code never added it, the user did. Present as open-ended discussion.
+</aside>
+</section>
+
+<!-- 53. STRETCH RUNNABLE — name in description -->
+<section class="s-code">
+<h3>Run it — a name in the description reaches the prompt</h3>
+<div class="run" data-lang="python">def build_prompt(category, description):
+    return f'Summarise this {category} business request in one clear sentence:\n{description}'
+
+# Appendix B: the user pasted a name into their OWN free-text description.
+sent = build_prompt('Software', 'License renewal for Taylor\'s design tools')
+print('Software in prompt:', 'Software' in sent)   # category IS sent -- expected
+print('Taylor in prompt: ', 'Taylor' in sent)      # user-supplied -- code cannot fully prevent</div>
+<p class="expect">Genuinely runnable — the same f-string as <code>ai_feature.py</code>, no network. It reproduces Appendix B's two assertions (<code>'Software' in sent_prompt</code>, <code>'Taylor' in sent_prompt</code>) directly: the category is sent by design, and a name the <em>user</em> put in the description is sent too. Verified with <code>python3</code> 3.12.2.</p>
+<aside class="notes">
+Line-by-line: <code>build_prompt</code> is <code>ai_feature.py</code>'s exact f-string. The description string <code>'License renewal for Taylor\'s design tools'</code> is the guide's Appendix B example (escaped single quote — ISM3232 single-quote style). Both <code>in</code> checks print <code>True</code>: the function's <em>code</em> never adds a name, but the user's own free-text did, and the f-string interpolates it verbatim. The README Limitations section is where this gets named honestly.
+</aside>
+</section>
+
+<!-- 54. STRETCH RUNNABLE out -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Software in prompt: True
+Taylor in prompt:  True</pre>
+<p class="expect">Both <code>True</code> — matching Appendix B's <code>assert 'Software' in sent_prompt</code> and <code>assert 'Taylor' in sent_prompt</code>. The structural control (the signature) still holds; the free-text description is the part code can't police, so it goes in the README.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4): the block prints exactly these two lines and exits 0. It is the plain-Python mirror of the guide's Appendix B stronger test — same two assertions, same conclusion: "a control enforced by <em>code structure</em> versus one that depends on <em>user behavior</em>."</aside>
+</section>
+
+<!-- 55. STRETCH quiz B -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">A user types "renewal for Taylor's team" into the description box. <code>summarise_request</code> sends "Taylor" to the API. Is Control #3 (no PII) broken, and what's the right response?</p>
+<button data-opt="A">Yes — the function is leaking PII; add a regex in <code>summarise_request</code> that strips any capitalised word before building the prompt</button>
+<button data-opt="B">The <em>code-structure</em> control still holds (the signature never adds a name); this is a <em>user-behavior</em> limitation that code can't fully prevent — name it honestly in the README's Limitations section</button>
+<button data-opt="C">Yes — switch to a model that filters names server-side, which removes the need to document anything</button>
+<p class="why" hidden>Per R-conv-3 (Appendix B / Stretch has no CFU parenthetical): the guide states verbatim "the function's <em>code</em> never adds a name, but if a user's own <code>description</code> text happens to <em>contain</em> one, that name would legitimately be sent to the API — a real limitation worth naming explicitly in the README's Limitations section, and a good final example of the difference between a control enforced by <em>code structure</em> versus one that depends on <em>user behavior</em>." A name-stripping regex would mangle legitimate text and is not what the guide recommends (A); no model choice removes the documentation obligation (C).</p>
+</div>
+<aside class="notes">R-conv-3 fallback, disclosed: the Stretch (Appendix B) has no "Check for understanding" parenthetical. Keyed answer (B) is a verbatim same-segment position — "a control enforced by <em>code structure</em> versus one that depends on <em>user behavior</em>," with the fix being to "name it explicitly in the README's Limitations section." This is the defense-not-exploit framing the deck rules require for the prompt-injection / uncontrolled-input discussion. Keyed B.</aside>
+</section>
+
+<!-- 56. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li><code>ai_feature.py</code> built — one function, two parameters, no PII (Control #3), key from the environment</li>
+<li>AI feature wired into Tab 1 with a working disclosure label (Control #1) and a <em>working</em> human review gate (Control #2, the <code>st.session_state</code> version — re-test the save step)</li>
+<li><code>tests/test_ai_feature.py</code> mocked test passing, no key or network needed (Control #4)</li>
+<li>README AI Feature section complete with specific, honest Limitations (Control #5) and an AI use statement</li>
+<li>Full checklist worked through; <code>.gitignore</code> includes <code>.venv/</code>, <code>__pycache__/</code>, <code>*.db</code>, <code>.env</code></li>
+<li>Ritual run: <code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v</code>, then commit with a message including "lab 16", then push</li>
+<li>2 screenshots + GitHub URL in Canvas; completion credit; live presentation of all eight topics (Control #6)</li>
+</ul>
+<aside class="notes">Consolidates the guide's Part 4 checklist and the Session Snapshot's submission line (2 screenshots, GitHub URL, Canvas, completion credit, live presentation). The one item most worth restating: re-test the <em>save</em> step of the GenAI feature, not just generate — that is where Part 2's bug hides.</aside>
+</section>
+
+<!-- 57. WRAP — closing the semester -->
+<section class="s-wrap">
+<h3>Closing the semester</h3>
+<p>There is no "next week" — Week 16 is the end of the course. Worth saying to the room:</p>
+<ul>
+<li><strong>Name the arc:</strong> "Week 1, you checked whether your terminal prompt showed <code>%</code> or <code>$</code>. Today, you presented a working, tested, database-backed, AI-integrated web application, built entirely by you, that you can explain line by line. That distance is worth acknowledging directly."</li>
+<li><strong>The habits matter beyond this course:</strong> rubber-duck debugging, AI-use disclosures, boundary-case tests, the pre-submission ritual — genuine professional habits, not classroom-specific requirements.</li>
+<li><strong>If time allows,</strong> a closing question: "What's one thing from this semester you didn't expect to still be using by Week 16?"</li>
+</ul>
+<aside class="notes">Verbatim from the guide's "Closing the Semester". This is the last class — budget a genuine moment for it, separate from the mechanics of any single student's demo. The debugging and honesty habits are the through-line from Week 1 to here.</aside>
+</section>
+
+<!-- 58. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 16</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w16.md (Week 16 facilitation guide, "GenAI Feature &amp; Final Demo"). ISM3232 GenAI WEEK — predominantly READ-ONLY: LLM API calls cannot run in Pyodide (no key, CSP blocks the network, <code>anthropic</code> not bundled), so every <code>import anthropic</code> / <code>client.messages.create(...)</code> snippet, the full <code>ai_feature.py</code>, the <code>app.py</code> wiring (broken and fixed), the mocked <code>pytest</code> file, and Appendix B's stronger test are plain <code>&lt;pre&gt;&lt;code class="language-python"&gt;</code> blocks outside any <code>.run</code> div, each with an on-slide "needs an API key and network access — run this on your own machine" (or "run with <code>pytest -v</code> / <code>streamlit run</code>") note. Their <code>s-out</code> slides are an illustrative model response or a prose description, labelled. The manual-test and final-push shell blocks are <code>data-readonly</code> with an illustrative / guide-quoted terminal <code>s-out</code>. Four genuine <code>data-lang="python"</code> runnable blocks — Part 1's prompt-string builder, Part 2's plain-Python simulation of Streamlit's re-run model (nested-button vs <code>session_state</code>), Part 3's assertion mirror of the mocked test on a canned <code>.content[0].text</code> shape, and the Stretch's Appendix-B demonstration that a user-supplied name in the description reaches the prompt — all verified against local <code>python3</code> 3.12.2 (== Pyodide 0.26.4), each stdout == its paired <code>s-out</code>. ISM3232 style: single quotes in Python throughout (the one double-quoted f-string in Part 2's fix is the guide's own, because its key contains single quotes). No real API key anywhere — <code>anthropic.Anthropic()</code>'s default <code>ANTHROPIC_API_KEY</code> environment lookup is used exactly as the guide does; the prompt-injection discussion presents the limitation and the README defense, not an exploit. Quizzes (8): the Intro, Part 3, Part 4, Part 5 and Stretch quizzes key a verbatim same-segment line per R-conv-3 (disclosed on each); Part 1's first quiz and Part 2's quiz key the guide's "Check for understanding" parenthetical verbatim; Part 1's second quiz keys the guide's verbatim <code>max_tokens</code> line-by-line note. Keyed letters: A, B, C, A, B, C, A, B.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

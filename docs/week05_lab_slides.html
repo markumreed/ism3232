@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 5 — Variables, Data Types &amp; Operators</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 5 &nbsp;·&nbsp; Module 05 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Python Foundations</p>
+<h1>Variables, Data Types &amp; Operators</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:03</strong> Welcome: the environment work pays off now</span>
+<span class="t-item"><strong>0:03–0:17</strong> Part 1 — Setup and all four data types</span>
+<span class="t-item"><strong>0:17–0:30</strong> Part 2 — Operators and f-strings</span>
+<span class="t-item"><strong>0:30–0:43</strong> Part 3 — User input with type conversion</span>
+<span class="t-item"><strong>0:43–1:03</strong> Part 4 — <code>pytest</code> (including the two real bugs)</span>
+<span class="t-item"><strong>1:03–1:11</strong> Part 5 — Submission ritual and push</span>
+<span class="t-item"><strong>1:11–1:15</strong> Stretch preview + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Live code-along, ending with the full Week 4 submission ritual. This is the first ISM3232 lab where the environment finally runs real Python content — Weeks 1–4 (venv, ritual, <code>pytest</code>) exist specifically to support what starts today: all four core data types, the operators that combine them, and the first genuinely substantial <code>pytest</code> file.
+Say to the class (Intro, verbatim): "Four weeks of environment work — venvs, aliases, Git, testing infrastructure — all so that today, and every lab from here forward, you can focus entirely on the Python itself. Today: all four core data types, the operators that combine them, and your first genuinely substantial <code>pytest</code> file. Fair warning up front: not everything in today's lab is going to work exactly as expected the first time — and that's deliberate. Two of today's five tests are going to fail when we first run them, and figuring out <em>why</em> is one of the best lessons in this entire course."
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. The project-setup block, the <code>pytest -v</code> runs, and the submission ritual cannot execute in the browser (no <code>venv</code>/<code>pip</code>/<code>git</code>/<code>pytest</code> runner) — those are shown read-only / static with the guide's verified output beside them. The variable, operator, input, and diagnostic blocks all genuinely run.
+Before class: run the lab page's own provided <code>test_week5.py</code> yourself, exactly as written — as distributed, three of the five tests FAIL (floating-point equality and chained-comparison syntax). Part 4 turns that into the lab's best teaching moment; do not be caught off guard live.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full Week 4 submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 1–4: verified environment, venv / <code>.gitignore</code> / <code>.zshrc</code>, search tools, <code>pytest</code>, the ritual, a working GitHub remote (Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (setup + four types) – Part 5 (ritual + push) + Stretch (formatted report)</span></div>
+<div><span class="k">Submission</span><span class="v">Git commit (message must include "lab 5") + Canvas URL — completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. New project folder this week: <code>~/ism3232/module04_programming/</code> — a <strong>different</strong> folder than Week 4's <code>module02_zsh/</code>, with its <em>own</em> fresh venv and its <em>own</em> remote, not a reuse of Week 4's. Confirm every student's Week 4 GitHub remote still works before class. Internet access is required for <code>pip install</code>.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Create variables of all four core types (<code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code>) and confirm each with <code>type()</code>.</li>
+<li>Compute derived business values (subtotal, tax, total) using arithmetic operators, and format them with f-string format specs.</li>
+<li>Convert <code>input()</code>'s string return value with <code>int()</code> / <code>float()</code> before doing arithmetic, and explain the resulting <code>TypeError</code> when conversion is skipped.</li>
+<li>Write and run <code>pytest</code> assertions — and recognize two specific, real Python traps: comparing floats with <code>==</code>, and chaining a comparison directly against <code>is True</code> / <code>is False</code>.</li>
+<li>Execute the full pre-submission ritual from Week 4 on genuinely new content, without prompting.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 4 carries the most weight and gets the most time: the two bugs in the provided test file are genuinely excellent, real Python gotchas, not typos to route around quietly.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:03</td><td>Welcome: "the environment work pays off starting now"</td><td>3</td></tr>
+<tr><td>0:03–0:17</td><td>Part 1 — Setup and all four data types</td><td>14</td></tr>
+<tr><td>0:17–0:30</td><td>Part 2 — Operators and f-strings</td><td>13</td></tr>
+<tr><td>0:30–0:43</td><td>Part 3 — User input with type conversion</td><td>13</td></tr>
+<tr><td>0:43–1:03</td><td>Part 4 — <code>pytest</code> (including the two real bugs)</td><td>20</td></tr>
+<tr><td>1:03–1:11</td><td>Part 5 — Submission ritual and push</td><td>8</td></tr>
+<tr><td>1:11–1:15</td><td>Stretch preview + wrap-up</td><td>4</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 4 is deliberately given the most time of any single part — diagnosing the two real bugs properly, rather than rushing past them, is worth the extra minutes. If a section needs to compress, Part 5's ritual is the fastest to move through, since it's pure repetition of Week 4's already-established sequence.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:03</span>
+<h1>The environment work pays off — starting now</h1>
+<aside class="notes">
+Teaching goal: set the frame — Unit 1 was entirely about the environment; this is the first lab where that environment runs real Python content.
+Say to the class (verbatim): "Four weeks of environment work — venvs, aliases, Git, testing infrastructure — all so that today, and every lab from here forward, you can focus entirely on the Python itself. Today: all four core data types, the operators that combine them, and your first genuinely substantial <code>pytest</code> file. Fair warning up front: not everything in today's lab is going to work exactly as expected the first time — and that's deliberate. Two of today's five tests are going to fail when we first run them, and figuring out <em>why</em> is one of the best lessons in this entire course."
+Do: name the split — Parts 1–3 build the script, Part 4 is the diagnostic centerpiece, Part 5 is the familiar ritual on new content.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:03–0:17</span>
+<h1>Setup and All Four Data Types</h1>
+<aside class="notes">
+Teaching goal: a fresh project setup (new venv, new <code>.gitignore</code>) in a new folder, and the four core Python types — <code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code> — confirmed with <code>type()</code>.
+Say to the class (verbatim): "New module, new folder, new venv — this is genuinely a fresh project, not a continuation of Week 4's. Set it up the same way, every time, from muscle memory now."
+Check for understanding (asked at the end of this part): "If I asked for <code>is_over_limit</code> to check whether the order needs approval at a $2,000 threshold instead of $1,000, what's the one-character change?" Answer: change <code>1000</code> to <code>2000</code> — a quick confirmation that students can read and modify the comparison, not just recognize it.
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>Every value in Python has a <strong>type</strong>, and the type determines behavior. Today's four: <code>str</code> (text in quotes), <code>int</code> (whole number, no decimal), <code>float</code> (has a decimal point — even <code>.00</code>), <code>bool</code> (exactly <code>True</code> or <code>False</code>).</p>
+<p><code>type(value)</code> is how you ask Python what it thinks a value is; it prints as <code>&lt;class 'str'&gt;</code> — that display format is just Python's way of saying "the string type."</p>
+<p><code>unit_price * quantity &gt; 1000</code> reads with order of operations: <code>*</code> binds tighter than <code>&gt;</code>, so it computes <code>(unit_price * quantity) &gt; 1000</code> → <code>1350.0 &gt; 1000</code> → <code>True</code>, a <code>bool</code>.</p>
+</div>
+<aside class="notes">Ask the room to confirm <code>is_over_limit</code> is <code>True</code> <em>before</em> running it, not after — <code>450.00 * 3 = 1350.0</code>, and <code>1350.0 &gt; 1000</code> is <code>True</code>. <code>print()</code> accepts any number of comma-separated arguments and prints them all on one line, space-separated — new relative to one-type-per-line patterns.</aside>
+</section>
+
+<!-- 8. PART 1 project setup (readonly) -->
+<section class="s-code">
+<h3>Project setup — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module04_programming
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
+touch week5_lab.py &amp;&amp; code week5_lab.py</div>
+<p class="expect">Shown for reference — <code>python -m venv</code>, <code>source</code>, and <code>pip</code> can't execute in the browser. Run this in the VS Code integrated terminal. This five-line block is worth memorizing as "how every new ISM3232 project starts" — only the folder name changes each module.</p>
+<aside class="notes">
+Line by line:
+- Every line is Week 3's exact setup sequence, chained with <code>&amp;&amp;</code> so each command only runs if the one before it succeeded — a small safety net against, e.g., trying to <code>activate</code> a venv that failed to create.
+- <code>&amp;&amp;</code> is new usage today, though the underlying idea (Week 3's <code>mkcd</code> function) already introduced it.
+- <code>module04_programming/</code> is a <strong>fresh folder</strong> — its own venv, its own <code>.gitignore</code>, not a reuse of Week 4's <code>module02_zsh/</code>.
+Common mistakes: running the block from the wrong location, or forgetting <code>source .venv/bin/activate</code> before <code>pip install</code> — Week 3's exact failure modes; a quick <code>which python3</code> check helps if <code>pip install</code> behaves unexpectedly.
+</aside>
+</section>
+
+<!-- 9. PART 1 variables (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>week5_lab.py</code>, Part 1: four data types</h3>
+<div class="run" data-lang="python">
+# week5_lab.py
+# Author: [Your Name]
+# Business domain: [describe your scenario]
+
+product_name  = 'Laptop'
+status        = 'Pending'
+quantity      = 3
+unit_price    = 450.00
+is_over_limit = unit_price * quantity &gt; 1000
+
+print(type(product_name), type(quantity), type(unit_price), type(is_over_limit))
+</div>
+<p class="expect">Type it unchanged first and Run. Then try <code>unit_price = 450</code> (no decimal) and re-run — <code>type()</code> now reports <code>int</code>, silently changing what the exercise demonstrates.</p>
+<aside class="notes">
+Line by line:
+- <code>product_name = 'Laptop'</code> — a <code>str</code>.
+- <code>status = 'Pending'</code> — another <code>str</code>; two string variables for different purposes (one is data to display, <code>status</code> hints at future state-tracking logic) — not every variable needs to be used in a calculation to be meaningful.
+- <code>quantity = 3</code> — an <code>int</code>.
+- <code>unit_price = 450.00</code> — a <code>float</code>; the decimal point is what makes it one, regardless of whether the value is whole.
+- <code>is_over_limit = unit_price * quantity &gt; 1000</code> — a <code>bool</code>. Order of operations: <code>*</code> binds tighter than <code>&gt;</code>, so <code>(450.00 * 3) &gt; 1000</code> → <code>1350.0 &gt; 1000</code> → <code>True</code>. Ask the room to confirm before running.
+- <code>print(type(...), type(...), type(...), type(...))</code> — four separate <code>type()</code> calls as four arguments to one <code>print()</code>; <code>print()</code> prints them all on one line, space-separated by default.
+Common mistakes: <code>unit_price = 450</code> (no decimal) out of habit → <code>int</code> not <code>float</code>; running setup from the wrong location.
+Check for understanding: "one-character change to move the threshold to $2,000?" Answer: change <code>1000</code> to <code>2000</code>.
+</aside>
+</section>
+
+<!-- 10. PART 1 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>&lt;class 'str'&gt; &lt;class 'int'&gt; &lt;class 'float'&gt; &lt;class 'bool'&gt;</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 1 exactly — one line, four class names, space-separated, in the order the variables were passed to <code>print()</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): <code>python3 week5_lab.py</code> prints exactly <code>&lt;class 'str'&gt; &lt;class 'int'&gt; &lt;class 'float'&gt; &lt;class 'bool'&gt;</code>. Confirm every student sees exactly this.</aside>
+</section>
+
+<!-- 11. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">To make <code>is_over_limit</code> check a <strong>$2,000</strong> approval threshold instead of $1,000, what is the one-character change?</p>
+<button data-opt="A">Change <code>1000</code> to <code>2000</code> in the comparison</button>
+<button data-opt="B">Change <code>unit_price</code> from <code>450.00</code> to <code>900.00</code></button>
+<button data-opt="C">Change the <code>&gt;</code> operator to <code>&gt;=</code></button>
+<p class="why" hidden>Change <code>1000</code> to <code>2000</code> — a quick confirmation that students can read and modify the comparison, not just recognize it. The threshold is the literal <code>1000</code> in <code>unit_price * quantity &gt; 1000</code>; nothing else needs to move.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "Change <code>1000</code> to <code>2000</code> — a good, quick confirmation that students can read and modify the comparison, not just recognize it."</aside>
+</section>
+
+<!-- 12. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running the setup block from the wrong location, or forgetting <code>source .venv/bin/activate</code> before <code>pip install</code> — Week 3's exact failure modes. A quick <code>which python3</code> check is worth it if <code>pip install</code> behaves unexpectedly.</p>
+<p>Writing <code>unit_price = 450</code> (no decimal) out of habit — <code>type()</code> then reports <code>int</code>, not <code>float</code>, silently changing what this exercise is meant to demonstrate. A quick visual double-check across the room.</p>
+</div>
+<aside class="notes">Check for understanding: "one-character change to move the approval threshold to $2,000?" Answer: change <code>1000</code> to <code>2000</code>.</aside>
+</section>
+
+<!-- 13. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:17–0:30</span>
+<h1>Operators and f-strings</h1>
+<aside class="notes">
+Teaching goal: derived business calculations (subtotal, tax, total) and a fully formatted, multi-line business summary using f-strings.
+Say to the class (verbatim): "Three more calculated values, then a clean, formatted printout — this is what a real business script's output should look like, not just raw numbers."
+Check for understanding (asked at the end of this part): "If <code>subtotal</code> were exactly $1000.00, would <code>requires_approval</code> be <code>True</code> or <code>False</code>, given tax is added on top?" Answer: <code>True</code> — $1000.00 + 7% tax pushes the total to $1070.00, over the $1000 threshold, even though the subtotal alone sits exactly at the boundary; <code>requires_approval</code> checks the <em>post-tax</em> total specifically.
+</aside>
+</section>
+
+<!-- 14. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>subtotal → tax → total</code> are chained arithmetic: each derived value feeds the next. <code>requires_approval = total &gt; 1000</code> is a second, independently-computed boolean, distinct from Part 1's <code>is_over_limit</code> (a different threshold check on the pre-tax amount) — the two could, in principle, disagree.</p>
+<p><code>:.2f</code> on every dollar amount is the currency format spec, consistent across all three lines. Printing a <code>bool</code> directly in an f-string displays the literal word <code>True</code> or <code>False</code> — no special handling.</p>
+<p>Flag now for Part 4: <code>subtotal * 0.07</code> does <strong>not</strong> always produce a perfectly clean decimal in floating-point arithmetic, even though the math looks simple on paper. Hold that thought.</p>
+</div>
+<aside class="notes">The <code>tax</code> line is a deliberate foreshadow of Part 4's Bug 1 — <code>0.07</code> cannot be represented exactly in binary floating-point. Don't unpack it here; just plant the flag so it pays off in Part 4.</aside>
+</section>
+
+<!-- 15. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — Part 2: calculations + f-strings (same file)</h3>
+<div class="run" data-lang="python">
+product_name = 'Laptop'
+quantity     = 3
+unit_price   = 450.00
+
+subtotal          = unit_price * quantity
+tax               = subtotal * 0.07
+total             = subtotal + tax
+requires_approval = total &gt; 1000
+
+print('=== Purchase Request Summary ===')
+print(f'Product:  {product_name}')
+print(f'Qty:      {quantity}')
+print(f'Subtotal: ${subtotal:.2f}')
+print(f'Tax:      ${tax:.2f}')
+print(f'Total:    ${total:.2f}')
+print(f'Requires approval: {requires_approval}')
+</div>
+<p class="expect">The first three lines re-declare Part 1's variables — every runnable block here starts a fresh namespace, so nothing carries over unless re-typed. In the real <code>week5_lab.py</code> these lines are already above, from Part 1.</p>
+<aside class="notes">
+Line by line:
+- <code>subtotal = unit_price * quantity</code> — <code>450.00 * 3 = 1350.0</code>.
+- <code>tax = subtotal * 0.07</code> — a 7% rate on the subtotal. Brief flag: this exact calculation matters in Part 4; <code>subtotal * 0.07</code> does not always produce a perfectly clean decimal.
+- <code>total = subtotal + tax</code> — the final charged amount, <code>1444.5</code>.
+- <code>requires_approval = total &gt; 1000</code> — a second, independently-computed boolean, distinct from Part 1's <code>is_over_limit</code> (different threshold, pre-tax amount).
+- <code>:.2f</code> on every dollar amount — the currency spec, consistent across all three lines.
+- <code>f'Requires approval: {requires_approval}'</code> — a <code>bool</code> in an f-string displays as the literal word <code>True</code> or <code>False</code>.
+Common mistakes: computing <code>tax</code> from <code>total</code> instead of <code>subtotal</code> (compounding tax-on-tax); forgetting <code>:.2f</code> on one of the three dollar lines (inconsistent-looking report, not an error).
+Check for understanding: "If <code>subtotal</code> were exactly $1000.00, is <code>requires_approval</code> <code>True</code> or <code>False</code>?" Answer: <code>True</code> — $1000.00 + 7% tax = $1070.00, over the $1000 threshold; the check is on the post-tax total.
+</aside>
+</section>
+
+<!-- 16. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>=== Purchase Request Summary ===
+Product:  Laptop
+Qty:      3
+Subtotal: $1350.00
+Tax:      $94.50
+Total:    $1444.50
+Requires approval: True</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 2 exactly. <code>1350.0 * 0.07 = 94.5</code> → <code>$94.50</code>; <code>1350.0 + 94.5 = 1444.5</code> → <code>$1444.50</code>; <code>1444.5 &gt; 1000</code> → <code>True</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these seven lines. The <code>:.2f</code> spec rounds <code>tax</code> for display (<code>94.5</code> → <code>94.50</code>); the raw value is exactly <code>94.5</code> here, but Part 4 shows the same 7% multiplication on <code>200.00</code> does <em>not</em> land clean.</aside>
+</section>
+
+<!-- 17. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>subtotal</code> were exactly <strong>$1000.00</strong>, would <code>requires_approval</code> be <code>True</code> or <code>False</code> — given tax is added on top?</p>
+<button data-opt="A"><code>False</code> — the subtotal sits exactly at $1000, and <code>&gt;</code> is not "greater than or equal"</button>
+<button data-opt="B"><code>True</code> — $1000.00 + 7% tax pushes the total to $1070.00, over the $1000 threshold</button>
+<button data-opt="C"><code>False</code> — <code>requires_approval</code> checks <code>subtotal</code>, not the post-tax <code>total</code></button>
+<p class="why" hidden><code>True</code> — <code>$1000.00 + 7%</code> tax pushes the total to <code>$1070.00</code>, over the <code>$1000</code> threshold, even though the subtotal alone sits exactly at the boundary. A good reminder that <code>requires_approval</code> checks the <em>post-tax</em> total specifically, not the subtotal.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "<code>True</code> — <code>$1000.00 + 7%</code> tax pushes the total to <code>$1070.00</code>, over the <code>$1000</code> threshold, even though the subtotal alone sits exactly at the boundary; a good reminder that <code>requires_approval</code> checks the <em>post-tax</em> total specifically, not the subtotal."</aside>
+</section>
+
+<!-- 18. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Computing <code>tax</code> from <code>total</code> instead of <code>subtotal</code> by a copy-paste slip — produces a compounding error (tax-on-tax) rather than a clean 7% of the pre-tax amount. A good "does this number look plausibly like 7%" sanity check if the room's totals look off.</p>
+<p>Forgetting the <code>:.2f</code> on one of the three dollar lines — not an error, just an inconsistent-looking report; walk the room checking all three currency lines share the same format spec.</p>
+</div>
+<aside class="notes">Check for understanding: "If <code>subtotal</code> were exactly $1000.00, is <code>requires_approval</code> <code>True</code> or <code>False</code>?" Answer: <code>True</code> — the post-tax total is $1070.00, over the threshold.</aside>
+</section>
+
+<!-- 19. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:30–0:43</span>
+<h1>User Input with Type Conversion</h1>
+<aside class="notes">
+Teaching goal: <code>input()</code> always returns a string — convert with <code>int()</code> before arithmetic, or hit a genuinely instructive <code>TypeError</code>.
+Say to the class (verbatim): "One line of new user-facing input, and I want to show you the single most common Week 5 bug on purpose, before it happens to you by accident."
+Check for understanding (asked at the end of this part): "Why does the error say 'can't multiply sequence' — what does Python mean by calling a string a 'sequence' here?" Answer: a string is one specific kind of Python <strong>sequence</strong> — an ordered collection of characters — and sequences in general support multiplication-as-repetition by an integer; the error is using that general vocabulary, not something specific to strings alone.
+</aside>
+</section>
+
+<!-- 20. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>int(input('Enter a new quantity: '))</code> reads inside-out: <code>input(...)</code> displays the prompt and returns whatever was typed, <strong>as a string, always</strong> — <code>int(...)</code> then converts that string to a genuine integer.</p>
+<p><code>unit_price * user_qty * 1.07</code> applies the 7% tax inline in one step — a more compact style than Part 2's separate <code>subtotal</code> / <code>tax</code> / <code>total</code> variables. Both are valid; this one is terser, Part 2's is more explicit about each intermediate value.</p>
+</div>
+<aside class="notes">Read <code>int(input(...))</code> inside-out, the same pattern as prior modules. Quantity specifically calls for <code>int()</code> rather than <code>float()</code> — a fractional number of laptops doesn't make business sense.</aside>
+</section>
+
+<!-- 21. PART 3 fixed (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — Part 3: <code>input()</code> with <code>int()</code> conversion</h3>
+<div class="run" data-lang="python" data-stdin="5">
+product_name = 'Laptop'
+quantity     = 3
+unit_price   = 450.00
+
+user_qty = int(input('Enter a new quantity: '))
+new_total = unit_price * user_qty * 1.07
+print(f'New total for {user_qty} units: ${new_total:.2f}')
+print(f'Requires approval: {new_total &gt; 1000}')
+</div>
+<p class="expect">The stdin box is pre-filled with <code>5</code> — the answer to the one <code>input()</code> prompt. Run it: <code>450.00 * 5 * 1.07 = 2407.5</code> → <code>$2407.50</code>.</p>
+<aside class="notes">
+Line by line:
+- <code>int(input('Enter a new quantity: '))</code> — <code>input(...)</code> displays the prompt and returns what was typed, as a string, always; <code>int(...)</code> converts that string to a genuine integer.
+- <code>unit_price * user_qty * 1.07</code> — an equivalent, more compact way of computing a taxed total than Part 2's separate variables: multiplying by <code>1.07</code> directly applies the 7% tax inline. Both styles are valid — a real style tradeoff, not a correctness difference.
+- <code>new_total &gt; 1000</code> evaluated inside the f-string braces — displays <code>True</code> / <code>False</code> directly.
+Common mistakes: converting with <code>float()</code> instead of <code>int()</code> for a quantity (runs, but prints <code>5.0</code> not <code>5</code>); entering non-numeric text like <code>five</code> → <code>ValueError: invalid literal for int() with base 10: 'five'</code>, a different error from the multiplication <code>TypeError</code> on the next slide.
+Check for understanding: "what does Python mean by calling a string a 'sequence'?" Answer: a string is an ordered collection of characters — a kind of sequence — and sequences support repetition by an integer, so the error uses that general vocabulary.
+</aside>
+</section>
+
+<!-- 22. PART 3 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Enter a new quantity: 5
+New total for 5 units: $2407.50
+Requires approval: True</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 3 (entering <code>5</code>). The load-bearing lines are the last two — <code>$2407.50</code> and <code>Requires approval: True</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: <code>printf '5\n' | python3</code> emits <code>Enter a new quantity: New total for 5 units: $2407.50</code> on one line, because piped stdin is not a TTY so the typed value is not echoed. In Pyodide's stdin box the framework echoes the typed value + newline right after the prompt, producing the guide's clean three-line form shown here. <code>450.00 * 5 * 1.07 = 2407.5</code>; <code>2407.5 &gt; 1000</code> → <code>True</code>.</aside>
+</section>
+
+<!-- 23. PART 3 broken (RUNNABLE) -->
+<section class="s-code">
+<h3>Now the bug on purpose — "the most common Week 5 bug"</h3>
+<div class="run" data-lang="python" data-stdin="5">
+unit_price = 450.00
+
+unit_price * input('qty: ')
+</div>
+<p class="expect">Exactly as the lab page frames it. <code>unit_price</code> is re-declared (fresh namespace); the last line multiplies a <code>float</code> by an <em>unconverted</em> string. Run it and enter any number — it raises.</p>
+<aside class="notes">
+Explain precisely why, since the message reads oddly the first time: <code>input('qty: ')</code> returns a <strong>string</strong>, unconverted. <code>unit_price * &lt;that string&gt;</code> is Python attempting to multiply a <code>float</code> by a string — and Python's error phrasing comes from the string's side: strings support repetition when multiplied by an <em>integer</em> (<code>'ab' * 3</code> gives <code>'ababab'</code>), so the error is really saying "I tried to treat this like string-repetition, but the other side is a <code>float</code>, not a valid repeat count." Say plainly: the specific wording matters less than the takeaway — <code>input()</code> is always a string until you explicitly convert it, no matter what the user typed.
+</aside>
+</section>
+
+<!-- 24. PART 3 broken output (traceback) -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>qty: 5
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 3, in &lt;module&gt;
+    unit_price * input('qty: ')
+    ~~~~~~~~~~~^~~~~~~~~~~~~~~~
+TypeError: can't multiply sequence by non-int of type 'float'</pre>
+<p class="expect">The guide shows only the final line — <code>TypeError: can't multiply sequence by non-int of type 'float'</code> — which matches exactly.</p>
+<aside class="notes">Verified against CPython 3.12.2 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match). The file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path under <code>python3</code>, and the line number depends on the block's leading lines — neither is load-bearing. The load-bearing last line is identical: <code>TypeError: can't multiply sequence by non-int of type 'float'</code>. Make a student say "TypeError," not just "it breaks."</aside>
+</section>
+
+<!-- 25. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Why does the error say "can't multiply <strong>sequence</strong>" — what does Python mean by calling a string a "sequence" here?</p>
+<button data-opt="A">It's a copy-paste artifact in Python's error text — strings aren't really sequences</button>
+<button data-opt="B">"sequence" means the value came from <code>input()</code> specifically, rather than a literal</button>
+<button data-opt="C">A string is a kind of <strong>sequence</strong> — an ordered collection of characters — and sequences support multiplication-as-repetition by an integer, so the error uses that general term</button>
+<p class="why" hidden>A string is one specific kind of Python <strong>sequence</strong> — an ordered collection of characters — and sequences in general support multiplication-as-repetition by an integer; the error is using that general vocabulary, not something specific to strings alone. Not required depth for this course, but a good "why does this specific wording exist" answer for a curious student.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: "A string is one specific kind of Python <strong>sequence</strong> — an ordered collection of characters — and sequences in general support multiplication-as-repetition by an integer; the error is using that general vocabulary, not something specific to strings alone."</aside>
+</section>
+
+<!-- 26. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Converting with <code>float()</code> instead of <code>int()</code> for a quantity — runs without error, but changes <code>user_qty</code>'s type, printing <code>5.0</code> instead of <code>5</code> in the f-string unless the format spec compensates. Ask why a quantity specifically calls for <code>int()</code> (a fractional number of laptops doesn't make business sense).</p>
+<p>Entering non-numeric text at the prompt (e.g. <code>five</code>) — raises <code>ValueError: invalid literal for int() with base 10: 'five'</code>, a different failure mode from the multiplication <code>TypeError</code>: a conversion given genuinely unconvertible text vs. a missing conversion.</p>
+</div>
+<aside class="notes">Check for understanding: "what does Python mean by calling a string a 'sequence'?" Answer: a string is an ordered collection of characters — a kind of sequence — and sequences support repetition by an integer, so the error uses that general vocabulary.</aside>
+</section>
+
+<!-- 27. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:43–1:03</span>
+<h1><code>pytest</code> — and two real bugs</h1>
+<aside class="notes">
+Teaching goal: write and run five <code>pytest</code> assertions — and diagnose two genuinely real, subtle Python bugs hiding in the provided test file, rather than just confirming green output.
+Say to the class (verbatim): "Five tests. I'm going to type them exactly as given, run them, and I want you to watch closely — because not all five are going to pass, and the reason why is one of the most useful things you'll learn all semester about how Python actually works underneath what looks like simple code."
+Then, calmly, after the reds appear (verbatim): "Three failures. Nobody typed anything wrong — this is exactly what the code as given does. Let's diagnose each one, because both underlying causes are things you will run into again, for real, later in your career."
+Check for understanding (asked at the end of this part): "Would <code>assert 1500 &gt; 1000 == True</code> (using <code>==</code> instead of <code>is</code>) have the same chained-comparison problem?" Answer: Yes — chaining applies to <em>any</em> comparison operators strung together this way; <code>1500 &gt; 1000 == True</code> evaluates as <code>1500 &gt; 1000 and 1000 == True</code>, and <code>1000 == True</code> is <em>also</em> <code>False</code> in Python, since <code>True</code> only equals <code>1</code>, not <code>1000</code>.
+</aside>
+</section>
+
+<!-- 28. PART 4 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept danger">
+<div class="concept-lbl">Read carefully</div>
+<p>The lab page's own provided <code>test_week5.py</code>, run exactly as written, produces <strong>three failing tests out of five</strong> — not the "all five must pass" the lab page states.</p>
+<p>This isn't a typo to route around quietly. It's two genuinely excellent, real Python gotchas: <strong>Bug 1</strong> — comparing a computed <code>float</code> with <code>==</code>; <strong>Bug 2</strong> — chaining a comparison directly against <code>is True</code> / <code>is False</code>.</p>
+<p>Model appropriate skepticism, not blind trust, toward any code — including this guide's own corrections. Tests are code too, and code can have bugs.</p>
+</div>
+<aside class="notes">Frame the three reds as the actual point of the exercise, not a problem to apologise for. Decide before class whether to present this as a live "even provided code can be wrong — let's diagnose why" moment (recommended) or hand out Appendix A's corrected version without dwelling. Either way, do not be caught off guard live.</aside>
+</section>
+
+<!-- 29. PART 4 provided test file (static, can't run pytest in browser) -->
+<section class="s-code">
+<h3>Type the tests exactly as provided — <code>tests/test_week5.py</code></h3>
+<pre><code class="language-python">def test_tax_at_seven_percent():
+    subtotal = 200.00
+    tax = subtotal * 0.07
+    assert tax == 14.0
+
+def test_over_limit_true():
+    assert 1500 &gt; 1000 is True
+
+def test_over_limit_false():
+    assert 500 &gt; 1000 is False
+
+def test_type_of_string():
+    name = 'ISM3232'
+    assert type(name) == str
+
+def test_type_conversion():
+    s = '42'
+    assert int(s) == 42</code></pre>
+<p class="expect">Shown static — <code>pytest</code> has no runner in Pyodide, so this and the two <code>pytest -v</code> panes below cannot execute in the browser. First: <code>mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_week5.py</code>, then run <code>pytest -v</code> on your own machine.</p>
+<aside class="notes">
+Line by line:
+- <code>test_tax_at_seven_percent</code> — recomputes 7% of <code>200.00</code> and asserts it equals <code>14.0</code> with <code>==</code>. This is Bug 1.
+- <code>test_over_limit_true</code> / <code>test_over_limit_false</code> — <code>assert 1500 &gt; 1000 is True</code> and <code>assert 500 &gt; 1000 is False</code>. Both chain a comparison against <code>is</code>. This is Bug 2.
+- <code>test_type_of_string</code> / <code>test_type_conversion</code> — <code>type(name) == str</code> and <code>int('42') == 42</code>. Both genuinely PASS.
+Common mistake: assuming a failing test always means <em>their</em> code is wrong, rather than considering the test itself might be flawed — a genuinely valuable, humbling lesson.
+Check for understanding: "Would <code>==</code> instead of <code>is</code> have the same chained-comparison problem?" Answer: Yes.
+</aside>
+</section>
+
+<!-- 30. PART 4 pytest -v broken output (static) -->
+<section class="s-out">
+<h3>Actual <code>pytest -v</code> output — <em>not</em> "all five pass"</h3>
+<pre>tests/test_week5.py::test_tax_at_seven_percent FAILED
+tests/test_week5.py::test_over_limit_true FAILED
+tests/test_week5.py::test_over_limit_false FAILED
+tests/test_week5.py::test_type_of_string PASSED
+tests/test_week5.py::test_type_conversion PASSED
+2 passed, 3 failed</pre>
+<p class="expect">Reproduces the guide's "Actual verified output" for Part 4 verbatim. Three failures, nobody typed anything wrong — this is exactly what the code as given does.</p>
+<aside class="notes">Verified locally with <code>pytest</code> 9.1.1 on <code>python3</code> 3.12.2. Full run: <code>3 failed, 2 passed</code>; the failure detail is <code>assert 14.000000000000002 == 14.0</code> (Bug 1), <code>assert 1000 is True</code> (Bug 2, <code>true</code> case), and <code>assert 500 &gt; 1000</code> (Bug 2, <code>false</code> case). The guide's condensed six-line form is shown here.</aside>
+</section>
+
+<!-- 31. PART 4 Bug 1 diagnostic (RUNNABLE) -->
+<section class="s-code">
+<h3>Bug 1 — floating-point equality: print the actual value</h3>
+<div class="run" data-lang="python">
+print(200.00 * 0.07)
+</div>
+<p class="expect"><code>test_tax_at_seven_percent</code> asserts <code>tax == 14.0</code>. Run this to see what <code>tax</code> really is.</p>
+<aside class="notes">
+Explain (verbatim): "<code>0.07</code> cannot be represented <em>exactly</em> in binary floating-point — the same limitation behind nearly every 'why doesn't my decimal math come out exactly right' surprise in any programming language, not just Python. <code>tax</code> really is <code>14.000000000000002</code>, not <code>14.0</code> — so <code>tax == 14.0</code> is, correctly, <code>False</code>. This is not a bug in Python; it's an inherent property of how computers represent most decimal fractions in binary. The fix: never compare floats with <code>==</code> when you expect a computed decimal result — use a tolerance-based comparison instead."
+This is a bare <code>print(x)</code> of a raw float — the output is the exact repr, not a rounded display; that rawness is the whole point.
+</aside>
+</section>
+
+<!-- 32. PART 4 Bug 1 output -->
+<section class="s-out">
+<h3>Output</h3>
+<pre>14.000000000000002</pre>
+<p class="expect">Reproduces the guide's stated output exactly. <code>tax</code> is <code>14.000000000000002</code>, not <code>14.0</code> — so <code>tax == 14.0</code> is, correctly, <code>False</code>, and the test fails for a genuinely real reason.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: <code>print(200.00 * 0.07)</code> emits exactly <code>14.000000000000002</code>. Raw <code>print()</code> of a float shows its full repr — no rounding — which is exactly why <code>==</code> against <code>14.0</code> fails. (Part 2's <code>1350.0 * 0.07</code> happened to land on <code>94.5</code> exactly; <code>200.00 * 0.07</code> does not — the value matters, which is why <code>==</code> on computed floats is unreliable in general.)</aside>
+</section>
+
+<!-- 33. PART 4 Bug 1 fix (RUNNABLE) -->
+<section class="s-code">
+<h3>Bug 1 fix — tolerance-based comparison</h3>
+<div class="run" data-lang="python">
+import math
+
+subtotal = 200.00
+tax = subtotal * 0.07
+print(math.isclose(tax, 14.0))
+</div>
+<p class="expect">The corrected test body: <code>assert math.isclose(tax, 14.0)</code> instead of <code>assert tax == 14.0</code>.</p>
+<aside class="notes">
+<code>math.isclose(a, b)</code> returns <code>True</code> when <code>a</code> and <code>b</code> are within a small relative tolerance — the general, robust pattern for comparing computed decimals.
+Also accept, if a student proposes it: <code>tax = round(subtotal * 0.07, 2)</code> then <code>assert tax == 14.0</code> — this works for this specific case, but flag that <code>math.isclose()</code> doesn't depend on the numbers happening to round cleanly.
+</aside>
+</section>
+
+<!-- 34. PART 4 Bug 1 fix output -->
+<section class="s-out">
+<h3>Output</h3>
+<pre>True</pre>
+<p class="expect"><code>math.isclose(14.000000000000002, 14.0)</code> is <code>True</code> — the corrected assertion passes.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints <code>True</code>. Under <code>pytest</code> the corrected <code>test_tax_at_seven_percent</code> then passes.</aside>
+</section>
+
+<!-- 35. PART 4 Bug 2 diagnostic (RUNNABLE) -->
+<section class="s-code">
+<h3>Bug 2 — chained comparison: print the raw expression</h3>
+<div class="run" data-lang="python">
+print(1500 &gt; 1000 is True)
+</div>
+<p class="expect"><code>test_over_limit_true</code> asserts exactly this expression. It looks like it should ask "is <code>1500 &gt; 1000</code> equal to <code>True</code>" — run it and see.</p>
+<aside class="notes">
+Explain slowly (verbatim): "This looks like it should ask 'is <code>1500 &gt; 1000</code> equal to <code>True</code>' — but Python doesn't read it that way. Python supports <strong>chained comparisons</strong>: <code>a &gt; b is c</code> is actually evaluated as <code>a &gt; b and b is c</code> — comparing <code>b</code> on <em>both</em> sides at once, not evaluating <code>a &gt; b</code> first and then comparing <em>that result</em> against <code>c</code>. So <code>1500 &gt; 1000 is True</code> really means <code>1500 &gt; 1000 and 1000 is True</code> — and <code>1000 is True</code> is <code>False</code> (an integer is never identical to the boolean <code>True</code>, even though <code>1000</code> is 'truthy' — <code>is</code> checks genuine identity, not truthiness). <code>True and False</code> is <code>False</code> — exactly the failing result we saw."
+Point out: Python itself prints a <code>SyntaxWarning: "is" with 'int' literal. Did you mean "=="?</code> for this exact pattern — read it aloud, since Python is quite literally trying to warn about this specific mistake.
+</aside>
+</section>
+
+<!-- 36. PART 4 Bug 2 output -->
+<section class="s-out">
+<h3>Output</h3>
+<pre>&lt;exec&gt;:1: SyntaxWarning: "is" with 'int' literal. Did you mean "=="?
+  print(1500 &gt; 1000 is True)
+False</pre>
+<p class="expect">Reproduces the guide's stated output — <code>False</code> — plus the <code>SyntaxWarning</code> Python emits for this exact pattern. <code>1500 &gt; 1000 is True</code> evaluates as <code>1500 &gt; 1000 and 1000 is True</code>; <code>1000 is True</code> is <code>False</code>, so the whole thing is <code>False</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: stdout is <code>False</code>; the <code>SyntaxWarning</code> ("<code>"is" with 'int' literal. Did you mean "=="?</code>) is emitted on stderr at compile time. The file prefix is a temp path under <code>python3</code> vs <code>&lt;exec&gt;</code> in Pyodide — not load-bearing. The load-bearing facts: the <code>SyntaxWarning</code> text and the <code>False</code> result.</aside>
+</section>
+
+<!-- 37. PART 4 Bug 2 fix (RUNNABLE) -->
+<section class="s-code">
+<h3>Bug 2 fix — parentheses force the intended grouping</h3>
+<div class="run" data-lang="python">
+print((1500 &gt; 1000) is True)
+print((500 &gt; 1000) is False)
+</div>
+<p class="expect">The corrected test bodies: <code>assert (1500 &gt; 1000) is True</code> and <code>assert (500 &gt; 1000) is False</code>. Both lines print <code>True</code> — meaning both assertions now hold.</p>
+<aside class="notes">
+Parentheses evaluate the comparison first, then <code>is</code> checks that genuine boolean against <code>True</code> / <code>False</code> — no chaining.
+Mention the more idiomatic fix (verbatim): "In practice, you'd almost never write <code>assert (x &gt; y) is True</code> at all — <code>assert x &gt; y</code> alone already asserts the condition is truthy, which is all a test needs. Comparing explicitly against <code>is True</code> is really only useful when you specifically need to distinguish a real <code>True</code> from some other truthy value — rare in practice. The parenthesized version is shown because it fixes the <em>given</em> code with the smallest possible change."
+</aside>
+</section>
+
+<!-- 38. PART 4 Bug 2 fix output -->
+<section class="s-out">
+<h3>Output</h3>
+<pre>True
+True</pre>
+<p class="expect">Line 1: <code>(1500 &gt; 1000)</code> is <code>True</code>, and <code>True is True</code> → <code>True</code>. Line 2: <code>(500 &gt; 1000)</code> is <code>False</code>, and <code>False is False</code> → <code>True</code>. Both corrected assertions pass.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints <code>True</code> then <code>True</code>. Both lines printing <code>True</code> means "the parenthesised comparison matches the expected boolean" in each case — so <code>test_over_limit_true</code> and <code>test_over_limit_false</code> both pass once parenthesised.</aside>
+</section>
+
+<!-- 39. PART 4 corrected pytest run (static) -->
+<section class="s-out">
+<h3>Re-run with all fixes applied</h3>
+<pre>tests/test_week5.py::test_tax_at_seven_percent PASSED
+tests/test_week5.py::test_over_limit_true PASSED
+tests/test_week5.py::test_over_limit_false PASSED
+tests/test_week5.py::test_type_of_string PASSED
+tests/test_week5.py::test_type_conversion PASSED
+5 passed</pre>
+<p class="expect">Reproduces the guide's "Verified output" after Part 4's fixes: <code>math.isclose(tax, 14.0)</code> for Bug 1, parenthesised comparisons for Bug 2. All five green.</p>
+<aside class="notes">Verified locally with <code>pytest</code> 9.1.1 on <code>python3</code> 3.12.2 against the corrected file from Appendix A: <code>5 passed</code>. Do not commit and push a test file with known failing tests — arrive at Part 5 with a genuinely green suite.</aside>
+</section>
+
+<!-- 40. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Would <code>assert 1500 &gt; 1000 == True</code> (using <code>==</code> instead of <code>is</code>) have the same chained-comparison problem?</p>
+<button data-opt="A">Yes — chaining applies to any comparison operators strung together; it evaluates as <code>1500 &gt; 1000 and 1000 == True</code>, and <code>1000 == True</code> is also <code>False</code></button>
+<button data-opt="B">No — <code>==</code> compares values, so Python reads it as <code>(1500 &gt; 1000) == True</code></button>
+<button data-opt="C">No — only <code>is</code> triggers chained comparison; <code>==</code> is immune to it</button>
+<p class="why" hidden>Yes — chaining applies to <em>any</em> comparison operators strung together this way, not just <code>is</code>. <code>1500 &gt; 1000 == True</code> evaluates as <code>1500 &gt; 1000 and 1000 == True</code>, and <code>1000 == True</code> is <em>also</em> <code>False</code> in Python, since <code>True</code> only equals <code>1</code>, not <code>1000</code>. Generalizing the lesson beyond the one operator confirms the concept landed, not just the fix.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "Yes — chaining applies to <em>any</em> comparison operators strung together this way, not just <code>is</code> specifically; <code>1500 &gt; 1000 == True</code> would evaluate as <code>1500 &gt; 1000 and 1000 == True</code>, and <code>1000 == True</code> is <em>also</em> <code>False</code> in Python, since <code>True</code> only equals <code>1</code>, not <code>1000</code>."</aside>
+</section>
+
+<!-- 41. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Assuming a failing test always means <em>their</em> code is wrong, rather than considering the test itself might be flawed — a genuinely valuable, humbling lesson from today: tests are code too, and code can have bugs, including tests written by an instructor or a lab page. Model appropriate skepticism toward any code — including this guide's own corrections.</p>
+<p>"Fixing" the floating-point issue by rounding — <code>tax = round(subtotal * 0.07, 2)</code> then <code>assert tax == 14.0</code> — works for this specific case and is a valid alternative fix if a student proposes it, but flag that <code>math.isclose()</code> is the more general, robust pattern that doesn't depend on the numbers rounding cleanly.</p>
+</div>
+<aside class="notes">Check for understanding: "Would <code>==</code> instead of <code>is</code> have the same chained-comparison problem?" Answer: Yes — chaining applies to any strung-together comparisons; <code>1000 == True</code> is also <code>False</code>.</aside>
+</section>
+
+<!-- 42. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 1:03–1:11</span>
+<h1>Submission Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: execute Week 4's full ritual on this week's genuinely new content — the first time it's run without step-by-step guidance, on a new project.
+Say to the class (verbatim): "Same five steps as Week 4, on today's work. I want to see hands move, not just watch me type."
+Check for understanding (asked at the end of this part): "If <code>pytest</code> still showed failures at this point in the ritual, what should happen next — push anyway, or something else?" Answer: something else — go back and fix the failures first; the ritual's whole design is a sequence of gates, and a failing <code>pytest</code> step means the process shouldn't proceed to commit/push yet, exactly as established in Week 4.
+</aside>
+</section>
+
+<!-- 43. PART 5 ritual (readonly) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format .
+ruff check .
+pytest
+git status
+git add .
+git commit -m 'lab 5: variables types operators'
+git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Identical to Week 4's ritual — no new syntax, purely repetition. It should feel <em>faster</em> and more automatic than three weeks ago — that's the habit forming correctly.</p>
+<aside class="notes">
+Line by line: identical to Week 4's ritual — no new syntax, purely repetition, which is the point.
+One new note specific to this module: since <code>module04_programming/</code> is a fresh project folder, this is its <strong>first-ever</strong> commit — if it also needs its own new GitHub remote (rather than reusing Week 4's <code>ism3232-module02</code> repo), that's a <code>git remote add origin ...</code> step identical to Week 4 Part 4.
+Ritual complete when, per the same three criteria as Week 4: <code>ruff check</code> returns no errors; <code>pytest</code> returns all 5 passed (after Part 4's fixes); <code>git status</code>, after the push, says "nothing to commit".
+Common mistakes: pushing <strong>before</strong> fixing Part 4's two bugs — do not commit and push a test file with known failing tests; forgetting the commit message must include "lab 5" (the lab page's explicit grading requirement).
+Check for understanding: "If <code>pytest</code> still showed failures here — push anyway, or something else?" Answer: something else — fix the failures first.
+</aside>
+</section>
+
+<!-- 44. PART 5 completion criteria -->
+<section class="s-out">
+<h3>Ritual complete when — three criteria</h3>
+<pre>ruff check .      →  no errors
+pytest            →  5 passed        (after Part 4's fixes)
+git status        →  nothing to commit   (after the push)</pre>
+<p class="expect">Reproduces the guide's "Verified — ritual complete when" for Part 5, the same three criteria as Week 4. A failing <code>pytest</code> means stop — don't proceed to <code>commit</code> / <code>push</code>.</p>
+<aside class="notes">The guide's Part 5 verification, verbatim: "<code>ruff check</code> returns no errors; <code>pytest</code> returns all 5 passed (after Part 4's fixes); <code>git status</code>, after the push, says 'nothing to commit'." Commands can't run here — the point is the three gates and their order.</aside>
+</section>
+
+<!-- 45. PART 5 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>pytest</code> still showed failures at this point in the ritual, what should happen next?</p>
+<button data-opt="A">Push anyway — the commit records progress; fix the tests in the next commit</button>
+<button data-opt="B">Something else — stop, go back and fix the failures first; a failing <code>pytest</code> gate means the process shouldn't proceed to commit or push</button>
+<button data-opt="C">Run <code>git push --no-verify</code> to bypass the failing gate</button>
+<p class="why" hidden>Something else — go back and fix the failures first. The ritual's whole design is a sequence of gates, and a failing <code>pytest</code> step means the process shouldn't proceed to commit/push yet, exactly as established in Week 4.</p>
+</div>
+<aside class="notes">Guide's Part 5 Check for understanding, verbatim answer: "Something else — go back and fix the failures first; the ritual's whole design is a sequence of gates, and a failing <code>pytest</code> step means the process shouldn't proceed to commit/push yet, exactly as established in Week 4."</aside>
+</section>
+
+<!-- 46. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Pushing <strong>before</strong> fixing Part 4's two bugs — this week specifically: do not commit and push a test file with known failing tests. The whole point of today's diagnostic work is to arrive at Part 5 with a genuinely green suite, not a red one pushed out of time pressure.</p>
+<p>Forgetting the commit message must include <strong>"lab 5"</strong> — the lab page's own explicit grading requirement; a good final visual check before <code>git push</code>.</p>
+</div>
+<aside class="notes">Check for understanding: "If <code>pytest</code> still showed failures here — push anyway, or something else?" Answer: something else — fix the failures first; the ritual is a sequence of gates.</aside>
+</section>
+
+<!-- 47. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · as time allows</span>
+<h1>Formatted Report Block</h1>
+<aside class="notes">
+Frame as a quick close-out if the room reaches it.
+<code>approval_text = 'Manager required' if total &gt; 1000 else 'Not required'</code> is a <strong>conditional expression</strong> (sometimes called a ternary) — a compact <code>if</code>/<code>else</code> that produces a value directly, in one line, rather than the multi-line <code>if</code>/<code>else</code> block Week 6 introduces formally. Flag it as a preview, not something to dwell on.
+<code>{product_name:&lt;12}</code> left-aligns text in a 12-character field; <code>{total:,.2f}</code> adds a thousands separator and two decimals.
+</aside>
+</section>
+
+<!-- 48. STRETCH code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — Stretch: formatted report</h3>
+<div class="run" data-lang="python">
+product_name = 'Laptop'
+quantity     = 3
+unit_price   = 450.00
+subtotal     = unit_price * quantity
+tax          = subtotal * 0.07
+total        = subtotal + tax
+
+approval_text = 'Manager required' if total &gt; 1000 else 'Not required'
+print('=== Purchase Request Summary ===')
+print(f'Product:  {product_name:&lt;12} Unit: ${unit_price:.2f}')
+print(f'Qty:      {quantity:&lt;12} Total: ${total:,.2f}')
+print(f'Approval: {approval_text}')
+</div>
+<p class="expect">Continues the running <code>Laptop</code> / <code>450.00</code> / <code>3</code> example. Note the guide's total is <code>$1,444.50</code> (tax on the running subtotal) — the lab page's stretch snippet shows a different number for a different scenario; the guide is the source of truth here.</p>
+<aside class="notes">
+Line by line:
+- <code>approval_text = 'Manager required' if total &gt; 1000 else 'Not required'</code> — a conditional expression: a compact one-line <code>if</code>/<code>else</code> that produces a value. <code>total</code> is <code>1444.5</code>, over <code>1000</code>, so <code>approval_text</code> is <code>'Manager required'</code>. Week 6 introduces the multi-line <code>if</code>/<code>else</code> block formally.
+- <code>{product_name:&lt;12}</code> — left-align in a 12-char field, so <code>Unit:</code> starts at the same column on both lines.
+- <code>{total:,.2f}</code> — thousands separator + two decimals → <code>1,444.50</code>.
+</aside>
+</section>
+
+<!-- 49. STRETCH output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>=== Purchase Request Summary ===
+Product:  Laptop       Unit: $450.00
+Qty:      3            Total: $1,444.50
+Approval: Manager required</pre>
+<p class="expect">Reproduces the guide's "Verified output" for the Stretch block, continuing the running example. <code>Laptop</code> is left-padded to 12 chars; <code>3</code> is left-padded to 12 chars; <code>total</code> renders with a thousands comma.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these four lines. <code>total = 1350.0 + 94.5 = 1444.5</code> → <code>{total:,.2f}</code> → <code>1,444.50</code>. The lab page's own stretch snippet shows <code>$1,446.75</code> for a different worked scenario — the facilitation guide's <code>$1,444.50</code> is the source of truth for this deck.</aside>
+</section>
+
+<!-- 50. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including <strong>"lab 5"</strong></li>
+<li><code>week5_lab.py</code> contains all three parts (types, operators/f-strings, user input)</li>
+<li><code>tests/test_week5.py</code> contains all five tests, <strong>corrected</strong>, all passing</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. The corrected-tests line is the one most likely to trip students who pushed early — confirm the suite is genuinely green, not the as-distributed 3-failing version.</aside>
+</section>
+
+<!-- 51. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 6</h3>
+<p>Today's boolean checks (<code>is_over_limit</code>, <code>requires_approval</code>) just sat there as printed values. Next week, you finally <strong>branch</strong> on them — <code>if</code> / <code>elif</code> / <code>else</code> — plus loops and dictionaries, processing more than one purchase request at a time instead of just one.</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. The Stretch's conditional expression is a soft first taste of Week 6's branching; name that connection if the room did the Stretch.</aside>
+</section>
+
+<!-- 52. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 5</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w05.md (Week 5 facilitation guide, "Variables, Data Types &amp; Operators"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4; the <code>pytest -v</code> panes and the setup/ritual shell blocks are static (no runner in the browser) and were verified locally with pytest 9.1.1.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

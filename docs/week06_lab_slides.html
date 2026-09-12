@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 6 — Conditionals, Loops &amp; Dictionaries</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 6 &nbsp;·&nbsp; Module 06 &nbsp;·&nbsp; Unit 2 &nbsp;·&nbsp; Python Foundations</p>
+<h1>Conditionals, Loops &amp; Dictionaries</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:03</strong> Welcome: "the list-of-dicts pattern"</span>
+<span class="t-item"><strong>0:03–0:15</strong> Part 1 — Records and loop</span>
+<span class="t-item"><strong>0:15–0:29</strong> Part 2 — Two business rules</span>
+<span class="t-item"><strong>0:29–0:45</strong> Part 3 — Formatted summary and file output</span>
+<span class="t-item"><strong>0:45–0:58</strong> Part 4 — <code>pytest</code></span>
+<span class="t-item"><strong>0:58–1:06</strong> Part 5 — Ritual and push</span>
+<span class="t-item"><strong>1:06–1:15</strong> Stretch (sort/group) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Live code-along, ending with the full submission ritual. This is the lab where ISM3232 introduces the <strong>list-of-dicts pattern</strong> — the single most common way real business data actually gets represented in memory before it's ever a database table or a pandas DataFrame: a list where every item is a dictionary with the same shape. Everything builds toward one realistic mini-application: loop through records, apply business rules with conditionals, accumulate results, and save a summary to disk.
+Say to the class (Intro, verbatim): "Today's structure — a list where every item is a dictionary with the same fields — is genuinely one of the most common ways real business data lives in memory, before it's ever in a spreadsheet, a database table, or a pandas DataFrame later in this course. Five records, two business rules, a formatted summary saved to disk. This is the first lab that feels like a small, real application, not just a syntax exercise."
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. The project-setup block, the <code>pytest -v</code> run, and the submission ritual cannot execute in the browser (no <code>venv</code>/<code>git</code>/<code>pytest</code> runner) — those are shown read-only / static with the guide's verified output beside them. The records loop, the accumulator loop, the summary/file-output block, the comprehension-logic block, the two error demos, and the Stretch sort all genuinely run.
+Verified this week: the lab page's own provided <code>test_week6.py</code> passes cleanly as written — no hidden bugs this time, a useful contrast worth naming for the room after last week's diagnostic detour.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 5: all four data types, operators, <code>input()</code> conversion, <code>pytest</code> basics (Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (records + loop) – Part 5 (ritual + push) + Stretch (sort/group)</span></div>
+<div><span class="k">Submission</span><span class="v">Git commit (message must include "lab 6") + Canvas URL — completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. Students continue in the same <code>~/ism3232/module04_programming/</code> project folder, venv and repo from Week 5 — no new setup, just a new file. Confirm <code>data/</code> doesn't already exist with a stale <code>week6_summary.txt</code> from a previous rehearsal before Part 3, so live output stays clean.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Represent a small dataset as a list of dictionaries, each with consistent keys, and loop through it with <code>for rec in records:</code>.</li>
+<li>Apply <code>if</code> conditionals inside a loop to filter and classify records against business thresholds.</li>
+<li>Accumulate multiple results simultaneously inside one loop — a running total and two separately-filtered lists.</li>
+<li>Write a summary to a text file with <code>open(..., 'w')</code> and <code>.write()</code>, after ensuring the target folder exists with <code>os.makedirs(..., exist_ok=True)</code>.</li>
+<li>Write <code>pytest</code> tests using list comprehensions and generator expressions as the assertion targets, not just simple hardcoded values.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 (the list-of-dicts pattern) is the spine of the whole lab; objectives 2–3 are the accumulator pattern applied three ways in parallel; objective 5 previews comprehension syntax.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:03</td><td>Welcome: "the list-of-dicts pattern"</td><td>3</td></tr>
+<tr><td>0:03–0:15</td><td>Part 1 — Records and loop</td><td>12</td></tr>
+<tr><td>0:15–0:29</td><td>Part 2 — Two business rules</td><td>14</td></tr>
+<tr><td>0:29–0:45</td><td>Part 3 — Formatted summary and file output</td><td>16</td></tr>
+<tr><td>0:45–0:58</td><td>Part 4 — <code>pytest</code></td><td>13</td></tr>
+<tr><td>0:58–1:06</td><td>Part 5 — Ritual and push</td><td>8</td></tr>
+<tr><td>1:06–1:15</td><td>Stretch (sort/group) + wrap-up</td><td>9</td></tr>
+</tbody>
+</table>
+<aside class="notes">Four required parts plus the ritual fill the class period at a normal pace; the sort/group Stretch is genuinely quick (one new function, <code>sorted(..., key=lambda ...)</code>) and worth full live demo time if the room reaches it, since it's a directly reusable pattern for later modules.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:03</span>
+<h1>The list-of-dicts pattern</h1>
+<aside class="notes">
+Teaching goal: set the frame — a list where every item is a dictionary with the same fields is one of the most common ways real business data lives in memory.
+Say to the class (verbatim): "Today's structure — a list where every item is a dictionary with the same fields — is genuinely one of the most common ways real business data lives in memory, before it's ever in a spreadsheet, a database table, or a pandas DataFrame later in this course. Five records, two business rules, a formatted summary saved to disk. This is the first lab that feels like a small, real application, not just a syntax exercise."
+Do: name the arc — Part 1 builds the records and a first filter loop, Part 2 adds three parallel accumulators, Part 3 saves a summary to disk, Part 4 tests the logic with comprehensions, Part 5 is the familiar ritual.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:03–0:15</span>
+<h1>Records and Loop</h1>
+<aside class="notes">
+Teaching goal: the list-of-dicts literal syntax, and a first loop that filters on one condition.
+Say to the class (verbatim): "Five records, each a dictionary with the same five keys. This consistency — every record having exactly the same fields — is what makes looping through them meaningful."
+Check for understanding (asked at the end of this part): "If a sixth record had <code>'status': 'pending'</code> (lowercase), would it be included by this filter?" Answer: No — string comparison with <code>==</code> is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code>. A good, concrete reminder of a lesson that recurs constantly whenever real-world data has inconsistent capitalization — a genuine, common data-quality issue, not just a syntax trivia point.
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>A <strong>list of dictionaries</strong>: square brackets hold five elements, each itself a dictionary in curly braces. Every dictionary has the <strong>same five keys</strong> (<code>id</code>, <code>name</code>, <code>category</code>, <code>amount</code>, <code>status</code>) — nothing in Python requires this, but consistency is what makes looping and filtering useful.</p>
+<p><code>for rec in records:</code> — <code>rec</code> is bound to one whole dictionary per pass, the same loop shape as any prior list iteration, just holding a richer value each time.</p>
+<p><code>if rec['status'] == 'Pending':</code> — bracket-notation dictionary access, inside a conditional, inside a loop: the three-layer combination doing real filtering work on business data.</p>
+</div>
+<aside class="notes">In the f-string <code>f"{rec['name']}: ${rec['amount']:,.2f}"</code>, note the <strong>single quotes inside</strong>, <strong>double quotes outside</strong> — Python requires the inner and outer quote characters to differ so there's no ambiguity about where the string ends. <code>:,.2f</code> adds a thousands separator and two decimals.</aside>
+</section>
+
+<!-- 8. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Start the file — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module04_programming
+source .venv/bin/activate
+touch week6_lab.py &amp;&amp; code week6_lab.py</div>
+<p class="expect">Shown for reference — <code>source</code> and <code>code</code> can't execute in the browser. Same project folder, venv and repo as Week 5 — no new setup this week, just a new file.</p>
+<aside class="notes">
+Line by line:
+- <code>cd ~/ism3232/module04_programming</code> — the Week 5 project folder, reused as-is.
+- <code>source .venv/bin/activate</code> — the same venv from Week 5; no new <code>python -m venv</code> / <code>pip install</code> step this week.
+- <code>touch week6_lab.py &amp;&amp; code week6_lab.py</code> — create the new file and open it.
+Common mistakes: forgetting to activate the venv before running <code>pytest</code> later; starting a brand-new folder instead of continuing in <code>module04_programming/</code>.
+</aside>
+</section>
+
+<!-- 9. PART 1 records + loop (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>week6_lab.py</code>, Part 1: records + filter loop</h3>
+<div class="run" data-lang="python">
+# week6_lab.py
+# Author: [Your Name]
+
+records = [
+    {'id': 1, 'name': 'Taylor', 'category': 'Travel',    'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'category': 'Equipment', 'amount': 450,  'status': 'Pending'},
+    {'id': 3, 'name': 'Morgan', 'category': 'Software',  'amount': 3500, 'status': 'Approved'},
+    {'id': 4, 'name': 'Riley',  'category': 'Travel',    'amount': 89,   'status': 'Pending'},
+    {'id': 5, 'name': 'Alex',   'category': 'Equipment', 'amount': 2200, 'status': 'Pending'},
+]
+
+for rec in records:
+    if rec['status'] == 'Pending':
+        print(f"{rec['name']}: ${rec['amount']:,.2f}")
+</div>
+<p class="expect">Type it unchanged and Run — only the four <code>Pending</code> records print; Morgan (<code>Approved</code>) is correctly excluded. Then delete the <code>if</code> line's indentation to print all five and see Morgan wrongly appear.</p>
+<aside class="notes">
+Line by line:
+- <code>records = [{...}, {...}, ...]</code> — a list, square brackets, five elements, each itself a dictionary in curly braces. Every dictionary has the <strong>same five keys</strong> (<code>id</code>, <code>name</code>, <code>category</code>, <code>amount</code>, <code>status</code>), in the same order — a convention worth calling out: nothing in Python requires it, but for this pattern to be useful for looping and filtering, consistency is what makes it work.
+- <code>for rec in records:</code> — <code>rec</code> is bound to one whole dictionary per pass, the same loop shape as any prior list iteration, just holding a richer value than a plain number or string.
+- <code>if rec['status'] == 'Pending':</code> — bracket-notation dictionary access, inside a conditional, inside a loop — the three-layer combination that's been building all semester, now filtering real business data.
+- <code>f"{rec['name']}: ${rec['amount']:,.2f}"</code> — single quotes inside, double quotes outside the f-string; Python requires the inner and outer quote characters to differ. <code>:,.2f</code> — thousands separator + two decimals.
+Common mistakes: mismatched key names between records (a typo like <code>'Statuss'</code>) — doesn't error until the loop reaches that record, then <code>KeyError</code>; forgetting the <code>if</code> filter entirely so Morgan (Approved) wrongly appears.
+Check for understanding: "If a sixth record had <code>'status': 'pending'</code> (lowercase), would it be included?" Answer: No — <code>==</code> string comparison is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code>.
+</aside>
+</section>
+
+<!-- 10. PART 1 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Taylor: $1,200.00
+Jordan: $450.00
+Riley: $89.00
+Alex: $2,200.00</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 1 exactly — only the four <code>Pending</code> records; Morgan, <code>Approved</code>, is correctly excluded.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): <code>python3 week6_lab.py</code> prints exactly these four lines. Confirm every student sees exactly this.</aside>
+</section>
+
+<!-- 11. PART 1 KeyError demo (RUNNABLE, broken) -->
+<section class="s-code">
+<h3>The typo bug on purpose — a misspelled key</h3>
+<div class="run" data-lang="python">
+records = [
+    {'id': 1, 'name': 'Taylor', 'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'amount': 450,  'statuss': 'Pending'},
+]
+
+for rec in records:
+    if rec['status'] == 'Pending':
+        print(f"{rec['name']}: ${rec['amount']:,.2f}")
+</div>
+<p class="expect">Record 2's key is misspelled <code>'statuss'</code>. Run it — the first record prints fine, then the loop reaches record 2 and raises. This is why proofreading five records by eye matters.</p>
+<aside class="notes">
+Line by line: identical to Part 1's loop, but record 2 has <code>'statuss'</code> instead of <code>'status'</code>. A mismatched key name does <strong>not</strong> error at definition time — it's only when <code>rec['status']</code> is looked up on that record, mid-loop, that Python raises <code>KeyError: 'status'</code>. The first record (Taylor) prints normally first, which is what makes a typo two records deep genuinely hard to spot by eye.
+Common mistakes: this exact typo; assuming the whole list is validated up front rather than key-by-key as the loop runs.
+</aside>
+</section>
+
+<!-- 12. PART 1 KeyError traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Taylor: $1,200.00
+Traceback (most recent call last):
+  File "&lt;exec&gt;", line 7, in &lt;module&gt;
+    if rec['status'] == 'Pending':
+       ~~~^^^^^^^^^^
+KeyError: 'status'</pre>
+<p class="expect">The load-bearing last line is <code>KeyError: 'status'</code> — Python asking for a key that record 2 doesn't have, because it was misspelled <code>'statuss'</code>.</p>
+<aside class="notes">Verified against CPython 3.12.2 (Pyodide 0.26.4 bundles CPython 3.12, so the traceback body and caret markers match). The file shows as <code>&lt;exec&gt;</code> in Pyodide vs a temp path under <code>python3</code>, and the line number depends on the block's leading lines — neither is load-bearing. Note Taylor's line prints <em>before</em> the traceback: the error happens mid-loop, not up front. Make a student say "KeyError," not just "it breaks."</aside>
+</section>
+
+<!-- 13. PART 1 KeyError fixed (RUNNABLE) -->
+<section class="s-code">
+<h3>Fixed — every record uses the same key name</h3>
+<div class="run" data-lang="python">
+records = [
+    {'id': 1, 'name': 'Taylor', 'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'amount': 450,  'status': 'Pending'},
+]
+
+for rec in records:
+    if rec['status'] == 'Pending':
+        print(f"{rec['name']}: ${rec['amount']:,.2f}")
+</div>
+<p class="expect">Record 2's key is now <code>'status'</code>, matching every other record. Both records print — the fix is simply consistent key names across the whole list.</p>
+<aside class="notes">The only change from the broken block is <code>'statuss'</code> &rarr; <code>'status'</code> on record 2. Takeaway: the list-of-dicts pattern only works when every dictionary genuinely shares the same keys; a quick proofread of the five records before running is cheaper than chasing a mid-loop <code>KeyError</code>.</aside>
+</section>
+
+<!-- 14. PART 1 KeyError fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Taylor: $1,200.00
+Jordan: $450.00</pre>
+<p class="expect">With consistent keys, both <code>Pending</code> records print cleanly — no traceback.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the corrected block prints exactly these two lines and exits 0.</aside>
+</section>
+
+<!-- 15. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If a sixth record had <code>'status': 'pending'</code> (lowercase <code>p</code>), would <code>if rec['status'] == 'Pending':</code> include it?</p>
+<button data-opt="A">No — <code>==</code> string comparison is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code></button>
+<button data-opt="B">Yes — Python compares strings case-insensitively by default</button>
+<button data-opt="C">Yes — the <code>if</code> only checks that the <code>'status'</code> key exists, not its value</button>
+<p class="why" hidden>No — string comparison with <code>==</code> is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code>. A concrete reminder of a lesson that recurs constantly whenever real-world data has inconsistent capitalization — a genuine, common data-quality issue, not just a syntax trivia point.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "No — string comparison with <code>==</code> is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code>. A good, concrete reminder of a lesson that recurs constantly whenever real-world data has inconsistent capitalization — worth flagging as a genuine, common data-quality issue, not just a syntax trivia point."</aside>
+</section>
+
+<!-- 16. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Mismatched key names between records (a typo like <code>'Statuss'</code> in one dict) — this doesn't error at definition time; it means that record's <code>rec['status']</code> lookup fails with <code>KeyError</code> the moment the loop reaches it. Have students proofread their own five records carefully before running — a typo two records deep is genuinely hard to spot by eye.</p>
+<p>Forgetting the <code>if</code> filter entirely and printing all five records — Morgan (Approved) would incorrectly appear; a good "does this output match what was asked" sanity check.</p>
+</div>
+<aside class="notes">Check for understanding: "If a sixth record had <code>'status': 'pending'</code> (lowercase), would it be included?" Answer: No — <code>==</code> is case-sensitive; <code>'pending' == 'Pending'</code> is <code>False</code>.</aside>
+</section>
+
+<!-- 17. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:15–0:29</span>
+<h1>Two Business Rules</h1>
+<aside class="notes">
+Teaching goal: accumulate multiple, independent results inside one loop — a running total, plus two separately-filtered lists built from two distinct threshold checks.
+Say to the class (verbatim): "Same loop shape, but now doing three jobs at once: a running total, and two separate 'flag this record' lists, each with its own threshold. This is the accumulator pattern, applied three times in parallel, inside one pass through the data."
+Check for understanding (asked at the end of this part): "If a pending record had <code>amount</code> exactly equal to <code>1000</code> — right at <code>LIMIT</code> — would it be flagged?" Answer: No — the check is strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>; a good boundary-condition check, echoing every prior module's repeated emphasis on reading comparison operators precisely.
+</aside>
+</section>
+
+<!-- 18. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>LIMIT = 1000</code>, <code>HIGH = 2000</code> — <strong>named constants</strong>, all-caps by convention: if the review threshold ever changes, there's exactly one line to edit rather than hunting for every literal <code>1000</code>.</p>
+<p><code>total = 0</code>, <code>flagged = []</code>, <code>high_value = []</code> — <strong>three separate accumulators, initialized before the loop</strong>, each a different shape for a different purpose.</p>
+<p>The two threshold checks are <strong>separate <code>if</code>s, not <code>elif</code></strong> — a record over <code>HIGH</code> ($2000) is by definition also over <code>LIMIT</code> ($1000) and should land in <em>both</em> lists. <code>elif</code> would silently exclude it from the broader review list.</p>
+</div>
+<aside class="notes"><code>flagged.append(rec)</code> appends the <strong>whole dictionary</strong>, not just the amount — Part 3's "records needing review" printout needs each record's <code>id</code> and <code>name</code>, so keeping the full dict is a deliberate choice. Ask the room explicitly: "would <code>elif</code> here be correct?" (No — <code>elif</code> would mean a high-value record only ever lands in <code>high_value</code>, never also in <code>flagged</code>.)</aside>
+</section>
+
+<!-- 19. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — Part 2: three parallel accumulators (same file)</h3>
+<div class="run" data-lang="python">
+records = [
+    {'id': 1, 'name': 'Taylor', 'category': 'Travel',    'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'category': 'Equipment', 'amount': 450,  'status': 'Pending'},
+    {'id': 3, 'name': 'Morgan', 'category': 'Software',  'amount': 3500, 'status': 'Approved'},
+    {'id': 4, 'name': 'Riley',  'category': 'Travel',    'amount': 89,   'status': 'Pending'},
+    {'id': 5, 'name': 'Alex',   'category': 'Equipment', 'amount': 2200, 'status': 'Pending'},
+]
+
+LIMIT = 1000
+HIGH  = 2000
+total = 0
+flagged = []
+high_value = []
+
+for rec in records:
+    if rec['status'] == 'Pending':
+        total += rec['amount']
+        if rec['amount'] &gt; LIMIT:
+            flagged.append(rec)
+        if rec['amount'] &gt; HIGH:
+            high_value.append(rec)
+
+print(f'total: {total}')
+print(f"flagged: {[r['name'] for r in flagged]}")
+print(f"high_value: {[r['name'] for r in high_value]}")
+</div>
+<p class="expect">The <code>records</code> list is re-declared — every runnable block here starts a fresh namespace, so nothing carries over unless re-typed. In the real <code>week6_lab.py</code> it's already above, from Part 1. The three <code>print</code> lines are just to confirm the accumulators; they aren't part of the guide's Part 2 code.</p>
+<aside class="notes">
+Line by line:
+- <code>LIMIT = 1000</code>, <code>HIGH = 2000</code> — named constants, all-caps by convention (a value meant to stay fixed). One line to edit if the threshold changes.
+- <code>total = 0</code>, <code>flagged = []</code>, <code>high_value = []</code> — three separate accumulators, initialized before the loop, each a different shape (a number, and two empty lists).
+- <code>if rec['status'] == 'Pending':</code> — the outer filter, unchanged from Part 1 — everything inside only runs for pending records; approved records (Morgan) never reach any accumulator update.
+- <code>total += rec['amount']</code> — the running total, only for pending records.
+- <code>if rec['amount'] &gt; LIMIT: flagged.append(rec)</code> — appends the <strong>whole dictionary</strong>, not just the amount; Part 3 needs <code>id</code> and <code>name</code>.
+- <code>if rec['amount'] &gt; HIGH: high_value.append(rec)</code> — a <strong>second, independent</strong> check, a separate <code>if</code> not <code>elif</code>: a record over <code>HIGH</code> is also over <code>LIMIT</code> and should land in both lists.
+Common mistakes: using <code>elif</code> (the exercise's central structural point); an indentation slip putting <code>total += rec['amount']</code> outside the status filter, which would wrongly add Morgan's $3,500; appending <code>rec['amount']</code> instead of <code>rec</code>, which breaks Part 3's printout.
+Check for understanding: "If a pending record had <code>amount</code> exactly <code>1000</code>, would it be flagged?" Answer: No — the check is strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>.
+</aside>
+</section>
+
+<!-- 20. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total: 3939
+flagged: ['Taylor', 'Alex']
+high_value: ['Alex']</pre>
+<p class="expect">Matches the guide's "Verified values": <code>total</code> is <code>3939</code> (the four pending amounts, <code>1200 + 450 + 89 + 2200</code>); <code>flagged</code> is the amounts over $1,000 ($1,200 and $2,200); <code>high_value</code> is the amounts over $2,000 ($2,200 only). The guide lists the full dicts; these <code>print</code> lines show just the <code>name</code> of each for readability.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these three lines. The guide's Part 2 "Verified values" panel writes <code>flagged: ['Taylor', 'Alex']</code> and <code>high_value: ['Alex']</code> with the dollar amounts as trailing <code>#</code> annotations (not literal output); the accumulators actually hold the full record dicts. Morgan ($3,500, Approved) is correctly excluded from all three because the status filter runs first.</aside>
+</section>
+
+<!-- 21. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If a pending record had <code>amount</code> exactly equal to <code>1000</code> — right at <code>LIMIT</code> — would it be added to <code>flagged</code>?</p>
+<button data-opt="A">Yes — <code>1000</code> counts as "at or over" the $1,000 review limit</button>
+<button data-opt="B">No — the check is strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>; <code>1000 &gt; 1000</code> is <code>False</code></button>
+<button data-opt="C">No — <code>flagged</code> only ever holds records over <code>HIGH</code> ($2,000)</button>
+<p class="why" hidden>No — the check is strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>; a good boundary-condition check, echoing every prior module's repeated emphasis on reading comparison operators precisely. <code>1000 &gt; 1000</code> evaluates to <code>False</code>, so a record sitting exactly at the limit is not flagged.</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "No — the check is strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>; a good boundary-condition check, echoing every prior module's repeated emphasis on reading comparison operators precisely."</aside>
+</section>
+
+<!-- 22. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Using <code>elif</code> instead of two separate <code>if</code>s for the <code>LIMIT</code>/<code>HIGH</code> checks — this is the exercise's central structural point. <code>elif</code> would mean a high-value record lands only in <code>high_value</code>, never also in <code>flagged</code>, silently excluding it from the broader review list.</p>
+<p>Placing <code>total += rec['amount']</code> <strong>outside</strong> the <code>if rec['status'] == 'Pending':</code> block by an indentation slip — would wrongly include Morgan's $3,500 Approved amount. Sanity-check the total against the four pending amounts' sum: <code>1200 + 450 + 89 + 2200 = 3939</code>.</p>
+<p>Appending <code>rec['amount']</code> (just the number) instead of <code>rec</code> (the whole dictionary) — fine for a total, but breaks Part 3's printout, which needs <code>r['id']</code> and <code>r['name']</code>.</p>
+</div>
+<aside class="notes">Check for understanding: "If a pending record had <code>amount</code> exactly <code>1000</code>, would it be flagged?" Answer: No — strictly <code>&gt; LIMIT</code>, not <code>&gt;=</code>.</aside>
+</section>
+
+<!-- 23. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:29–0:45</span>
+<h1>Formatted Summary and File Output</h1>
+<aside class="notes">
+Teaching goal: print a clean, multi-line summary, and — new today — <strong>save it to an actual file on disk</strong>, ensuring the target folder exists first.
+Say to the class (verbatim): "Everything so far has only lived on screen, gone the moment the script ends. Today we save a summary to a real file — and I want to show you the one-line safety net that makes this work reliably regardless of whether the folder it's going into already exists."
+Check for understanding (asked at the end of this part): "If you ran this script three times in a row without deleting <code>data/week6_summary.txt</code> between runs, what would the file contain after the third run?" Answer: Still just the three summary lines — <code>'w'</code> mode overwrites completely on every run, not accumulating; a direct callback to earlier modules' <code>"w"</code>-vs-append-mode distinction.
+</aside>
+</section>
+
+<!-- 24. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>os.makedirs('data', exist_ok=True)</code> — creates the folder if it's missing; <code>exist_ok=True</code> is the detail that prevents an error if the folder is <em>already</em> there, so re-running the script doesn't crash on the second run. Without <code>makedirs</code> at all, <code>open('data/...', 'w')</code> raises <code>FileNotFoundError</code> — Python won't create missing parent folders for you.</p>
+<p><code>lines = [f'...', f'...', f'...']</code> — build the content once, as a list, so both the <code>print()</code> loop and the file-write reuse the <em>exact same</em> content and never drift out of sync.</p>
+<p><code>'\n'.join(lines)</code> glues the list elements with a newline <em>between</em> each pair — but <strong>not</strong> after the last one, which is why <code>+ '\n'</code> is added explicitly for a clean trailing newline.</p>
+</div>
+<aside class="notes"><code>'w'</code> mode is create-or-overwrite — the same overwrite-risk lesson as every prior file-writing exercise. <code>f.write(...)</code> does <strong>not</strong> add a newline the way <code>print()</code> does — that contrast is exactly why the <code>'\n'.join(...) + '\n'</code> construction is needed. The final loop over <code>flagged</code> reuses Part 2's accumulated list directly.</aside>
+</section>
+
+<!-- 25. PART 3 code (RUNNABLE, self-contained) -->
+<section class="s-code">
+<h3>Live-code — Part 3: summary + file output (same file)</h3>
+<div class="run" data-lang="python">
+records = [
+    {'id': 1, 'name': 'Taylor', 'category': 'Travel',    'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'category': 'Equipment', 'amount': 450,  'status': 'Pending'},
+    {'id': 3, 'name': 'Morgan', 'category': 'Software',  'amount': 3500, 'status': 'Approved'},
+    {'id': 4, 'name': 'Riley',  'category': 'Travel',    'amount': 89,   'status': 'Pending'},
+    {'id': 5, 'name': 'Alex',   'category': 'Equipment', 'amount': 2200, 'status': 'Pending'},
+]
+LIMIT = 1000
+HIGH  = 2000
+total = 0
+flagged = []
+high_value = []
+for rec in records:
+    if rec['status'] == 'Pending':
+        total += rec['amount']
+        if rec['amount'] &gt; LIMIT:
+            flagged.append(rec)
+        if rec['amount'] &gt; HIGH:
+            high_value.append(rec)
+
+import os
+os.makedirs('data', exist_ok=True)
+
+lines = [
+    f'Pending total:   ${total:,.2f}',
+    f'Needs review:    {len(flagged)}',
+    f'High-value:      {len(high_value)}',
+]
+for line in lines:
+    print(line)
+
+with open('data/week6_summary.txt', 'w') as f:
+    f.write('\n'.join(lines) + '\n')
+
+print('\nRecords needing review:')
+for r in flagged:
+    print(f"  ID {r['id']}: {r['name']} - ${r['amount']:,.2f}")
+</div>
+<p class="expect">Part 1's records and Part 2's accumulator loop are re-declared so this block is self-contained (fresh namespace). In the real <code>week6_lab.py</code>, only the code from <code>import os</code> down is new for Part 3.</p>
+<aside class="notes">
+Line by line (Part 3 portion):
+- <code>import os</code> — Python's built-in module for interacting with the operating system, including the filesystem — new today.
+- <code>os.makedirs('data', exist_ok=True)</code> — the line worth explaining most carefully. Without it, <code>open('data/week6_summary.txt', 'w')</code> fails with <code>FileNotFoundError</code> if <code>data/</code> doesn't exist. <code>exist_ok=True</code> prevents an error if the folder is already there — without it, re-running the script would crash on the <em>second</em> run. Worth using as a default habit any time a script writes to a folder that might or might not already exist.
+- <code>lines = [f'...', f'...', f'...']</code> — a list of three formatted strings, built up first: both the <code>print()</code> loop and the file-write reuse the <em>exact same</em> content, guaranteeing screen and file never drift.
+- <code>with open('data/week6_summary.txt', 'w') as f:</code> — <code>'w'</code> mode, create-or-overwrite.
+- <code>f.write('\n'.join(lines) + '\n')</code> — <code>.join()</code> is called <em>on</em> the separator (<code>'\n'</code>) and glues every list element with that separator <em>between</em> each pair — but not a trailing one, so <code>+ '\n'</code> is added explicitly.
+- The final loop over <code>flagged</code> prints each review-needed record's <code>id</code>, <code>name</code>, and formatted <code>amount</code>.
+Common mistakes: skipping <code>os.makedirs(..., exist_ok=True)</code> (&rarr; <code>FileNotFoundError</code>); omitting the trailing <code>+ '\n'</code>; confusing <code>f.write(...)</code> with <code>print(...)</code> (<code>.write()</code> adds no newline).
+Check for understanding: "Run three times without deleting the file — what's in it after run 3?" Answer: still just the three summary lines; <code>'w'</code> overwrites completely, never appends.
+</aside>
+</section>
+
+<!-- 26. PART 3 terminal output -->
+<section class="s-out">
+<h3>Expected output (terminal)</h3>
+<pre>Pending total:   $3,939.00
+Needs review:    2
+High-value:      1
+
+Records needing review:
+  ID 1: Taylor - $1,200.00
+  ID 5: Alex - $2,200.00</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 3 exactly — the three summary lines, a blank line from <code>'\n'</code>, then the per-record review list.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the self-contained block prints exactly these lines. <code>total</code> is <code>3939</code> &rarr; <code>$3,939.00</code>; <code>len(flagged)</code> is <code>2</code>; <code>len(high_value)</code> is <code>1</code>.</aside>
+</section>
+
+<!-- 27. PART 3 file content (static) -->
+<section class="s-out">
+<h3>Verified file content — <code>cat data/week6_summary.txt</code></h3>
+<pre>Pending total:   $3,939.00
+Needs review:    2
+High-value:      1</pre>
+<p class="expect">The saved file is <em>shorter</em> than the terminal output — only the three lines from <code>lines</code> were written, not the "Records needing review" section printed afterward. A defensible design choice, not a bug: the file is a compact summary; the terminal shows fuller detail for whoever's running the script now.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: after the Part 3 block runs, <code>cat data/week6_summary.txt</code> shows exactly these three lines plus a trailing newline. Ask the room: "is this a bug, or a deliberate design choice?" (Defensible design choice — the file's content is fixed at the moment <code>.write()</code> executes; adding the review detail would mean adding those lines to <code>lines</code> first, or writing a second file.)</aside>
+</section>
+
+<!-- 28. PART 3 FileNotFoundError demo (RUNNABLE, broken) -->
+<section class="s-code">
+<h3>Skip <code>os.makedirs</code> on purpose — write into a folder that isn't there</h3>
+<div class="run" data-lang="python">
+lines = ['Pending total:   $3,939.00', 'Needs review:    2', 'High-value:      1']
+
+with open('reports/week6_summary.txt', 'w') as f:
+    f.write('\n'.join(lines) + '\n')
+print('saved')
+</div>
+<p class="expect">No <code>os.makedirs('reports', ...)</code> first — <code>open(..., 'w')</code> does <strong>not</strong> create the missing <code>reports/</code> folder. Run it: it raises before <code>'saved'</code> ever prints. Same failure the guide describes for <code>data/</code>.</p>
+<aside class="notes">
+The guide's Part 3 common mistakes: "Skipping <code>os.makedirs(..., exist_ok=True)</code>, assuming <code>open(..., 'w')</code> will create the folder automatically — it will not; <code>FileNotFoundError</code> is the resulting error, worth demonstrating live if it doesn't happen naturally." A brand-new folder name (<code>reports/</code>) is used here instead of <code>data/</code> so the demo reliably fails even after the Part 3 block has already created <code>data/</code> in Pyodide's persistent virtual filesystem.
+</aside>
+</section>
+
+<!-- 29. PART 3 FileNotFoundError traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  File "&lt;exec&gt;", line 3, in &lt;module&gt;
+    with open('reports/week6_summary.txt', 'w') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'reports/week6_summary.txt'</pre>
+<p class="expect">The load-bearing last line is <code>FileNotFoundError: [Errno 2] No such file or directory: 'reports/week6_summary.txt'</code> — Python won't create the missing parent folder just because you're opening a file inside it.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly this <code>FileNotFoundError</code> and exits 1; <code>'saved'</code> never prints. The <code>&lt;exec&gt;</code> path and line number are not load-bearing (temp path under <code>python3</code>). The guide names this exact error class as the consequence of skipping <code>os.makedirs</code>.</aside>
+</section>
+
+<!-- 30. PART 3 FileNotFoundError fixed (RUNNABLE) -->
+<section class="s-code">
+<h3>Fixed — <code>os.makedirs(..., exist_ok=True)</code> first</h3>
+<div class="run" data-lang="python">
+import os
+
+lines = ['Pending total:   $3,939.00', 'Needs review:    2', 'High-value:      1']
+
+os.makedirs('reports', exist_ok=True)
+with open('reports/week6_summary.txt', 'w') as f:
+    f.write('\n'.join(lines) + '\n')
+print('saved')
+</div>
+<p class="expect">One line added — <code>os.makedirs('reports', exist_ok=True)</code> — creates the folder if missing, does nothing if it's already there. Now the write succeeds and <code>saved</code> prints. Run it twice: <code>exist_ok=True</code> means the second run is fine too.</p>
+<aside class="notes"><code>os.makedirs('reports', exist_ok=True)</code> is the one-line safety net: creates the folder if missing, and <code>exist_ok=True</code> makes a repeat run a no-op instead of a crash. This is the pattern the guide recommends as a default habit any time a script writes into a folder that might or might not already exist.</aside>
+</section>
+
+<!-- 31. PART 3 FileNotFoundError fixed output -->
+<section class="s-out">
+<h3>Output</h3>
+<pre>saved</pre>
+<p class="expect">With the folder ensured first, <code>open(..., 'w')</code> succeeds and <code>print('saved')</code> runs. Re-running is safe — <code>exist_ok=True</code> swallows the "folder already exists" case.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints <code>saved</code> and exits 0, on the first run and every run after.</aside>
+</section>
+
+<!-- 32. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">If you ran this script three times in a row without deleting <code>data/week6_summary.txt</code> between runs, what would the file contain after the third run?</p>
+<button data-opt="A">All nine lines — three runs' worth of summary, appended in order</button>
+<button data-opt="B">An error on the second run — the file already exists</button>
+<button data-opt="C">Still just the three summary lines — <code>'w'</code> mode overwrites completely on every run, never appends</button>
+<p class="why" hidden>Still just the three summary lines — <code>'w'</code> mode overwrites completely on every run, not accumulating. A direct callback to earlier modules' <code>"w"</code>-vs-append-mode distinction, confirming it still applies here. (<code>os.makedirs(..., exist_ok=True)</code> is why there's no error on the later runs either.)</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: "Still just the three summary lines — <code>'w'</code> mode overwrites completely on every run, not accumulating; a good, direct callback to earlier modules' <code>"w"</code>-vs-append-mode distinction, confirming it still applies here."</aside>
+</section>
+
+<!-- 33. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Skipping <code>os.makedirs(..., exist_ok=True)</code>, assuming <code>open(..., 'w')</code> will create the folder automatically — it will not; <code>FileNotFoundError</code> is the resulting error, worth demonstrating live if it doesn't happen naturally.</p>
+<p>Using <code>'\n'.join(lines)</code> without the trailing <code>+ '\n'</code> — the file's last line then has no trailing newline, which is usually harmless but can look visually odd in some tools (<code>cat</code>'s prompt appearing attached to the last line).</p>
+<p>Confusing <code>f.write(...)</code> with <code>print(...)</code> — <code>.write()</code> does not add a newline automatically the way <code>print()</code> does, which is precisely why the <code>'\n'.join(...) + '\n'</code> construction is necessary at all.</p>
+</div>
+<aside class="notes">Check for understanding: "Run three times without deleting the file — what's in it after run 3?" Answer: still just the three summary lines; <code>'w'</code> overwrites completely, never appends.</aside>
+</section>
+
+<!-- 34. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:45–0:58</span>
+<h1><code>pytest</code> — comprehensions as the assertion target</h1>
+<aside class="notes">
+Teaching goal: five <code>pytest</code> tests using <strong>list and generator comprehensions</strong> as their core logic — genuinely new syntax, worth explaining carefully even though it's compact. Unlike Week 5, all five pass exactly as written.
+Say to the class (verbatim): "Five tests, and this time — unlike last week — they all pass exactly as written. What's new here isn't a bug to diagnose; it's a genuinely useful piece of syntax: comprehensions, a compact way to build a filtered list in one line instead of a full <code>for</code>/<code>if</code>/<code>.append()</code> block."
+Then, verbatim: "Notice I'm not diagnosing anything today — this file is correct as given. Last week's lesson wasn't 'always expect broken tests' — it was 'read the output carefully regardless of what you expect.' This week confirms that habit pays off either way: a quick, confident green run is just as much the result of careful reading as catching a real bug was."
+Check for understanding (asked at the end of this part): "Rewrite <code>test_flag_filter</code>'s comprehension as a full <code>for</code> loop with <code>.append()</code>, out loud, without looking at the board." A good direct check that the comprehension's compactness hasn't obscured the underlying, already-familiar accumulator logic — every student should be able to produce the expanded version fluently at this point in the semester.
+</aside>
+</section>
+
+<!-- 35. PART 4 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>sum(a for a in amounts)</code> — a <strong>generator expression</strong> inside <code>sum()</code>: <code>a for a in amounts</code> produces each value one at a time. For this simple case it's identical to <code>sum(amounts)</code>; it's shown to preview the comprehension syntax on the next line.</p>
+<p><code>[r for r in records if r['amount'] &gt; 1000]</code> — a <strong>list comprehension</strong>: read left to right as "for each <code>r</code> in <code>records</code>, if <code>r['amount'] &gt; 1000</code>, include <code>r</code> in the new list." A compact equivalent of the <code>for</code>/<code>if</code>/<code>.append()</code> accumulator from Part 2 — same logic, tighter syntax.</p>
+<p>The order is fixed: <code>[expression for item in iterable if condition]</code>, always in that sequence.</p>
+</div>
+<aside class="notes">Write both versions side by side once, so students see the comprehension isn't new <em>logic</em>, just a more compact <em>syntax</em> for the accumulator-with-a-filter pattern. The square brackets specifically are what make it a <em>list</em> comprehension (materializing all results at once); without them it's a bare generator expression, which <code>len()</code> and re-iteration don't handle the same way.</aside>
+</section>
+
+<!-- 36. PART 4 provided test file (static, no pytest runner in browser) -->
+<section class="s-code">
+<h3>Type the tests as provided — <code>tests/test_week6.py</code></h3>
+<pre><code class="language-python">def test_accumulator():
+    amounts = [500, 1500, 200]
+    total = sum(a for a in amounts)
+    assert total == 2200
+
+def test_flag_filter():
+    records = [{'amount': 500}, {'amount': 1500}, {'amount': 800}]
+    flagged = [r for r in records if r['amount'] &gt; 1000]
+    assert len(flagged) == 1
+
+def test_status_filter():
+    records = [{'amount': 500, 'status': 'Pending'}, {'amount': 1000, 'status': 'Approved'}]
+    pending = [r for r in records if r['status'] == 'Pending']
+    assert len(pending) == 1
+
+def test_dict_key_access():
+    rec = {'id': 1, 'amount': 750, 'status': 'Pending'}
+    assert rec['amount'] == 750
+
+def test_list_of_dicts_length():
+    data = [{'x': 1}, {'x': 2}, {'x': 3}]
+    assert len(data) == 3</code></pre>
+<p class="expect">Shown static — <code>pytest</code> has no runner in Pyodide, so this and the <code>pytest -v</code> pane below cannot execute in the browser. First: <code>touch tests/test_week6.py</code>, then run <code>pytest -v</code> on your own machine. The next slide runs the same core logic live.</p>
+<aside class="notes">
+Line by line:
+- <code>test_accumulator</code> — <code>sum(a for a in amounts)</code>, a generator expression; functionally identical to <code>sum(amounts)</code> here, shown to preview comprehensions.
+- <code>test_flag_filter</code> — <code>[r for r in records if r['amount'] &gt; 1000]</code>, a list comprehension; direct equivalent of:
+  <code>flagged = []</code> / <code>for r in records:</code> / <code>&nbsp;&nbsp;if r['amount'] &gt; 1000:</code> / <code>&nbsp;&nbsp;&nbsp;&nbsp;flagged.append(r)</code>
+- <code>test_status_filter</code> — the same comprehension shape, filtering on a different condition.
+- <code>test_dict_key_access</code> / <code>test_list_of_dicts_length</code> — simpler direct assertions confirming the foundational operations the comprehension tests depend on.
+Common mistakes: writing a bare generator expression <code>r for r in records if ...</code> without the square brackets (valid Python, but <code>len()</code> / re-iteration behave differently); putting the <code>if</code> before the <code>for</code>.
+Check for understanding: "Rewrite <code>test_flag_filter</code>'s comprehension as a full <code>for</code> loop with <code>.append()</code>, out loud." The expanded form is the four-line block above.
+</aside>
+</section>
+
+<!-- 37. PART 4 comprehension logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The same core logic, run live</h3>
+<div class="run" data-lang="python">
+amounts = [500, 1500, 200]
+print(sum(a for a in amounts))
+
+records = [{'amount': 500}, {'amount': 1500}, {'amount': 800}]
+print(len([r for r in records if r['amount'] &gt; 1000]))
+
+records2 = [{'amount': 500, 'status': 'Pending'}, {'amount': 1000, 'status': 'Approved'}]
+print(len([r for r in records2 if r['status'] == 'Pending']))
+
+rec = {'id': 1, 'amount': 750, 'status': 'Pending'}
+print(rec['amount'])
+
+data = [{'x': 1}, {'x': 2}, {'x': 3}]
+print(len(data))
+</div>
+<p class="expect">One line per test: the generator-expression sum, the two list-comprehension filters, the dict key access, the <code>len()</code> of a list of dicts. Each printed value is exactly what the matching <code>assert</code> expects.</p>
+<aside class="notes">
+Line by line:
+- <code>sum(a for a in amounts)</code> &rarr; <code>2200</code> — matches <code>test_accumulator</code>'s <code>assert total == 2200</code>.
+- <code>len([r for r in records if r['amount'] &gt; 1000])</code> &rarr; <code>1</code> — matches <code>test_flag_filter</code>.
+- <code>len([r for r in records2 if r['status'] == 'Pending'])</code> &rarr; <code>1</code> — matches <code>test_status_filter</code>.
+- <code>rec['amount']</code> &rarr; <code>750</code> — matches <code>test_dict_key_access</code>.
+- <code>len(data)</code> &rarr; <code>3</code> — matches <code>test_list_of_dicts_length</code>.
+This block lets the room see the comprehension logic execute even though the <code>pytest</code> runner itself can't run in the browser.
+</aside>
+</section>
+
+<!-- 38. PART 4 comprehension logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>2200
+1
+1
+750
+3</pre>
+<p class="expect">Five values, one per test's assertion target: <code>2200</code>, <code>1</code>, <code>1</code>, <code>750</code>, <code>3</code>. Every one matches the <code>== ...</code> in the corresponding test.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these five lines. Each equals the right-hand side of the matching test's <code>assert</code>, so all five tests pass.</aside>
+</section>
+
+<!-- 39. PART 4 pytest -v (static) -->
+<section class="s-out">
+<h3><code>pytest -v</code> — all five pass as provided</h3>
+<pre>tests/test_week6.py::test_accumulator PASSED
+tests/test_week6.py::test_flag_filter PASSED
+tests/test_week6.py::test_status_filter PASSED
+tests/test_week6.py::test_dict_key_access PASSED
+tests/test_week6.py::test_list_of_dicts_length PASSED
+5 passed</pre>
+<p class="expect">Reproduces the guide's "Verified output" for Part 4 verbatim — all five pass, no diagnostic detour needed this week. A deliberate contrast to Week 5's three-failing file.</p>
+<aside class="notes">Verified locally with <code>pytest</code> on <code>python3</code> 3.12.2 against the provided test file: <code>5 passed</code>. Say explicitly (verbatim): "Last week's lesson wasn't 'always expect broken tests' — it was 'read the output carefully regardless of what you expect.' This week confirms that habit pays off either way."</aside>
+</section>
+
+<!-- 40. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Which is the correct expansion of <code>flagged = [r for r in records if r['amount'] &gt; 1000]</code> as a full <code>for</code> loop with <code>.append()</code>?</p>
+<button data-opt="A"><code>flagged = []</code> &nbsp;/&nbsp; <code>for r in records:</code> &nbsp;/&nbsp; &nbsp;&nbsp;<code>if r['amount'] &gt; 1000:</code> &nbsp;/&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<code>flagged.append(r)</code></button>
+<button data-opt="B"><code>flagged = []</code> &nbsp;/&nbsp; <code>for r in records:</code> &nbsp;/&nbsp; &nbsp;&nbsp;<code>flagged.append(r)</code> &nbsp;/&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<code>if r['amount'] &gt; 1000:</code></button>
+<button data-opt="C"><code>for r in records:</code> &nbsp;/&nbsp; &nbsp;&nbsp;<code>if r['amount'] &gt; 1000:</code> &nbsp;/&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<code>flagged = [r]</code></button>
+<p class="why" hidden>Initialize the accumulator first (<code>flagged = []</code>), loop over every record, test the condition, and only <code>append</code> when it holds. The comprehension isn't new <em>logic</em> — it's exactly the Part 2 accumulator-with-a-filter pattern in one line. Option B appends before filtering (adds everything); option C rebinds <code>flagged</code> to a one-element list each pass.</p>
+</div>
+<aside class="notes">The guide's Part 4 Check for understanding is a task, not a Q&amp;A parenthetical: "Rewrite <code>test_flag_filter</code>'s comprehension as a full <code>for</code> loop with <code>.append()</code>, out loud, without looking at the board." Per rollout R-conv-3, the quiz answer is taken verbatim from the guide's Part 4 line-by-line expansion (the code block under <code>[r for r in records if r['amount'] &gt; 1000]</code>): <code>flagged = []</code> / <code>for r in records:</code> / <code>&nbsp;&nbsp;if r['amount'] &gt; 1000:</code> / <code>&nbsp;&nbsp;&nbsp;&nbsp;flagged.append(r)</code>.</aside>
+</section>
+
+<!-- 41. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Writing <code>flagged = r for r in records if r['amount'] &gt; 1000</code> <strong>without the square brackets</strong> — this is valid Python (a bare generator expression), but behaves differently from a list: <code>len()</code> on it, or iterating it a second time, won't work the way a list does. The square brackets are what make it a <em>list</em> comprehension, materializing all results at once.</p>
+<p>Misreading comprehension order — writing the <code>if</code> before the <code>for</code>. Re-state the fixed order: <code>[expression for item in iterable if condition]</code>, always in that sequence.</p>
+</div>
+<aside class="notes">Check for understanding: "Rewrite <code>test_flag_filter</code>'s comprehension as a full <code>for</code> loop with <code>.append()</code>, out loud." Expected: <code>flagged = []</code> / <code>for r in records:</code> / <code>&nbsp;&nbsp;if r['amount'] &gt; 1000:</code> / <code>&nbsp;&nbsp;&nbsp;&nbsp;flagged.append(r)</code>.</aside>
+</section>
+
+<!-- 42. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:06</span>
+<h1>Ritual and Push</h1>
+<aside class="notes">
+Teaching goal: the now-familiar five-step ritual, chained more compactly than prior weeks with <code>&amp;&amp;</code> — a natural progression as the sequence becomes second nature.
+Say to the class (verbatim): "Same ritual, written slightly more compactly today — chained with <code>&amp;&amp;</code>, the way you'll likely start typing it yourself once it's fully automatic."
+Check for understanding (asked at the end of this part): "If <code>ruff check .</code> reported an error, what would you see happen with the chained version above — would <code>pytest</code> still attempt to run?" Answer: No — <code>&amp;&amp;</code> chaining stops at the first failure; the practical benefit of chaining over running each command on its own separate line, where a failure wouldn't automatically prevent the next line from running.
+</aside>
+</section>
+
+<!-- 43. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest
+git add . &amp;&amp; git commit -m 'lab 6: conditionals loops dicts' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Functionally identical to Weeks 4–5's ritual, just chained with <code>&amp;&amp;</code> into two lines instead of five separate ones. Both forms are equally valid.</p>
+<aside class="notes">
+Line by line: functionally identical to Weeks 4–5's ritual, just chained with <code>&amp;&amp;</code> into two lines — <strong><code>&amp;&amp;</code> chaining means if <code>ruff format .</code> somehow failed, <code>ruff check .</code> and <code>pytest</code> wouldn't even attempt to run</strong> — a nice automatic safety property, not just a typing shortcut. Same logic on the second line: a failed <code>git add .</code> stops the commit and push.
+Common mistakes: assuming the chained form is required or that the spelled-out version from Weeks 4–5 is now wrong (both are equally valid); forgetting "lab 6" in the commit message — the same graded requirement as every prior week.
+Check for understanding: "If <code>ruff check .</code> reported an error, would <code>pytest</code> still attempt to run?" Answer: No — <code>&amp;&amp;</code> chaining stops at the first failure.
+</aside>
+</section>
+
+<!-- 44. PART 5 completion criteria -->
+<section class="s-out">
+<h3>What each step gates</h3>
+<pre>ruff format .   &amp;&amp;   ruff check .   &amp;&amp;   pytest
+      |                  |                |
+   reformats         no errors        all 5 pass
+                                          |
+git add .   &amp;&amp;   git commit -m 'lab 6: ...'   &amp;&amp;   git push
+   |                     |                          |
+ stages            message has "lab 6"      lands on GitHub</pre>
+<p class="expect"><code>&amp;&amp;</code> makes each step a gate: the next command runs only if the previous one succeeded. A failing <code>ruff check</code> or <code>pytest</code> stops the chain before anything is committed or pushed.</p>
+<aside class="notes">The guide frames the two chained lines as: "if <code>ruff format .</code> somehow failed, <code>ruff check .</code> and <code>pytest</code> wouldn't even attempt to run ... Same logic applies to the second line: a failed <code>git add .</code> would stop the commit and push from happening." Commands can't run here — the point is the gate order.</aside>
+</section>
+
+<!-- 45. PART 5 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If <code>ruff check .</code> reported an error, would <code>pytest</code> still attempt to run in <code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest</code>?</p>
+<button data-opt="A">Yes — <code>&amp;&amp;</code> runs all three commands regardless of individual results</button>
+<button data-opt="B">No — <code>&amp;&amp;</code> chaining stops at the first failure, so <code>pytest</code> never runs</button>
+<button data-opt="C">Yes — but only <code>pytest</code>; <code>ruff format .</code> would be skipped</button>
+<p class="why" hidden>No — <code>&amp;&amp;</code> chaining stops at the first failure. That's the practical benefit of chaining over running each command on its own separate line, where a failure wouldn't automatically prevent the next line from being typed and run.</p>
+</div>
+<aside class="notes">Guide's Part 5 Check for understanding, verbatim answer: "No — <code>&amp;&amp;</code> chaining stops at the first failure; get a student to state this explicitly as the practical benefit of chaining over just running each command on its own separate line, where a failure wouldn't automatically prevent the next line from being typed and run."</aside>
+</section>
+
+<!-- 46. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Assuming the chained form is required, or that the five-step spelled-out version from Weeks 4–5 is somehow now wrong — both are equally valid; the chained form is a natural evolution, not a replacement students must adopt immediately.</p>
+<p>Forgetting "lab 6" in the commit message — the same graded requirement pattern as every prior week; a quick final check before <code>git push</code>.</p>
+</div>
+<aside class="notes">Check for understanding: "If <code>ruff check .</code> reported an error, would <code>pytest</code> still run?" Answer: No — <code>&amp;&amp;</code> stops at the first failure.</aside>
+</section>
+
+<!-- 47. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:06–1:15</span>
+<h1>Sort and Group Output</h1>
+<aside class="notes">
+Frame as a quick, genuinely reusable pattern if the room reaches it.
+<code>sorted(records, key=lambda r: r['amount'], reverse=True)</code> — <code>key=lambda r: r['amount']</code> tells <code>sorted()</code> <strong>what to sort by</strong>, since a list of dictionaries has no inherent order; the <code>lambda</code> is a tiny unnamed function saying "for each record <code>r</code>, use <code>r['amount']</code> as the sort value." <code>reverse=True</code> flips it to descending. Any time you need to sort a list of dicts by one field, this <code>key=lambda r: r[...]</code> pattern is the standard tool.
+<code>{r['amount']:&gt;8,.2f}</code> — <code>&gt;8</code> right-aligns the value within an 8-character field, so all the dollar amounts line up in a clean column regardless of digit count.
+</aside>
+</section>
+
+<!-- 48. STRETCH idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><code>sorted(list, key=..., reverse=...)</code> returns a <strong>new</strong> sorted list; it doesn't modify the original. <code>key</code> is a function applied to each element to decide the sort value.</p>
+<p><code>lambda r: r['amount']</code> — a one-line unnamed function: given a record <code>r</code>, hand back its <code>amount</code>. This is the standard way to sort a list of dicts by one field.</p>
+<p><code>{value:&gt;8,.2f}</code> — right-align in an 8-wide field (<code>&gt;8</code>), thousands separator and two decimals (<code>,.2f</code>) — so a column of dollar amounts lines up cleanly.</p>
+</div>
+<aside class="notes">This is genuinely reusable syntax worth naming explicitly — it recurs in later modules whenever data needs ordering by a chosen field. A quick before/after with and without the <code>&gt;8</code> makes the alignment effect visible.</aside>
+</section>
+
+<!-- 49. STRETCH code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — Stretch: sort by amount, descending</h3>
+<div class="run" data-lang="python">
+records = [
+    {'id': 1, 'name': 'Taylor', 'category': 'Travel',    'amount': 1200, 'status': 'Pending'},
+    {'id': 2, 'name': 'Jordan', 'category': 'Equipment', 'amount': 450,  'status': 'Pending'},
+    {'id': 3, 'name': 'Morgan', 'category': 'Software',  'amount': 3500, 'status': 'Approved'},
+    {'id': 4, 'name': 'Riley',  'category': 'Travel',    'amount': 89,   'status': 'Pending'},
+    {'id': 5, 'name': 'Alex',   'category': 'Equipment', 'amount': 2200, 'status': 'Pending'},
+]
+
+sorted_recs = sorted(records, key=lambda r: r['amount'], reverse=True)
+print('\nAll records largest to smallest:')
+for r in sorted_recs:
+    print(f"  ${r['amount']:&gt;8,.2f}  {r['name']} ({r['category']})")
+</div>
+<p class="expect">All five records this time — no status filter — just ordered by <code>amount</code>, largest first. Morgan ($3,500) leads even though it's <code>Approved</code>; sorting and filtering are independent operations.</p>
+<aside class="notes">
+Line by line:
+- <code>sorted(records, key=lambda r: r['amount'], reverse=True)</code> — <code>key=lambda r: r['amount']</code> says sort by each record's <code>amount</code>; <code>reverse=True</code> makes it descending. Returns a new list, leaves <code>records</code> untouched.
+- <code>print('\nAll records largest to smallest:')</code> — the leading <code>\n</code> prints one blank line first.
+- <code>f"  ${r['amount']:&gt;8,.2f}  {r['name']} ({r['category']})"</code> — <code>&gt;8</code> right-aligns in an 8-char field so the amounts form a clean column; <code>,.2f</code> adds the thousands comma and two decimals.
+</aside>
+</section>
+
+<!-- 50. STRETCH output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>
+All records largest to smallest:
+  $3,500.00  Morgan (Software)
+  $2,200.00  Alex (Equipment)
+  $1,200.00  Taylor (Travel)
+  $  450.00  Jordan (Equipment)
+  $   89.00  Riley (Travel)</pre>
+<p class="expect">Reproduces the guide's "Verified output" for the Stretch block exactly — a leading blank line, then all five records sorted by <code>amount</code> descending, dollar amounts right-aligned in an 8-wide column.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints a blank line, the header, then the five right-aligned rows in this order. Note <code>$  450.00</code> and <code>$   89.00</code> get extra leading spaces from <code>&gt;8</code> so every amount ends at the same column.</aside>
+</section>
+
+<!-- 51. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li>Git commit made, with a message including <strong>"lab 6"</strong></li>
+<li><code>week6_lab.py</code> contains all three parts (records/loop, business rules, summary/file output)</li>
+<li><code>data/week6_summary.txt</code> exists and matches the printed summary</li>
+<li><code>tests/test_week6.py</code> contains all five tests, all passing</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. Verified this week: the provided <code>test_week6.py</code> passes cleanly as written — worth stating explicitly as a point of contrast with Week 5's diagnostic detour, reinforcing that reading test output carefully is a permanent habit, not a one-time lesson tied to a single bad file.</aside>
+</section>
+
+<!-- 52. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 7</h3>
+<p>Today's business-rule logic — the <code>LIMIT</code>/<code>HIGH</code> checks, the flagging loop — is exactly the kind of code that's worth packaging into a reusable <strong>function</strong>, rather than retyping for every new dataset. Next week: functions, modules, and testing them properly.</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. If the room did the Stretch, name the connection: <code>lambda</code> was a first taste of a function as a value; Week 7 makes named functions the main event.</aside>
+</section>
+
+<!-- 53. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 6</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w06.md (Week 6 facilitation guide, "Conditionals, Loops &amp; Dictionaries"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4; the <code>pytest -v</code> pane and the setup/ritual shell blocks are static (no runner in the browser) and were verified locally with pytest on python3 3.12.2. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

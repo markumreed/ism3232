@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 14 — Python + SQL Integration</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 14 &nbsp;·&nbsp; Module 14 &nbsp;·&nbsp; Unit 4 · Capstone Build</p>
+<h1>Python + SQL Integration</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "the two absolute rules"</span>
+<span class="t-item"><strong>0:04–0:14</strong> Part 1 — Set up <code>database.py</code> (<code>create_table</code>)</span>
+<span class="t-item"><strong>0:14–0:28</strong> Part 2 — <code>add_record</code> and <code>get_all_records</code></span>
+<span class="t-item"><strong>0:28–0:38</strong> Part 3 — <code>update_status</code> and <code>get_status_report</code></span>
+<span class="t-item"><strong>0:38–0:58</strong> Part 4 — Five <code>pytest</code> tests with <code>tmp_path</code></span>
+<span class="t-item"><strong>0:58–1:10</strong> Part 5 — Test script and ritual</span>
+<span class="t-item"><strong>1:10–1:15</strong> Wrap-up, submission checklist</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Format: live code-along, ending with the full submission ritual. Prerequisites: Week 13 — approved <code>PROPOSAL.md</code>, <code>schema.sql</code>, <code>sqlite3</code> shell fluency. Today's <code>database.py</code> becomes the actual data layer the capstone's Streamlit interface (Week 15) reads from and writes to — genuinely load-bearing code, not a standalone exercise.
+Say to the class (Intro, verbatim): "Two rules today, and they apply to every single line of code you write, no exceptions. One: SQL values always go in through <code>?</code> placeholders — never build a query string with an f-string or plus-concatenation. Two: every function takes an optional <code>db_file</code> parameter, defaulting to your real database, so tests can point at a throwaway one instead. Rule one is a real security discipline. Rule two is what makes today's tests possible at all. By the end of today, this file — <code>database.py</code> — is the actual data layer your capstone's interface reads from and writes to next week."
+NOTE ON THIS DECK: ISM3232 <strong>runnable-SQL</strong> week. <code>import sqlite3</code> is in Python's stdlib and is bundled in Pyodide 0.26.4, so every Python+SQL block here is a genuine <code>data-lang="python"</code> runnable block — verified against local <code>python3</code> 3.12.2 (<code>sqlite3</code> is stdlib there too, same behaviour as Pyodide). ISM3232 style: SINGLE quotes in Python throughout, matching the guide. Each Pyodide block runs in its OWN fresh namespace, so every block is a COMPLETE standalone script: <code>import sqlite3</code>, a connection, the <code>CREATE TABLE</code> + seed <code>INSERT</code>s inline at the top, then the code the segment teaches, then <code>print()</code> of the results. <strong>:memory: adaptation:</strong> the guide connects every function to the <code>data/requests.db</code> <em>file</em> and opens a fresh <code>sqlite3.connect(db_file)</code> per call; Pyodide's filesystem is ephemeral and a fresh <code>:memory:</code> connection is a brand-new empty database each time, so each runnable block here keeps ONE <code>:memory:</code> connection open and seeds the table + rows inline. Every <code>SELECT</code> / report result still reproduces the guide's "Verified output" EXACTLY. Broken/fixed pairs: Part 2 — an f-string query that breaks on an apostrophe (<code>O'Brien</code>) vs a <code>?</code> placeholder; Part 2 — forgetting <code>conn.row_factory = sqlite3.Row</code> (<code>TypeError</code>) vs setting it; Part 3 — a swapped placeholder tuple (silently-wrong, zero rows updated) vs the correct order. Part 4's <code>pytest</code> file and its <code>pytest -v</code> pane are shown static (no <code>pytest</code> runner in Pyodide), with a runnable assert-mirror beside them running the same five checks; the mirror's five functions take an open <code>conn</code> instead of <code>db_file</code> (the <code>:memory:</code> adaptation) — disclosed on that slide. The Part 1 setup and Part 5 ritual shell blocks are <code>data-readonly</code> (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Pyodide tracebacks show <code>&lt;exec&gt;</code> as the file and line numbers may differ from a real <code>python3 file.py</code> run — the exception <em>type</em> and <em>message</em> are the load-bearing content. Quizzes: Parts 1–5 each key the guide's own "Check for understanding" parenthetical verbatim. Keyed letters A, B, C, A, B (varied across all three).
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Week 13: approved <code>PROPOSAL.md</code>, <code>schema.sql</code>, <code>sqlite3</code> shell fluency</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (<code>database.py</code> setup) – Part 5 (test script + ritual)</span></div>
+<div><span class="k">Submission</span><span class="v">3 screenshots, GitHub URL, Canvas, completion credit</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. The lab page states two rules up front, applying to <em>every single line</em> of today's code, both absolute, not stylistic. <strong>Rule 1 — always use <code>?</code> placeholders, never f-strings or string concatenation, to build SQL.</strong> <strong>Rule 2 — every function accepts an optional <code>db_file</code> parameter, defaulting to <code>DB_FILE</code>, so tests can use an isolated temporary database.</strong> Rule 1 is a genuine security discipline (SQL injection prevention), worth demonstrating the actual vulnerability, not just stating the rule. Rule 2 is what makes Part 4's <code>pytest</code> tests possible at all without corrupting the real development database.
+Before class: rehearse the SQL injection demonstration; confirm your own <code>database.py</code> runs cleanly end to end (five interdependent functions — a broken function 2 cascades into confusing failures in 3–5); note that <code>get_all_records()</code> orders by <code>id DESC</code>, so <code>records[0]</code> is the <strong>most recently added</strong> record, not the first — flag this deliberately in Part 5.
+Materials: terminal (zsh), VS Code, Python 3.10+, the existing <code>module07_final_project</code> venv from Week 13; students bring their approved <code>PROPOSAL.md</code> and <code>schema.sql</code> (today builds the general pattern using the lab's own <code>requests</code> table).
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Connect to a SQLite database from Python with <code>sqlite3.connect()</code>, using a <code>with</code> block for automatic connection handling.</li>
+<li>Use <code>?</code> placeholders for every value inserted into a SQL query, and explain concretely why string formatting/concatenation into SQL is a security risk, not just a style issue.</li>
+<li>Use <code>row_factory = sqlite3.Row</code> to retrieve query results as dictionary-like rows instead of plain tuples.</li>
+<li>Design every database function to accept an optional <code>db_file</code> parameter, enabling isolated testing.</li>
+<li>Write <code>pytest</code> tests using the <code>tmp_path</code> fixture to test against a fresh, isolated database file per test.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is Part 1's <code>with sqlite3.connect(...)</code>; objective 2 is Part 2's Rule 1 (<code>?</code> placeholders) and the SQL-injection demo; objective 3 is Part 2's <code>row_factory</code>; objective 4 is Rule 2, applied in all five functions; objective 5 is Part 4's <code>tmp_path</code> tests.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "the two absolute rules"</td><td>4</td></tr>
+<tr><td>0:04–0:14</td><td>Part 1 — Set up <code>database.py</code></td><td>10</td></tr>
+<tr><td>0:14–0:28</td><td>Part 2 — <code>add_record</code> and <code>get_all_records</code></td><td>14</td></tr>
+<tr><td>0:28–0:38</td><td>Part 3 — <code>update_status</code> and <code>get_status_report</code></td><td>10</td></tr>
+<tr><td>0:38–0:58</td><td>Part 4 — Five pytest tests with <code>tmp_path</code></td><td>20</td></tr>
+<tr><td>0:58–1:10</td><td>Part 5 — Test script and ritual</td><td>12</td></tr>
+<tr><td>1:10–1:15</td><td>Wrap-up, submission checklist</td><td>5</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 4 receives the most time of any single part — the <code>tmp_path</code> fixture and the whole "isolated test database" pattern is genuinely new machinery this lab introduces, worth unhurried treatment, since it directly depends on Rule 2 being correctly applied throughout Parts 1–3.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Two absolute rules — every line, no exceptions</h1>
+<aside class="notes">
+Teaching goal: frame the day — <code>?</code> placeholders for every SQL value (Rule 1, a security discipline), and an optional <code>db_file</code> parameter on every function (Rule 2, what makes today's tests possible). This file becomes the capstone's real data layer next week.
+Say to the class (verbatim): "Two rules today, and they apply to every single line of code you write, no exceptions. One: SQL values always go in through <code>?</code> placeholders — never build a query string with an f-string or plus-concatenation. Two: every function takes an optional <code>db_file</code> parameter, defaulting to your real database, so tests can point at a throwaway one instead. Rule one is a real security discipline. Rule two is what makes today's tests possible at all. By the end of today, this file — <code>database.py</code> — is the actual data layer your capstone's interface reads from and writes to next week."
+Rule 1 is a genuine security discipline (SQL injection prevention), not a style preference — worth demonstrating the actual vulnerability (Part 2), not just asserting the rule. Rule 2 is what makes Part 4's <code>pytest</code> tests possible at all without corrupting the real development database.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:14</span>
+<h1>Set Up <code>database.py</code></h1>
+<aside class="notes">
+Teaching goal: the connection pattern (<code>with sqlite3.connect(...)</code>) and the first of five required functions, <code>create_table()</code>.
+Say to the class (verbatim): "First function: create the table if it doesn't already exist. Notice the <code>with</code> block — same pattern as every file-handling exercise since Module 12, now managing a database connection instead of a file."
+Line-by-line: <code>import sqlite3</code> — Python's standard library, no install, the same engine as last week's <code>sqlite3</code> shell, now driven from Python. <code>DB_FILE = 'data/requests.db'</code> — a module-level constant naming the <strong>default</strong> database file, the "real" development database path used automatically unless a function is told otherwise. <code>def create_table(db_file=DB_FILE):</code> — <strong>Rule 2 in its very first application</strong>; <code>db_file=DB_FILE</code> is a default parameter value: <code>create_table()</code> uses <code>DB_FILE</code>, <code>create_table(other_path)</code> uses that instead; every one of today's five functions repeats this exact pattern. <code>with sqlite3.connect(db_file) as conn:</code> — opens a connection (creating the file if it doesn't exist); the <code>with</code> block guarantees the connection closes properly even on error, same rationale as file-handling <code>with</code> blocks. <code>conn.execute('''...''')</code> — runs a SQL statement; the <strong>triple-quoted string</strong> is new here specifically because this SQL spans multiple lines. <code>CREATE TABLE IF NOT EXISTS requests (...)</code> — <code>IF NOT EXISTS</code> is new relative to Week 13's shell version: this function may be called many times across a script's life; without <code>IF NOT EXISTS</code>, a second call raises an error; with it, repeated calls are safe no-ops. Columns are identical vocabulary to Week 13, plus one new column <code>notes TEXT</code>.
+Common student mistakes: forgetting <code>mkdir -p data</code> before anything creates <code>data/requests.db</code> — <code>sqlite3.connect()</code> can fail if the parent directory doesn't exist; using single quotes for the multi-line <code>CREATE TABLE</code> string instead of triple quotes — a <code>SyntaxError</code> from the embedded line breaks.
+Check for understanding: "If <code>create_table()</code> were called twice in a row, what would happen the second time, and why is that safe?" (Nothing happens the second time — <code>IF NOT EXISTS</code> means the statement is a no-op if the table is already there; get a student to state this is <em>deliberately</em> safe, not accidentally harmless.)
+</aside>
+</section>
+
+<!-- 7. PART 1 setup (readonly shell) -->
+<section class="s-code">
+<h3>Setup — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module07_final_project
+source .venv/bin/activate
+mkdir -p data tests
+touch database.py tests/__init__.py tests/test_database.py
+code database.py</div>
+<p class="expect">Shown for reference — <code>source</code>, <code>code</code>, and the venv can't run in the browser; run this on your own machine. <code>mkdir -p data</code> first: <code>sqlite3.connect()</code> can fail if <code>data/</code> doesn't exist yet.</p>
+<aside class="notes">
+Line-by-line: <code>cd</code> into the Week 13 capstone folder; activate the existing <code>module07_final_project</code> venv; <code>mkdir -p data tests</code> creates the folder the database file will live in plus the tests folder; <code>touch</code> creates <code>database.py</code>, <code>tests/__init__.py</code>, and <code>tests/test_database.py</code>; open <code>database.py</code> in the editor.
+Common mistake: forgetting <code>mkdir -p data</code> before running anything that tries to create <code>data/requests.db</code> — a quick <code>ls data/</code> check confirms the folder is present first.
+</aside>
+</section>
+
+<!-- 8. PART 1 idea — create_table + schema reference -->
+<section class="s-idea">
+<h3>The connection pattern, and <code>create_table()</code></h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>with sqlite3.connect(db_file) as conn:</code></strong> — opens a connection to the named database file (creating the file if it doesn't yet exist). The <code>with</code> block guarantees the connection closes properly even if something goes wrong inside it — exactly the file-handling <code>with</code> rationale, now for a database.</p>
+<p><strong><code>db_file=DB_FILE</code></strong> — Rule 2's very first application. A default parameter value: <code>create_table()</code> uses <code>DB_FILE</code>; <code>create_table(other_path)</code> uses that instead. All five of today's functions repeat this exact pattern.</p>
+<p><strong><code>CREATE TABLE IF NOT EXISTS</code></strong> — new relative to Week 13's shell version. This function may run every time the app starts; <code>IF NOT EXISTS</code> makes calling it repeatedly a safe no-op instead of an error.</p>
+</div>
+<pre><code class="language-sql">-- the schema create_table() runs (reference — the runnable block executes it)
+CREATE TABLE IF NOT EXISTS requests (
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    requester TEXT    NOT NULL,
+    category  TEXT    NOT NULL,
+    amount    REAL,
+    status    TEXT    DEFAULT 'Pending',
+    notes     TEXT
+);</code></pre>
+<p class="expect">Same column vocabulary as Week 13 (<code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, <code>TEXT NOT NULL</code>, <code>DEFAULT 'Pending'</code>), plus one new column — <code>notes TEXT</code> — for this lab's slightly richer example.</p>
+<aside class="notes">
+Line-by-line (guide, Part 1): <code>import sqlite3</code> — stdlib, no install. <code>DB_FILE = 'data/requests.db'</code> — the default database path. <code>def create_table(db_file=DB_FILE):</code> — Rule 2, first application. <code>with sqlite3.connect(db_file) as conn:</code> — opens/creates the file, guaranteed clean close. <code>conn.execute('''...''')</code> — triple-quoted because the SQL spans multiple lines. <code>CREATE TABLE IF NOT EXISTS requests (...)</code> — repeated calls are no-ops. Columns identical to Week 13 plus <code>notes TEXT</code>.
+This static SQL block is a pure reference (schema listing) — the runnable block on the next slide actually executes it via <code>sqlite3</code>.
+Check for understanding: nothing happens the second call — <code>IF NOT EXISTS</code> is a deliberate no-op, not accidental harmlessness.
+</aside>
+</section>
+
+<!-- 9. PART 1 runnable -->
+<section class="s-code">
+<h3>Run it — <code>create_table()</code> is safe to call twice</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+cur = conn.cursor()
+
+ddl = '''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+'''
+
+cur.execute(ddl)   # first call -- creates the table
+cur.execute(ddl)   # second call -- IF NOT EXISTS makes this a safe no-op
+print('create_table() ran twice, no error')
+
+cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
+print(cur.fetchall())</div>
+<p class="expect">Adapted to <code>:memory:</code> (the guide connects to the <code>data/requests.db</code> file; Pyodide's FS is ephemeral, so one open in-memory connection stands in). Running the same <code>CREATE TABLE IF NOT EXISTS</code> twice raises nothing — that's the point of the CFU.</p>
+<aside class="notes">
+Say to the class (verbatim): "First function: create the table if it doesn't already exist. Notice the <code>with</code> block — same pattern as every file-handling exercise since Module 12, now managing a database connection instead of a file."
+Line-by-line: <code>import sqlite3</code>; open one <code>:memory:</code> connection and a cursor (the <code>:memory:</code> adaptation of the guide's <code>with sqlite3.connect(db_file) as conn:</code>); <code>ddl</code> is the triple-quoted multi-line <code>CREATE TABLE IF NOT EXISTS</code>; <code>cur.execute(ddl)</code> twice — the second call is a no-op because the table already exists; the final <code>SELECT ... FROM sqlite_master</code> lists user tables to confirm exactly one table, <code>requests</code>, was created.
+Common mistakes: forgetting <code>mkdir -p data</code> on a real file DB; single quotes instead of triple quotes for the multi-line string (<code>SyntaxError</code>).
+Check for understanding: "If <code>create_table()</code> were called twice in a row, what would happen the second time, and why is that safe?" — Nothing happens the second time; <code>IF NOT EXISTS</code> makes the statement a no-op if the table is already there. It is <em>deliberately</em> safe, not accidentally harmless.
+</aside>
+</section>
+
+<!-- 10. PART 1 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>create_table() ran twice, no error
+[('requests',)]</pre>
+<p class="expect">Two calls to <code>CREATE TABLE IF NOT EXISTS</code>, no exception. The <code>sqlite_master</code> query confirms one user table exists — <code>requests</code> — exactly as after a single call.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (<code>sqlite3</code> stdlib == Pyodide 0.26.4's bundled module): the block prints exactly these two lines and exits 0. The <code>AND name NOT LIKE 'sqlite_%'</code> filter hides the internal <code>sqlite_sequence</code> table that <code>AUTOINCREMENT</code> creates, so the list is just <code>[('requests',)]</code>.</aside>
+</section>
+
+<!-- 11. PART 1 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If <code>create_table()</code> were called twice in a row, what happens the second time, and why is that safe?</p>
+<button data-opt="A">Nothing happens — <code>IF NOT EXISTS</code> makes the statement a no-op when the table already exists; it is <em>deliberately</em> safe, so calling it every time the app starts is fine</button>
+<button data-opt="B">The second call raises <code>sqlite3.OperationalError: table requests already exists</code> — which is why the function should only ever be called once</button>
+<button data-opt="C">The table is dropped and recreated empty, wiping any rows added between the two calls</button>
+<p class="why" hidden>The guide's Part 1 "Check for understanding": "Nothing happens the second time — <code>IF NOT EXISTS</code> means the statement is a no-op if the table is already there; get a student to state this is <em>deliberately</em> safe, not accidentally harmless." Without <code>IF NOT EXISTS</code>, a second <code>CREATE TABLE</code> would raise an "already exists" error (option B is what the missing clause would do); <code>IF NOT EXISTS</code> never drops data (option C).</p>
+</div>
+<aside class="notes">Guide's Part 1 "Check for understanding", verbatim answer: "Nothing happens the second time — <code>IF NOT EXISTS</code> means the statement is a no-op if the table is already there; get a student to state this is <em>deliberately</em> safe, not accidentally harmless." Option B describes the behaviour <em>without</em> the <code>IF NOT EXISTS</code> clause; option C (drop + recreate) is what <code>DROP TABLE IF EXISTS</code> followed by <code>CREATE</code> would do, never <code>CREATE TABLE IF NOT EXISTS</code> alone. Keyed A.</aside>
+</section>
+
+<!-- 12. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>mkdir -p data</code> before running anything that tries to create <code>data/requests.db</code> — <code>sqlite3.connect()</code> can fail if the parent directory doesn't exist. A quick <code>ls data/</code> check confirms the folder is present first.</p>
+<p>Using single quotes for the multi-line <code>CREATE TABLE</code> string instead of triple quotes — produces a <code>SyntaxError</code> from the embedded, unescaped line breaks. A good moment to point at the triple-quote requirement explicitly if it comes up.</p>
+</div>
+<aside class="notes">Both are the guide's Part 1 "Common student mistakes to watch for", verbatim. The <code>:memory:</code> runnable block sidesteps the <code>mkdir</code> issue (no file), but it is real on a student's own machine with the file-based <code>DB_FILE</code>.</aside>
+</section>
+
+<!-- 13. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:14–0:28</span>
+<h1><code>add_record</code> and <code>get_all_records</code></h1>
+<aside class="notes">
+Teaching goal: the two most important functions in this file — writing data safely with <code>?</code> placeholders, and reading it back as usable dictionaries with <code>row_factory</code>.
+Say to the class (verbatim): "This is where Rule 1 matters most. I'm going to show you what goes wrong if you don't follow it — not just tell you."
+Line-by-line (<code>add_record</code>): <code>'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)'</code> — the SQL string contains <strong><code>?</code> placeholders</strong>, not the actual values. <code>(requester, category, amount, notes)</code> — a <strong>second, separate argument</strong> to <code>.execute()</code>: a tuple of actual values, matched positionally to each <code>?</code> in order. <code>sqlite3</code> fills in each placeholder itself, safely — not simply substituting text into the string the way an f-string would.
+The broken f-string version: <code>query = f"INSERT INTO requests (...) VALUES ('{requester}', '{category}', {amount})"</code> — if <code>requester</code> were <code>Taylor', 'Travel', 999); DROP TABLE requests; --</code> the f-string would build a completely different, malicious SQL statement — not because of a bug in this function, but because untrusted text was allowed to become part of the SQL itself. This is <strong>SQL injection</strong>. <code>?</code> placeholders make it structurally impossible: the value and the SQL structure are always kept completely separate.
+Line-by-line (<code>get_all_records</code>): <code>conn.row_factory = sqlite3.Row</code> — without this line, query results come back as plain tuples (<code>(1, 'Taylor', 'Travel', 1200.0, 'Pending', '')</code>), accessible only by position. Setting <code>row_factory</code> to <code>sqlite3.Row</code> lets each row be accessed both by position <em>and</em> by column name. <code>cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')</code> — <strong><code>ORDER BY id DESC</code>, deliberately</strong>: the most recently added record comes first; Part 5 revisits this exact detail. <code>[dict(row) for row in cur.fetchall()]</code> — <code>fetchall()</code> retrieves every matching row; wrapping each <code>sqlite3.Row</code> in <code>dict(...)</code> makes the returned data fully ordinary — usable with every dictionary technique from Weeks 6, 11, 12, with no <code>sqlite3</code>-specific knowledge required downstream.
+Common student mistakes: forgetting <code>conn.row_factory = sqlite3.Row</code> — results still work but come back as plain tuples; <code>records[0]['requester']</code> then fails with <code>TypeError: tuple indices must be integers or slices, not str</code>. Passing values directly into the SQL string instead of via the placeholder tuple, even for just one value (<code>conn.execute(f'... VALUES ({amount})')</code>) — worth catching even a partial violation of Rule 1.
+Check for understanding: "If a user's <code>requester</code> name were <code>O'Brien</code> — containing an apostrophe — would <code>add_record</code> with <code>?</code> placeholders handle it correctly?" (Yes, without any special handling needed — this is exactly the kind of input that would silently break a naive f-string-built query (an unescaped apostrophe would prematurely end a quoted SQL string literal), while <code>?</code> placeholders handle it completely correctly and automatically, with no extra code required. A good, concrete, non-malicious example of why Rule 1 matters even without imagining an attacker.)
+</aside>
+</section>
+
+<!-- 14. PART 2 idea — Rule 1 + row_factory -->
+<section class="s-idea">
+<h3>Rule 1 — <code>?</code> placeholders — and readable rows</h3>
+<div class="concept danger">
+<div class="concept-lbl">Rule 1</div>
+<p><strong>The SQL string holds <code>?</code> placeholders; the values go in a separate tuple.</strong> <code>conn.execute('INSERT ... VALUES (?,?,?,?)', (requester, category, amount, notes))</code>. <code>sqlite3</code> fills in each placeholder itself, safely — it is <em>not</em> substituting text the way an f-string would. The <em>value</em> and the <em>SQL structure</em> stay completely separate, no matter what text a value contains. This is how you prevent <strong>SQL injection</strong> — one of the most common real-world security vulnerabilities in software history.</p>
+</div>
+<div class="concept">
+<div class="concept-lbl">Reading rows back</div>
+<p><strong><code>conn.row_factory = sqlite3.Row</code></strong> — without it, rows come back as plain tuples accessed only by position. With it, each row is accessible by position <em>and</em> by column name. <code>[dict(row) for row in cur.fetchall()]</code> then converts each to an ordinary <code>dict</code> — usable with every dictionary technique from Weeks 6, 11 and 12.</p>
+<p><strong><code>ORDER BY id DESC</code></strong> — deliberate. The <em>most recently added</em> record comes first. Write it on the board now; Part 5 revisits it as a "read the code carefully" moment.</p>
+</div>
+<aside class="notes">
+Guide, Part 2 — "this is Rule 1, worth the most careful explanation of the whole lab". The SQL string contains <code>?</code>, not values; the tuple is a second, separate argument matched positionally. An f-string version that interpolates untrusted text can build a completely different, malicious statement — SQL injection. <code>?</code> placeholders make that structurally impossible.
+<code>row_factory = sqlite3.Row</code> gives name-based access; <code>dict(row)</code> makes it fully ordinary. <code>ORDER BY id DESC</code> puts the newest row first — flagged again in Part 5.
+</aside>
+</section>
+
+<!-- 15. PART 2 runnable main -->
+<section class="s-code">
+<h3>Run it — <code>add_record</code> then <code>get_all_records()</code></h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+cur = conn.cursor()
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+
+# add_record('Taylor', 'Travel', 1200) -- ? placeholders, never an f-string
+conn.execute(
+    'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+    ('Taylor', 'Travel', 1200, '')
+)
+
+# get_all_records() -- row_factory makes each row dict-like
+conn.row_factory = sqlite3.Row
+cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
+records = [dict(row) for row in cur.fetchall()]
+print(records[0])</div>
+<p class="expect">The guide's manual REPL test (<code>create_table()</code>; <code>add_record('Taylor', 'Travel', 1200)</code>; <code>records = get_all_records()</code>; <code>print(records[0])</code>), adapted to one <code>:memory:</code> connection with the schema + insert inline. The <code>SELECT</code> result reproduces the guide's "Verified output" exactly.</p>
+<aside class="notes">
+Say to the class (verbatim): "This is where Rule 1 matters most. I'm going to show you what goes wrong if you don't follow it — not just tell you."
+Line-by-line: open one <code>:memory:</code> connection (adapting the guide's per-call <code>sqlite3.connect(db_file)</code>); create the table inline; the <code>INSERT ... VALUES (?,?,?,?)</code> with the value tuple <code>('Taylor', 'Travel', 1200, '')</code> is <code>add_record</code>'s body (<code>notes</code> defaults to <code>''</code>); <code>conn.row_factory = sqlite3.Row</code> then <code>SELECT * ... ORDER BY id DESC</code> then <code>[dict(row) for row in cur.fetchall()]</code> is <code>get_all_records</code>'s body; <code>print(records[0])</code> shows the single row as a genuine Python dict with real key names.
+Point out: this printed as a genuine Python dictionary — directly usable with <code>records[0]['requester']</code>, exactly like every dictionary since Week 6, with zero special SQL-aware syntax needed downstream.
+Check for understanding: yes — <code>?</code> placeholders handle <code>O'Brien</code> correctly with no special handling; a naive f-string query would break on the apostrophe.
+</aside>
+</section>
+
+<!-- 16. PART 2 output main -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>{'id': 1, 'requester': 'Taylor', 'category': 'Travel', 'amount': 1200.0, 'status': 'Pending', 'notes': ''}</pre>
+<p class="expect">Reproduces the guide's Part 2 "Verified output" exactly. A genuine Python <code>dict</code> with real key names — <code>amount</code> is <code>1200.0</code> because the column is <code>REAL</code>; <code>status</code> is <code>'Pending'</code> from the column <code>DEFAULT</code>; <code>notes</code> is <code>''</code>, the parameter default.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly this one line. The dict key order follows the <code>SELECT *</code> column order, which is the <code>CREATE TABLE</code> order. This is the guide's "Verified output" for Part 2 verbatim.</aside>
+</section>
+
+<!-- 17. PART 2 BROKEN A — f-string, apostrophe -->
+<section class="s-code">
+<h3>Broken on purpose — an f-string query and a stray apostrophe</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+
+# NEVER DO THIS -- building the SQL string with an f-string (violates Rule 1)
+requester = "O'Brien"
+category = 'Travel'
+amount = 1200
+query = f"INSERT INTO requests (requester, category, amount) VALUES ('{requester}', '{category}', {amount})"
+conn.execute(query)
+print('inserted')</div>
+<p class="expect">This is the guide's Part 2 check-for-understanding, done live: the name <code>O'Brien</code> contains an apostrophe. The f-string drops it straight into the SQL, where the <code>'</code> prematurely ends the string literal. Press <strong>Run</strong> and read the last line of the traceback.</p>
+<aside class="notes">
+The f-string builds <code>INSERT INTO requests (...) VALUES ('O'Brien', 'Travel', 1200)</code> — the apostrophe in <code>O'Brien</code> closes the quoted literal early, leaving <code>Brien', 'Travel', 1200)</code> as broken syntax. This is not a bug in the function; it is untrusted text being allowed to become part of the SQL. A malicious value (<code>Taylor', 'Travel', 999); DROP TABLE requests; --</code>) exploits the same hole deliberately — that is SQL injection. Make a student say "the value became part of the SQL structure," not just "it broke."
+Check for understanding: with <code>?</code> placeholders (next slide) the exact same <code>O'Brien</code> value inserts correctly, no special handling.
+</aside>
+</section>
+
+<!-- 18. PART 2 broken A traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  ...
+sqlite3.OperationalError: near "Brien": syntax error</pre>
+<p class="expect">Load-bearing: <code>sqlite3.OperationalError: near "Brien": syntax error</code> — the apostrophe in <code>O'Brien</code> ended the SQL string literal early, and <code>Brien', 'Travel', 1200)</code> is not valid SQL. Pyodide shows <code>&lt;exec&gt;</code> as the file and a different line number — neither is load-bearing; the exception <em>type</em> and <em>message</em> are.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly <code>sqlite3.OperationalError: near "Brien": syntax error</code> and exits 1. This is the concrete, non-malicious version of the SQL-injection risk the guide's Part 2 explanation describes — an innocent apostrophe, not an attacker, and the naive query still breaks.</aside>
+</section>
+
+<!-- 19. PART 2 FIXED A — ? placeholder -->
+<section class="s-code">
+<h3>Fixed — a <code>?</code> placeholder handles the apostrophe automatically</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+
+# add_record with ? placeholders -- the value can contain anything, even a quote
+conn.execute(
+    'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+    ("O'Brien", 'Travel', 1200, '')
+)
+
+conn.row_factory = sqlite3.Row
+row = conn.execute('SELECT * FROM requests ORDER BY id DESC').fetchone()
+print(dict(row))</div>
+<p class="expect">The only change from the broken block: the value goes in the tuple, not the string. <code>sqlite3</code> keeps the value and the SQL structure separate, so <code>O'Brien</code> stores correctly with no escaping code. Press <strong>Run</strong> — clean insert.</p>
+<aside class="notes">
+Guide's Part 2 CFU answer, verbatim: "Yes, without any special handling needed — this is exactly the kind of input that would silently break a naive f-string-built query (an unescaped apostrophe would prematurely end a quoted SQL string literal), while <code>?</code> placeholders handle it completely correctly and automatically, with no extra code required." The stored <code>requester</code> reads back as <code>O'Brien</code>, apostrophe intact.
+</aside>
+</section>
+
+<!-- 20. PART 2 fixed A output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>{'id': 1, 'requester': "O'Brien", 'category': 'Travel', 'amount': 1200.0, 'status': 'Pending', 'notes': ''}</pre>
+<p class="expect">The apostrophe survived intact — <code>requester</code> is <code>O'Brien</code>. Python's <code>dict</code> repr wraps that value in double quotes because it contains a <code>'</code>; the stored text is exactly <code>O'Brien</code>. No escaping code was written anywhere.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly this one line and exits 0. Contrast directly with the broken block's <code>sqlite3.OperationalError</code> — same input value, opposite outcome, and the only difference is placeholder vs f-string.</aside>
+</section>
+
+<!-- 21. PART 2 BROKEN B — missing row_factory -->
+<section class="s-code">
+<h3>Broken on purpose — forgetting <code>row_factory</code></h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+conn.execute(
+    'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+    ('Taylor', 'Travel', 1200, '')
+)
+
+# BUG: conn.row_factory = sqlite3.Row is missing -- rows come back as plain tuples
+cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
+records = cur.fetchall()
+print(records[0]['requester'])</div>
+<p class="expect">This is the guide's Part 2 common mistake, done live: without <code>conn.row_factory = sqlite3.Row</code>, rows are plain tuples — <code>records[0]['requester']</code> tries to index a tuple with a string. Press <strong>Run</strong> and read the last traceback line.</p>
+<aside class="notes">
+Without <code>row_factory</code>, <code>fetchall()</code> returns tuples like <code>(1, 'Taylor', 'Travel', 1200.0, 'Pending', '')</code>, accessible only by integer position. <code>records[0]['requester']</code> indexes a tuple with the string <code>'requester'</code>, which Python rejects. The guide notes this is "a good, specific error confirming exactly what's missing." The fix is the one missing line — already present in the canonical Part 2 block: <code>conn.row_factory = sqlite3.Row</code> before the <code>SELECT</code>.
+</aside>
+</section>
+
+<!-- 22. PART 2 broken B traceback -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>Traceback (most recent call last):
+  ...
+TypeError: tuple indices must be integers or slices, not str</pre>
+<p class="expect">Load-bearing: <code>TypeError: tuple indices must be integers or slices, not str</code> — exactly the error the guide names for a forgotten <code>row_factory</code>. The fix is one line, <code>conn.row_factory = sqlite3.Row</code> before the <code>SELECT</code> (it is already in the canonical Part 2 block a few slides back).</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly <code>TypeError: tuple indices must be integers or slices, not str</code> and exits 1. Guide's Part 2 "Common student mistakes": "Forgetting <code>conn.row_factory = sqlite3.Row</code> — results still work, but come back as plain tuples; <code>records[0]['requester']</code> would then fail with <code>TypeError: tuple indices must be integers or slices, not str</code>, a good, specific error confirming exactly what's missing."</aside>
+</section>
+
+<!-- 23. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">If a user's <code>requester</code> name were <code>O'Brien</code> — containing an apostrophe — would <code>add_record</code> with <code>?</code> placeholders handle it correctly?</p>
+<button data-opt="A">No — an apostrophe always needs manual escaping first (e.g. doubling it to <code>O''Brien</code>) before it can be passed to <code>.execute()</code></button>
+<button data-opt="B">Yes — with no special handling needed; the <code>?</code> placeholder keeps the value separate from the SQL structure, whereas a naive f-string query would break where the apostrophe ends the string literal early</button>
+<button data-opt="C">Only if <code>row_factory = sqlite3.Row</code> is also set — otherwise the apostrophe corrupts the returned tuple</button>
+<p class="why" hidden>The guide's Part 2 "Check for understanding": "Yes, without any special handling needed — this is exactly the kind of input that would silently break a naive f-string-built query (an unescaped apostrophe would prematurely end a quoted SQL string literal), while <code>?</code> placeholders handle it completely correctly and automatically, with no extra code required. A good, concrete, non-malicious example of why Rule 1 matters even without imagining an attacker." Verified live: the f-string block raises <code>sqlite3.OperationalError: near "Brien": syntax error</code>; the <code>?</code> block stores <code>O'Brien</code> intact. <code>row_factory</code> (option C) is unrelated — it only affects how rows are <em>read back</em>.</p>
+</div>
+<aside class="notes">Guide's Part 2 "Check for understanding", verbatim answer: "Yes, without any special handling needed — this is exactly the kind of input that would silently break a naive f-string-built query (an unescaped apostrophe would prematurely end a quoted SQL string literal), while <code>?</code> placeholders handle it completely correctly and automatically, with no extra code required." Option A is wrong — <code>?</code> placeholders do the escaping for you. Option C conflates writing (placeholders) with reading (<code>row_factory</code>). Keyed B.</aside>
+</section>
+
+<!-- 24. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Forgetting <code>conn.row_factory = sqlite3.Row</code> — results still work, but come back as plain tuples; <code>records[0]['requester']</code> would then fail with <code>TypeError: tuple indices must be integers or slices, not str</code>, a good, specific error confirming exactly what's missing.</p>
+<p>Passing values directly into the SQL string instead of via the placeholder tuple, even without going as far as an f-string (e.g., <code>conn.execute(f'... VALUES ({amount})')</code> for just one value) — worth catching even a partial violation of Rule 1, not just a fully f-string version.</p>
+</div>
+<aside class="notes">Both are the guide's Part 2 "Common student mistakes to watch for", verbatim. The SQL-injection explanation is the memorable security lesson — rehearse the demo before class; show the idea (a value becoming SQL structure), not the destructive <code>DROP TABLE</code> exploit against a real table.</aside>
+</section>
+
+<!-- 25. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:28–0:38</span>
+<h1><code>update_status</code> and <code>get_status_report</code></h1>
+<aside class="notes">
+Teaching goal: the remaining two functions — completing the full CRUD-and-report pattern (create, read, update, aggregate-report) with the same two rules applied throughout.
+Say to the class (verbatim): "Two more functions, same two rules, no new ideas — just applying what you already have to <code>UPDATE</code> and <code>GROUP BY</code>."
+Line-by-line: <code>'UPDATE requests SET status=? WHERE id=?', (new_status, record_id)</code> — <strong>two placeholders this time, matched positionally in order</strong>: the first <code>?</code> gets <code>new_status</code>, the second gets <code>record_id</code>. Get this order wrong (swap the tuple to <code>(record_id, new_status)</code>) and the query tries to set <code>status</code> to a number and filter <code>WHERE id=</code> a status string — worth demonstrating live, since the resulting error or silently-wrong behaviour is genuinely instructive. <code>get_status_report</code> — <strong>does NOT use <code>row_factory</code>/<code>dict()</code></strong>; it returns <code>cur.fetchall()</code> directly as plain tuples, unlike <code>get_all_records()</code>. This is a deliberate, meaningful difference: each row here is <code>(status, count, total)</code> — three positional values with clear, fixed meaning by position, genuinely fine to access as <code>row[0]</code>, <code>row[1]</code>, <code>row[2]</code>. Not every query result needs the dictionary treatment.
+Common student mistakes: swapping the placeholder order in <code>update_status</code>; expecting <code>get_status_report()</code>'s rows to support <code>row['status']</code>-style access, out of habit from <code>get_all_records()</code> — they don't, since <code>row_factory</code> wasn't set for this connection; <code>row[0]</code> is the correct access pattern here.
+Check for understanding: "Why doesn't <code>get_status_report()</code> need <code>row_factory = sqlite3.Row</code> the way <code>get_all_records()</code> does?" (Because its result rows are short, fixed-shape tuples (status, count, total) whose meaning is clear from position alone — dictionary-style access would add ceremony without adding clarity here, unlike a five-or-six-column full record row where remembering "is <code>amount</code> the third or fourth position" genuinely gets error-prone.)
+</aside>
+</section>
+
+<!-- 26. PART 3 idea -->
+<section class="s-idea">
+<h3>Two placeholders, and when to skip <code>row_factory</code></h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>'UPDATE requests SET status=? WHERE id=?', (new_status, record_id)</code></strong> — two placeholders, matched positionally: first <code>?</code> gets <code>new_status</code>, second gets <code>record_id</code>. Swap the tuple and the query tries to set <code>status</code> to a number and filter <code>WHERE id=</code> a status string.</p>
+<p><strong><code>get_status_report</code> returns <code>cur.fetchall()</code> directly — no <code>row_factory</code>, no <code>dict()</code></strong> — and that is a deliberate design choice, not an oversight. Each row is <code>(status, count, total)</code>: three positional values with fixed, obvious meaning. <code>row[0]</code>, <code>row[1]</code>, <code>row[2]</code> is genuinely clear here. Not every query result needs the dictionary treatment — use it when named access improves clarity (a wide record row), skip it when a short fixed tuple is already clear.</p>
+</div>
+<pre><code class="language-sql">-- the two statements these functions run (reference)
+UPDATE requests SET status = ? WHERE id = ?;
+SELECT status, COUNT(*) AS count, SUM(amount) AS total FROM requests GROUP BY status;</code></pre>
+<p class="expect">Same two rules as Parts 1–2 — <code>?</code> placeholders, an optional <code>db_file</code> parameter — applied to <code>UPDATE</code> and <code>GROUP BY</code>. No new ideas.</p>
+<aside class="notes">
+Guide, Part 3: two placeholders matched positionally in order; getting the order wrong sets <code>status</code> to a number and filters on a status string. <code>get_status_report</code> deliberately returns plain tuples because <code>(status, count, total)</code> is clear by position. This static SQL block is a reference; the runnable block executes both statements via <code>sqlite3</code>.
+Check for understanding: <code>get_status_report()</code> rows are short fixed-shape tuples whose meaning is clear from position; dictionary access would add ceremony without clarity.
+</aside>
+</section>
+
+<!-- 27. PART 3 runnable main -->
+<section class="s-code">
+<h3>Run it — <code>update_status(1, 'Approved')</code> then <code>get_status_report()</code></h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+cur = conn.cursor()
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+conn.execute(
+    'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+    ('Taylor', 'Travel', 1200, '')
+)
+
+# update_status(1, 'Approved') -- two placeholders, matched positionally in order
+conn.execute('UPDATE requests SET status=? WHERE id=?', ('Approved', 1))
+
+# get_status_report() -- plain tuples, no row_factory here (deliberate)
+cur = conn.execute('SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status')
+report = cur.fetchall()
+print(report)</div>
+<p class="expect">The guide's Part 3 manual check (<code>update_status(1, 'Approved')</code>; <code>report = get_status_report()</code>; <code>print(report)</code>), continuing from Part 2's one seeded row. The result reproduces the guide's "Verified output" exactly.</p>
+<aside class="notes">
+Say to the class (verbatim): "Two more functions, same two rules, no new ideas — just applying what you already have to <code>UPDATE</code> and <code>GROUP BY</code>."
+Line-by-line: one <code>:memory:</code> connection; table + one seeded row (Taylor / Travel / 1200) inline, standing in for Part 2's <code>add_record</code>; <code>UPDATE requests SET status=? WHERE id=?</code> with the tuple <code>('Approved', 1)</code> in the right order is <code>update_status</code>'s body; the <code>SELECT ... GROUP BY status</code> with <code>fetchall()</code> is <code>get_status_report</code>'s body, returning one plain tuple. The single row is now <code>Approved</code>, so the report has one group: <code>('Approved', 1, 1200.0)</code>.
+Common mistakes: swapping the placeholder tuple order (next slide); expecting <code>report</code> rows to support <code>row['status']</code> — they are plain tuples, so <code>row[0]</code> is correct.
+Check for understanding: <code>get_status_report()</code> skips <code>row_factory</code> because <code>(status, count, total)</code> is clear by position; a wide record row is where names earn their keep.
+</aside>
+</section>
+
+<!-- 28. PART 3 output main -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>[('Approved', 1, 1200.0)]</pre>
+<p class="expect">Reproduces the guide's Part 3 "Verified output" exactly. One group — <code>status</code> is <code>'Approved'</code>, <code>COUNT(*)</code> is <code>1</code>, <code>SUM(amount)</code> is <code>1200.0</code> — returned as a plain tuple inside a list, accessed as <code>row[0]</code> / <code>row[1]</code> / <code>row[2]</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly <code>[('Approved', 1, 1200.0)]</code>. This is the guide's Part 3 "Verified output" verbatim. Because <code>row_factory</code> is never set on this connection, the row is a bare tuple — the deliberate contrast with <code>get_all_records()</code>.</aside>
+</section>
+
+<!-- 29. PART 3 BROKEN — swapped placeholder order -->
+<section class="s-code">
+<h3>Broken on purpose — the placeholder tuple in the wrong order</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+conn.execute(
+    'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+    ('Taylor', 'Travel', 1200, '')
+)
+
+# BUG: tuple is (record_id, new_status) -- swapped.
+# First ? (status) gets 1; second ? (id) gets 'Approved'
+conn.execute('UPDATE requests SET status=? WHERE id=?', (1, 'Approved'))
+
+cur = conn.execute('SELECT id, requester, status FROM requests')
+print(cur.fetchall())</div>
+<p class="expect">The guide's Part 3 mistake, done live: the tuple is <code>(record_id, new_status)</code> instead of <code>(new_status, record_id)</code>. No exception is raised — <code>WHERE id = 'Approved'</code> just matches no rows, so <strong>nothing changes</strong>. Press <strong>Run</strong> and compare the status to the correct block.</p>
+<aside class="notes">
+With the tuple swapped, the statement becomes "set <code>status</code> to <code>1</code> where <code>id</code> equals <code>'Approved'</code>". The integer column <code>id</code> never equals the string <code>'Approved'</code>, so zero rows match and zero rows update — SQLite raises no error. The row's <code>status</code> stays <code>'Pending'</code>. This is the "silently-wrong behaviour" the guide calls "genuinely instructive": a wrong answer with no traceback to point at. The fix is putting the tuple back in statement order: <code>(new_status, record_id)</code>.
+</aside>
+</section>
+
+<!-- 30. PART 3 broken output -->
+<section class="s-out">
+<h3>What it prints — no error, no change</h3>
+<pre>[(1, 'Taylor', 'Pending')]</pre>
+<p class="expect">No traceback. <code>status</code> is still <code>'Pending'</code> — the swap made the statement "set <code>status</code> to <code>1</code> where <code>id</code> = <code>'Approved'</code>", which matches nothing. The correct block a slide back prints <code>Approved</code>. Silently wrong is worse than a crash: nothing tells you it failed.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly <code>[(1, 'Taylor', 'Pending')]</code> and exits 0 — no exception. Contrast with the correct block's report showing <code>Approved</code>. Guide: "get this order wrong ... and the query would try to set <code>status</code> to a number and filter <code>WHERE id=</code> a status string — worth demonstrating live if a student makes this mistake, since the resulting error or silently-wrong behavior is genuinely instructive."</aside>
+</section>
+
+<!-- 31. PART 3 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Why doesn't <code>get_status_report()</code> need <code>row_factory = sqlite3.Row</code> the way <code>get_all_records()</code> does?</p>
+<button data-opt="A">Because <code>GROUP BY</code> queries are not allowed to use <code>row_factory</code> — SQLite raises an error if you set it before an aggregate query</button>
+<button data-opt="B">Because <code>get_status_report()</code> returns only one row, and <code>row_factory</code> only matters when there is more than one row</button>
+<button data-opt="C">Because its result rows are short, fixed-shape tuples <code>(status, count, total)</code> whose meaning is clear from position alone — dictionary-style access would add ceremony without clarity, unlike a wide record row where remembering positions gets error-prone</button>
+<p class="why" hidden>The guide's Part 3 "Check for understanding": "Because its result rows are short, fixed-shape tuples (status, count, total) whose meaning is clear from position alone — dictionary-style access would add ceremony without adding clarity here, unlike a five-or-six-column full record row where remembering 'is <code>amount</code> the third or fourth position' genuinely gets error-prone." <code>row_factory</code> is always allowed on any query (option A is false) and helps regardless of row count (option B is false) — it is a readability choice, and here the short fixed tuple is already readable.</p>
+</div>
+<aside class="notes">Guide's Part 3 "Check for understanding", verbatim answer: "Because its result rows are short, fixed-shape tuples (status, count, total) whose meaning is clear from position alone — dictionary-style access would add ceremony without adding clarity here, unlike a five-or-six-column full record row where remembering 'is <code>amount</code> the third or fourth position' genuinely gets error-prone." Options A and B are invented constraints — <code>row_factory</code> works on any query and any row count; it is purely a readability choice. Keyed C.</aside>
+</section>
+
+<!-- 32. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Swapping the placeholder order in <code>update_status</code> — <code>(record_id, new_status)</code> instead of <code>(new_status, record_id)</code>. No error is raised; the row simply doesn't update (<code>WHERE id = 'Approved'</code> matches nothing). Silently wrong — worth demonstrating live.</p>
+<p>Expecting <code>get_status_report()</code>'s rows to support <code>row['status']</code>-style access, out of habit from <code>get_all_records()</code> — they don't, since <code>row_factory</code> wasn't set for this connection. <code>row[0]</code> is the correct access pattern here; an explicit contrast with Part 2's function is worth making.</p>
+</div>
+<aside class="notes">Both are the guide's Part 3 "Common student mistakes to watch for", verbatim. Reinforce the deliberate contrast: <code>get_all_records()</code> sets <code>row_factory</code> (wide rows, names help); <code>get_status_report()</code> doesn't (short fixed tuple, position is clear).</aside>
+</section>
+
+<!-- 33. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:38–0:58</span>
+<h1>Five <code>pytest</code> Tests with <code>tmp_path</code></h1>
+<aside class="notes">
+Teaching goal: <code>tmp_path</code> — a <code>pytest</code> fixture creating a fresh, isolated temporary folder for every single test — and Rule 2's actual payoff: every function's <code>db_file</code> parameter exists specifically to make this possible.
+Say to the class (verbatim): "This is the entire reason every function today takes a <code>db_file</code> parameter. Watch: every test gets its <em>own</em>, completely separate, temporary database file — nothing here ever touches your real <code>data/requests.db</code>, and no test can accidentally see data left over from a different test."
+Line-by-line: <code>def test_add_and_retrieve(tmp_path):</code> — <code>tmp_path</code> is a <code>pytest</code> fixture: a special parameter name <code>pytest</code> recognises and automatically supplies. <code>pytest</code> creates a brand-new, empty temporary directory unique to <em>this specific test run</em> and hands its path in as <code>tmp_path</code>. <code>db = tmp_path / 'test.db'</code> — the <code>/</code> is <strong>not division</strong>; <code>tmp_path</code> is a <code>pathlib.Path</code>, which overloads <code>/</code> to mean "join a path segment" — this builds a full path like <code>/tmp/pytest-.../test0/test.db</code>. <code>create_table(db)</code>, <code>add_record(..., db_file=db)</code>, <code>get_all_records(db_file=db)</code> — <strong>every call passes <code>db</code> explicitly</strong>: Rule 2's entire payoff — because every function accepts <code>db_file</code> instead of hardcoding <code>DB_FILE</code>, tests redirect every operation to this test's own private temp file, isolated from the real database and from every other test's <code>tmp_path</code>. <code>test_status_report_groups_correctly</code> — the richest test, combining all four functions; closer to a genuine end-to-end integration test than a narrow unit test, a deliberate choice for a small, tightly-coupled data layer.
+Common student mistakes: creating a <code>tmp_path / 'test.db'</code> but forgetting to pass <code>db_file=db</code> to one of the four calls — silently defaulting that one call back to the real <code>DB_FILE</code>; walk the room checking every call in each test. Assuming <code>tmp_path</code> is shared <em>across</em> tests — it isn't; each test function gets its own fresh, separate <code>tmp_path</code>, which is precisely the isolation guarantee.
+Check for understanding: "If Rule 2 had never been applied — if every function hardcoded <code>DB_FILE</code> internally with no parameter — could these five tests still pass?" (Not safely — they might <em>appear</em> to pass individually, but would all be reading and writing the same real database file, meaning tests could interfere with each other's data, and running the test suite would pollute the actual development database with test records. A good check that "the tests happen to produce green checkmarks" and "the tests are actually correctly isolated" are different, and only the second is what this lab is really after.)
+</aside>
+</section>
+
+<!-- 34. PART 4 idea -->
+<section class="s-idea">
+<h3><code>tmp_path</code> — a fresh database file per test</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>tmp_path</code> is a <code>pytest</code> fixture</strong> — a special parameter name <code>pytest</code> recognises and supplies automatically. It creates a brand-new, empty temporary directory unique to <em>that one test run</em> and passes its path in.</p>
+<p><strong><code>db = tmp_path / 'test.db'</code></strong> — the <code>/</code> is not division. <code>tmp_path</code> is a <code>pathlib.Path</code>, which overloads <code>/</code> to mean "join a path segment", building a full path like <code>/tmp/pytest-.../test0/test.db</code>.</p>
+<p><strong>Every call passes <code>db</code> explicitly</strong> — <code>create_table(db)</code>, <code>add_record(..., db_file=db)</code>, <code>get_all_records(db_file=db)</code>. This is Rule 2's entire payoff: because no function hardcodes <code>DB_FILE</code>, tests redirect every operation to this test's private temp file — isolated from the real database and from every other test.</p>
+</div>
+<p class="expect">Each test function gets its <em>own</em> fresh <code>tmp_path</code> — data from <code>test_add_and_retrieve</code> is <strong>not</strong> visible in <code>test_default_status_is_pending</code>. That isolation is the whole point.</p>
+<aside class="notes">
+Guide, Part 4: <code>tmp_path</code> is auto-supplied; <code>/</code> on a <code>Path</code> joins segments; every function call passes <code>db_file=db</code> so nothing touches the real <code>data/requests.db</code>. <code>test_status_report_groups_correctly</code> is deliberately an integration-style test for a small, tightly-coupled data layer. A worthwhile live demo if time allows: hardcode <code>db_file=DB_FILE</code> inside <code>add_record</code> (ignoring the parameter) and re-run — watch the tests fail or, worse, silently write to the real development database.
+</aside>
+</section>
+
+<!-- 35. PART 4 static test file -->
+<section class="s-code">
+<h3>The five tests as provided — <code>tests/test_database.py</code></h3>
+<pre><code class="language-python">import pytest
+from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+def test_add_and_retrieve(tmp_path):
+    db = tmp_path / 'test.db'
+    create_table(db)
+    add_record('Taylor', 'Travel', 1200, db_file=db)
+    records = get_all_records(db_file=db)
+    assert len(records) == 1
+    assert records[0]['requester'] == 'Taylor'
+    assert records[0]['amount'] == 1200
+
+def test_default_status_is_pending(tmp_path):
+    db = tmp_path / 'test.db'
+    create_table(db)
+    add_record('Jordan', 'Equipment', 450, db_file=db)
+    records = get_all_records(db_file=db)
+    assert records[0]['status'] == 'Pending'
+
+def test_update_status(tmp_path):
+    db = tmp_path / 'test.db'
+    create_table(db)
+    add_record('Morgan', 'Software', 3500, db_file=db)
+    records = get_all_records(db_file=db)
+    update_status(records[0]['id'], 'Approved', db_file=db)
+    updated = get_all_records(db_file=db)
+    assert updated[0]['status'] == 'Approved'
+
+def test_multiple_records(tmp_path):
+    db = tmp_path / 'test.db'
+    create_table(db)
+    add_record('A', 'T', 500, db_file=db)
+    add_record('B', 'T', 750, db_file=db)
+    records = get_all_records(db_file=db)
+    assert len(records) == 2
+
+def test_status_report_groups_correctly(tmp_path):
+    db = tmp_path / 'test.db'
+    create_table(db)
+    add_record('A', 'T', 500, db_file=db)
+    add_record('B', 'T', 750, db_file=db)
+    records = get_all_records(db_file=db)
+    update_status(records[0]['id'], 'Approved', db_file=db)
+    report = get_status_report(db_file=db)
+    statuses = [row[0] for row in report]
+    assert 'Pending' in statuses
+    assert 'Approved' in statuses</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, and these tests need the real file-based <code>database.py</code> with its <code>db_file</code> parameter. Type this into <code>tests/test_database.py</code> and run <code>pytest -v</code> on your own machine. Two slides on, the same five checks run live.</p>
+<aside class="notes">
+Reproduced verbatim from the guide's Part 4 / Appendix A. Line-by-line: every test takes <code>tmp_path</code>, builds <code>db = tmp_path / 'test.db'</code>, and passes <code>db</code> / <code>db_file=db</code> to <em>every</em> function call so nothing touches the real database. <code>test_status_report_groups_correctly</code> exercises all four data functions in sequence. This file cannot execute in the deck — no <code>pytest</code> runner in Pyodide, and it imports the file-based <code>database.py</code>.
+Common mistakes: forgetting <code>db_file=db</code> on one of the four calls in a test (silently hits the real <code>DB_FILE</code>); assuming <code>tmp_path</code> is shared across tests (it isn't).
+</aside>
+</section>
+
+<!-- 36. PART 4 static pytest pane -->
+<section class="s-out">
+<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
+<pre>tests/test_database.py::test_add_and_retrieve PASSED
+tests/test_database.py::test_default_status_is_pending PASSED
+tests/test_database.py::test_update_status PASSED
+tests/test_database.py::test_multiple_records PASSED
+tests/test_database.py::test_status_report_groups_correctly PASSED
+5 passed</pre>
+<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all five pass". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. The next slide runs the same five checks live.</p>
+<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output — all five pass": the five <code>PASSED</code> lines and the <code>5 passed</code> summary. This pane is <strong>not executed</strong> in the deck. Double-checked locally with <code>python3 -m pytest -v</code> against the guide's Appendix A <code>database.py</code> + test file: <code>5 passed</code>. The provided code is correct as written — no hidden bugs this week.</aside>
+</section>
+
+<!-- 37. PART 4 runnable assert-mirror -->
+<section class="s-code">
+<h3>The same five checks, run live — as bare <code>assert</code>s</h3>
+<div class="run" data-lang="python">import sqlite3
+
+def fresh():
+    conn = sqlite3.connect(':memory:')
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS requests (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            requester TEXT    NOT NULL,
+            category  TEXT    NOT NULL,
+            amount    REAL,
+            status    TEXT    DEFAULT 'Pending',
+            notes     TEXT
+        )
+    ''')
+    return conn
+
+def add_record(conn, requester, category, amount, notes=''):
+    conn.execute(
+        'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+        (requester, category, amount, notes)
+    )
+
+def get_all_records(conn):
+    conn.row_factory = sqlite3.Row
+    cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
+    return [dict(row) for row in cur.fetchall()]
+
+def update_status(conn, record_id, new_status):
+    conn.execute('UPDATE requests SET status=? WHERE id=?', (new_status, record_id))
+
+def get_status_report(conn):
+    cur = conn.execute('SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status')
+    return cur.fetchall()
+
+# test_add_and_retrieve -- each 'test' gets its own fresh() db, mirroring tmp_path
+conn = fresh()
+add_record(conn, 'Taylor', 'Travel', 1200)
+records = get_all_records(conn)
+assert len(records) == 1
+assert records[0]['requester'] == 'Taylor'
+assert records[0]['amount'] == 1200
+print('test_add_and_retrieve PASSED')
+
+# test_default_status_is_pending
+conn = fresh()
+add_record(conn, 'Jordan', 'Equipment', 450)
+records = get_all_records(conn)
+assert records[0]['status'] == 'Pending'
+print('test_default_status_is_pending PASSED')
+
+# test_update_status
+conn = fresh()
+add_record(conn, 'Morgan', 'Software', 3500)
+records = get_all_records(conn)
+update_status(conn, records[0]['id'], 'Approved')
+updated = get_all_records(conn)
+assert updated[0]['status'] == 'Approved'
+print('test_update_status PASSED')
+
+# test_multiple_records
+conn = fresh()
+add_record(conn, 'A', 'T', 500)
+add_record(conn, 'B', 'T', 750)
+records = get_all_records(conn)
+assert len(records) == 2
+print('test_multiple_records PASSED')
+
+# test_status_report_groups_correctly
+conn = fresh()
+add_record(conn, 'A', 'T', 500)
+add_record(conn, 'B', 'T', 750)
+records = get_all_records(conn)
+update_status(conn, records[0]['id'], 'Approved')
+report = get_status_report(conn)
+statuses = [row[0] for row in report]
+assert 'Pending' in statuses
+assert 'Approved' in statuses
+print('test_status_report_groups_correctly PASSED')
+
+print('5 passed')</div>
+<p class="expect">Where the guide's point is "the tests pass", this runs the same five test bodies as bare <code>assert</code>s. <strong>:memory: adaptation:</strong> <code>pytest</code> and <code>tmp_path</code> have no runner in Pyodide, so a <code>fresh()</code> helper returns a new in-memory connection per "test" (mirroring a fresh <code>tmp_path</code> db) and the five functions take that open <code>conn</code> instead of a <code>db_file</code> path. Each <code>assert</code> that holds prints its test name; a failing one raises <code>AssertionError</code> and stops the block.</p>
+<aside class="notes">
+Say to the class (verbatim): "This is the entire reason every function today takes a <code>db_file</code> parameter. Watch: every test gets its <em>own</em>, completely separate, temporary database file — nothing here ever touches your real <code>data/requests.db</code>, and no test can accidentally see data left over from a different test."
+Line-by-line: <code>fresh()</code> stands in for <code>tmp_path / 'test.db'</code> + <code>create_table(db)</code> — a brand-new isolated in-memory database per call; the four data functions are the guide's bodies verbatim except they receive an open <code>conn</code> instead of a <code>db_file</code> path (forced by <code>:memory:</code> — a fresh <code>connect(':memory:')</code> is a different empty database each time, so the connection must be kept and passed). Then the five test bodies from <code>tests/test_database.py</code> run as bare <code>assert</code>s, each starting from its own <code>fresh()</code> db — the isolation guarantee <code>tmp_path</code> provides. A clean run here means all five <code>pytest</code> tests pass too.
+Check for understanding: no — if every function hardcoded <code>DB_FILE</code>, the five tests might <em>appear</em> to pass individually but would share one real database file, interfering with each other and polluting the development database.
+</aside>
+</section>
+
+<!-- 38. PART 4 assert-mirror output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>test_add_and_retrieve PASSED
+test_default_status_is_pending PASSED
+test_update_status PASSED
+test_multiple_records PASSED
+test_status_report_groups_correctly PASSED
+5 passed</pre>
+<p class="expect">Every one of the five test bodies' assertions holds, so all five names print followed by <code>5 passed</code> — the live equivalent of the static <code>pytest -v</code> pane. Each <code>fresh()</code> database starts empty, so <code>len(records) == 1</code> and <code>len(records) == 2</code> both hold: no leakage between tests.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these six lines and exits 0. Each <code>assert</code> corresponds one-to-one with a test in <code>tests/test_database.py</code>, so a clean run here means all five <code>pytest</code> tests pass too. Matches the guide's "Verified output — all five pass" (minus <code>pytest</code>'s own <code>::testname</code> node-id prefix and session header).</aside>
+</section>
+
+<!-- 39. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">If Rule 2 had never been applied — if every function hardcoded <code>DB_FILE</code> internally with no parameter — could these five tests still pass?</p>
+<button data-opt="A">Not safely — they might <em>appear</em> to pass individually, but all five would read and write the same real database file, so tests could interfere with each other's data and the suite would pollute the actual development database with test records</button>
+<button data-opt="B">Yes, with no downside — <code>pytest</code> automatically sandboxes every test's file writes, so a hardcoded <code>DB_FILE</code> is never actually touched during a test run</button>
+<button data-opt="C">No — the tests would immediately crash with <code>sqlite3.OperationalError</code> because a hardcoded path cannot be opened from inside a test</button>
+<p class="why" hidden>The guide's Part 4 "Check for understanding": "Not safely — they might <em>appear</em> to pass individually, but would all be reading and writing the same real database file, meaning tests could interfere with each other's data, and running the test suite would pollute the actual development database with test records. A good check that 'the tests happen to produce green checkmarks' and 'the tests are actually correctly isolated' are different, and only the second is what this lab is really after." <code>pytest</code> does not sandbox file writes (option B); a hardcoded path opens fine, it is just the wrong (shared, real) file (option C).</p>
+</div>
+<aside class="notes">Guide's Part 4 "Check for understanding", verbatim answer: "Not safely — they might <em>appear</em> to pass individually, but would all be reading and writing the same real database file, meaning tests could interfere with each other's data, and running the test suite would pollute the actual development database with test records. A good check that 'the tests happen to produce green checkmarks' and 'the tests are actually correctly isolated' are different, and only the second is what this lab is really after." Option B invents a <code>pytest</code> sandbox that does not exist; option C misreads a hardcoded path as unopenable. Keyed A.</aside>
+</section>
+
+<!-- 40. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Creating a <code>tmp_path / 'test.db'</code> inside a test but forgetting to pass <code>db_file=db</code> to one of the four function calls — silently defaulting that one call back to the real <code>DB_FILE</code>. A subtle, easy-to-miss mistake; walk the room checking every single function call within each test passes <code>db_file</code> explicitly.</p>
+<p>Assuming <code>tmp_path</code> is shared <em>across</em> tests in the same file — it isn't; each test function gets its own fresh, separate <code>tmp_path</code>, which is precisely the isolation guarantee this whole pattern provides. A student who expects data from <code>test_add_and_retrieve</code> to still be present in <code>test_default_status_is_pending</code> has misunderstood the fixture's scope.</p>
+</div>
+<aside class="notes">Both are the guide's Part 4 "Common student mistakes to watch for", verbatim. If time allows, the guide's live demo — hardcode <code>db_file=DB_FILE</code> inside <code>add_record</code> and re-run — makes "why Rule 2 matters" concrete by watching it break.</aside>
+</section>
+
+<!-- 41. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:58–1:10</span>
+<h1>Test Script and Ritual</h1>
+<aside class="notes">
+Teaching goal: a standalone script exercising the real <code>database.py</code> against the actual development database — and a genuine "read the code, don't assume" moment around <code>get_all_records()</code>'s ordering.
+Say to the class (verbatim): "One more script, this time against your real database, not a temp one — showing everything working together end to end. And I want you to predict something before we run it."
+Before running it, ask the room explicitly: "Three records added — Taylor, Jordan, Morgan, in that order. <code>update_status(records[0]['id'], 'Approved')</code> approves <em>which one</em>? Predict it, based on Part 2's <code>ORDER BY id DESC</code> detail."
+Confirm explicitly, since this is worth landing deliberately: "$3,500 approved — that's <strong>Morgan</strong>, the <em>last</em> record added, not Taylor, the first. <code>records[0]</code> is the <em>first item in the list returned by <code>get_all_records()</code></em>, and that function orders by <code>id DESC</code> — most recent first. If you assumed <code>records[0]</code> meant 'the first request I added,' this output would look wrong. It isn't wrong — the code did exactly what it says; the assumption about what <code>records[0]</code> means was the actual gap." A real example of code being completely correct while still producing a surprising result, purely because of an unstated assumption about ordering.
+Common student mistakes: running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — <code>add_record</code> always inserts new rows, so running it twice produces six records total, not three; if a student's <code>Records: 3</code> doesn't match, check whether this is a repeat run first. Assuming the <code>Status report</code> line order (<code>Approved</code> before <code>Pending</code>) reflects something meaningful (insertion order, urgency) rather than just whatever order <code>GROUP BY</code> happened to produce — <code>GROUP BY</code>'s result order isn't guaranteed or semantically meaningful unless an explicit <code>ORDER BY</code> is added.
+Check for understanding: "If you wanted <code>test_script.py</code> to approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?" (Either query specifically for the record with the minimum <code>id</code> — e.g., <code>records[-1]</code> if the list stays DESC-ordered, since the oldest record would then be <em>last</em> in the list — or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code> instead of <code>DESC</code>. Getting a student to propose a concrete fix confirms the ordering behavior, and its consequences, genuinely landed.)
+</aside>
+</section>
+
+<!-- 42. PART 5 runnable test_script -->
+<section class="s-code">
+<h3>Run it — <code>test_script.py</code> end to end</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+cur = conn.cursor()
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+
+for requester, category, amount in [
+    ('Taylor', 'Travel', 1200),
+    ('Jordan', 'Equipment', 450),
+    ('Morgan', 'Software', 3500),
+]:
+    conn.execute(
+        'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+        (requester, category, amount, '')
+    )
+
+conn.row_factory = sqlite3.Row
+records = [dict(row) for row in conn.execute('SELECT * FROM requests ORDER BY id DESC').fetchall()]
+print(f'Records: {len(records)}')
+
+# records[0] is the MOST RECENT row (ORDER BY id DESC) -- Morgan, not Taylor
+conn.execute('UPDATE requests SET status=? WHERE id=?', ('Approved', records[0]['id']))
+
+report = conn.execute(
+    'SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status'
+).fetchall()
+print('\nStatus report:')
+for row in report:
+    print(f'  {row[0]}: {row[1]} records, ${row[2]:,.2f}')</div>
+<p class="expect">The guide's <code>test_script.py</code>, adapted to one <code>:memory:</code> connection with the three <code>add_record</code> calls inlined as a loop. Predict before running: <code>update_status(records[0]['id'], 'Approved')</code> approves <em>which</em> of Taylor, Jordan, Morgan? The output reproduces the guide's "Verified output" exactly.</p>
+<aside class="notes">
+Say to the class (verbatim): "One more script, this time against your real database, not a temp one — showing everything working together end to end. And I want you to predict something before we run it."
+Line-by-line: one <code>:memory:</code> connection; three rows inserted in order Taylor, Jordan, Morgan (ids 1, 2, 3); <code>get_all_records()</code>'s body — <code>row_factory</code>, <code>SELECT * ... ORDER BY id DESC</code>, <code>[dict(row) ...]</code> — so <code>records</code> is [Morgan(3), Jordan(2), Taylor(1)]; <code>print(f'Records: {len(records)}')</code> gives <code>3</code>; <code>update_status(records[0]['id'], 'Approved')</code> approves <code>records[0]</code> = Morgan, id 3, amount 3500; <code>get_status_report()</code>'s body groups by status; the loop prints each group with <code>${row[2]:,.2f}</code> (thousands separator, two decimals).
+Confirm explicitly: <code>$3,500.00</code> approved is Morgan — the <em>last</em> added, not Taylor the first — because <code>records[0]</code> is the first item of a <code>DESC</code>-ordered list. Correct code, surprising result, unstated ordering assumption.
+Common mistakes: re-running without clearing the DB gives six rows not three; the <code>Approved</code>-before-<code>Pending</code> report order is just <code>GROUP BY</code>'s doing, not meaningful.
+Check for understanding: to approve Taylor (first added) instead — use <code>records[-1]</code> (oldest is last in a DESC list) or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code>.
+</aside>
+</section>
+
+<!-- 43. PART 5 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Records: 3
+
+Status report:
+  Approved: 1 records, $3,500.00
+  Pending: 2 records, $1,650.00</pre>
+<p class="expect">Reproduces the guide's Part 5 / Appendix A "Verified output" exactly. <code>$3,500.00</code> is <strong>Morgan</strong> — the last record added — because <code>records[0]</code> is the first item of a list ordered <code>id DESC</code> (most recent first). <code>Pending</code> total is <code>1200 + 450 = $1,650.00</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these lines and exits 0. The blank line comes from <code>print('\nStatus report:')</code>. The <code>Approved</code>-before-<code>Pending</code> order is just what <code>GROUP BY status</code> produced (alphabetical, as it happens) — the guide notes it is not guaranteed or semantically meaningful without an explicit <code>ORDER BY</code>. This is the guide's "Verified output" verbatim.</aside>
+</section>
+
+<!-- 44. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>python3 test_script.py
+ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 14: Python SQL integration' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Run <code>test_script.py</code> once (not repeatedly — <code>add_record</code> keeps inserting), then format, lint, test, commit, push. The commit message must include <strong>"lab 14"</strong>.</p>
+<aside class="notes">
+Line-by-line: <code>python3 test_script.py</code> runs the end-to-end script against the real <code>data/requests.db</code>; <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all five tests; <code>&amp;&amp;</code> chaining stops on any failure; then stage, commit with a message including "lab 14", push.
+Common mistake: running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> — six records instead of three, because <code>add_record</code> always inserts new rows and never resets the table.
+</aside>
+</section>
+
+<!-- 45. PART 5 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">To make <code>test_script.py</code> approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?</p>
+<button data-opt="A">Add a second <code>ORDER BY id DESC</code> to the <code>UPDATE</code> statement so it targets the oldest row</button>
+<button data-opt="B">Use <code>records[-1]</code> instead of <code>records[0]</code> (the oldest row is <em>last</em> in a <code>DESC</code>-ordered list), or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code></button>
+<button data-opt="C">Nothing in the code — just add the records in the reverse order (Morgan, Jordan, Taylor) so Taylor ends up with the highest <code>id</code></button>
+<p class="why" hidden>The guide's Part 5 "Check for understanding": "Either query specifically for the record with the minimum <code>id</code> — e.g., <code>records[-1]</code> if the list stays DESC-ordered, since the oldest record would then be <em>last</em> in the list — or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code> instead of <code>DESC</code>." Option A is invalid SQL (<code>UPDATE ... WHERE id=?</code> takes no <code>ORDER BY</code>); option C changes which record is "first added", defeating the point.</p>
+</div>
+<aside class="notes">Guide's Part 5 "Check for understanding", verbatim answer: "Either query specifically for the record with the minimum <code>id</code> — e.g., <code>records[-1]</code> if the list stays DESC-ordered, since the oldest record would then be <em>last</em> in the list — or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code> instead of <code>DESC</code>. Getting a student to propose a concrete fix confirms the ordering behavior, and its consequences, genuinely landed." Option A is not valid SQLite (a bare <code>UPDATE ... WHERE</code> takes no <code>ORDER BY</code>); option C sidesteps the question by redefining "first added". Keyed B.</aside>
+</section>
+
+<!-- 46. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — since <code>add_record</code> always inserts new rows (never resets the table), running it twice produces six records total, not three. If a student's <code>Records: 3</code> doesn't match, checking whether this is a repeat run is the first thing to verify.</p>
+<p>Assuming the <code>Status report</code> line order (<code>Approved</code> before <code>Pending</code>) reflects something meaningful (like insertion order or urgency) rather than just whatever order <code>GROUP BY</code> happened to produce — <code>GROUP BY</code>'s result order isn't guaranteed or semantically meaningful unless an explicit <code>ORDER BY</code> is added afterward.</p>
+</div>
+<aside class="notes">Both are the guide's Part 5 "Common student mistakes to watch for", verbatim. The <code>records[0]</code>-is-most-recent surprise is the deliberate highlight of this part: correct code, surprising result, an unstated ordering assumption — exactly the kind of subtle bug a quick test or a careful read catches.</aside>
+</section>
+
+<!-- 47. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · only if the class finishes early</span>
+<h1>Add a <code>delete_record</code> Function</h1>
+<aside class="notes">
+From the guide's Appendix B — "only if the class finishes early". Five required functions plus tests fill the full class period at a normal pace.
+Extra — a <code>delete_record</code> function: <code>def delete_record(record_id, db_file=DB_FILE): with sqlite3.connect(db_file) as conn: conn.execute('DELETE FROM requests WHERE id=?', (record_id,))</code> — note the single-element tuple <code>(record_id,)</code> needs the trailing comma to actually be a tuple, not just parentheses around one value (a classic Python syntax trap) — and write a <code>tmp_path</code>-based test confirming the record count decreases by one after deletion.
+</aside>
+</section>
+
+<!-- 48. STRETCH runnable -->
+<section class="s-code">
+<h3>Live-code — <code>delete_record</code> and the trailing-comma trap</h3>
+<div class="run" data-lang="python">import sqlite3
+
+conn = sqlite3.connect(':memory:')
+conn.execute('''
+    CREATE TABLE IF NOT EXISTS requests (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        requester TEXT    NOT NULL,
+        category  TEXT    NOT NULL,
+        amount    REAL,
+        status    TEXT    DEFAULT 'Pending',
+        notes     TEXT
+    )
+''')
+for requester, category, amount in [('Taylor', 'Travel', 1200), ('Jordan', 'Equipment', 450)]:
+    conn.execute(
+        'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
+        (requester, category, amount, '')
+    )
+
+before = conn.execute('SELECT COUNT(*) FROM requests').fetchone()[0]
+
+# delete_record(1) -- (record_id,) needs the trailing comma to be a tuple
+conn.execute('DELETE FROM requests WHERE id=?', (1,))
+
+after = conn.execute('SELECT COUNT(*) FROM requests').fetchone()[0]
+print(f'before={before} after={after}')
+assert after == before - 1
+print('delete_record removed exactly one row')</div>
+<p class="expect">Same two rules as the five required functions — a <code>?</code> placeholder for the id, an optional <code>db_file</code> parameter. The trap: <code>(1,)</code> with the trailing comma is a one-element tuple; <code>(1)</code> is just the integer <code>1</code> in parentheses, and <code>.execute()</code> would reject it.</p>
+<aside class="notes">
+Line-by-line: table + two seeded rows; <code>before</code> counts them (2); <code>conn.execute('DELETE FROM requests WHERE id=?', (1,))</code> is <code>delete_record</code>'s body — the <code>?</code> placeholder for <code>record_id</code>, and the single-element tuple <code>(1,)</code>; <code>after</code> re-counts (1); the <code>assert</code> confirms the count dropped by exactly one, mirroring the guide's suggested <code>tmp_path</code> test.
+The trailing-comma point is the guide's: <code>(record_id,)</code> is a tuple; <code>(record_id)</code> is not — a classic, worth-flagging Python syntax trap. Passing a bare <code>1</code> to <code>.execute()</code>'s parameter argument raises <code>ValueError: parameters are of unsupported type</code>.
+</aside>
+</section>
+
+<!-- 49. STRETCH output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>before=2 after=1
+delete_record removed exactly one row</pre>
+<p class="expect">Two rows seeded, one deleted by id, one left — the count dropped by exactly one, so the <code>assert</code> holds and the confirmation line prints. This is the guide's Appendix B suggested test (record count decreases by one after deletion), as a bare <code>assert</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these two lines and exits 0. The guide's Appendix B asks for a <code>tmp_path</code>-based test "confirming the record count decreases by one after deletion" — this assert-mirror is that check, adapted to <code>:memory:</code> like Part 4.</aside>
+</section>
+
+<!-- 50. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li><code>database.py</code> contains all five functions: <code>create_table</code>, <code>add_record</code>, <code>get_all_records</code>, <code>update_status</code>, <code>get_status_report</code></li>
+<li>Every function uses <code>?</code> placeholders for values, never f-strings/concatenation in SQL (Rule 1)</li>
+<li>Every function accepts an optional <code>db_file</code> parameter defaulting to <code>DB_FILE</code> (Rule 2)</li>
+<li><code>tests/test_database.py</code> contains all five tests, all using <code>tmp_path</code>, all passing</li>
+<li><code>test_script.py</code> runs cleanly and shows the status report</li>
+<li>Git commit made, with a message including "lab 14"; full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas — 3 screenshots submitted</li>
+</ul>
+<aside class="notes">Review this checklist together in the last ~5 minutes. Completion credit — the bar is the checklist above. The featured ideas to reinforce as they leave: Rule 1 (<code>?</code> placeholders, always — a security discipline) and Rule 2 (an optional <code>db_file</code> on every function — what makes isolated testing possible), and that <code>get_all_records()</code> returns most-recent-first.</aside>
+</section>
+
+<!-- 51. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 15</h3>
+<p>"Today's five functions are the entire data layer your capstone needs. Next week, Streamlit — a real, clickable web interface, calling exactly these functions (<code>add_record</code>, <code>get_all_records</code>, <code>update_status</code>, <code>get_status_report</code>) to let a genuine user interact with your database without touching a terminal or the <code>sqlite3</code> shell at all."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: <code>database.py</code> is genuinely load-bearing — Week 15's Streamlit UI imports and calls these exact five functions, so the two rules applied today (placeholders, <code>db_file</code>) carry straight through.</aside>
+</section>
+
+<!-- 52. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 14</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w14.md (Week 14 facilitation guide, "Python + SQL Integration"). This is the FIRST runnable-SQL deck of the rollout — <code>import sqlite3</code> is in Pyodide 0.26.4's stdlib, so every Python+SQL block is a genuine <code>data-lang="python"</code> runnable block. All runnable-block output verified against CPython 3.12.2 (<code>sqlite3</code> stdlib == Pyodide's bundled module). :memory: adaptation: the guide connects every function to the <code>data/requests.db</code> file and opens a fresh connection per call; Pyodide's FS is ephemeral and a fresh <code>:memory:</code> connection is a new empty database each time, so each block keeps one <code>:memory:</code> connection open with the schema + seed rows inline — every <code>SELECT</code>/report result still reproduces the guide's "Verified output" exactly. Part 4's <code>tests/test_database.py</code> and its <code>pytest -v</code> pane are static (no <code>pytest</code> runner in Pyodide; they import the file-based <code>database.py</code>) — reproduced verbatim from the guide's "Verified output — all five pass"; double-checked locally with <code>python3 -m pytest -v</code> (5 passed). The runnable assert-mirror runs the same five test bodies; its five functions take an open <code>conn</code> instead of a <code>db_file</code> path (the <code>:memory:</code> adaptation). Broken/fixed pairs: Part 2 f-string + apostrophe → <code>sqlite3.OperationalError: near "Brien": syntax error</code>; Part 2 missing <code>row_factory</code> → <code>TypeError: tuple indices must be integers or slices, not str</code>; Part 3 swapped placeholder tuple → silently-wrong, zero rows updated. The Part 1 setup and Part 5 ritual shell blocks are <code>data-readonly</code> (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Quizzes: Parts 1–5 key the guide's own "Check for understanding" parenthetical verbatim; keyed letters A, B, C, A, B. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

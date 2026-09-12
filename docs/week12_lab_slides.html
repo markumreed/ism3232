@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 12 — OOP III — Applied Practice &amp; Design</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 12 &nbsp;·&nbsp; Module 12 &nbsp;·&nbsp; Unit 3 · Object-Oriented Design</p>
+<h1>OOP III — Applied Practice &amp; Design</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: "design before code, enforced"</span>
+<span class="t-item"><strong>0:04–0:24</strong> Part 1 — Design document (write + instructor review)</span>
+<span class="t-item"><strong>0:24–0:36</strong> Part 2 — Build Entity Class 1</span>
+<span class="t-item"><strong>0:36–0:50</strong> Part 3 — Build Entity Class 2 and the Manager</span>
+<span class="t-item"><strong>0:50–1:03</strong> Part 4 — Six or more <code>pytest</code> tests</span>
+<span class="t-item"><strong>1:03–1:11</strong> Part 5 — Main simulation and ritual</span>
+<span class="t-item"><strong>1:11–1:15</strong> Wrap-up, submission checklist</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Full class period, 75 minutes. Format: independent design-and-build, gated by an instructor design review checkpoint. Prerequisites: Weeks 10–11's <code>BusinessRequest</code>/<code>RequestManager</code> — two entity classes, a manager class, composition, boundary/independence testing. This lab is structurally different from every prior week: students design and build their <em>own</em> multi-class system, in a business domain of their own choosing — not the <code>BusinessRequest</code> template. The lab page's rule is enforced exactly as written: <strong>students may not open VS Code to write class code until their <code>design.md</code> is reviewed by the instructor.</strong> Today's central facilitation challenge isn't teaching new syntax — it's running an efficient, fair design-review queue for the whole room.
+Say to the class (Intro, verbatim): "Today you design and build your own system — your own business domain, your own classes, not the purchase-request template from the last two weeks. And I'm enforcing something new: you cannot open a code editor until I've reviewed your design document. This isn't busywork — designing before coding is a genuinely professional habit, and today is the one day this semester built specifically to practice it, with real consequences for skipping it."
+Do: write the day's gate rule on the board, exactly: <strong>No code until <code>design.md</code> is reviewed. Raise your hand when it's done.</strong>
+NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>Event</code>, <code>Registration</code>, and <code>RegistrationManager</code> at the top and then the code that uses them — the guide splits this across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. The guide's worked example (event registrations: <code>Event</code>, <code>Registration</code>, <code>RegistrationManager</code>) is a model of the <em>design-to-code process</em>, NOT an answer key for students to copy — each student builds their own domain. <strong><code>pytest</code> has no runner in Pyodide</strong> — Part 4's test file and its <code>pytest -v</code> output are shown static ("not run here"), with a runnable block beside them running the same nine checks as bare <code>assert</code>s. The ritual shell block is read-only (no <code>ruff</code> / <code>pytest</code> / <code>git</code> in the browser). Week 13's SQL is mentioned only in prose in the preview — nothing SQL executes here (Week 14 runs real <code>sqlite3</code>). Pyodide tracebacks show <code>&lt;exec&gt;</code> as the file and line numbers may differ from a real <code>python3 file.py</code> run — the error <em>type</em> and <em>message</em> are the load-bearing content.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<ul class="kv">
+<div><span class="k">Format</span><span class="v">Independent design-and-build, gated by an instructor design review checkpoint</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 10–11: <code>BusinessRequest</code>/<code>RequestManager</code> — two entity classes, a manager class, composition, boundary/independence testing</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (design document, enforced) – Part 5 (simulation + ritual)</span></div>
+<div><span class="k">Submission</span><span class="v"><code>design.md</code> + 2 screenshots, GitHub URL, Canvas, completion credit</span></div>
+</ul>
+<aside class="notes">
+From the Session Snapshot. Students design and build their own multi-class system in a business domain of their own choosing — a library checkout system, event registrations, a food delivery order tracker, a gym membership manager. Part 1 is deliberately given the most time of any part this semester: it includes both independent writing time <em>and</em> a queued instructor review that gates all further progress — a student who finishes their design in 8 minutes may still wait several minutes for their turn in the review queue, and that wait needs to be built into the plan, not treated as slack. Students who finish and get approved early may begin Part 2 immediately.
+Before class: build your own complete worked example (this guide's <code>Event</code>/<code>Registration</code>/<code>RegistrationManager</code> is fully verified below); decide your design-review approval bar in advance and write it somewhere visible; plan your physical/virtual queue mechanism before class (a raised-hand line, a shared sign-up doc, or calling rows in sequence).
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Design a multi-class OOP system on paper <em>before</em> writing code — naming classes, attributes, methods, and business rules in advance.</li>
+<li>Independently build two related entity classes and a manager class, applying every pattern from Weeks 10–11 (constructors, instance methods, <code>__repr__</code>, composition) to a novel domain.</li>
+<li>Write and pass at least six <code>pytest</code> tests covering initial state, business logic, a boundary case, and manager-level behavior including instance independence.</li>
+<li>Build a <code>main.py</code> simulation exercising the full system, and run the established submission ritual.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 is Part 1's enforced design document; objective 2 is Parts 2–3 (two entity classes + a manager, applied to a student's own domain); objective 3 is Part 4's six required test categories; objective 4 is Part 5's <code>main.py</code> simulation plus the submission ritual.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: "design before code, enforced"</td><td>4</td></tr>
+<tr><td>0:04–0:24</td><td>Part 1 — Design document (write + instructor review)</td><td>20</td></tr>
+<tr><td>0:24–0:36</td><td>Part 2 — Build Entity Class 1</td><td>12</td></tr>
+<tr><td>0:36–0:50</td><td>Part 3 — Build Entity Class 2 and the Manager</td><td>14</td></tr>
+<tr><td>0:50–1:03</td><td>Part 4 — Six or more <code>pytest</code> tests</td><td>13</td></tr>
+<tr><td>1:03–1:11</td><td>Part 5 — Main simulation and ritual</td><td>8</td></tr>
+<tr><td>1:11–1:15</td><td>Wrap-up, submission checklist</td><td>4</td></tr>
+</tbody>
+</table>
+<aside class="notes">Part 1 gets the most time of any part this semester, for a structural reason: it includes both independent writing time <em>and</em> a queued instructor review that gates all further progress. Build the review wait into the plan, not as slack. Parts 2–5's remaining 55 minutes assume a design scoped to exactly two entity classes plus a manager — redirect "too big" designs toward that scope during review.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>Design before code — enforced</h1>
+<aside class="notes">
+Teaching goal: frame the day — design your own multi-class system on paper first; you cannot open a code editor until the instructor has reviewed your <code>design.md</code>. Designing before coding is a genuinely professional habit, and today is the one day this semester built specifically to practice it.
+Say to the class (verbatim): "Today you design and build your own system — your own business domain, your own classes, not the purchase-request template from the last two weeks. And I'm enforcing something new: you cannot open a code editor until I've reviewed your design document. This isn't busywork — designing before coding is a genuinely professional habit, and today is the one day this semester built specifically to practice it, with real consequences for skipping it."
+Do: write the gate rule on the board, exactly: <strong>No code until <code>design.md</code> is reviewed. Raise your hand when it's done.</strong>
+This deck demonstrates the instructor's own worked example (event registrations) as <em>process</em>, not as an answer key — students choose their own domains.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:24</span>
+<h1>Design Document</h1>
+<aside class="notes">
+Teaching goal: a complete <code>design.md</code>, written entirely before any code — forcing students to think through class structure, attributes, methods, and business rules in the abstract, the way a real system would be planned before implementation begins.
+Say to the class (verbatim): "Pick a business domain — something genuinely different from purchase requests. A library checkout system, event registrations, a food delivery order tracker, a gym membership manager — anything with two related kinds of things and rules that govern them. Fill in every field in this template. I will not review a design with blanks left in it."
+Do: <code>cd ~/ism3232/module06_oop &amp;&amp; touch design.md &amp;&amp; code design.md</code>
+What "approved" means — set a fast, consistent bar, say it aloud before students start writing: every field filled with real content (no blanks, no "TBD"); the two entity classes are genuinely different kinds of things, not the same concept renamed; at least one business rule specific enough to become a real boundary-case test (a numeric threshold, a status transition rule). A review should take well under a minute per student. Queue mechanism: call students up in a fixed order (by row, alphabetically, a sign-up sheet), not an open "raise your hand whenever" free-for-all. Early-approved finishers may begin Part 2 immediately.
+Common student mistakes: two entity classes that are really the same concept with different names ("Customer" and "Client" with near-identical fields) — redirect toward a genuine relationship like this guide's <code>Registration</code> (has-a) <code>Event</code>; business rules too vague to become a test ("the system should work well") — push for a specific, numeric, checkable rule, modeling "VIP if price exceeds $500"; skipping ahead to write code before approval — enforce the rule as stated.
+No explicit "Check for understanding" appears in this segment of the guide. The knowledge-check answer is taken verbatim from the guide's Part 1 "Common student mistakes" line: "redirect toward a genuine relationship instead, like this guide's <code>Registration</code> (has-a) <code>Event</code>," together with the "too big" redirect toward "exactly the required two entity classes plus manager."
+</aside>
+</section>
+
+<!-- 7. PART 1 idea — the template -->
+<section class="s-idea">
+<h3>Fill in every field — the <code>design.md</code> template</h3>
+<div class="tmpl"># OOP Lab 12 Design
+# Author: [Your Name]
+
+## Business Domain
+[Describe the system you are building in 1-2 sentences]
+
+## Entity Class 1
+Class name: ___
+Attributes (name + type):
+  - ___: ___
+Methods (name + what it does + return type):
+  - ___: ___ -> ___
+
+## Entity Class 2
+Class name: ___
+Attributes:
+  - ___: ___
+Methods:
+  - ___: ___ -> ___
+
+## Manager Class
+Class name: ___
+Holds: list of [entity class 1]
+Methods:
+  - add(item): adds to the list
+  - list_by_status(status): filters by status
+  - total(): returns sum of a numeric attribute
+  - report(): prints formatted summary
+
+## Business Rules (will become methods and test cases)
+1. ___
+2. ___
+3. ___
+
+## Out of Scope
+[What you are NOT building]</div>
+<p class="expect">The lab page's own rule, enforced verbatim: "I will not review a design with blanks left in it." Every field gets real content — no "TBD".</p>
+<aside class="notes">
+Line-by-line (guide, Part 1 template): the <strong>Business Domain</strong> is 1–2 sentences of what the system does. <strong>Entity Class 1</strong> and <strong>Entity Class 2</strong> each name a class, its typed attributes, and its methods with return types — the two must be genuinely different kinds of things. The <strong>Manager Class</strong> holds a list of Entity Class 1 and always has <code>add</code>, <code>list_by_status</code>, <code>total</code>, <code>report</code> — the same shape as Week 11's <code>RequestManager</code>. <strong>Business Rules</strong> become methods and test cases — at least one must be numeric/checkable enough to drive Part 4's required boundary test. <strong>Out of Scope</strong> names what the student is deliberately not building, keeping the design to the ~55-minute scope of Parts 2–5.
+Common mistakes: leaving blanks or "TBD"; a design that is "too big" (six entity classes) — redirect toward exactly two entity classes plus a manager; a design that is "too thin" (an entity with only two attributes and no real business rule) — push for at least one genuine, testable rule before approving.
+</aside>
+</section>
+
+<!-- 8. PART 1 idea — the worked example -->
+<section class="s-idea">
+<h3>The instructor's worked example — event registrations (a model of the <em>process</em>)</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Business Domain.</strong> A system for managing registrations to a company's annual gala event — tracking who's signed up, at what price tier, and whether they're confirmed, pending, or cancelled.</p>
+<p><strong>Entity Class 1 — <code>Registration</code>.</strong> Attributes: <code>reg_id: int</code>, <code>attendee_name: str</code>, <code>event: Event</code> (a reference to Entity Class 2), <code>price: float</code>, <code>status: str</code> (defaults to <code>'Pending'</code>). Methods: <code>confirm()</code> → <code>None</code>, <code>cancel()</code> → <code>None</code>, <code>is_vip()</code> → <code>bool</code> (True if price exceeds $500).</p>
+<p><strong>Entity Class 2 — <code>Event</code>.</strong> Attributes: <code>event_id: int</code>, <code>name: str</code>, <code>capacity: int</code>. No methods required beyond <code>__init__</code> and <code>__repr__</code> for this domain.</p>
+<p><strong>Manager — <code>RegistrationManager</code>.</strong> Holds a list of <code>Registration</code>. Methods: <code>add(registration)</code>, <code>list_by_status(status)</code>, <code>total()</code> (sums <code>price</code>), <code>report()</code> (prints confirmed/pending counts and total revenue).</p>
+<p><strong>Business Rules.</strong> (1) A new registration starts as <code>'Pending'</code> until confirmed. (2) A registration is VIP if its price exceeds $500. (3) Cancelled registrations still count in total revenue history but do not appear in the "Confirmed" report section.</p>
+</div>
+<p class="expect">Demonstrated live as a model of the design-to-code <em>process</em>, not as an answer to copy. <code>Registration</code> <em>has-a</em> <code>Event</code> — a genuine "many registrations, one event" relationship.</p>
+<aside class="notes">
+Guide, Part 1 worked example (event registrations, used throughout). The two entity classes are genuinely different kinds of things: <code>Event</code> doesn't hold or reference <code>Registration</code> at all; each <code>Registration</code> holds a <em>reference to</em> the <code>Event</code> it's for (<code>self.event = event</code>). Business Rule 2 ("VIP if price exceeds $500") is the specific, numeric, checkable rule that drives Part 4's required boundary test — <code>&gt;</code>, not <code>&gt;=</code>. Out of scope for the demo: payment processing, waitlists, refunds, multi-event registrations.
+Appendix B lists three other quick, verified-workable domains for students stuck on Part 1 — library checkout, gym membership, food delivery — offered only to stuck students, since genuine domain choice is part of the exercise's value.
+</aside>
+</section>
+
+<!-- 9. PART 1 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">During your design review, which of these meets the bar for "the two entity classes are genuinely different kinds of things"?</p>
+<button data-opt="A">Two classes named <code>Customer</code> and <code>Client</code> with near-identical fields — a genuine relationship as long as the names differ</button>
+<button data-opt="B"><code>Registration</code> and <code>Event</code>, where each <code>Registration</code> holds a reference to the <code>Event</code> it is for — a genuine has-a relationship</button>
+<button data-opt="C">One entity class with six sub-classes and elaborate business rules, so the design is clearly thorough enough</button>
+<p class="why" hidden>The guide's Part 1 redirects "two entity classes that are really the same concept with different names (e.g., 'Customer' and 'Client' as separate classes with near-identical fields)" toward "a genuine relationship instead, like this guide's <code>Registration</code> (has-a) <code>Event</code>." It also redirects a "too big" design (six entity classes) toward "exactly the required two entity classes plus manager."</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 1 of the guide. Answer B is drawn verbatim from the guide's Part 1 "Common student mistakes to watch for": "Choosing two entity classes that are really the same concept with different names (e.g., 'Customer' and 'Client' as separate classes with near-identical fields) — redirect toward a genuine relationship instead, like this guide's <code>Registration</code> (has-a) <code>Event</code>." Option C is refused by the same section's "too big" redirect toward "exactly the required two entity classes plus manager."</aside>
+</section>
+
+<!-- 10. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Choosing two entity classes that are really the same concept with different names (e.g., "Customer" and "Client" as separate classes with near-identical fields) — redirect toward a genuine relationship instead, like this guide's <code>Registration</code> (has-a) <code>Event</code>.</p>
+<p>Business rules that are too vague to become a test ("the system should work well") — push for a specific, numeric, checkable rule, modeling the "VIP if price exceeds $500" example.</p>
+<p>Skipping ahead to write code before approval, out of impatience — enforce the rule as stated; this is the entire point of the exercise, and inconsistent enforcement undermines it for the whole room.</p>
+</div>
+<aside class="notes">A design that's "too big" (six entity classes) → redirect toward exactly two entity classes plus a manager, since Parts 2–5's remaining 55 minutes assume that scope. A design that's "too thin" (an entity with only two attributes and no real business rule) → push for at least one genuine, testable rule before approving — this is exactly what Part 4's required boundary test depends on existing.</aside>
+</section>
+
+<!-- 11. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:24–0:36</span>
+<h1>Build Entity Class 1</h1>
+<aside class="notes">
+Teaching goal: independently build the first entity class exactly as designed — applying Week 10's <code>__init__</code>/methods/<code>__repr__</code> pattern to a student's own domain, with instructor circulation rather than lockstep live-coding.
+Say to the class (verbatim): "Once you're approved, build Entity Class 1 exactly as you designed it. I'm circulating, not lecturing — this is where your own design becomes real code."
+Requirements, matching the lab page: <code>__init__</code> with <strong>at least 4 attributes</strong>, including a status field defaulting to a pending-like value; <strong>at least 2 business logic methods that return values</strong> — not <code>print()</code>, echoing Week 7's rule; <code>__repr__</code> showing key attributes; <strong>docstrings on every method</strong>.
+Point out as you circulate: the four-attribute minimum is easy to satisfy accidentally without a genuine status field — confirm the status attribute specifically exists and defaults sensibly, since Part 4's boundary/state tests depend on it. Walk the room checking for stray <code>print()</code> calls inside methods (the exact Week 7 violation) — a method like <code>confirm()</code> that prints instead of setting <code>self.status</code> will silently break Part 3's <code>list_by_status()</code> filtering. Python doesn't require class definitions to appear in dependency order within a file — Entity Class 1's <code>__init__</code> may reference <code>Event</code> before it's defined; what matters is both classes exist by the time an object is created, in <code>main.py</code>.
+Common student mistakes: fewer than 4 real attributes — padding with a trivial, unused field; business logic methods that take no meaningful action (returning a hardcoded value regardless of the object's state).
+No explicit "Check for understanding" in this segment. The knowledge-check answer is verbatim from the guide's Part 2 "Point out explicitly" bullet on definition order.
+</aside>
+</section>
+
+<!-- 12. PART 2 idea -->
+<section class="s-idea">
+<h3>Entity Class 1 — <code>Registration</code>, four requirements</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>__init__</code> with at least 4 attributes, including a status field.</strong> <code>reg_id</code>, <code>attendee_name</code>, <code>event</code>, <code>price</code> — then <code>self.status = 'Pending'</code>, set with no parameter so every new registration starts pending. The status field is not optional padding — Part 4's state tests and Part 3's <code>list_by_status()</code> both depend on it.</p>
+<p><strong>At least 2 business logic methods that <em>return values</em> — not <code>print()</code>.</strong> <code>confirm()</code> and <code>cancel()</code> <em>set</em> <code>self.status</code>; <code>is_vip()</code> <em>returns</em> <code>self.price &gt; 500</code>. Echoes Week 7's rule: business logic acts on or reports <code>self</code>'s data — it does not <code>print()</code> from inside.</p>
+<p><strong><code>__repr__</code> showing key attributes.</strong> <code>f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'</code> — note <code>self.event.name</code> reaches through the held <code>Event</code> reference.</p>
+<p><strong>Docstrings on every method.</strong> One line each, describing what the method does.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 2 worked example):
+- <code>def __init__(self, reg_id, attendee_name, event, price):</code> — four passed attributes; <code>self.status = 'Pending'</code> is set unconditionally as the default fifth.
+- <code>confirm()</code> / <code>cancel()</code> — set <code>self.status</code> to <code>'Confirmed'</code> / <code>'Cancelled'</code>; return <code>None</code> implicitly; no <code>print()</code>.
+- <code>is_vip()</code> — <code>return self.price &gt; 500</code>; strictly greater-than, matching Business Rule 2 ("exceeds $500").
+- <code>__repr__</code> — an f-string referencing <code>self.event.name</code>, an attribute of the not-yet-defined (in this deck's fresh namespace it <em>is</em> defined above) <code>Event</code> class.
+Common mistakes: fewer than 4 real attributes (padding); a method that returns a hardcoded value regardless of the object's actual state.
+</aside>
+</section>
+
+<!-- 13. PART 2 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>models.py</code>: Entity Class 1 (<code>Registration</code>)</h3>
+<div class="run" data-lang="python">class Event:
+    """Represents a single event that people can register for."""
+
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    """Represents one attendee's registration for an event."""
+
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        """Mark this registration as confirmed."""
+        self.status = 'Confirmed'
+
+    def cancel(self):
+        """Mark this registration as cancelled."""
+        self.status = 'Cancelled'
+
+    def is_vip(self):
+        """Return True if this registration's price exceeds $500."""
+        return self.price &gt; 500
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+# deck smoke test -- Entity Class 1 on its own
+gala = Event(1, 'Annual Gala', 200)
+reg = Registration(1, 'Taylor', gala, 750)
+print(reg.status)
+print(reg.is_vip())
+reg.confirm()
+print(reg.status)
+print(reg)</div>
+<p class="expect"><code>Registration</code> matches the guide's Part 2 worked example verbatim, docstrings included. Each Pyodide block is a fresh namespace, so <code>Event</code> (Part 3's Entity Class 2) is defined above it here — the guide keeps both in one <code>models.py</code>. The trailing block is a deck smoke test.</p>
+<aside class="notes">
+Say to the class (verbatim): "Once you're approved, build Entity Class 1 exactly as you designed it. I'm circulating, not lecturing — this is where your own design becomes real code."
+Line by line: see the idea slide's notes — <code>__init__</code> sets four passed attributes plus <code>self.status = 'Pending'</code>; <code>confirm()</code>/<code>cancel()</code> set <code>self.status</code> (no <code>print()</code>); <code>is_vip()</code> returns <code>self.price &gt; 500</code>; <code>__repr__</code> reaches through <code>self.event.name</code>.
+Smoke-test output: a fresh registration is <code>Pending</code>; <code>is_vip()</code> is <code>True</code> ($750 &gt; $500); after <code>confirm()</code> the status is <code>Confirmed</code>; the object prints via <code>__repr__</code>.
+Common mistakes: fewer than 4 real attributes; a business logic method that returns a hardcoded value regardless of the object's state.
+</aside>
+</section>
+
+<!-- 14. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Pending
+True
+Confirmed
+Registration(1, Taylor, Annual Gala, $750, Confirmed)</pre>
+<p class="expect">A new <code>Registration</code> starts <code>Pending</code> (Business Rule 1); <code>is_vip()</code> is <code>True</code> because <code>750 &gt; 500</code>; <code>confirm()</code> <em>sets</em> <code>self.status</code> to <code>Confirmed</code>; the final line is <code>__repr__</code>, reaching through <code>self.event.name</code> for "Annual Gala".</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): the block prints exactly these four lines and exits 0. The guide's Part 2 is class-definition only with no "Expected output"; this pane is the deck's own smoke test of the four requirements.</aside>
+</section>
+
+<!-- 15. PART 2 BROKEN — print() inside confirm() -->
+<section class="s-code">
+<h3>The Week 7 violation on purpose — <code>confirm()</code> <code>print()</code>s instead of setting <code>self.status</code></h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        # BUG: prints instead of setting self.status -- the Week 7 violation
+        print('Confirmed')
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        self.registrations.append(registration)
+
+    def list_by_status(self, status):
+        return [r for r in self.registrations if r.status == status]
+
+
+gala = Event(1, 'Annual Gala', 200)
+mgr = RegistrationManager()
+r = Registration(1, 'Taylor', gala, 750)
+mgr.add(r)
+r.confirm()
+print(r.status)
+print(mgr.list_by_status('Confirmed'))</div>
+<p class="expect">This is the guide's Part 2 warning, done live: a method like <code>confirm()</code> that <code>print()</code>s instead of setting <code>self.status</code>. No exception — it "silently break[s] Part 3's manager-level filtering." Press <strong>Run</strong> and read all three lines.</p>
+<aside class="notes">
+<code>confirm()</code> prints the string <code>Confirmed</code> and returns <code>None</code>; it never touches <code>self.status</code>, which stays <code>'Pending'</code>. So <code>mgr.list_by_status('Confirmed')</code> — which depends on <code>self.status</code> actually being set — filters to the empty list. This is the guide's exact prediction: "a method like <code>confirm()</code> that prints instead of setting <code>self.status</code> will silently break Part 3's manager-level filtering later, since <code>list_by_status()</code> depends on <code>self.status</code> actually being set." Make a student say "it printed, but it didn't <em>change</em> anything" — not just "it looks fine".
+</aside>
+</section>
+
+<!-- 16. PART 2 broken output -->
+<section class="s-out">
+<h3>What it produces — no error, wrong state</h3>
+<pre>Confirmed
+Pending
+[]</pre>
+<p class="expect">Load-bearing: <code>confirm()</code> prints <code>Confirmed</code>, but <code>r.status</code> is still <code>Pending</code> on the next line, and <code>list_by_status('Confirmed')</code> is <code>[]</code>. No traceback — the bug is silent, exactly as the guide warns. This is why "business logic methods that return values" (or set state) matters, not <code>print()</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these three lines and exits 0 — no exception. The empty list <code>[]</code> is the concrete downstream symptom the guide predicts for Part 3. Fixed on the next slide.</aside>
+</section>
+
+<!-- 17. PART 2 FIXED -->
+<section class="s-code">
+<h3>Fixed — <code>confirm()</code> sets <code>self.status</code></h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        # fixed: SET the attribute; no print() inside a business-logic method
+        self.status = 'Confirmed'
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        self.registrations.append(registration)
+
+    def list_by_status(self, status):
+        return [r for r in self.registrations if r.status == status]
+
+
+gala = Event(1, 'Annual Gala', 200)
+mgr = RegistrationManager()
+r = Registration(1, 'Taylor', gala, 750)
+mgr.add(r)
+r.confirm()
+print(r.status)
+print(mgr.list_by_status('Confirmed'))</div>
+<p class="expect">The only change is <code>print('Confirmed')</code> &rarr; <code>self.status = 'Confirmed'</code>. Now <code>r.status</code> actually changes, and <code>list_by_status('Confirmed')</code> finds the registration. Press <strong>Run</strong> — correct state.</p>
+<aside class="notes">The single change from the broken block is a <code>print()</code> replaced with an assignment to <code>self.status</code>. Takeaway: a business logic method changes or reports the object's own data — printing from inside looks like it worked while leaving the object untouched, and every downstream method that reads that attribute then sees the wrong value.</aside>
+</section>
+
+<!-- 18. PART 2 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Confirmed
+[Registration(1, Taylor, Annual Gala, $750, Confirmed)]</pre>
+<p class="expect"><code>r.status</code> is now <code>Confirmed</code>, and <code>list_by_status('Confirmed')</code> returns the one matching registration, printed via <code>__repr__</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly these two lines and exits 0. Because <code>Registration</code> defines <code>__repr__</code>, no <code>&lt;...object at 0x...&gt;</code> memory address appears inside the list.</aside>
+</section>
+
+<!-- 19. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Entity Class 1's <code>__init__</code> takes an <code>event</code> parameter that is an <code>Event</code> object, but <code>Event</code> is defined <em>lower down</em> in <code>models.py</code>. Is that a problem?</p>
+<button data-opt="A">No — Python doesn't require class definitions to appear in dependency order within a file; what matters is that both classes exist by the time an actual object is <em>created</em>, in <code>main.py</code>, not the order they're <em>defined</em> in <code>models.py</code></button>
+<button data-opt="B">Yes — <code>Event</code> must be defined above <code>Registration</code>, or the file will not import</button>
+<button data-opt="C">Yes — the class body raises <code>NameError</code> at definition time unless you add <code>from __future__ import annotations</code></button>
+<p class="why" hidden>The guide's Part 2: "Python doesn't require class definitions to appear in dependency order within a file the way some students might expect — what matters is that both classes exist by the time an actual object is <em>created</em>, in <code>main.py</code>, not the order they're <em>defined</em> in <code>models.py</code>." The <code>event</code> parameter is only a name in the signature until an object is actually constructed.</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 2 of the guide. Answer A is quoted verbatim from the guide's Part 2 "Point out explicitly" bullet: "Python doesn't require class definitions to appear in dependency order within a file the way some students might expect — what matters is that both classes exist by the time an actual object is <em>created</em>, in <code>main.py</code>, not the order they're <em>defined</em> in <code>models.py</code>."</aside>
+</section>
+
+<!-- 20. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Fewer than 4 real attributes — padding with a trivial, unused field to hit the count rather than genuinely modeling the domain; a quick "does this attribute get used anywhere later" question surfaces this.</p>
+<p>Business logic methods that take no meaningful action (e.g., a method that returns a hardcoded value regardless of the object's actual state) — redirect toward methods that genuinely read or modify <code>self</code>'s own attributes.</p>
+<p>A status field that is missing or doesn't default sensibly — confirm it specifically exists and defaults to a pending-like value (<code>'Pending'</code>, <code>'Open'</code>, <code>'Draft'</code>), since Part 4's required boundary/state tests depend on it.</p>
+</div>
+<aside class="notes">A method like <code>confirm()</code> that <code>print()</code>s instead of setting <code>self.status</code> will silently break Part 3's <code>list_by_status()</code> filtering — walk the room checking for stray <code>print()</code> calls inside business logic methods, the exact Week 7 violation.</aside>
+</section>
+
+<!-- 21. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:36–0:50</span>
+<h1>Build Entity Class 2 and the Manager</h1>
+<aside class="notes">
+Teaching goal: a second entity class that genuinely relates to the first, plus a manager class following Week 11's exact composition pattern, applied independently.
+Say to the class (verbatim): "Entity Class 2 should be a different kind of thing that relates to Entity Class 1 in your domain — not a duplicate. Then the manager, following exactly the same shape as last week's <code>RequestManager</code>: holds a list, adds to it, filters it, totals it, reports on it."
+Manager requirements, matching the lab page: <code>__init__</code> with an empty list; <code>add(item)</code>; <code>list_by_status(status)</code> that filters and returns a list; <code>total()</code> that sums a numeric attribute; <code>report()</code> that prints a formatted summary.
+Point out as you circulate: in this guide's example <code>Event</code> doesn't hold or reference <code>Registration</code> at all — each <code>Registration</code> holds a reference <em>to</em> the <code>Event</code> (a "many registrations, one event" relationship); some student domains may genuinely need the reverse, and both are fine as long as the relationship reflects something true about the domain. <code>list_by_status(status)</code> must be genuinely parameterized — some students, echoing Week 11's <code>get_by_status</code> too literally, hardcode a specific status instead of using the parameter; check this, since Part 4's tests call it with different status values. <code>total()</code> should sum a genuine, meaningful business number (a price, a quantity, a duration), not an arbitrary field.
+Common student mistakes: an <code>add(item)</code> that doesn't actually append (reassigning instead, silently discarding prior additions) — a good "does the count actually grow with each add" spot-check; <code>report()</code> calling <code>print()</code> — correctly, this time, unlike the entity classes' business-logic methods.
+No explicit "Check for understanding" in this segment. The knowledge-check answer is verbatim from the guide's Part 3 "Point out explicitly" bullet on <code>list_by_status</code> being genuinely parameterized.
+</aside>
+</section>
+
+<!-- 22. PART 3 idea -->
+<section class="s-idea">
+<h3>Entity Class 2 (<code>Event</code>) + Manager (<code>RegistrationManager</code>)</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>Event</code> — a different kind of thing.</strong> <code>event_id</code>, <code>name</code>, <code>capacity</code>, plus <code>__repr__</code>. It doesn't reference <code>Registration</code> at all — the relationship runs the other way: each <code>Registration</code> holds a reference to <em>its</em> <code>Event</code>.</p>
+<p><strong><code>__init__(self): self.registrations = []</code></strong> — composition in one line, exactly Week 11's shape: the manager <em>has</em> a list of <code>Registration</code> objects.</p>
+<p><strong><code>add(self, registration)</code></strong> — <code>self.registrations.append(registration)</code>. Appends an already-built object; does not reassign the list.</p>
+<p><strong><code>list_by_status(self, status)</code></strong> — <code>[r for r in self.registrations if r.status == status]</code>. Genuinely <em>parameterized</em> — it uses the <code>status</code> argument, so different values return different results.</p>
+<p><strong><code>total(self)</code></strong> — <code>sum(r.price for r in self.registrations)</code>, a generator-expression sum over a genuine numeric business attribute.</p>
+<p><strong><code>report(self)</code></strong> — a presentation method whose entire job <em>is</em> to <code>print()</code>; it calls <code>self.list_by_status('Confirmed')</code> and <code>self.list_by_status('Pending')</code>, reusing logic via <code>self</code>.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 3 worked example):
+- <code>class Event:</code> — <code>__init__</code> sets <code>event_id</code>, <code>name</code>, <code>capacity</code>; <code>__repr__</code> returns <code>f'Event({self.event_id}, {self.name}, capacity={self.capacity})'</code>.
+- <code>RegistrationManager.__init__</code> — <code>self.registrations = []</code>.
+- <code>add</code> — appends; a reassignment here silently discards prior additions.
+- <code>list_by_status</code> — a Week-6-shaped comprehension over <code>self.registrations</code>, filtering on the <code>status</code> <em>parameter</em>, not a hardcoded string.
+- <code>total</code> — <code>sum(r.price for r in self.registrations)</code>.
+- <code>report</code> — prints total count and <code>${self.total():,.2f}</code>, then confirmed/pending counts, then each confirmed registration via <code>__repr__</code>. <code>print()</code> here is correct — it's a presentation method.
+Common mistakes: <code>add</code> that reassigns instead of appending; over-applying "no print in business logic" to <code>report()</code> itself, which is explicitly a presentation method.
+</aside>
+</section>
+
+<!-- 23. PART 3 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>models.py</code>: <code>Event</code> + <code>RegistrationManager</code></h3>
+<div class="run" data-lang="python">class Event:
+    """Represents a single event that people can register for."""
+
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    """Represents one attendee's registration for an event."""
+
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        """Mark this registration as confirmed."""
+        self.status = 'Confirmed'
+
+    def cancel(self):
+        """Mark this registration as cancelled."""
+        self.status = 'Cancelled'
+
+    def is_vip(self):
+        """Return True if this registration's price exceeds $500."""
+        return self.price &gt; 500
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    """Manages a collection of event registrations."""
+
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        """Add a Registration to the collection."""
+        self.registrations.append(registration)
+
+    def list_by_status(self, status):
+        """Return registrations matching the given status."""
+        return [r for r in self.registrations if r.status == status]
+
+    def total(self):
+        """Return the total revenue across all registrations."""
+        return sum(r.price for r in self.registrations)
+
+    def report(self):
+        """Print a formatted summary of all registrations."""
+        confirmed = self.list_by_status('Confirmed')
+        pending = self.list_by_status('Pending')
+        print(f'Total registrations: {len(self.registrations)} | Revenue: ${self.total():,.2f}')
+        print(f'Confirmed: {len(confirmed)} | Pending: {len(pending)}')
+        print('Confirmed registrations:')
+        for r in confirmed:
+            print(f'  {r}')
+
+
+# deck smoke test -- Entity Class 2 + Manager working together
+gala = Event(1, 'Annual Gala', 200)
+mgr = RegistrationManager()
+mgr.add(Registration(1, 'Taylor', gala, 750))
+mgr.add(Registration(2, 'Jordan', gala, 150))
+mgr.add(Registration(3, 'Morgan', gala, 300))
+print(len(mgr.registrations))
+print(mgr.total())
+mgr.registrations[0].confirm()
+print(len(mgr.list_by_status('Confirmed')))
+print(len(mgr.list_by_status('Pending')))
+print([r.attendee_name for r in mgr.list_by_status('Confirmed')])</div>
+<p class="expect"><code>Event</code> and <code>RegistrationManager</code> match the guide's Part 3 worked example verbatim, docstrings included. Each Pyodide block is a fresh namespace, so <code>Registration</code> (Part 2) is re-defined here too — the guide keeps all three classes in one <code>models.py</code>.</p>
+<aside class="notes">
+Say to the class (verbatim): "Entity Class 2 should be a different kind of thing that relates to Entity Class 1 in your domain — not a duplicate. Then the manager, following exactly the same shape as last week's <code>RequestManager</code>: holds a list, adds to it, filters it, totals it, reports on it."
+Line by line: see the idea slide's notes. Smoke-test output: three added, <code>total()</code> is <code>1200</code> (750 + 150 + 300); after approving <code>registrations[0]</code>, <code>list_by_status('Confirmed')</code> holds one (Taylor), <code>list_by_status('Pending')</code> holds two.
+Common mistakes: an <code>add</code> that reassigns instead of appending; hardcoding a status inside <code>list_by_status</code> instead of using the parameter.
+</aside>
+</section>
+
+<!-- 24. PART 3 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>3
+1200
+1
+2
+['Taylor']</pre>
+<p class="expect">Three registrations added; <code>total()</code> is <code>1200</code> (750 + 150 + 300). After <code>mgr.registrations[0].confirm()</code>, <code>list_by_status('Confirmed')</code> returns Taylor's registration and <code>list_by_status('Pending')</code> drops to two — the same parameterized method, two different arguments, two different results.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these five lines and exits 0. The last two calls to <code>list_by_status</code> — with <code>'Confirmed'</code> then <code>'Pending'</code> — returning different lists is the concrete proof the method is genuinely parameterized. The guide's Part 3 is class-definition only with no "Expected output"; this pane is the deck's own smoke test.</aside>
+</section>
+
+<!-- 25. PART 3 BROKEN — add() reassigns -->
+<section class="s-code">
+<h3>The guide's Part 3 mistake on purpose — <code>add()</code> reassigns instead of appending</h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        # BUG: reassigns the list instead of appending -- each add discards the last
+        self.registrations = [registration]
+
+    def total(self):
+        return sum(r.price for r in self.registrations)
+
+
+gala = Event(1, 'Annual Gala', 200)
+mgr = RegistrationManager()
+mgr.add(Registration(1, 'Taylor', gala, 750))
+mgr.add(Registration(2, 'Jordan', gala, 150))
+mgr.add(Registration(3, 'Morgan', gala, 300))
+print(len(mgr.registrations))
+print(mgr.total())</div>
+<p class="expect">The guide's Part 3 warning: "a manager <code>add(item)</code> method that doesn't actually append to the list (e.g., reassigning instead of appending, silently discarding prior additions)." No error — just a wrong count. Press <strong>Run</strong> and do the "does the count grow" spot-check.</p>
+<aside class="notes">
+<code>self.registrations = [registration]</code> throws away whatever the list held and replaces it with a one-element list every call. After three <code>add</code>s, only the last (Morgan) survives: <code>len</code> is <code>1</code>, not <code>3</code>, and <code>total()</code> is <code>300</code>, not <code>1200</code>. This is silent — no exception — so the guide recommends "a good 'does the count actually grow with each add' spot-check." The fix is <code>self.registrations.append(registration)</code>.
+</aside>
+</section>
+
+<!-- 26. PART 3 broken output -->
+<section class="s-out">
+<h3>What it produces — no error, wrong count</h3>
+<pre>1
+300</pre>
+<p class="expect">Load-bearing: after three <code>add()</code> calls the manager holds only <code>1</code> registration and <code>total()</code> is <code>300</code> — the last one added (Morgan, $300). Each <code>add()</code> replaced the whole list. No traceback; the bug is silent.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly <code>1</code> then <code>300</code> and exits 0 — no exception. Contrast with the correct block's <code>3</code> / <code>1200</code>. Fixed on the next slide.</aside>
+</section>
+
+<!-- 27. PART 3 FIXED -->
+<section class="s-code">
+<h3>Fixed — <code>add()</code> appends</h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        # fixed: append -- the list grows by one each call
+        self.registrations.append(registration)
+
+    def total(self):
+        return sum(r.price for r in self.registrations)
+
+
+gala = Event(1, 'Annual Gala', 200)
+mgr = RegistrationManager()
+mgr.add(Registration(1, 'Taylor', gala, 750))
+mgr.add(Registration(2, 'Jordan', gala, 150))
+mgr.add(Registration(3, 'Morgan', gala, 300))
+print(len(mgr.registrations))
+print(mgr.total())</div>
+<p class="expect">The only change is <code>self.registrations = [registration]</code> &rarr; <code>self.registrations.append(registration)</code>. Now the list accumulates. Press <strong>Run</strong> — <code>3</code> and <code>1200</code>.</p>
+<aside class="notes">The single change from the broken block is reassignment &rarr; <code>append</code>. Takeaway: <code>add</code> must <em>mutate</em> the existing list — <code>append</code> — not rebind <code>self.registrations</code> to a fresh one, which discards everything added before.</aside>
+</section>
+
+<!-- 28. PART 3 fixed output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>3
+1200</pre>
+<p class="expect">All three registrations are retained: <code>len(mgr.registrations)</code> is <code>3</code> and <code>total()</code> is <code>1200</code> (750 + 150 + 300).</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly <code>3</code> then <code>1200</code> and exits 0.</aside>
+</section>
+
+<!-- 29. PART 3 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">Part 4's tests will call your manager's <code>list_by_status(status)</code> with different status values and expect different results each time. What makes the method correct?</p>
+<button data-opt="A">It hardcodes <code>r.status == 'Confirmed'</code> inside, echoing Week 11's <code>RequestManager.get_by_status</code> exactly</button>
+<button data-opt="B">It calls <code>report()</code> internally so the printed summary always stays in sync</button>
+<button data-opt="C">It is genuinely <em>parameterized</em> — it uses the <code>status</code> parameter in the comparison, so different status values return different subsets each time</button>
+<p class="why" hidden>The guide's Part 3: "<code>list_by_status(status)</code> must be genuinely parameterized — some students, echoing Week 11's <code>RequestManager.get_by_status</code> too literally, may hardcode a specific status inside the method instead of using the <code>status</code> parameter; check this specifically, since Part 4's tests will call it with different status values and expect different results each time."</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 3 of the guide. Answer C is quoted verbatim from the guide's Part 3 "Point out explicitly" bullet: "<code>list_by_status(status)</code> must be genuinely parameterized — some students, echoing Week 11's <code>RequestManager.get_by_status</code> too literally, may hardcode a specific status inside the method instead of using the <code>status</code> parameter; check this specifically, since Part 4's tests will call it with different status values and expect different results each time."</aside>
+</section>
+
+<!-- 30. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>A manager <code>add(item)</code> method that doesn't actually append to the list (e.g., reassigning instead of appending, silently discarding prior additions) — a good "does the count actually grow with each add" spot-check.</p>
+<p><code>report()</code> calling <code>print()</code> — correctly, this time, unlike the entity classes' business-logic methods; make sure students don't over-apply "no print in business logic" to <code>report()</code> itself, which is <em>explicitly</em> a presentation method whose entire job is to print.</p>
+<p>Hardcoding a status inside <code>list_by_status</code> instead of using the <code>status</code> parameter; picking an arbitrary numeric field for <code>total()</code> instead of a genuine, meaningful business total.</p>
+</div>
+<aside class="notes">The relationship between the two entity classes is worth checking per student: in this guide's example <code>Event</code> doesn't reference <code>Registration</code> — each <code>Registration</code> holds a reference to its <code>Event</code> ("many registrations, one event"). Some domains genuinely need the reverse; both are fine as long as the relationship reflects something true about the domain.</aside>
+</section>
+
+<!-- 31. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:50–1:03</span>
+<h1>Six or More <code>pytest</code> Tests</h1>
+<aside class="notes">
+Teaching goal: a complete test suite covering the required categories — initial state, business logic, a boundary case, and manager-level behavior including independence — applied to each student's own system.
+Say to the class (verbatim): "Six tests, minimum, and I want every one of these six categories represented — not six variations on the same check."
+Required coverage, matching the lab page: default status / initial state of a new instance; each business logic method (at least 2 methods tested); at least one boundary/edge case; manager <code>add</code> increases count; manager filter returns correct subset; two manager instances are independent.
+The guide's worked example ships <strong>nine</strong> tests, one more than the six-minimum, showing genuine coverage across all categories. It runs <code>pytest -v</code> and all nine pass.
+Facilitation notes: check for genuine category coverage, not just a count of six — walk the room asking students to point out which test satisfies which required category. The boundary case is the one most likely to be missing or weak — explicit spot-check per student. The independence test is structurally identical across every domain (two managers, add to one, assert the other's collection is empty) — confirm it's present in close to that exact shape.
+Common student mistakes (same as Weeks 10–11): testing the same object twice under different variable names rather than genuinely two independent objects; a boundary test using <code>&gt;=</code> reasoning when the actual method uses <code>&gt;</code>, or vice versa.
+No explicit "Check for understanding" in this segment. The knowledge-check answer is taken verbatim from the guide's worked-example test <code>test_is_vip_boundary</code> (<code>assert reg.is_vip() is False  # &gt; not &gt;=</code>) and its "Common student mistakes" line about <code>&gt;=</code> vs <code>&gt;</code>.
+</aside>
+</section>
+
+<!-- 32. PART 4 idea -->
+<section class="s-idea">
+<h3>Six required categories — the worked example covers all in nine tests</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Initial state.</strong> <code>test_default_status_is_pending</code> — a fresh <code>Registration</code> is <code>'Pending'</code>. The foundation.</p>
+<p><strong>Each business logic method (≥ 2).</strong> <code>test_confirm_changes_status</code>, <code>test_cancel_changes_status</code>, <code>test_is_vip_true</code>, <code>test_is_vip_false</code> — the methods genuinely exercised, not just called.</p>
+<p><strong>At least one boundary/edge case.</strong> <code>test_is_vip_boundary</code> — a registration priced at <em>exactly</em> $500 asserts <code>is_vip() is False</code>, because the rule says "exceeds $500" — <code>&gt;</code>, not <code>&gt;=</code>. The single most-skipped category historically.</p>
+<p><strong>Manager: <code>add</code> increases count.</strong> <code>test_manager_add_increases_count</code> — one add, <code>len == 1</code>.</p>
+<p><strong>Manager: filter returns correct subset.</strong> <code>test_manager_filter_by_status</code> — asserts both the count <em>and which</em> registration survived (<code>confirmed[0].attendee_name == 'A'</code>).</p>
+<p><strong>Manager: two instances independent.</strong> <code>test_managers_are_independent</code> — add to <code>mgr1</code> only, assert <code>len(mgr2.registrations) == 0</code>. Structurally identical across every domain.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 4 worked example, nine tests):
+- <code>test_default_status_is_pending</code> — <code>Registration(1, 'Test', event, 100).status == 'Pending'</code>.
+- <code>test_confirm_changes_status</code> / <code>test_cancel_changes_status</code> — call the method, assert the new <code>status</code>.
+- <code>test_is_vip_true</code> (750 → True) / <code>test_is_vip_false</code> (300 → False).
+- <code>test_is_vip_boundary</code> — 500 → False; the comment in the guide is literally <code># &gt; not &gt;=</code>.
+- <code>test_manager_add_increases_count</code> — one <code>add</code>, <code>len(mgr.registrations) == 1</code>.
+- <code>test_manager_filter_by_status</code> — two added, <code>r1.confirm()</code>, then <code>len(confirmed) == 1</code> AND <code>confirmed[0].attendee_name == 'A'</code>.
+- <code>test_managers_are_independent</code> — <code>mgr1.add(...)</code>, assert <code>len(mgr2.registrations) == 0</code>.
+A shared module-level <code>event = Event(1, 'Annual Gala', 200)</code> is reused by the <code>Registration</code>-constructing tests.
+Common mistakes: six tests that are all variations of "does <code>confirm()</code> work"; a boundary test with <code>&gt;=</code> reasoning against a <code>&gt;</code> method; two "independent" objects that are secretly the same object under two names.
+</aside>
+</section>
+
+<!-- 33. PART 4 provided test file (STATIC — no pytest runner in browser) -->
+<section class="s-code">
+<h3>The worked example's <code>tests/test_models.py</code> — nine tests</h3>
+<pre><code class="language-python"># tests/test_models.py
+from models import Registration, Event, RegistrationManager
+
+event = Event(1, 'Annual Gala', 200)
+
+def test_default_status_is_pending():
+    reg = Registration(1, 'Test', event, 100)
+    assert reg.status == 'Pending'
+
+def test_confirm_changes_status():
+    reg = Registration(2, 'Test', event, 100)
+    reg.confirm()
+    assert reg.status == 'Confirmed'
+
+def test_cancel_changes_status():
+    reg = Registration(3, 'Test', event, 100)
+    reg.cancel()
+    assert reg.status == 'Cancelled'
+
+def test_is_vip_true():
+    reg = Registration(4, 'Test', event, 750)
+    assert reg.is_vip() is True
+
+def test_is_vip_false():
+    reg = Registration(5, 'Test', event, 300)
+    assert reg.is_vip() is False
+
+def test_is_vip_boundary():
+    reg = Registration(6, 'Test', event, 500)
+    assert reg.is_vip() is False  # &gt; not &gt;=
+
+def test_manager_add_increases_count():
+    mgr = RegistrationManager()
+    mgr.add(Registration(7, 'Test', event, 100))
+    assert len(mgr.registrations) == 1
+
+def test_manager_filter_by_status():
+    mgr = RegistrationManager()
+    r1 = Registration(8, 'A', event, 100)
+    r2 = Registration(9, 'B', event, 200)
+    mgr.add(r1); mgr.add(r2)
+    r1.confirm()
+    confirmed = mgr.list_by_status('Confirmed')
+    assert len(confirmed) == 1
+    assert confirmed[0].attendee_name == 'A'
+
+def test_managers_are_independent():
+    mgr1 = RegistrationManager()
+    mgr2 = RegistrationManager()
+    mgr1.add(Registration(10, 'A', event, 100))
+    assert len(mgr2.registrations) == 0</code></pre>
+<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, so neither this file nor the <code>pytest -v</code> pane can execute in the browser. Run <code>pytest -v</code> on your own machine. Two slides on, the same nine checks run live as bare <code>assert</code>s.</p>
+<aside class="notes">
+Reproduced verbatim from the guide's Part 4 / Appendix A worked example. Nine tests, one more than the six-minimum, with all six required categories represented. The module-level <code>event</code> is a single shared <code>Event</code> instance reused by the <code>Registration</code>-constructing tests — this is safe because none of them mutate the <code>Event</code>. The comment <code># &gt; not &gt;=</code> on <code>test_is_vip_boundary</code> is the guide's own.
+Common mistakes: overwriting genuine category coverage with six near-duplicate checks; a boundary test whose reasoning (<code>&gt;=</code>) doesn't match the method (<code>&gt;</code>).
+</aside>
+</section>
+
+<!-- 34. PART 4 pytest -v pane (STATIC) -->
+<section class="s-out">
+<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
+<pre>tests/test_models.py::test_default_status_is_pending PASSED
+tests/test_models.py::test_confirm_changes_status PASSED
+tests/test_models.py::test_cancel_changes_status PASSED
+tests/test_models.py::test_is_vip_true PASSED
+tests/test_models.py::test_is_vip_false PASSED
+tests/test_models.py::test_is_vip_boundary PASSED
+tests/test_models.py::test_manager_add_increases_count PASSED
+tests/test_models.py::test_manager_filter_by_status PASSED
+tests/test_models.py::test_managers_are_independent PASSED
+9 passed</pre>
+<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all nine pass". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. The next slide runs the nine checks live.</p>
+<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output — all nine pass": the nine <code>PASSED</code> lines and the <code>9 passed</code> summary. This pane is <strong>not executed</strong> in the deck. Double-checked locally with <code>python3 -m pytest -v</code> on <code>python3</code> 3.12.2 against the worked-example <code>models.py</code> + the nine-test file: <code>9 passed in 0.05s</code>. The provided code is correct as written — no hidden bugs in the worked example.</aside>
+</section>
+
+<!-- 35. PART 4 live-logic (RUNNABLE) -->
+<section class="s-code">
+<h3>The nine checks, run live as bare <code>assert</code>s</h3>
+<div class="run" data-lang="python">class Event:
+    """Represents a single event that people can register for."""
+
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    """Represents one attendee's registration for an event."""
+
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        """Mark this registration as confirmed."""
+        self.status = 'Confirmed'
+
+    def cancel(self):
+        """Mark this registration as cancelled."""
+        self.status = 'Cancelled'
+
+    def is_vip(self):
+        """Return True if this registration's price exceeds $500."""
+        return self.price &gt; 500
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    """Manages a collection of event registrations."""
+
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        """Add a Registration to the collection."""
+        self.registrations.append(registration)
+
+    def list_by_status(self, status):
+        """Return registrations matching the given status."""
+        return [r for r in self.registrations if r.status == status]
+
+    def total(self):
+        """Return the total revenue across all registrations."""
+        return sum(r.price for r in self.registrations)
+
+
+# the nine tests from tests/test_models.py, run here as bare asserts
+event = Event(1, 'Annual Gala', 200)
+
+reg = Registration(1, 'Test', event, 100)
+assert reg.status == 'Pending'
+print('test_default_status_is_pending PASSED')
+
+reg = Registration(2, 'Test', event, 100)
+reg.confirm()
+assert reg.status == 'Confirmed'
+print('test_confirm_changes_status PASSED')
+
+reg = Registration(3, 'Test', event, 100)
+reg.cancel()
+assert reg.status == 'Cancelled'
+print('test_cancel_changes_status PASSED')
+
+reg = Registration(4, 'Test', event, 750)
+assert reg.is_vip() is True
+print('test_is_vip_true PASSED')
+
+reg = Registration(5, 'Test', event, 300)
+assert reg.is_vip() is False
+print('test_is_vip_false PASSED')
+
+reg = Registration(6, 'Test', event, 500)
+assert reg.is_vip() is False  # boundary: &gt; not &gt;=
+print('test_is_vip_boundary PASSED')
+
+mgr = RegistrationManager()
+mgr.add(Registration(7, 'Test', event, 100))
+assert len(mgr.registrations) == 1
+print('test_manager_add_increases_count PASSED')
+
+mgr = RegistrationManager()
+r1 = Registration(8, 'A', event, 100)
+r2 = Registration(9, 'B', event, 200)
+mgr.add(r1); mgr.add(r2)
+r1.confirm()
+confirmed = mgr.list_by_status('Confirmed')
+assert len(confirmed) == 1
+assert confirmed[0].attendee_name == 'A'
+print('test_manager_filter_by_status PASSED')
+
+mgr1 = RegistrationManager()
+mgr2 = RegistrationManager()
+mgr1.add(Registration(10, 'A', event, 100))
+assert len(mgr2.registrations) == 0
+print('test_managers_are_independent PASSED')
+
+print('9 passed')</div>
+<p class="expect">Where the guide's point is "the tests pass", this runs the nine assertions with <code>assert</code> so the logic executes live even though <code>pytest</code> itself is static. Each <code>assert</code> that holds prints its test name; a failing one would raise <code>AssertionError</code> and stop the block.</p>
+<aside class="notes">
+Say to the class (verbatim): "Six tests, minimum, and I want every one of these six categories represented — not six variations on the same check."
+Line by line: <code>Event</code>, <code>Registration</code>, <code>RegistrationManager</code> are re-defined (fresh namespace), then the nine tests from <code>tests/test_models.py</code> run as bare <code>assert</code>s. The boundary check (<code>Registration(6, 'Test', event, 500)</code> → <code>is_vip() is False</code>) and the manager-independence check (add to <code>mgr1</code> only, <code>mgr2.registrations</code> still empty) are the two worth pausing on.
+</aside>
+</section>
+
+<!-- 36. PART 4 live-logic output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>test_default_status_is_pending PASSED
+test_confirm_changes_status PASSED
+test_cancel_changes_status PASSED
+test_is_vip_true PASSED
+test_is_vip_false PASSED
+test_is_vip_boundary PASSED
+test_manager_add_increases_count PASSED
+test_manager_filter_by_status PASSED
+test_managers_are_independent PASSED
+9 passed</pre>
+<p class="expect">Every one of the nine assertions holds, so all nine names print followed by <code>9 passed</code> — the live equivalent of the nine rows in the static <code>pytest -v</code> pane.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these ten lines and exits 0. Each <code>assert</code> corresponds one-to-one with a test in <code>tests/test_models.py</code>; a clean run here means all nine <code>pytest</code> tests pass, matching the guide's "Verified output — all nine pass".</aside>
+</section>
+
+<!-- 37. PART 4 BROKEN boundary — >= instead of > -->
+<section class="s-code">
+<h3>The boundary mistake on purpose — <code>is_vip()</code> uses <code>&gt;=</code></h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def is_vip(self):
+        # BUG: >= instead of > -- $500 exactly counts as VIP,
+        # but Business Rule 2 says "exceeds $500"
+        return self.price &gt;= 500
+
+
+event = Event(1, 'Annual Gala', 200)
+reg = Registration(6, 'Test', event, 500)
+print(reg.is_vip())
+assert reg.is_vip() is False, 'boundary: $500 exactly should not be VIP'
+print('test_is_vip_boundary PASSED')</div>
+<p class="expect">The guide's Part 4 "Common student mistakes": "a boundary test using <code>&gt;=</code> reasoning when the actual method uses <code>&gt;</code>, or vice versa." Here the method itself uses <code>&gt;=</code>, so the boundary assertion fails. Press <strong>Run</strong> and read the last line.</p>
+<aside class="notes">
+With <code>&gt;=</code>, a price of exactly <code>500</code> makes <code>is_vip()</code> return <code>True</code> — <code>500 &gt;= 500</code>. But Business Rule 2 is "VIP if its price <em>exceeds</em> $500", which is strictly greater-than. So <code>print(reg.is_vip())</code> shows <code>True</code>, then the boundary assertion (<code>is_vip() is False</code>) raises <code>AssertionError</code> with the message string. The fix is <code>return self.price &gt; 500</code>. Make a student connect "exceeds" to <code>&gt;</code>, not just "change the operator".
+</aside>
+</section>
+
+<!-- 38. PART 4 broken boundary output -->
+<section class="s-out">
+<h3>What it raises</h3>
+<pre>True
+Traceback (most recent call last):
+  ...
+  File "&lt;exec&gt;", line 24, in &lt;module&gt;
+    assert reg.is_vip() is False, 'boundary: $500 exactly should not be VIP'
+AssertionError: boundary: $500 exactly should not be VIP</pre>
+<p class="expect">Load-bearing: <code>reg.is_vip()</code> prints <code>True</code> for a $500 registration (wrong — the rule is "exceeds $500"), then <code>AssertionError: boundary: $500 exactly should not be VIP</code>. Pyodide shows <code>&lt;exec&gt;</code> as the file and the line number may differ from a real <code>python3</code> run — the error <em>type</em> and <em>message</em> are load-bearing.</p>
+<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> prints <code>True</code>, then raises exactly <code>AssertionError: boundary: $500 exactly should not be VIP</code> and exits 1. This is the concrete failure of the "<code>&gt;=</code> vs <code>&gt;</code>" boundary mismatch the guide warns about. Fixed on the next slide.</aside>
+</section>
+
+<!-- 39. PART 4 FIXED boundary -->
+<section class="s-code">
+<h3>Fixed — <code>is_vip()</code> uses <code>&gt;</code>, matching "exceeds $500"</h3>
+<div class="run" data-lang="python">class Event:
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+
+class Registration:
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def is_vip(self):
+        # fixed: > -- only a price strictly greater than $500 is VIP
+        return self.price &gt; 500
+
+
+event = Event(1, 'Annual Gala', 200)
+reg = Registration(6, 'Test', event, 500)
+print(reg.is_vip())
+assert reg.is_vip() is False, 'boundary: $500 exactly should not be VIP'
+print('test_is_vip_boundary PASSED')</div>
+<p class="expect">The only change is <code>&gt;=</code> &rarr; <code>&gt;</code>. Now $500 exactly is <em>not</em> VIP, matching Business Rule 2, and the boundary assertion holds. Press <strong>Run</strong>.</p>
+<aside class="notes">The single change from the broken block is the comparison operator. Takeaway: the boundary test and the method must agree on which side of the threshold the boundary value falls — "exceeds" / "over" / "more than" all mean strictly <code>&gt;</code>.</aside>
+</section>
+
+<!-- 40. PART 4 fixed boundary output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>False
+test_is_vip_boundary PASSED</pre>
+<p class="expect"><code>is_vip()</code> returns <code>False</code> for a $500 registration, so the boundary assertion holds and the test name prints.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly <code>False</code> then <code>test_is_vip_boundary PASSED</code> and exits 0 — matching the worked example's own <code>test_is_vip_boundary</code> (<code>assert reg.is_vip() is False  # &gt; not &gt;=</code>).</aside>
+</section>
+
+<!-- 41. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Business Rule 2 is "VIP if price exceeds $500." What should <code>test_is_vip_boundary</code> assert for a registration priced at <em>exactly</em> $500?</p>
+<button data-opt="A"><code>assert reg.is_vip() is False</code> — "exceeds" means <code>&gt;</code>, not <code>&gt;=</code>, so $500 exactly is not VIP</button>
+<button data-opt="B"><code>assert reg.is_vip() is True</code> — $500 is the threshold value, so it counts as VIP</button>
+<button data-opt="C">Nothing — a boundary at exactly the threshold can't be tested deterministically</button>
+<p class="why" hidden>The worked example's <code>test_is_vip_boundary</code> is literally <code>reg = Registration(6, 'Test', event, 500)</code> then <code>assert reg.is_vip() is False  # &gt; not &gt;=</code>. The guide's Part 4 "Common student mistakes" names "a boundary test using <code>&gt;=</code> reasoning when the actual method uses <code>&gt;</code>, or vice versa" as a recurring error.</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 4 of the guide. Answer A is taken verbatim from the worked-example test file — <code>test_is_vip_boundary</code>: <code>reg = Registration(6, 'Test', event, 500)</code> / <code>assert reg.is_vip() is False  # &gt; not &gt;=</code> — and from Part 4's "Common student mistakes to watch for": "a boundary test using <code>&gt;=</code> reasoning when the actual method uses <code>&gt;</code>, or vice versa."</aside>
+</section>
+
+<!-- 42. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Six tests that are all variations of "does <code>confirm()</code> work" — technically hitting the number but missing the point; walk the room asking students to point out which test satisfies which of the six required categories.</p>
+<p>The boundary case is the one most likely to be missing or weak — the single most-skipped required category historically. Explicit spot-check per student.</p>
+<p>Testing the same object twice under different variable names rather than genuinely two independent objects; a boundary test using <code>&gt;=</code> reasoning when the actual method uses <code>&gt;</code>, or vice versa.</p>
+</div>
+<aside class="notes">The independence test is structurally identical across every domain — two managers, add to one, assert the other's collection is empty — worth confirming is present in something close to that exact shape, since it's the most mechanically transferable of the six requirements from Weeks 10–11's templates.</aside>
+</section>
+
+<!-- 43. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 1:03–1:11</span>
+<h1>Main Simulation and Ritual</h1>
+<aside class="notes">
+Teaching goal: a <code>main.py</code> exercising the complete, independently-designed system end to end, followed by the now-fully-automatic submission ritual.
+Say to the class (verbatim): "Last step: a simulation showing your whole system working together, then the ritual, exactly as every week since Week 4."
+Requirements, matching the lab page: creates a manager instance; adds at least 4 entity instances; calls at least one status-changing method; calls <code>report()</code> to print the summary.
+The ritual, unchanged from every prior week: <code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v</code> then <code>git add . &amp;&amp; git commit -m 'lab 12: OOP III applied practice' &amp;&amp; git push</code>.
+Common student mistakes: fewer than 4 entity instances added — a quick visual count during circulation; no status-changing method called at all, so <code>report()</code>'s output shows everything still in its default state — technically satisfies "calls report()" but misses the more meaningful requirement of demonstrating the system's actual behavior; encourage at least one status change before the report.
+No explicit "Check for understanding" in this segment. The knowledge-check answer is verbatim from the guide's Part 5 "Common student mistakes" line about calling no status-changing method.
+</aside>
+</section>
+
+<!-- 44. PART 5 idea -->
+<section class="s-idea">
+<h3><code>main.py</code> — four requirements</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Creates a manager instance.</strong> <code>mgr = RegistrationManager()</code>.</p>
+<p><strong>Adds at least 4 entity instances.</strong> Four <code>mgr.add(Registration(...))</code> calls — a quick visual count during circulation confirms it.</p>
+<p><strong>Calls at least one status-changing method.</strong> <code>mgr.registrations[0].confirm()</code> — reaching through the manager into its held collection. Without this, <code>report()</code> shows everything still <code>Pending</code> and the simulation doesn't demonstrate the system's actual behavior.</p>
+<p><strong>Calls <code>report()</code>.</strong> The manager's presentation method prints the formatted summary — total count and revenue, confirmed/pending counts, and each confirmed registration via <code>__repr__</code>.</p>
+</div>
+<aside class="notes">
+Line-by-line (guide, Part 5 worked example <code>main.py</code>):
+- <code>annual_gala = Event(1, 'Annual Gala', 200)</code> — one shared <code>Event</code>.
+- <code>mgr = RegistrationManager()</code> — the empty manager.
+- four <code>mgr.add(Registration(id, name, annual_gala, price))</code> calls — Taylor $750, Jordan $150, Morgan $300, Riley $500.
+- <code>mgr.registrations[0].confirm()</code> and <code>mgr.registrations[1].confirm()</code> — two status changes, reaching through the manager.
+- <code>mgr.report()</code> — prints the summary.
+Revenue is <code>$1,700.00</code> (750 + 150 + 300 + 500), formatted by <code>report()</code>'s <code>${self.total():,.2f}</code>. Two confirmed, two still pending.
+</aside>
+</section>
+
+<!-- 45. PART 5 code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — <code>main.py</code>: the full system end to end</h3>
+<div class="run" data-lang="python">class Event:
+    """Represents a single event that people can register for."""
+
+    def __init__(self, event_id, name, capacity):
+        self.event_id = event_id
+        self.name = name
+        self.capacity = capacity
+
+    def __repr__(self):
+        return f'Event({self.event_id}, {self.name}, capacity={self.capacity})'
+
+
+class Registration:
+    """Represents one attendee's registration for an event."""
+
+    def __init__(self, reg_id, attendee_name, event, price):
+        self.reg_id = reg_id
+        self.attendee_name = attendee_name
+        self.event = event
+        self.price = price
+        self.status = 'Pending'
+
+    def confirm(self):
+        """Mark this registration as confirmed."""
+        self.status = 'Confirmed'
+
+    def cancel(self):
+        """Mark this registration as cancelled."""
+        self.status = 'Cancelled'
+
+    def is_vip(self):
+        """Return True if this registration's price exceeds $500."""
+        return self.price &gt; 500
+
+    def __repr__(self):
+        return f'Registration({self.reg_id}, {self.attendee_name}, {self.event.name}, ${self.price}, {self.status})'
+
+
+class RegistrationManager:
+    """Manages a collection of event registrations."""
+
+    def __init__(self):
+        self.registrations = []
+
+    def add(self, registration):
+        """Add a Registration to the collection."""
+        self.registrations.append(registration)
+
+    def list_by_status(self, status):
+        """Return registrations matching the given status."""
+        return [r for r in self.registrations if r.status == status]
+
+    def total(self):
+        """Return the total revenue across all registrations."""
+        return sum(r.price for r in self.registrations)
+
+    def report(self):
+        """Print a formatted summary of all registrations."""
+        confirmed = self.list_by_status('Confirmed')
+        pending = self.list_by_status('Pending')
+        print(f'Total registrations: {len(self.registrations)} | Revenue: ${self.total():,.2f}')
+        print(f'Confirmed: {len(confirmed)} | Pending: {len(pending)}')
+        print('Confirmed registrations:')
+        for r in confirmed:
+            print(f'  {r}')
+
+
+# main.py  --  from models import Registration, Event, RegistrationManager
+
+annual_gala = Event(1, 'Annual Gala', 200)
+
+mgr = RegistrationManager()
+mgr.add(Registration(1, 'Taylor', annual_gala, 750))
+mgr.add(Registration(2, 'Jordan', annual_gala, 150))
+mgr.add(Registration(3, 'Morgan', annual_gala, 300))
+mgr.add(Registration(4, 'Riley', annual_gala, 500))
+
+mgr.registrations[0].confirm()
+mgr.registrations[1].confirm()
+
+mgr.report()</div>
+<p class="expect">Each Pyodide block is a fresh namespace, so <code>models.py</code>'s three classes and <code>main.py</code>'s code live in one block here — the guide splits them, with a real <code>from models import ...</code> line standing in for the commented one. <code>main.py</code> is guide-verbatim.</p>
+<aside class="notes">
+Say to the class (verbatim): "Last step: a simulation showing your whole system working together, then the ritual, exactly as every week since Week 4."
+Line by line: one shared <code>Event</code>; an empty manager; four registrations added; two confirmed via <code>mgr.registrations[i].confirm()</code>; <code>mgr.report()</code>.
+Verified output (guide): <code>Total registrations: 4 | Revenue: $1,700.00</code>; <code>Confirmed: 2 | Pending: 2</code>; then the two confirmed registrations, Taylor and Jordan, each via <code>__repr__</code>.
+Common mistakes: fewer than 4 entities added; no status change before <code>report()</code>.
+</aside>
+</section>
+
+<!-- 46. PART 5 verified output -->
+<section class="s-out">
+<h3>Verified output</h3>
+<pre>Total registrations: 4 | Revenue: $1,700.00
+Confirmed: 2 | Pending: 2
+Confirmed registrations:
+  Registration(1, Taylor, Annual Gala, $750, Confirmed)
+  Registration(2, Jordan, Annual Gala, $150, Confirmed)</pre>
+<p class="expect">Reproduces the guide's Part 5 "Run it. Verified output" exactly. Revenue is <code>$1,700.00</code> (750 + 150 + 300 + 500), counting every registration regardless of status; <code>report()</code> lists only the two <em>confirmed</em> ones (Taylor, Jordan), each via <code>__repr__</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the combined block prints exactly these five lines and exits 0. Morgan and Riley are still <code>Pending</code>, so they're in "Pending: 2" and the revenue total but not the "Confirmed registrations" list. Because <code>Registration</code> defines <code>__repr__</code>, no <code>0x...</code> address appears.</aside>
+</section>
+
+<!-- 47. PART 5 ritual (readonly shell) -->
+<section class="s-code">
+<h3>The full pre-submission ritual — run on your own machine</h3>
+<div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 12: OOP III applied practice' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Format, lint, test, then commit and push. The commit message must include <strong>"lab 12"</strong>. Unchanged from every week since Week 4.</p>
+<aside class="notes">
+Say to the class (verbatim): "Last step: a simulation showing your whole system working together, then the ritual, exactly as every week since Week 4."
+Line by line: <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs the six-or-more tests; <code>&amp;&amp;</code> chaining stops on any failure. Then stage everything, commit with a message that includes "lab 12", push. Finally paste the GitHub repository URL into Canvas.
+Common mistakes: forgetting "lab 12" in the commit message — the same graded requirement pattern as every prior week.
+</aside>
+</section>
+
+<!-- 48. PART 5 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">Your <code>main.py</code> creates a manager, adds four registrations, and calls <code>report()</code> — but calls no status-changing method. Does it meet the requirement?</p>
+<button data-opt="A">Yes — the requirement is only "calls <code>report()</code>", and it does</button>
+<button data-opt="B">It technically satisfies "calls <code>report()</code>" but misses the more meaningful requirement of demonstrating the system's actual behavior — call at least one status-changing method before the report</button>
+<button data-opt="C">No — <code>report()</code> raises an error because every registration is still <code>Pending</code></button>
+<p class="why" hidden>The guide's Part 5: "No status-changing method called at all, so <code>report()</code>'s output shows everything still in its default state — technically satisfies 'calls report()' but misses the more meaningful requirement of demonstrating the system's actual behavior; encourage at least one status change before the report."</p>
+</div>
+<aside class="notes">No explicit "Check for understanding" appears in Part 5 of the guide. Answer B is quoted verbatim from the guide's Part 5 "Common student mistakes to watch for": "No status-changing method called at all, so <code>report()</code>'s output shows everything still in its default state — technically satisfies 'calls report()' but misses the more meaningful requirement of demonstrating the system's actual behavior; encourage at least one status change before the report."</aside>
+</section>
+
+<!-- 49. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Fewer than 4 entity instances added — a quick visual count during circulation.</p>
+<p>No status-changing method called at all, so <code>report()</code>'s output shows everything still in its default state — technically satisfies "calls report()" but misses the more meaningful requirement of demonstrating the system's actual behavior; encourage at least one status change before the report.</p>
+<p>Forgetting "lab 12" in the commit message — the same graded requirement pattern as every prior week.</p>
+</div>
+<aside class="notes">The ritual is unchanged from every week since Week 4 — pure repetition. The only graded snag is the commit message string; a quick final check before <code>git push</code>.</aside>
+</section>
+
+<!-- 50. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · other domains</span>
+<h1>The template is domain-independent</h1>
+<aside class="notes">
+Lighter section — from the guide's Appendix B ("Other Domain Ideas — for students stuck on Part 1"). Offer these only to students genuinely stuck choosing a domain, not as a default to steer everyone toward, since genuine domain choice is part of the exercise's value. Each maps cleanly onto the required template: two entity classes with a real relationship, a manager holding a list of the first, a numeric field for <code>total()</code>, and an obvious boundary-testable business rule.
+Say to the class (framing): the same design-to-code shape — two related entity classes plus a manager — works for any domain with "two related kinds of things and rules that govern them." The runnable block on the next slide is the library-checkout example, structurally identical to the event-registration one.
+</aside>
+</section>
+
+<!-- 51. STRETCH idea -->
+<section class="s-idea">
+<h3>Three verified-workable domains (Appendix B)</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Library checkout.</strong> <code>Loan</code> (book, borrower, due_date, status) + <code>Book</code> (title, author) + <code>LoanManager</code>. Business rule: overdue if <code>days_out &gt; 14</code>.</p>
+<p><strong>Gym membership.</strong> <code>Membership</code> (member_name, plan, monthly_fee, status) + <code>Plan</code> (name, monthly_fee, perks) + <code>MembershipManager</code>. Business rule: premium if <code>monthly_fee &gt; 50</code>.</p>
+<p><strong>Food delivery orders.</strong> <code>Order</code> (customer, restaurant, total, status) + <code>Restaurant</code> (name, cuisine) + <code>OrderManager</code>. Business rule: requires driver bonus if <code>total &gt; 75</code>.</p>
+<p>Each has two entity classes with a real relationship, a manager holding a list of the first, a numeric field for <code>total()</code>, and an obvious boundary-testable rule — the exact shape of the required template.</p>
+</div>
+<aside class="notes">Reproduced from the guide's Appendix B. The three business rules are all strictly greater-than thresholds (<code>&gt; 14</code>, <code>&gt; 50</code>, <code>&gt; 75</code>) — each an obvious boundary-case test, exactly like "VIP if price exceeds $500". Offer only to stuck students.</aside>
+</section>
+
+<!-- 52. STRETCH code (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — the library-checkout domain, same shape</h3>
+<div class="run" data-lang="python">class Book:
+    """A book that can be borrowed from the library."""
+
+    def __init__(self, book_id, title, author):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+
+    def __repr__(self):
+        return f'Book({self.book_id}, {self.title})'
+
+
+class Loan:
+    """One borrower's loan of one book."""
+
+    def __init__(self, loan_id, borrower, book, days_out):
+        self.loan_id = loan_id
+        self.borrower = borrower
+        self.book = book
+        self.days_out = days_out
+        self.status = 'Open'
+
+    def return_book(self):
+        """Mark this loan as returned."""
+        self.status = 'Returned'
+
+    def is_overdue(self):
+        """Return True if the book has been out more than 14 days."""
+        return self.days_out &gt; 14
+
+    def __repr__(self):
+        return f'Loan({self.loan_id}, {self.borrower}, {self.book.title}, {self.status})'
+
+
+class LoanManager:
+    """Manages a collection of library loans."""
+
+    def __init__(self):
+        self.loans = []
+
+    def add(self, loan):
+        """Add a Loan to the collection."""
+        self.loans.append(loan)
+
+    def list_by_status(self, status):
+        """Return loans matching the given status."""
+        return [loan for loan in self.loans if loan.status == status]
+
+    def overdue_count(self):
+        """Return how many loans are currently overdue."""
+        return sum(1 for loan in self.loans if loan.is_overdue())
+
+
+dune = Book(1, 'Dune', 'Herbert')
+mgr = LoanManager()
+mgr.add(Loan(1, 'Sam', dune, 20))
+mgr.add(Loan(2, 'Alex', dune, 7))
+print(mgr.loans[0].is_overdue())
+print(mgr.loans[1].is_overdue())
+print(mgr.overdue_count())
+mgr.loans[0].return_book()
+print(len(mgr.list_by_status('Open')))</div>
+<p class="expect">Exactly the event-registration shape — two related entity classes (<code>Loan</code> has-a <code>Book</code>), a manager holding a list of the first, a boundary-testable rule (<code>days_out &gt; 14</code>). Only the domain vocabulary changed.</p>
+<aside class="notes">
+Line by line: <code>Book</code> is Entity Class 2 (like <code>Event</code>); <code>Loan</code> is Entity Class 1 (like <code>Registration</code>), holding a reference to its <code>Book</code>, with a status defaulting to <code>'Open'</code>, a status-changing method (<code>return_book()</code>), and a boundary method (<code>is_overdue()</code>, <code>&gt; 14</code>). <code>LoanManager</code> is the manager. Output: <code>True</code> (20 &gt; 14), <code>False</code> (7 not &gt; 14), <code>1</code> overdue, then <code>1</code> still <code>Open</code> after Sam's loan is returned.
+</aside>
+</section>
+
+<!-- 53. STRETCH output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>True
+False
+1
+1</pre>
+<p class="expect">Sam's loan (20 days) is overdue — <code>20 &gt; 14</code>; Alex's (7 days) is not. <code>overdue_count()</code> is <code>1</code>. After <code>mgr.loans[0].return_book()</code>, one loan remains <code>Open</code>.</p>
+<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these four lines and exits 0. The structure is identical to the event-registration worked example — the same four requirements, a different business domain.</aside>
+</section>
+
+<!-- 54. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Wrap-up — submission checklist</h3>
+<ul>
+<li><code>design.md</code> completed and instructor-approved <em>before</em> any code was written</li>
+<li>Entity Class 1: <code>__init__</code> with 4+ attributes including status, 2+ returning business logic methods, <code>__repr__</code>, docstrings on every method</li>
+<li>Entity Class 2: genuinely related to Entity Class 1, not a duplicate concept</li>
+<li>Manager class: <code>add</code>, <code>list_by_status</code>, <code>total</code>, <code>report</code>, all functioning correctly</li>
+<li><code>tests/test_models.py</code>: 6+ tests covering all required categories, all passing</li>
+<li><code>main.py</code>: manager created, 4+ entities added, at least one status change, <code>report()</code> called</li>
+<li>Git commit made, with a message including "lab 12"</li>
+<li>Full ritual run (format, lint, test, commit, push)</li>
+<li>GitHub repository URL pasted into Canvas</li>
+</ul>
+<aside class="notes">Review this checklist together in the last few minutes. Completion credit — the bar is the checklist above, not a graded rubric on the code. The featured idea to reinforce as they leave: designing a multi-class system on paper first — classes, attributes, methods, business rules — is a genuinely professional habit, and today was the one day this semester built specifically to practice it.</aside>
+</section>
+
+<!-- 55. WRAP — next-week preview -->
+<section class="s-wrap">
+<h3>Preview — Week 13</h3>
+<p>"Today's design document — naming classes, attributes, and relationships before writing any code — is exactly the skill Week 13 formalizes into real database design: the same entities, attributes, and relationships, expressed as SQL tables instead of Python classes."</p>
+<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: the <code>design.md</code> template's Entity Class / Attributes / Business Rules sections map directly onto Week 13's tables / columns / constraints — the design skill transfers paradigm to paradigm.</aside>
+</section>
+
+<!-- 56. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 12</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w12.md (Week 12 facilitation guide, "OOP III — Applied Practice &amp; Design"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4. This lab is structurally different: students design and build their <em>own</em> multi-class system — the deck demonstrates the instructor's event-registration worked example (<code>Event</code>, <code>Registration</code>, <code>RegistrationManager</code>) as a model of the design-to-code <em>process</em>, not an answer key. The <code>tests/test_models.py</code> file and the <code>pytest -v</code> pane are static (no <code>pytest</code> runner in the browser) — output reproduced verbatim from the guide's "Verified output — all nine pass"; double-checked locally with <code>python3 -m pytest -v</code> (9 passed). The ritual shell block is read-only (no <code>ruff</code> / <code>pytest</code> / <code>git</code> in the browser). Each Pyodide block is a fresh namespace, so every runnable block re-defines the classes it needs at the top; the guide splits it across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. Broken slides: <code>confirm()</code> that <code>print()</code>s instead of setting <code>self.status</code> &rarr; no error, <code>list_by_status('Confirmed')</code> returns <code>[]</code>; <code>add()</code> that reassigns instead of appending &rarr; no error, count is <code>1</code> not <code>3</code>; <code>is_vip()</code> with <code>&gt;=</code> instead of <code>&gt;</code> &rarr; <code>AssertionError: boundary: $500 exactly should not be VIP</code> — all verified against CPython 3.12.2; Pyodide shows <code>&lt;exec&gt;</code> as the file and line numbers may differ. No SQL executes this week — Week 13's database design is mentioned only in the preview. ISM3232 style: single quotes in Python throughout.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>

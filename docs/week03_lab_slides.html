@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Lab Week 3 — Virtual Environments &amp; Shell Customisation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="../assets/lab-slides.css">
+<style>
+/* Deck-local helpers not covered by lab-slides.css */
+.eyebrow{font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;}
+.hint{font-size:.4em;color:var(--mu);margin-top:.9em;font-family:monospace;letter-spacing:.1em;}
+.chip{display:inline-block;font-family:monospace;font-size:.46em;letter-spacing:.12em;text-transform:uppercase;
+  padding:.32em .95em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);margin-bottom:.55em;}
+.kv{list-style:none;padding:0;margin:.6em auto;max-width:860px;text-align:left;}
+.kv>div{display:grid;grid-template-columns:200px 1fr;gap:1em;padding:.5em 0;border-bottom:1px solid var(--bd);}
+.kv .k{color:var(--mu);font-weight:700;font-size:.8em;}
+.kv .v{color:var(--tx);font-size:.8em;line-height:1.6;}
+table.grid{border-collapse:collapse;margin:.7em auto;font-size:.62em;max-width:900px;}
+table.grid th,table.grid td{border:1px solid var(--bd);padding:.42em .8em;text-align:left;}
+table.grid th{background:var(--bg2);color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-size:.92em;}
+table.grid td:first-child{white-space:nowrap;color:var(--mu);}
+table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
+.expect{font-size:.62em;color:var(--mu);font-style:italic;margin:.4em auto 0;max-width:960px;text-align:left;}
+.concept.danger{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-left:4px solid var(--red);}
+.concept.danger .concept-lbl{color:var(--red);}
+.tmpl{font-family:"Fira Code","Courier New",monospace;font-size:.44em;white-space:pre;overflow-x:auto;
+  text-align:left;max-width:960px;margin:.5em auto;padding:.7em .9em;border-radius:8px;
+  border:1px solid var(--bd);background:var(--term-bg);color:var(--term-tx);}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. TITLE -->
+<section class="s-title">
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 3 &nbsp;·&nbsp; Module 03 &nbsp;·&nbsp; Unit 1</p>
+<h1>Virtual Environments &amp; Shell Customisation</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0:00–0:04</strong> Welcome: the "private room" mental model</span>
+<span class="t-item"><strong>0:04–0:22</strong> Part 1 — Virtual environment workflow</span>
+<span class="t-item"><strong>0:22–0:32</strong> Part 2 — <code>.gitignore</code></span>
+<span class="t-item"><strong>0:32–0:52</strong> Part 3 — <code>.zshrc</code> aliases and functions</span>
+<span class="t-item"><strong>0:52–1:02</strong> Part 4 — Practice and deactivate + README</span>
+<span class="t-item"><strong>1:02–1:15</strong> Stretch (rebuild from <code>requirements.txt</code>) + wrap-up</span>
+</div>
+<p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">
+Two genuinely separate ideas share this lab, and it's worth naming that split to the class up front: virtual environments (an isolated package "room" per project) and shell customization (<code>.zshrc</code> aliases and functions that make the terminal itself faster to use). Neither depends on the other, but both are foundational habits the rest of the semester assumes are already automatic — Week 4's Git ritual uses the aliases defined today (<code>gs</code>, <code>ga</code>, <code>gcmsg</code>, <code>gp</code>) as shorthand, and every remaining Python module runs inside a project-specific <code>.venv</code>. The lab page's own mental model — "a venv is a private room for each project" — is worth repeating verbatim; it's the single clearest explanation of why this matters, not just how.
+Full class period, 75 minutes. Live terminal code-along. This lab has more sequential dependencies than Weeks 1–2 — a broken venv early cascades into every later part failing — so rehearse the full venv → install → freeze → gitignore → alias → deactivate sequence end to end before class.
+NOTE ON THIS DECK: ISM3232 shell week. The in-browser zsh emulator cannot run <code>python -m venv</code>, <code>source</code>/<code>deactivate</code>, <code>pip</code>, <code>alias</code>, live <code>.zshrc</code> edits, or <code>git</code>. Those slides are shown read-only ("run this on your own machine — it can't execute here") with the guide's verified output beside them. The runnable terminal blocks confirm the files and folders those steps create actually exist on a seeded filesystem.
+</aside>
+</section>
+
+<!-- 2. GLANCE -->
+<section class="s-glance">
+<h3>Today at a glance</h3>
+<div class="kv">
+<div><span class="k">Format</span><span class="v">Live terminal code-along</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 1–2: verified environment, <code>ism3232/</code> structure, core navigation / file commands (marked Midterm-Eligible)</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (venv workflow) – Part 4 (practice + deactivate) + Stretch (rebuild from <code>requirements.txt</code>)</span></div>
+<div><span class="k">Submission</span><span class="v">4 screenshots + <code>requirements.txt</code> + <code>.gitignore</code> + updated <code>README.md</code>, uploaded to Canvas — completion credit</span></div>
+</div>
+<aside class="notes">
+From the Session Snapshot. Students need their existing <code>ism3232/module02_zsh/</code> folder from Weeks 1–2 — if a section didn't reach that far, create it live before demonstrating. Internet access is required for <code>pip install</code>. Back up (or know how to restore) your own <code>~/.zshrc</code> before editing it live in front of the room — model the exact caution you're about to ask students to exercise.
+</aside>
+</section>
+
+<!-- 3. OBJECTIVES -->
+<section class="s-obj">
+<h3>Learning objectives</h3>
+<p>By the end of this class period, students should be able to:</p>
+<ul>
+<li>Create and activate a Python virtual environment, and explain what "isolated" actually means in concrete, checkable terms (a different <code>which python3</code>, a different <code>pip list</code>).</li>
+<li>Install packages inside an active venv, and freeze the exact installed versions to <code>requirements.txt</code> for reproducibility.</li>
+<li>Explain why <code>.venv/</code> must never be committed to Git, and create a <code>.gitignore</code> that excludes it before any files are staged.</li>
+<li>Add custom aliases and a shell function to <code>.zshrc</code>, apply the changes without restarting the terminal, and verify each one works.</li>
+<li>Deactivate a virtual environment cleanly and confirm the shell has returned to the system Python.</li>
+</ul>
+<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objectives 1 and 3 carry the most weight: "isolated" has to be demonstrated as a checkable fact, not asserted, and the <code>.gitignore</code> has to exist before Week 4's first commit or the mistake it prevents can't be undone cleanly later.</aside>
+</section>
+
+<!-- 4. TIMING -->
+<section class="s-timing">
+<h3>Timing plan — 75 minutes</h3>
+<table class="grid">
+<thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
+<tbody>
+<tr><td>0:00–0:04</td><td>Welcome: the "private room" mental model</td><td>4</td></tr>
+<tr><td>0:04–0:22</td><td>Part 1 — Virtual environment workflow</td><td>18</td></tr>
+<tr><td>0:22–0:32</td><td>Part 2 — <code>.gitignore</code></td><td>10</td></tr>
+<tr><td>0:32–0:52</td><td>Part 3 — <code>.zshrc</code> aliases and functions</td><td>20</td></tr>
+<tr><td>0:52–1:02</td><td>Part 4 — Practice and deactivate + README update</td><td>10</td></tr>
+<tr><td>1:02–1:15</td><td>Stretch (rebuild from <code>requirements.txt</code>) + wrap-up, submission checklist</td><td>13</td></tr>
+</tbody>
+</table>
+<aside class="notes">Four required parts fill the bulk of the class period; the Stretch (destroying and rebuilding the venv from <code>requirements.txt</code>) is given real time if the room reaches it, since it's the most concrete possible demonstration that <code>requirements.txt</code> actually captures everything needed to reproduce the environment — worth doing live, not just described, if time allows.</aside>
+</section>
+
+<!-- 5. INTRO divider -->
+<section class="s-sec">
+<span class="chip">Intro · 0:00–0:04</span>
+<h1>The "private room" mental model</h1>
+<aside class="notes">
+Say to the class: "Today has two halves that don't depend on each other, but both become automatic habits for the rest of the semester. First half: virtual environments — think of a venv as a private room for one project. When you activate it, you walk in, and every package you install goes on that room's shelves only. Walk out — deactivate — and other projects are completely unaffected. Second half: customizing your shell itself, so common commands become one or two characters instead of a full phrase."
+Do: write the "private room" analogy on the board and leave it visible through Part 1 — it's worth returning to explicitly once isolation is demonstrated concretely.
+</aside>
+</section>
+
+<!-- 6. PART 1 divider -->
+<section class="s-sec">
+<span class="chip">Part 1 · 0:04–0:22</span>
+<h1>Virtual Environment Workflow</h1>
+<aside class="notes">
+Teaching goal: create, activate, and populate a venv — and, critically, prove its isolation concretely, not just assert it.
+Say to the class: "Three steps: create, activate, verify it's actually isolated — not just trust that it is."
+Setup just before this: students are in <code>~/ism3232/module02_zsh</code> from Weeks 1–2. Everything in Part 1 happens there.
+Check for understanding (asked at the end of this part): "If you closed this terminal entirely and opened a brand new one tomorrow, would the venv still be active?" Answer: No — activation is a per-session shell state, not a permanent setting; <code>source .venv/bin/activate</code> needs to be re-run every time you open a new terminal and want to work on this project. "Why isn't my venv active anymore" is one of the most common beginner Python questions.
+</aside>
+</section>
+
+<!-- 7. PART 1 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>A venv is a private room for one project. Activate = walk in; every package installs on that room's shelves only. Deactivate = walk out; other projects are untouched.</p>
+<p><code>python3 -m venv .venv</code> creates a folder holding its <strong>own copy</strong> of the Python interpreter and its own place to install packages — nothing installed inside touches the system-wide Python. The leading dot makes it hidden (Week 2's <code>ls -la</code> lesson).</p>
+<p><code>source .venv/bin/activate</code> is the step that actually "walks into the room": <code>source</code> runs the activation script in the <em>current</em> shell, editing <code>PATH</code> so <code>python3</code> and <code>pip</code> resolve to the venv's copies first. The <code>(.venv)</code> prompt prefix is your visual confirmation — train yourself to glance at it reflexively.</p>
+</div>
+<aside class="notes">Emphasise: the <code>(.venv)</code> prefix is worth training yourself to glance at reflexively, the same way Week 1 trained checking for <code>%</code> vs <code>$</code>. A fresh venv starts essentially empty, deliberately, so whatever gets installed next is fully visible and attributable to this specific project.</aside>
+</section>
+
+<!-- 8. PART 1 create + activate + verify (readonly) -->
+<section class="s-code">
+<h3>Live-code — create, activate, verify (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module02_zsh
+python3 -m venv .venv
+source .venv/bin/activate
+# Prompt should now show (.venv)
+
+which python3   # should point inside .venv/
+pip list        # should show minimal packages</div>
+<p class="expect">Shown for reference — <code>python -m venv</code>, <code>source</code>, and <code>pip</code> can't execute in the browser. Run this in the VS Code integrated terminal on your own machine; the next slide shows the shape of a correct result.</p>
+<aside class="notes">
+Line by line:
+- <code>python3 -m venv .venv</code> — <code>-m venv</code> runs Python's built-in <code>venv</code> module, which creates a new, self-contained Python environment inside a folder named <code>.venv</code>. This folder now contains its own copy of the Python interpreter and its own separate place to install packages — nothing installed here touches the system-wide Python.
+- <code>source .venv/bin/activate</code> — this is the step that actually "walks into the room." <code>source</code> runs a script in the current shell session (rather than a separate subprocess, which is why the effect persists) — the activation script modifies your shell's <code>PATH</code> so that <code>python3</code> and <code>pip</code> now resolve to the venv's copies first.
+- The <code>(.venv)</code> prefix appearing in the prompt — a visual confirmation, built into most shell configurations, that a venv is currently active.
+- <code>which python3</code> — Week 1's command, now revealing something new: instead of a system path like <code>/usr/bin/python3</code> or <code>/opt/homebrew/bin/python3</code>, it should now point inside the <code>.venv</code> folder itself — the first concrete, checkable proof that activation changed something.
+- <code>pip list</code> — should show only a minimal handful of packages (<code>pip</code> itself, maybe <code>setuptools</code>) — a fresh venv starts essentially empty.
+Common mistake: running <code>pip install</code> before activating — installs to the system Python instead. If a student's <code>which python3</code> didn't show a <code>.venv</code> path, stop and fix activation before installing anything. Forgetting <code>source</code> and running <code>.venv/bin/activate</code> directly runs the script in a subprocess that exits immediately — the <code>(.venv)</code> prefix simply won't appear, which is the tell.
+</aside>
+</section>
+
+<!-- 9. PART 1 verified output (verbatim guide) -->
+<section class="s-out">
+<h3>Verified example output — not run here</h3>
+<pre>/private/tmp/.../module02_zsh/.venv/bin/python3
+Package Version
+------- -------
+pip     24.0</pre>
+<p class="expect">Reproduces the guide's "Verified example output" for Part 1 verbatim. On a student machine the path prefix is their own; what matters is that <code>which python3</code> now resolves <em>inside</em> <code>.venv/</code>, and <code>pip list</code> is nearly empty.</p>
+<aside class="notes">Guide's verified example output, quoted verbatim (guide Part 1: the four lines from <code>/private/tmp/.../module02_zsh/.venv/bin/python3</code> through <code>pip     24.0</code>). The <code>/private/tmp/...</code> prefix is illustrative — a real machine shows the student's own home path.</aside>
+</section>
+
+<!-- 10. PART 1 install + freeze (readonly) -->
+<section class="s-code">
+<h3>Now install and freeze (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>pip install pytest ruff
+pip list                       # confirm both are installed
+pip freeze > requirements.txt
+cat requirements.txt           # confirm it was written</div>
+<p class="expect">Shown for reference — <code>pip</code> can't run in the browser. Run this in your activated venv; the next slide shows the <code>requirements.txt</code> it writes.</p>
+<aside class="notes">
+Line by line:
+- <code>pip install pytest ruff</code> — installs two packages this course uses constantly from here forward: <code>pytest</code> (testing, first used next module) and <code>ruff</code> (formatting/linting, first used next module too) — both land inside <code>.venv/</code>, not system-wide.
+- <code>pip freeze &gt; requirements.txt</code> — <code>pip freeze</code> lists every installed package with its exact version number (e.g. <code>pytest==9.1.1</code>, not just <code>pytest</code>); <code>&gt;</code> (Week 2's redirect operator) writes that list to a file instead of printing it. Exact versions matter, not just names: <code>requirements.txt</code> is what lets anyone — a classmate, a grader, or you on a different machine — recreate this exact environment, down to the specific version of every package.
+Point out explicitly: more than just <code>pytest</code> and <code>ruff</code> appear — those two packages themselves depend on smaller supporting packages (<code>pluggy</code>, <code>iniconfig</code>, <code>Pygments</code>), which pip installed automatically. <code>pip freeze</code> captures the entire resulting environment, dependencies included, not just what was explicitly typed.
+</aside>
+</section>
+
+<!-- 11. PART 1 verified requirements.txt (verbatim guide) -->
+<section class="s-out">
+<h3>Verified <code>requirements.txt</code> content — not run here</h3>
+<pre>iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+ruff==0.16.4</pre>
+<p class="expect">Reproduces the guide's "Verified <code>requirements.txt</code> content" verbatim. Six lines from two <code>pip install</code> names — the extra four are dependencies pip pulled in automatically.</p>
+<aside class="notes">Guide's verified <code>requirements.txt</code> content, quoted verbatim (guide Part 1: <code>iniconfig==2.3.0</code> through <code>ruff==0.16.4</code>). Version numbers will drift over time; the teaching point is that every line carries an exact <code>==</code> pin, and that dependencies appear alongside the two packages actually requested.</aside>
+</section>
+
+<!-- 12. PART 1 confirm on disk (RUNNABLE) -->
+<section class="s-code">
+<h3>Confirm it exists — this one runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n",".venv":{"bin":{"activate":"","python3":""},"lib":{},"pyvenv.cfg":"home = /opt/homebrew/opt/python3.12/bin\ninclude-system-site-packages = false\nversion = 3.12.2\n"},"requirements.txt":"iniconfig==2.3.0\npackaging==26.3\npluggy==1.6.0\nPygments==2.21.0\npytest==9.1.1\nruff==0.16.4\n"}}'>cd ~/ism3232/module02_zsh
+ls -la
+cat requirements.txt</div>
+<p class="expect">The emulator can't create the venv, but it can confirm the results: after Part 1, <code>.venv/</code> and <code>requirements.txt</code> both exist in <code>module02_zsh/</code>, and <code>requirements.txt</code> holds the six pinned lines.</p>
+<aside class="notes">
+This is the runnable check that stands in for the read-only steps above. <code>ls -la</code> shows the hidden <code>.venv/</code> directory (Week 2's <code>-a</code> flag) alongside <code>requirements.txt</code>; <code>cat requirements.txt</code> prints exactly the six lines from the verified-content slide. Verified against <code>ism3232/assets/lab-shell.mjs</code> with the seeded <code>data-fs</code>. The permission / size / timestamp columns in <code>ls -la</code> are emulator stand-ins; only the file and folder names are load-bearing here.
+</aside>
+</section>
+
+<!-- 13. PART 1 confirm on disk — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total 5
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .venv
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 README.md
+-rw-r--r--  1 student  staff  91  Sep  5 10:00 requirements.txt
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+ruff==0.16.4</pre>
+<p class="expect"><code>.venv</code> appears in the listing (hidden dot-folder, shown by <code>-a</code>); <code>requirements.txt</code> holds the six pinned lines from the verified-content slide.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly. On a real machine the <code>ls -la</code> block also shows <code>.venv/</code>'s own contents when you look inside it; here the seed keeps it shallow.</aside>
+</section>
+
+<!-- 14. PART 1 idea — isolation is a checkable fact -->
+<section class="s-idea">
+<h3>The payoff — "isolated" is a checkable fact</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>Open a <strong>second</strong> terminal tab and do <em>not</em> activate the venv. In it, <code>which python3</code> points to the system interpreter and <code>pip list</code> does not include <code>pytest</code> or <code>ruff</code>.</p>
+<p>That second terminal never ran <code>source .venv/bin/activate</code> — so the two tabs resolve <code>python3</code> to <em>different</em> interpreters, right now, on the same machine. That is what "isolated" concretely means: not a promise, a checkable fact about two sessions.</p>
+</div>
+<aside class="notes">
+Say explicitly, since this is the exercise's real payoff: "This second terminal never ran <code>source .venv/bin/activate</code> — and <code>which python3</code> proves it's using a completely different interpreter, and <code>pip list</code> proves <code>pytest</code>/<code>ruff</code> simply aren't there. This is what 'isolated' concretely means: not a promise, a checkable fact about two different terminal sessions on the same machine, right now."
+Common mistake: checking isolation in the same terminal tab instead of a genuinely separate one — this doesn't test anything, since the same terminal still has the venv active. The isolation check specifically requires a fresh, non-activated session.
+</aside>
+</section>
+
+<!-- 15. PART 1 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You closed this terminal entirely and opened a brand new one tomorrow. Would the venv still be active?</p>
+<button data-opt="A">Yes — once created, a venv stays active for that project until you explicitly <code>deactivate</code> it</button>
+<button data-opt="B">No — activation is a per-session shell state; you must re-run <code>source .venv/bin/activate</code> in every new terminal</button>
+<button data-opt="C">Only if you added <code>source .venv/bin/activate</code> to your <code>.zshrc</code> — otherwise it is a one-time setting that never expires</button>
+<p class="why" hidden>No — activation is a per-session shell state, not a permanent setting. <code>source .venv/bin/activate</code> needs to be re-run every time you open a new terminal and want to work on this project. "Why isn't my venv active anymore" is one of the most common beginner Python questions, and the answer is always this.</p>
+</div>
+<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: No — activation is a per-session shell state, not a permanent setting; <code>source .venv/bin/activate</code> needs to be re-run every time you open a new terminal and want to work on this project. Worth stating explicitly because it is a genuine, recurring point of confusion.</aside>
+</section>
+
+<!-- 16. PART 1 quiz — isolation -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">You run <code>which python3</code> in the venv-activated tab and again in a second, non-activated tab, and the two paths differ. What does that prove?</p>
+<button data-opt="A">Nothing definitive — <code>which</code> output varies between terminal tabs at random</button>
+<button data-opt="B">The second tab is broken and needs <code>source .venv/bin/activate</code> run in it too</button>
+<button data-opt="C">The two tabs resolve <code>python3</code> to different interpreters — "isolated" is a checkable fact about two sessions, not a promise</button>
+<p class="why" hidden>The second terminal never ran <code>source .venv/bin/activate</code>, so <code>which python3</code> proves it is using a completely different interpreter, and <code>pip list</code> proves <code>pytest</code>/<code>ruff</code> simply aren't there. That is what "isolated" concretely means — a checkable fact about two different terminal sessions on the same machine, right now.</p>
+</div>
+<aside class="notes">Reinforces the guide's "real payoff" passage (guide Part 1: "This is what 'isolated' concretely means: not a promise, a checkable fact about two different terminal sessions on the same machine, right now."). No single-answer CFU is attached to this sub-point in the guide; the keyed option and <code>.why</code> are lifted from that same-segment passage.</aside>
+</section>
+
+<!-- 17. PART 1 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>pip install</code> <strong>before</strong> activating the venv — installs to the system Python instead, defeating the entire point. If a student's <code>which python3</code> in Part 1 didn't show a <code>.venv</code> path, stop and fix activation before installing anything.</p>
+<p>Forgetting <code>source</code> and just running <code>.venv/bin/activate</code> directly — this often runs the script in a subprocess that exits immediately, leaving the current shell unaffected; the <code>(.venv)</code> prefix simply won't appear.</p>
+<p>Checking isolation in the <strong>same</strong> terminal tab instead of a genuinely separate one — the same terminal still has the venv active, so it tests nothing.</p>
+</div>
+<aside class="notes">Check for understanding: "If you closed this terminal entirely and opened a brand new one tomorrow, would the venv still be active?" Answer: No — activation is a per-session shell state; <code>source .venv/bin/activate</code> must be re-run in every new terminal for this project.</aside>
+</section>
+
+<!-- 18. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:22–0:32</span>
+<h1><code>.gitignore</code></h1>
+<aside class="notes">
+Teaching goal: create a <code>.gitignore</code> before any files are committed, specifically to keep <code>.venv/</code> out of version control — and understand why committing a venv is a genuine mistake, not just a style preference.
+Say to the class: "One rule, stated as absolutely as anything in this course: <code>.venv/</code> must never be committed to Git. We're creating the <code>.gitignore</code> now, before Week 4's first commit, specifically so this mistake never happens."
+Check for understanding (asked at the end of this part): "If a classmate cloned your GitHub repo and it had properly excluded <code>.venv/</code>, what would they need to run to get a working environment on their own machine?" Answer: <code>python3 -m venv .venv</code>, <code>source .venv/bin/activate</code>, then <code>pip install -r requirements.txt</code> — exactly the Stretch section's sequence.
+</aside>
+</section>
+
+<!-- 19. PART 2 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept danger">
+<div class="concept-lbl">One rule</div>
+<p><code>.venv/</code> must never be committed to Git. Create the <code>.gitignore</code> now — before Week 4's first commit — so the mistake never happens.</p>
+<p>A venv folder can be hundreds of megabytes, is regeneratable from <code>requirements.txt</code> in seconds, and often contains machine-specific paths and binaries that won't work on another computer. Committing it bloats the repo with something that gives a collaborator zero value and can actively break on their machine.</p>
+<p>First line uses a single <code>&gt;</code> (nothing to preserve yet); the next two use <code>&gt;&gt;</code> to <em>append</em> — because the file now has content that must not be overwritten. Week 2's overwrite-vs-append distinction, now with real consequences.</p>
+</div>
+<aside class="notes">Ask the room explicitly: "what would happen if I'd used <code>&gt;</code> instead of <code>&gt;&gt;</code> on these last two lines?" Each would have erased the previous line, leaving <code>.gitignore</code> with only the single most recent entry. <code>__pycache__/</code> and <code>*.pyc</code> are Python's automatically-generated compiled bytecode files — pure clutter, regenerated automatically, never something a human wrote.</aside>
+</section>
+
+<!-- 20. PART 2 create .gitignore (RUNNABLE) -->
+<section class="s-code">
+<h3>Live-code — this one runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n",".venv":{"bin":{"activate":""},"pyvenv.cfg":"version = 3.12.2\n"},"requirements.txt":"pytest==9.1.1\nruff==0.16.4\n"}}'>cd ~/ism3232/module02_zsh
+echo '.venv/' > .gitignore
+echo '__pycache__/' >> .gitignore
+echo '*.pyc' >> .gitignore
+cat .gitignore
+ls -la</div>
+<p class="expect"><code>echo</code>, <code>&gt;</code>, <code>&gt;&gt;</code>, <code>cat</code> and <code>ls -la</code> all run in the emulator. Watch the single <code>&gt;</code> create the file, then the two <code>&gt;&gt;</code> append to it.</p>
+<aside class="notes">
+Line by line:
+- <code>echo '.venv/' &gt; .gitignore</code> — Week 2's redirect operator, creating a brand-new <code>.gitignore</code> with one line — note the single <code>&gt;</code>, correctly, since this is the first line and there's nothing to preserve yet.
+- <code>echo '__pycache__/' &gt;&gt; .gitignore</code> and <code>echo '*.pyc' &gt;&gt; .gitignore</code> — Week 2 Stretch's append operator, <code>&gt;&gt;</code>, used correctly here specifically because the file already has content from the line above that must be preserved, not overwritten.
+- <code>cat .gitignore</code> — confirms all three lines landed in order.
+- <code>ls -la</code> — <code>.gitignore</code> and <code>.venv</code> both appear (both hidden dot-entries, shown by <code>-a</code>).
+Common mistake: creating <code>.gitignore</code> after already running <code>git add .</code> on a prior commit that included <code>.venv/</code> — once a file is tracked, adding it to <code>.gitignore</code> afterward does not untrack it (needs <code>git rm -r --cached .venv</code>, not covered here). This is exactly why the lab's sequencing — <code>.gitignore</code> in Week 3, before Week 4's first commit — is deliberate.
+</aside>
+</section>
+
+<!-- 21. PART 2 expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>.venv/
+__pycache__/
+*.pyc
+total 6
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 .gitignore
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .venv
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 README.md
+-rw-r--r--  1 student  staff  27  Sep  5 10:00 requirements.txt</pre>
+<p class="expect">The first three lines are <code>cat .gitignore</code> — matching the guide's "Verified <code>.gitignore</code> content" (<code>.venv/</code>, <code>__pycache__/</code>, <code>*.pyc</code>). Then <code>ls -la</code> shows both <code>.gitignore</code> and <code>.venv</code> present.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines. The three <code>cat</code> lines reproduce the guide's "Verified <code>.gitignore</code> content" verbatim. The guide's own comment on the last line: "<code>.gitignore</code> and <code>.venv</code> should both appear."</aside>
+</section>
+
+<!-- 22. PART 2 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">A classmate clones your GitHub repo. You correctly excluded <code>.venv/</code>, so it isn't there. What do they run to get a working environment?</p>
+<button data-opt="A"><code>python3 -m venv .venv</code>, then <code>source .venv/bin/activate</code>, then <code>pip install -r requirements.txt</code></button>
+<button data-opt="B">Nothing — cloning the repo copies your working environment along with it</button>
+<button data-opt="C">Just <code>pip install -r requirements.txt</code> — the venv is optional once <code>requirements.txt</code> exists</button>
+<p class="why" hidden><code>python3 -m venv .venv</code>, <code>source .venv/bin/activate</code>, then <code>pip install -r requirements.txt</code> — exactly the Stretch section's sequence. Connecting today's <code>.gitignore</code> decision to that reconstruction process is what confirms the "why" actually landed, not just the "how."</p>
+</div>
+<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: <code>python3 -m venv .venv</code>, <code>source .venv/bin/activate</code>, then <code>pip install -r requirements.txt</code> — exactly the Stretch section's sequence.</aside>
+</section>
+
+<!-- 23. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Creating <code>.gitignore</code> <strong>after</strong> already running <code>git add .</code> on a prior commit that included <code>.venv/</code> — once a file is tracked, adding it to <code>.gitignore</code> afterward does not untrack it. That needs <code>git rm -r --cached .venv</code>, not covered in this lab. This is why the Week 3 / before-Week-4 sequencing is deliberate, not incidental.</p>
+<p>Typing <code>.venv</code> without the trailing slash — works in most cases since Git's matching is permissive, but the trailing <code>/</code> explicitly says "match a directory," the more precise professional habit.</p>
+<p>Using <code>&gt;</code> instead of <code>&gt;&gt;</code> on the second or third line — each would erase the line before it, leaving only the most recent entry.</p>
+</div>
+<aside class="notes">Check for understanding: "If a classmate cloned your repo with <code>.venv/</code> properly excluded, what would they run to get a working environment?" Answer: <code>python3 -m venv .venv</code>, <code>source .venv/bin/activate</code>, then <code>pip install -r requirements.txt</code>.</aside>
+</section>
+
+<!-- 24. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:32–0:52</span>
+<h1><code>.zshrc</code> Aliases and Functions</h1>
+<aside class="notes">
+Teaching goal: add custom aliases and a shell function to <code>.zshrc</code>, apply changes without restarting the terminal, and verify each one — building the exact shorthand vocabulary Week 4's Git ritual will lean on.
+Say to the class: "Second half of today: customizing the shell itself. <code>.zshrc</code> is a configuration file that runs every time you open a new terminal — anything you put here becomes available every session, automatically. We're adding nine shortcuts today, and I want every single one tested before we move on, not just typed and assumed correct."
+Check for understanding (asked at the end of this part): "If you typed <code>gs</code> in a folder that isn't a Git repository yet, what would happen?" Answer: <code>git status</code> would report something like <code>fatal: not a git repository</code> — the alias still runs the underlying command exactly as typed; it has no awareness of whether that command will succeed in the current context.
+</aside>
+</section>
+
+<!-- 25. PART 3 idea -->
+<section class="s-idea">
+<h3>The idea</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p>An <strong>alias</strong> is a simple text substitution: typing <code>ll</code> runs <code>ls -la</code> exactly as if you'd typed it out. Pure shorthand — no new functionality.</p>
+<p><code>gs</code>, <code>ga</code>, <code>gcmsg</code>, <code>gp</code>, <code>gl</code> are the Git shorthand <strong>Week 4's ritual will use</strong> — that's why these particular five were chosen.</p>
+<p><code>mkcd()</code> is a <strong>function, not an alias</strong> — a different mechanism. It takes an argument (<code>$1</code> = the first word typed after <code>mkcd</code>) and runs multiple commands: <code>mkdir -p "$1"</code> then, only if that succeeded (<code>&amp;&amp;</code>), <code>cd "$1"</code>. It replaces the two-step <code>mkdir foldername</code> then <code>cd foldername</code> pattern used in every lab so far.</p>
+</div>
+<aside class="notes"><code>-p</code> on <code>mkdir</code> (new here) means "create any necessary parent folders too, and don't error if it already exists." <code>&amp;&amp;</code> means "run the next command only if the first one succeeded." <code>source ~/.zshrc</code> is the step students most often forget: <code>.zshrc</code> only runs automatically when a new terminal session starts, so an already-open terminal needs <code>source</code> to re-run the file's contents into the current session. Closing and reopening the terminal achieves the same effect, but <code>source</code> is faster and doesn't lose your location/history.</aside>
+</section>
+
+<!-- 26. PART 3 edit .zshrc (readonly) -->
+<section class="s-code">
+<h3>Edit <code>~/.zshrc</code> — add these lines, delete nothing (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>code ~/.zshrc
+
+# ISM3232 required aliases
+alias ll='ls -la'
+alias c='clear'
+alias py='python3'
+alias gs='git status'
+alias ga='git add .'
+alias gcmsg='git commit -m'
+alias gp='git push'
+alias gl='git log --oneline'
+alias tree2='tree -L 2'
+
+# Required shell function
+mkcd() { mkdir -p "$1" &amp;&amp; cd "$1" }</div>
+<p class="expect">Shown for reference — editing <code>~/.zshrc</code> and defining <code>alias</code>/functions can't execute in the browser. Append these lines in VS Code; do not delete anything already in the file.</p>
+<aside class="notes">
+Line by line:
+- <code>alias ll='ls -la'</code> — an alias is a simple text substitution: typing <code>ll</code> from now on runs <code>ls -la</code>. Purely a shorthand, not new functionality.
+- <code>alias gs='git status'</code>, <code>ga='git add .'</code>, <code>gcmsg='git commit -m'</code>, <code>gp='git push'</code>, <code>gl='git log --oneline'</code> — these five specifically are the Git shorthand Week 4's ritual will use — flag this connection now, since it won't be obvious why these five were chosen until next week's lab makes them load-bearing.
+- <code>mkcd() { mkdir -p "$1" &amp;&amp; cd "$1" }</code> — a shell function, not an alias. It takes an argument (<code>$1</code> = the first word typed after <code>mkcd</code>) and runs multiple commands: <code>mkdir -p "$1"</code> creates a folder named whatever was typed (the <code>-p</code> flag means "create parent folders too, don't error if it exists"); <code>&amp;&amp;</code> means "run the next command only if the first succeeded"; <code>cd "$1"</code> then moves into that folder. This single command replaces the two-step <code>mkdir</code> then <code>cd</code> pattern used in every lab so far.
+Common mistake: deleting or overwriting existing <code>.zshrc</code> content while adding the new lines — append, don't replace. Have unsure students run <code>cat ~/.zshrc</code> before editing to see the starting state. A typo (mismatched quotes, missing <code>=</code>) can make the entire <code>.zshrc</code> fail to load on every new terminal — walk through the added lines character by character if an error appears on terminal open.
+</aside>
+</section>
+
+<!-- 27. PART 3 .zshrc after save (illustrative) -->
+<section class="s-out">
+<h3>Your <code>~/.zshrc</code> after saving — not run here</h3>
+<pre>#  ... your existing .zshrc content stays exactly as it was ...
+
+# ISM3232 required aliases
+alias ll='ls -la'
+alias c='clear'
+alias py='python3'
+alias gs='git status'
+alias ga='git add .'
+alias gcmsg='git commit -m'
+alias gp='git push'
+alias gl='git log --oneline'
+alias tree2='tree -L 2'
+
+# Required shell function
+mkcd() { mkdir -p "$1" &amp;&amp; cd "$1" }</pre>
+<p class="expect">Saving prints nothing. The added block sits below whatever was already in the file — the next slide applies it with <code>source ~/.zshrc</code> and tests every line.</p>
+<aside class="notes">Reproduces the guide's "Add these lines — do not delete anything already there" block verbatim (guide Part 3). There is no command output for an edit; the teaching point is that the new block is appended, not substituted for the file's existing contents.</aside>
+</section>
+
+<!-- 28. PART 3 apply + test (readonly) -->
+<section class="s-code">
+<h3>Apply and test every line (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>source ~/.zshrc
+
+# Test each alias
+ll                   # should work as ls -la
+gs                   # should run git status
+mkcd testdir         # should create and enter testdir/
+pwd                  # confirm you are inside testdir/</div>
+<p class="expect">Shown for reference — <code>source</code> and the new alias/function names can't run in the browser. The runnable slide after this executes the commands the alias and function stand for.</p>
+<aside class="notes">
+Line by line:
+- <code>source ~/.zshrc</code> — the step students most often forget. <code>.zshrc</code> only runs automatically when a new terminal session starts; since this terminal was already open when the file was edited, the new aliases don't exist in it until <code>source</code> re-runs the file's contents into the current session.
+- <code>ll</code> — tests the simplest alias first; if this doesn't work, <code>source ~/.zshrc</code> likely didn't run, or there's a typo in the edit.
+- <code>mkcd testdir</code> then <code>pwd</code> — the real test of the function: <code>pwd</code> should now show a path ending in <code>.../testdir</code>, proving both that the folder was created and that <code>cd</code> genuinely happened inside the same function call.
+Common mistake: forgetting <code>source ~/.zshrc</code> after saving, then being confused that the new aliases "don't work" — the fix is almost always just running <code>source ~/.zshrc</code>, not re-editing the file.
+</aside>
+</section>
+
+<!-- 29. PART 3 apply + test — illustrative output -->
+<section class="s-out">
+<h3>What you should see — not run here</h3>
+<pre>$ source ~/.zshrc        # no output; aliases now live in this session
+$ ll                     # expands to: ls -la  (long listing, hidden files)
+$ gs                     # runs: git status
+$ mkcd testdir           # mkdir -p testdir  &amp;&amp;  cd testdir
+$ pwd
+/Users/you/ism3232/module02_zsh/testdir</pre>
+<p class="expect">Guide's "Verified output": <code>pwd</code> after <code>mkcd testdir</code> ends in <code>/testdir</code>, confirming the function performed both steps — created the folder <em>and</em> moved into it.</p>
+<aside class="notes">Reproduces the guide's verified result for Part 3 verbatim: "<code>pwd</code> after <code>mkcd testdir</code> ends in <code>/testdir</code>, confirming the function performed both steps correctly." The <code>$</code> lines here are illustrative prompts; the real values (branch name for <code>gs</code>, full home path for <code>pwd</code>) vary by machine and repo state.</aside>
+</section>
+
+<!-- 30. PART 3 alias targets (RUNNABLE) -->
+<section class="s-code">
+<h3>What the alias and function <em>do</em> — this runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n",".gitignore":".venv/\n__pycache__/\n*.pyc\n",".venv":{"bin":{"activate":""}},"requirements.txt":"pytest==9.1.1\nruff==0.16.4\n"}}'>cd ~/ism3232/module02_zsh
+ls -la
+mkdir -p testdir
+cd testdir
+pwd</div>
+<p class="expect">The alias <em>names</em> (<code>ll</code>, <code>mkcd</code>) need your own <code>.zshrc</code>, but the emulator can run what they expand to: <code>ls -la</code> is what <code>ll</code> does, and <code>mkdir -p testdir</code> then <code>cd testdir</code> is what <code>mkcd testdir</code> does.</p>
+<aside class="notes">
+This runnable block stands in for the read-only apply-and-test slide. <code>ls -la</code> is the exact command <code>ll</code> aliases to. <code>mkdir -p testdir</code> followed by <code>cd testdir</code> is exactly the two-step sequence <code>mkcd</code> collapses into one call — and the final <code>pwd</code> ends in <code>/testdir</code>, matching the guide's verified output. Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the seeded <code>data-fs</code>.
+</aside>
+</section>
+
+<!-- 31. PART 3 alias targets — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total 6
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 .gitignore
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .venv
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 README.md
+-rw-r--r--  1 student  staff  27  Sep  5 10:00 requirements.txt
+/Users/student/ism3232/module02_zsh/testdir</pre>
+<p class="expect"><code>pwd</code> ends in <code>/testdir</code> — the function's two steps (make the folder, move into it) both happened.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly. The emulator's <code>pwd</code> shows <code>/Users/student/...</code>; on a real machine the path starts with the student's own username.</aside>
+</section>
+
+<!-- 32. PART 3 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="B">
+<p class="q">You type <code>gs</code> in a folder that isn't a Git repository yet. What happens?</p>
+<button data-opt="A">The alias fails with <code>command not found: gs</code>, because Git isn't initialized in that folder</button>
+<button data-opt="B"><code>git status</code> runs and reports <code>fatal: not a git repository</code> — the alias just expands to the command, with no awareness of context</button>
+<button data-opt="C">Nothing happens — an alias silently does nothing when its command can't succeed</button>
+<p class="why" hidden><code>git status</code> would report something like <code>fatal: not a git repository</code>. The alias still runs the underlying command exactly as typed; it has no awareness of whether that command will succeed in the current context. This previews Week 4's actual Git work, where these aliases only become useful once inside an initialized repo.</p>
+</div>
+<aside class="notes">Guide's Part 3 Check for understanding, verbatim answer: <code>git status</code> would report something like <code>fatal: not a git repository</code> — the alias still runs the underlying command exactly as typed; it has no awareness of whether that command will succeed in the current context.</aside>
+</section>
+
+<!-- 33. PART 3 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Deleting or overwriting existing <code>.zshrc</code> content while adding the new lines — <strong>append these lines, don't replace the file's existing content.</strong> If unsure, run <code>cat ~/.zshrc</code> before editing to see the starting state.</p>
+<p>Forgetting <code>source ~/.zshrc</code> after saving, then being confused that the new aliases "don't work" — the single most common issue in this part; the fix is almost always just running <code>source ~/.zshrc</code>, not re-editing.</p>
+<p>A typo in an alias definition (mismatched quotes, a missing <code>=</code>) — can make the <em>entire</em> <code>.zshrc</code> fail to load with an error on every new terminal. Walk through the added lines character by character rather than letting it go.</p>
+</div>
+<aside class="notes">Check for understanding: "If you typed <code>gs</code> in a folder that isn't a Git repository yet, what would happen?" Answer: <code>git status</code> reports something like <code>fatal: not a git repository</code> — the alias runs the underlying command exactly as typed, with no awareness of context.</aside>
+</section>
+
+<!-- 34. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:52–1:02</span>
+<h1>Practice and Deactivate</h1>
+<aside class="notes">
+Teaching goal: confirm <code>pytest</code> runs (even with no tests yet) inside the active venv, then deactivate cleanly and verify the return to system Python — closing the loop on Part 1's activation.
+Say to the class: "Quick round-trip: confirm the venv still works for something real, then walk back out of the room and confirm you're genuinely back to system Python — not just assume it."
+Check for understanding (asked at the end of this part): "You deactivated, closed your terminal, and came back the next day to keep working on this project. What's the very first command you should run?" Answer: <code>source .venv/bin/activate</code>, from inside <code>module02_zsh/</code> — the automatic first move for returning to any venv-based project, the same reflex as <code>pwd</code> in Weeks 1–2.
+</aside>
+</section>
+
+<!-- 35. PART 4 pytest + deactivate (readonly) -->
+<section class="s-code">
+<h3>Round-trip — test, then deactivate (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module02_zsh
+source .venv/bin/activate
+
+# Quick test: pytest with no tests yet returns exit 0
+pytest --collect-only   # should say 'no tests found'
+
+# Deactivate
+deactivate
+which python3           # back to system Python
+# (.venv) prefix is gone from the prompt</div>
+<p class="expect">Shown for reference — <code>source</code>, <code>pytest</code>, and <code>deactivate</code> can't run in the browser. The runnable slide next confirms <code>which python3</code> is back to the system path and <code>.venv/</code> is still intact.</p>
+<aside class="notes">
+Line by line:
+- <code>pytest --collect-only</code> — runs pytest's test-discovery step without running anything. Since no test files exist yet (that's next module's work), this reports finding zero tests, not an error. This is a legitimate check on its own — confirming <code>pytest</code> is correctly installed and runnable before you have real tests, so a broken install doesn't get confused with a genuinely failing test later.
+- <code>deactivate</code> — the exact reverse of <code>source .venv/bin/activate</code>; a built-in that becomes available specifically because a venv is currently active — "walking back out of the room."
+- <code>which python3</code> (again) — should now report the system Python path again, not the <code>.venv</code> one — concrete, checkable proof that deactivation reversed activation's effect.
+Common mistake: running <code>pytest --collect-only</code> outside the venv (forgot to activate, or already deactivated) — might still work if <code>pytest</code> is also installed system-wide, masking that the venv install isn't being used. Double-check <code>which python3</code> immediately before running <code>pytest</code> if the room seems uncertain.
+</aside>
+</section>
+
+<!-- 36. PART 4 pytest + deactivate — illustrative output -->
+<section class="s-out">
+<h3>What you should see — not run here</h3>
+<pre>$ pytest --collect-only
+collected 0 items
+
+no tests ran in 0.01s
+$ deactivate
+$ which python3
+/usr/bin/python3</pre>
+<p class="expect">Guide: <code>pytest --collect-only</code> "should say 'no tests found'" — zero tests is the correct result here, not an error. After <code>deactivate</code>, <code>which python3</code> is "back to system Python".</p>
+<aside class="notes">Reproduces the guide's stated expectations for Part 4 verbatim in the comments: <code>pytest --collect-only</code> "# should say 'no tests found'" and <code>which python3</code> "# back to system Python". The exact pytest banner wording varies by version; the load-bearing facts are zero tests collected and a system Python path after deactivate.</aside>
+</section>
+
+<!-- 37. PART 4 back to system python (RUNNABLE) -->
+<section class="s-code">
+<h3>Confirm the round-trip — this runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n",".gitignore":".venv/\n__pycache__/\n*.pyc\n",".venv":{"bin":{"activate":""}},"requirements.txt":"pytest==9.1.1\nruff==0.16.4\n"}}'>cd ~/ism3232/module02_zsh
+which python3
+ls -la</div>
+<p class="expect">After <code>deactivate</code>, <code>which python3</code> resolves to the system path (<code>/usr/bin/python3</code> here) — "back to system Python". And <code>.venv/</code> is still on disk: <code>deactivate</code> changes only the current shell session, it does not delete the venv.</p>
+<aside class="notes">
+Stands in for the read-only round-trip slide. <code>which python3</code> in the emulator resolves to <code>/usr/bin/python3</code> — the system interpreter, which is exactly what "back to system Python" means after <code>deactivate</code>. <code>ls -la</code> then shows <code>.venv/</code> still present, reinforcing the guide's reassurance that <code>deactivate</code> only affects the current shell session's configuration — the <code>.venv/</code> folder and everything installed in it remain intact, ready to reactivate. Verified headless through <code>ism3232/assets/lab-shell.mjs</code>.
+</aside>
+</section>
+
+<!-- 38. PART 4 back to system python — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>/usr/bin/python3
+total 6
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 .gitignore
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .venv
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 README.md
+-rw-r--r--  1 student  staff  27  Sep  5 10:00 requirements.txt</pre>
+<p class="expect"><code>which python3</code> is a system path — the deactivate worked. <code>.venv/</code> is still listed — deactivating never deletes it.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly. The emulator always reports <code>/usr/bin/python3</code> for a bare <code>which python3</code>; on a real machine outside a venv it might be <code>/opt/homebrew/bin/python3</code> or similar — the point is that it is a system path, not a <code>.venv/</code> one.</aside>
+</section>
+
+<!-- 39. PART 4 README update (readonly) -->
+<section class="s-code">
+<h3>Then update the README (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module02_zsh
+code README.md</div>
+<pre class="tmpl" data-readonly>## Week 3: Virtual Environments and .zshrc
+
+| Command / alias           | What it does                                  |
+|---------------------------|-----------------------------------------------|
+| python3 -m venv .venv     | Create a project-local virtual environment    |
+| source .venv/bin/activate | Activate the venv for this shell session      |
+| pip install pytest ruff   | Install packages into the active venv         |
+| pip freeze > requirements.txt | Pin exact installed versions to a file    |
+| deactivate                | Leave the venv, return to system Python        |
+| ll  /  gs  /  mkcd        | [your one-line description of each]            |</pre>
+<p class="expect">Shown for reference — run on your own machine. Add a <code>## Week 3</code> section to the <em>existing</em> module README (it's accumulating now, not a fresh file each week), listing the commands and aliases from today with one-line descriptions.</p>
+<aside class="notes">Same documentation habit from Weeks 1–2, now accumulating into a single growing README rather than a fresh one each week. The guide's instruction verbatim: "Add a section titled <code>## Week 3: Virtual Environments and .zshrc</code> listing the commands and aliases learned today with one-line descriptions." Descriptions in the student's own words are the point — writing one is the test of whether the command is understood, not just typeable.</aside>
+</section>
+
+<!-- 40. PART 4 README — example filled section -->
+<section class="s-out">
+<h3>Example — a filled row set</h3>
+<pre>## Week 3: Virtual Environments and .zshrc
+
+| Command / alias           | What it does                                     |
+|---------------------------|-------------------------------------------------|
+| python3 -m venv .venv     | Makes a folder with its own Python + packages    |
+| source .venv/bin/activate | Puts this terminal "inside" that environment     |
+| pip freeze > requirements.txt | Writes exact versions so others can rebuild  |
+| .gitignore                | Lists paths Git must never track (.venv/ etc.)   |
+| ll                        | Alias for ls -la (long listing, hidden files)    |
+| mkcd name                 | Function: make folder "name" and cd into it      |</pre>
+<p class="expect">Your wording, not copied from the guide or lab page. This file is uploaded to Canvas as part of the submission.</p>
+<aside class="notes">Illustrative only — there is no single required set of rows. The guide asks for "the commands and aliases learned today with one-line descriptions"; the AI Use Statement / own-phrasing expectation from Weeks 1–2 carries forward.</aside>
+</section>
+
+<!-- 41. PART 4 quiz (CFU) -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="C">
+<p class="q">You deactivated, closed your terminal, and came back the next day to keep working on this project. What's the very first command you should run?</p>
+<button data-opt="A"><code>python3 -m venv .venv</code> — recreate the environment from scratch</button>
+<button data-opt="B"><code>pip install -r requirements.txt</code> — reinstall the packages</button>
+<button data-opt="C"><code>source .venv/bin/activate</code>, from inside <code>module02_zsh/</code> — reactivate the venv that's still there</button>
+<p class="why" hidden><code>source .venv/bin/activate</code>, from inside <code>module02_zsh/</code>. The venv was never deleted — <code>deactivate</code> and closing the terminal only ended the shell session's state. Reactivating is the automatic first move for returning to any venv-based project, the same reflex as <code>pwd</code> in Weeks 1–2.</p>
+</div>
+<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: <code>source .venv/bin/activate</code>, from inside <code>module02_zsh/</code> — get a student to state this as the automatic first move for returning to any venv-based project.</aside>
+</section>
+
+<!-- 42. PART 4 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Running <code>pytest --collect-only</code> <strong>outside</strong> the venv (forgot to activate, or already deactivated) — it might still work if <code>pytest</code> is installed system-wide, masking that the venv-specific install isn't being used. Double-check <code>which python3</code> immediately before running <code>pytest</code>.</p>
+<p>Assuming <code>deactivate</code> also deletes or breaks the venv — it only affects the current shell session's configuration. The <code>.venv/</code> folder and everything installed in it remain intact, ready to reactivate at any time.</p>
+</div>
+<aside class="notes">Check for understanding: "You deactivated, closed your terminal, and came back the next day. What's the very first command?" Answer: <code>source .venv/bin/activate</code>, from inside <code>module02_zsh/</code>.</aside>
+</section>
+
+<!-- 43. STRETCH divider -->
+<section class="s-sec">
+<span class="chip">Stretch · 1:02–1:15</span>
+<h1>Recreate the Environment from <code>requirements.txt</code></h1>
+<aside class="notes">
+Frame as genuinely worth live demo time if the room reaches it — this is the single most convincing proof that <code>requirements.txt</code> actually works.
+If you demo this live, narrate the <code>rm -r .venv</code> step specifically, since it's the first recursive delete of the semester: "<code>-r</code> means recursive — delete this folder and everything inside it. This is more dangerous than any single-file <code>rm</code> from Week 2, which is exactly why we're only doing it here, deliberately, on a folder we know is fully reproducible from <code>requirements.txt</code> — the whole point of this Stretch is proving that claim true before you'd ever trust it on something that matters."
+The payoff, worth stating once <code>pip list</code> shows both packages again: "Nothing about <code>pytest</code> or <code>ruff</code> was manually reinstalled by name — <code>pip install -r requirements.txt</code> read the file from Part 1 and recreated the exact environment, version numbers included, from scratch. This is why <code>requirements.txt</code> gets committed to Git while <code>.venv/</code> itself never does: the file is small, portable, and sufficient; the folder is neither."
+</aside>
+</section>
+
+<!-- 44. STRETCH rm -r .venv (RUNNABLE) -->
+<section class="s-code">
+<h3>Destroy the venv — this runs here</h3>
+<div class="run" data-lang="shell" data-fs='{"~/ism3232/module02_zsh":{"README.md":"# ISM3232 Module 02 - zsh\n",".gitignore":".venv/\n__pycache__/\n*.pyc\n",".venv":{"bin":{"activate":""},"pyvenv.cfg":"version = 3.12.2\n"},"requirements.txt":"pytest==9.1.1\nruff==0.16.4\n"}}'>cd ~/ism3232/module02_zsh
+rm -r .venv
+ls -la</div>
+<p class="expect"><code>rm -r</code> is the first recursive delete of the semester — <code>-r</code> means "this folder and everything inside it." Safe here <em>only</em> because <code>.venv/</code> is fully reproducible from <code>requirements.txt</code>. Note what survives: <code>.gitignore</code>, <code>README.md</code>, <code>requirements.txt</code>.</p>
+<aside class="notes">
+Runnable because <code>rm -r</code> is supported by the emulator. Narrate the danger exactly as the guide scripts it: <code>-r</code> is recursive, more dangerous than any single-file <code>rm</code> from Week 2, and we only do it here deliberately on a folder we know is reproducible. After the delete, <code>ls -la</code> shows <code>.venv/</code> gone while every committed artifact remains — which is the whole argument for why the venv is disposable and <code>requirements.txt</code> is not. Verified headless through <code>ism3232/assets/lab-shell.mjs</code>.
+</aside>
+</section>
+
+<!-- 45. STRETCH rm -r .venv — expected output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>total 5
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 .
+drwxr-xr-x  1 student  staff  64  Sep  5 10:00 ..
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 .gitignore
+-rw-r--r--  1 student  staff  26  Sep  5 10:00 README.md
+-rw-r--r--  1 student  staff  27  Sep  5 10:00 requirements.txt</pre>
+<p class="expect"><code>.venv/</code> is gone; <code>.gitignore</code>, <code>README.md</code> and <code>requirements.txt</code> are untouched — exactly the files that <em>do</em> belong in Git.</p>
+<aside class="notes">Verified headless through <code>ism3232/assets/lab-shell.mjs</code> with the slide's exact <code>data-fs</code> and command lines — output matches this pane exactly.</aside>
+</section>
+
+<!-- 46. STRETCH rebuild (readonly) -->
+<section class="s-code">
+<h3>Rebuild it from the file (run on your own machine)</h3>
+<div class="run" data-lang="shell" data-readonly>deactivate
+rm -r .venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip list    # pytest and ruff should both appear</div>
+<p class="expect">Shown for reference — <code>python -m venv</code>, <code>source</code>, and <code>pip</code> can't run in the browser. Nothing here is reinstalled by name: <code>pip install -r requirements.txt</code> reads the Part 1 file and rebuilds the exact environment.</p>
+<aside class="notes">
+Line by line:
+- <code>rm -r .venv</code> — recursive delete of the venv folder (narrated above).
+- <code>python3 -m venv .venv</code> then <code>source .venv/bin/activate</code> — a fresh, empty venv, activated — same as Part 1.
+- <code>pip install -r requirements.txt</code> — <code>-r</code> reads a requirements file and installs every pinned line in it. Nothing is typed by name.
+- <code>pip list</code> — <code>pytest</code> and <code>ruff</code> (and their dependencies) are all back, at the exact versions from Part 1.
+Payoff: this is why <code>requirements.txt</code> gets committed to Git while <code>.venv/</code> never does — the file is small, portable, and sufficient; the folder is neither.
+</aside>
+</section>
+
+<!-- 47. STRETCH rebuild — illustrative output -->
+<section class="s-out">
+<h3><code>pip list</code> after the rebuild — not run here</h3>
+<pre>Package    Version
+---------- -------
+iniconfig  2.3.0
+packaging  26.3
+pluggy     1.6.0
+Pygments   2.21.0
+pytest     9.1.1
+ruff       0.16.4</pre>
+<p class="expect">Guide: "<code>pytest</code> and <code>ruff</code> should both appear." They do — plus the four dependencies — recreated from <code>requirements.txt</code> alone, exact versions included.</p>
+<aside class="notes">Reproduces the guide's stated Stretch expectation verbatim (guide Stretch: "<code>pip list</code>    # <code>pytest</code> and <code>ruff</code> should both appear"). The version numbers match the Part 1 verified <code>requirements.txt</code>; <code>pip list</code>'s exact column spacing varies by pip version.</aside>
+</section>
+
+<!-- 48. WRAP — submission checklist -->
+<section class="s-wrap">
+<h3>Submission checklist</h3>
+<ul>
+<li><strong>Screenshot 1:</strong> <code>(.venv)</code> prompt and <code>which python3</code> output</li>
+<li><strong>Screenshot 2:</strong> <code>pip install</code> and <code>cat requirements.txt</code> output</li>
+<li><strong>Screenshot 3:</strong> <code>ls -la</code> showing both <code>.venv/</code> and <code>.gitignore</code></li>
+<li><strong>Screenshot 4:</strong> <code>ll</code>, <code>gs</code>, and <code>mkcd</code> all working after <code>source ~/.zshrc</code></li>
+<li><strong>File upload:</strong> <code>module02_zsh/requirements.txt</code></li>
+<li><strong>File upload:</strong> <code>module02_zsh/.gitignore</code></li>
+<li><strong>File upload:</strong> <code>module02_zsh/README.md</code> with the Week 3 section added</li>
+<li>All uploaded to Canvas by end of class</li>
+</ul>
+<aside class="notes">Review the submission checklist together, on screen, in the last few minutes. Completion credit — the bar is "did you do the work and document it," not a graded rubric.</aside>
+</section>
+
+<!-- 49. WRAP — next week -->
+<section class="s-wrap">
+<h3>Next week</h3>
+<p>Today's <code>.gitignore</code> and the five Git aliases you just added — <code>gs</code>, <code>ga</code>, <code>gcmsg</code>, <code>gp</code>, <code>gl</code> — are the exact tools next week's lab uses to search your codebase and push your first real commit to GitHub. This was preparation; next week is the payoff.</p>
+<aside class="notes">Week 4: search tools, the Git ritual, and the first real commit to GitHub. Everything defined today — the venv habit, the <code>.gitignore</code>, the aliases — becomes load-bearing then.</aside>
+</section>
+
+<!-- 50. END -->
+<section class="s-end">
+<div class="sec-n">ISM3232 · Week 3</div>
+<h1>End of lab</h1>
+<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w03.md (Week 3 facilitation guide — "Virtual Environments &amp; Shell Customisation").</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script type="module" src="../assets/lab-slides.js"></script>
+</body>
+</html>
