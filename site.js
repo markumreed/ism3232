@@ -62,6 +62,7 @@
       <button class="nav-dd-btn" data-dd="ref" aria-haspopup="true" aria-expanded="false">Reference ▾</button>
       <div class="nav-dd-menu" data-menu="ref">
         <a href="${pg}unit_1_cheatsheet.html">Cheat Sheets</a>
+        <a href="${pg}zshrc_setup_guide.html">.zshrc Setup Guide</a>
         <a href="${pg}glossary.html">Glossary</a>
         <a href="${pg}troubleshooting.html">Help / Troubleshooting</a>
         <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
@@ -80,6 +81,7 @@
         <a href="${pg}week01_reading.html">Module 1 · Developer Mindset &amp; Setup</a>
         <a href="${pg}week02_reading.html">Module 2 · zsh Navigation &amp; File Ops</a>
         <a href="${pg}week03_reading.html">Module 3 · Virtual Environments &amp; .zshrc</a>
+        <a href="${pg}zshrc_setup_guide.html">.zshrc Setup Guide</a>
         <a href="${pg}week04_reading.html">Module 4 · Search Tools, Ritual &amp; Git</a>
       </div>
     </div>
@@ -157,6 +159,7 @@
     <div class="mob-section">
       <div class="mob-section-label">Reference</div>
       <a href="${pg}unit_1_cheatsheet.html">Cheat Sheets</a>
+      <a href="${pg}zshrc_setup_guide.html">.zshrc Setup Guide</a>
       <a href="${pg}glossary.html">Glossary</a>
       <a href="${pg}faq.html">FAQ</a>
       <a href="${pg}troubleshooting.html">Help / Troubleshooting</a>
@@ -172,6 +175,7 @@
       <a href="${pg}week01_reading.html">Module 1 · Developer Mindset &amp; Setup</a>
       <a href="${pg}week02_reading.html">Module 2 · zsh Navigation &amp; File Ops</a>
       <a href="${pg}week03_reading.html">Module 3 · Virtual Environments &amp; .zshrc</a>
+      <a href="${pg}zshrc_setup_guide.html">.zshrc Setup Guide</a>
       <a href="${pg}week04_reading.html">Module 4 · Search Tools, Ritual &amp; Git</a>
     </div>
     <div class="mob-section">
