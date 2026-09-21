@@ -238,16 +238,18 @@ print(f'Total:    ${total:.2f}')
 print(f'Requires approval: {requires_approval}')</pre></div><p>Run again. Verify the dollar amounts are correct.</p><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot the formatted business summary output.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; User Input with Type Conversion</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Add input() with int() conversion</div><div class="task-body"><p>Add to the end of <code>week5_lab.py</code>:</p><div class="code-block"><div class="cb-label">Part 3: user input</div><pre>user_qty = int(input('Enter a new quantity: '))
 new_total = unit_price * user_qty * 1.07
 print(f'New total for {user_qty} units: ${new_total:.2f}')
-print(f'Requires approval: {new_total > 1000}')</pre></div><p>Run: <code>python3 week5_lab.py</code> and enter a number at the prompt.</p><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">The most common Week 5 bug</div><div class="callout-body"><code>input()</code> always returns a string. If you forget to convert it with <code>int()</code> or <code>float()</code> and then try arithmetic, you get a TypeError. Show yourself by trying <code>unit_price * input('qty: ')</code> without conversion.</div></div></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing the complete output including the input prompt and result.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; pytest</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write five pytest tests</div><div class="task-body"><div class="code-block"><div class="cb-label">mkdir -p tests && touch tests/__init__.py tests/test_week5.py</div><pre></pre></div><div class="code-block"><div class="cb-label">tests/test_week5.py</div><pre>def test_tax_at_seven_percent():
+print(f'Requires approval: {new_total > 1000}')</pre></div><p>Run: <code>python3 week5_lab.py</code> and enter a number at the prompt.</p><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">The most common Week 5 bug</div><div class="callout-body"><code>input()</code> always returns a string. If you forget to convert it with <code>int()</code> or <code>float()</code> and then try arithmetic, you get a TypeError. Show yourself by trying <code>unit_price * input('qty: ')</code> without conversion.</div></div></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing the complete output including the input prompt and result.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; pytest</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write five pytest tests</div><div class="task-body"><div class="code-block"><div class="cb-label">mkdir -p tests && touch tests/__init__.py tests/test_week5.py</div><pre></pre></div><div class="code-block"><div class="cb-label">tests/test_week5.py</div><pre>import math
+
+def test_tax_at_seven_percent():
     subtotal = 200.00
     tax = subtotal * 0.07
-    assert tax == 14.0
+    assert math.isclose(tax, 14.0)
 
 def test_over_limit_true():
-    assert 1500 > 1000 is True
+    assert (1500 > 1000) is True
 
 def test_over_limit_false():
-    assert 500 > 1000 is False
+    assert (500 > 1000) is False
 
 def test_type_of_string():
     name = 'ISM3232'
@@ -255,7 +257,7 @@ def test_type_of_string():
 
 def test_type_conversion():
     s = '42'
-    assert int(s) == 42</pre></div><p>Run: <code>pytest -v</code> &mdash; all five must pass.</p><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing pytest -v with all tests green.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Submission Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Run the full pre-submission ritual</div><div class="task-body"><div class="code-block"><pre>ruff format .
+    assert int(s) == 42</pre></div><p>Run: <code>pytest -v</code> &mdash; all five must pass.</p><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Two traps these tests avoid</div><div class="callout-body"><code>200.00 * 0.07</code> is really <code>14.000000000000002</code>, so compare computed decimals with <code>math.isclose()</code>, not <code>==</code>. And <code>1500 &gt; 1000 is True</code> is a <em>chained comparison</em> (<code>1500 &gt; 1000 and 1000 is True</code>), which is <code>False</code>, so wrap the comparison in parentheses.</div></div></div><div class="snap-flag"><div class="sf-icon">&#x1F4F8;</div><div class="sf-text">Screenshot showing pytest -v with all tests green.</div></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Submission Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Run the full pre-submission ritual</div><div class="task-body"><div class="code-block"><pre>ruff format .
 ruff check .
 pytest
 git status
