@@ -100,15 +100,24 @@
 }
 </style>
 </head><body><div class="reveal"><div class="slides">
-<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 9</p><h1>Midterm</h1><div class="t-bar"><span class="t-item"><strong>Full session</strong> Midterm exam</span><span class="t-item"><strong>~15 min</strong> Concept checks</span><span class="t-item"><strong>~40 min</strong> CLI tasks + code tracing + fix the bug</span><span class="t-item"><strong>~15 min</strong> Short coding prompt</span><span class="t-item"><strong>After exam</strong> Return and debrief</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 9: Week 9 — Midterm Practical Exam — Structure, Coverage, and Prep
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 9</p><h1>Midterm</h1><div class="t-bar"><span class="t-item"><strong>Full session</strong> Midterm exam</span><span class="t-item"><strong>~25 min</strong> Concepts + code tracing</span><span class="t-item"><strong>~20 min</strong> Fix the bug</span><span class="t-item"><strong>~15 min</strong> Short coding prompt</span><span class="t-item"><strong>After exam</strong> Collect exams</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 9: Week 9 — Midterm Practical Exam — Structure, Coverage, and Prep
 
 Today&#x27;s plan:
   Full session — Midterm exam
-  ~15 min — Concept checks
-  ~40 min — CLI tasks + code tracing + fix the bug
+  ~25 min — Concepts + code tracing
+  ~20 min — Fix the bug
   ~15 min — Short coding prompt
-  After exam — Return and debrief</aside></section>
+  After exam — Collect exams</aside></section>
 <section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Midterm Structure and Weighting</h1></section>
+<section class="s-point"><h2>Midterm Structure and Weighting</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>A — Concepts and code tracing · 40% · ~25 min</li><li>B — Fix the bug · 30% · ~20 min</li><li>C — Short coding prompt · 30% · ~15 min</li><li>Open notes: your own printed or handwritten materials only</li><li>No laptops, phones, or other electronic devices · no internet, no AI, no classmates</li></ul><aside class="notes">A — Concepts and code tracing · 40% · ~25 min: multiple choice and 'what is the output?' questions on zsh, Git, and Python.
+
+B — Fix the bug · 30% · ~20 min: a short script with one or two bugs, printed with its error output.
+
+C — Short coding prompt · 30% · ~15 min: write a short business-rule function from a description.
+
+Open notes: your own printed or handwritten materials only.
+
+No laptops, phones, or other electronic devices · no internet, no AI, no classmates.</aside></section>
 <section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">What Is and Is Not Tested</h1><aside class="notes">zsh: pwd, ls, cd, mkdir, touch, rm, cat, tree, code .</aside></section>
 <section class="s-point"><h2>What Is and Is Not Tested</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>zsh: pwd, ls, cd, mkdir, touch, rm, cat, tree, code .</li><li>venv + pip: create, activate, install, freeze, deactivate</li><li>Git: init, add, commit, push, log, .</li><li>Python: all data types, operators, conditionals, loops, lists, dicts, functions, modules, pytest, tr</li><li>These are covered in Units 3 and 4 after the midterm.</li></ul><aside class="notes">zsh: pwd, ls, cd, mkdir, touch, rm, cat, tree, code .
 
@@ -131,7 +140,7 @@ for r in requests:
         total += r[&quot;amount&quot;]
 print(total)
 
-# Expected output: 2300</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+# Expected output: 2300</code></pre><aside class="notes">Walk through each line. Students trace on paper. Do not rush.
 
 Code label: Code tracing example — students predict the exact output</aside></section>
 <section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Fix-the-bug example — students identify and correct the error</h3><pre><code class="language-python">def calculate_tax(amount):
@@ -140,19 +149,17 @@ Code label: Code tracing example — students predict the exact output</aside></
 def test_calculate_tax():
     assert calculate_tax(100) == 7.0   # this fails
 
-# Fix: change 0.7 to 0.07</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+# Fix: change 0.7 to 0.07</code></pre><aside class="notes">Walk through each line. Students trace on paper. Do not rush.
 
 Code label: Fix-the-bug example — students identify and correct the error</aside></section>
-<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Midterm Logistics — Instructor Checklist</h1><aside class="notes">☐ Distribute the broken script for the fix-the-bug section in advance (same session).</aside></section>
-<section class="s-point"><h2>Midterm Logistics — Instructor Checklist</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>☐ Distribute the broken script for the fix-the-bug section in advance (same session).</li><li>☐ Ensure every student has their venv activated and pytest/ruff available.</li><li>☐ Confirm GitHub access is not required during the exam (no push required).</li><li>☐ Clarify AI use policy for the exam: AI tools are not permitted during the midterm.</li><li>☐ Tell students to bring their own computer with the full stack configured.</li></ul><aside class="notes">☐ Distribute the broken script for the fix-the-bug section in advance (same session).
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Midterm Logistics — Instructor Checklist</h1><aside class="notes">☐ Print one exam per student. The fix-the-bug script and its error output are printed in the exam — students do not run any code.</aside></section>
+<section class="s-point"><h2>Midterm Logistics — Instructor Checklist</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>☐ Print one exam per student. The fix-the-bug script and its error output are printed in the exam — students do not run any code.</li><li>☐ Remind students the week before: open notes means their own printed or handwritten materials only. Assignment code or slides they want to use must be printed.</li><li>☐ Laptops, phones, and all other electronic devices are put away for the entire exam.</li><li>☐ Clarify AI use policy for the exam: AI tools are not permitted during the midterm.</li></ul><aside class="notes">☐ Print one exam per student. The fix-the-bug script and its error output are printed in the exam — students do not run any code.
 
-☐ Ensure every student has their venv activated and pytest/ruff available.
+☐ Remind students the week before: open notes means their own printed or handwritten materials only. Assignment code or slides they want to use must be printed.
 
-☐ Confirm GitHub access is not required during the exam (no push required).
+☐ Laptops, phones, and all other electronic devices are put away for the entire exam.
 
 ☐ Clarify AI use policy for the exam: AI tools are not permitted during the midterm.
-
-☐ Tell students to bring their own computer with the full stack configured.
 
 Week 10 begins OOP. Students who struggled on the midterm with functions and scope will face additional difficulty with classes and methods. Offer office hours before Week 10 for students who want to consolidate function fundamentals before OOP begins.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>

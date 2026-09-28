@@ -65,7 +65,7 @@ NOTE ON THIS DECK: ISM3232 <strong>runnable-SQL</strong> week. <code>import sqli
 <div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
 <div><span class="k">Prerequisites</span><span class="v">Week 13: approved <code>PROPOSAL.md</code>, <code>schema.sql</code>, <code>sqlite3</code> shell fluency</span></div>
 <div><span class="k">Parts covered</span><span class="v">Part 1 (<code>database.py</code> setup) – Part 5 (test script + ritual)</span></div>
-<div><span class="k">Submission</span><span class="v">3 screenshots, GitHub URL, Canvas, completion credit</span></div>
+<div><span class="k">Submission</span><span class="v">GitHub URL in Canvas (no screenshots), completion credit</span></div>
 </ul>
 <aside class="notes">
 From the Session Snapshot. The lab page states two rules up front, applying to <em>every single line</em> of today's code, both absolute, not stylistic. <strong>Rule 1 — always use <code>?</code> placeholders, never f-strings or string concatenation, to build SQL.</strong> <strong>Rule 2 — every function accepts an optional <code>db_file</code> parameter, defaulting to <code>DB_FILE</code>, so tests can use an isolated temporary database.</strong> Rule 1 is a genuine security discipline (SQL injection prevention), worth demonstrating the actual vulnerability, not just stating the rule. Rule 2 is what makes Part 4's <code>pytest</code> tests possible at all without corrupting the real development database.
@@ -1012,7 +1012,7 @@ delete_record removed exactly one row</pre>
 <li><code>tests/test_database.py</code> contains all five tests, all using <code>tmp_path</code>, all passing</li>
 <li><code>test_script.py</code> runs cleanly and shows the status report</li>
 <li>Git commit made, with a message including "lab 14"; full ritual run (format, lint, test, commit, push)</li>
-<li>GitHub repository URL pasted into Canvas — 3 screenshots submitted</li>
+<li>GitHub repository URL pasted into Canvas — no screenshots; the repo is graded directly</li>
 </ul>
 <aside class="notes">Review this checklist together in the last ~5 minutes. Completion credit — the bar is the checklist above. The featured ideas to reinforce as they leave: Rule 1 (<code>?</code> placeholders, always — a security discipline) and Rule 2 (an optional <code>db_file</code> on every function — what makes isolated testing possible), and that <code>get_all_records()</code> returns most-recent-first.</aside>
 </section>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISM3232 Day One — Welcome</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--T:#2dd4bf;--I:#818cf8;--A:#fbbf24;--G:#4ade80;--R:#fb7185;--S:#38bdf8;
+  --bg:#0d1117;--bg2:#161b22;--bd:#30363d;--tx:#e6edf3;--mu:#8b949e;}
+.reveal{font-family:"Segoe UI",system-ui,sans-serif;}
+.reveal h1{font-size:1.65em;color:var(--T);font-weight:800;letter-spacing:-.02em;line-height:1.15;}
+.reveal h2{font-size:1.15em;color:var(--I);font-weight:700;margin-bottom:.4em;}
+.reveal h3{font-size:.62em;color:var(--mu);font-weight:500;text-transform:uppercase;
+  letter-spacing:.14em;margin-bottom:.35em;}
+.reveal p{font-size:.82em;color:var(--tx);line-height:1.75;margin:.25em 0;}
+.reveal ul{list-style:none;padding:0;margin:.4em 0;}
+.reveal ul li{font-size:.8em;color:var(--tx);padding:.22em 0;line-height:1.6;}
+.reveal ul li::before{content:"▸ ";color:var(--T);font-weight:700;}
+.reveal strong{color:var(--A);}
+.reveal em{color:var(--mu);}
+.reveal code{font-family:"Fira Code","Courier New",monospace;color:var(--S);
+  background:rgba(56,189,248,.12);padding:2px 7px;border-radius:4px;font-size:.87em;}
+.reveal pre{font-size:.5em;margin:.3em 0;border-radius:8px;border:1px solid var(--bd);}
+
+/* Slide types */
+.s-title  {background:linear-gradient(135deg,#060c14 0%,#0d1117 100%);}
+.s-sec    {background:linear-gradient(135deg,#080e18,#0d1117);}
+.s-point  {background:#0d1117;}
+.s-code   {background:#0a0a18;}
+.s-demo   {background:linear-gradient(135deg,#081208,#0d1117);
+  outline:2px solid rgba(74,222,128,.3);outline-offset:-4px;}
+.s-warn   {background:#140a0a;}
+.s-qa     {background:linear-gradient(135deg,#0c0a18,#0d1117);
+  outline:2px solid rgba(129,140,248,.25);outline-offset:-4px;}
+
+/* Timing bar */
+.t-bar{display:flex;gap:.4em;flex-wrap:wrap;justify-content:center;margin-top:.55em;}
+.t-item{font-family:monospace;font-size:.42em;padding:.28em .75em;border-radius:4px;
+  background:rgba(255,255,255,.06);color:var(--mu);border:1px solid var(--bd);}
+.t-item strong{color:var(--tx);}
+
+/* Section chip */
+.sec-n{font-family:monospace;font-size:.5em;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--I);opacity:.7;margin-bottom:.25em;}
+
+/* Concept card */
+.concept{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);
+  border-left:4px solid var(--I);border-radius:0 8px 8px 0;
+  padding:.6em 1em;text-align:left;margin:.4em 0;}
+.concept-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--I);margin-bottom:.25em;}
+
+/* Warn card */
+.warn-card{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);
+  border-left:4px solid var(--A);border-radius:0 8px 8px 0;
+  padding:.6em 1em;text-align:left;margin:.4em 0;}
+.warn-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--A);margin-bottom:.25em;}
+
+/* Demo card */
+.demo-card{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.25);
+  border-radius:10px;padding:.7em 1.2em;text-align:center;max-width:640px;margin:0 auto;}
+.demo-lbl{font-family:monospace;font-size:.48em;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--G);margin-bottom:.3em;}
+.demo-app{font-size:1.25em;font-weight:700;color:#fff;letter-spacing:.01em;}
+.demo-sub{font-size:.65em;color:var(--mu);margin-top:.3em;}
+
+/* Q&A card */
+.qa-card{max-width:820px;margin:0 auto;text-align:left;}
+.qa-q{font-size:.5em;font-family:monospace;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--I);margin-bottom:.35em;}
+.qa-a{font-size:.9em;color:var(--tx);line-height:1.7;}
+
+/* Grade bar */
+.grade-row{display:flex;align-items:center;gap:.6em;max-width:820px;margin:.3em auto;text-align:left;}
+.grade-name{flex:0 0 220px;font-size:.68em;color:var(--tx);}
+.grade-bar-bg{flex:1;height:14px;background:rgba(255,255,255,.08);border-radius:7px;overflow:hidden;}
+.grade-bar-fill{height:100%;background:linear-gradient(90deg,var(--T),var(--I));border-radius:7px;}
+.grade-pct{flex:0 0 44px;font-family:monospace;font-size:.62em;color:var(--A);text-align:right;}
+
+/* Two-column */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2em;text-align:left;
+  max-width:920px;margin:0 auto;}
+
+/* Draw overlay */
+#dc { image-rendering: pixelated; }
+#dtb { user-select: none; }
+/* ism-mobile */
+@media(max-width:600px){
+  .two-col{grid-template-columns:1fr!important}
+  .grade-name{flex-basis:140px}
+  .pn{grid-template-columns:1fr}
+  pre,code{font-size:12px}
+}
+</style>
+</head><body><div class="reveal"><div class="slides">
+
+<section class="s-title">
+<p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Day One</p>
+<h1>Welcome to Business Application Development</h1>
+<div class="t-bar">
+<span class="t-item"><strong>0–1.5 min</strong> Welcome</span>
+<span class="t-item"><strong>1.5–3.5 min</strong> What this course is</span>
+<span class="t-item"><strong>3.5–8.5 min</strong> Course website tour</span>
+<span class="t-item"><strong>8.5–14 min</strong> Syllabus tour</span>
+<span class="t-item"><strong>14–18.5 min</strong> Meet Dr. Reed — AMA</span>
+<span class="t-item"><strong>18.5–20 min</strong> Before Module 2</span>
+</div>
+<p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
+<aside class="notes">Welcome to ISM3232. This deck is the Day One orientation companion — pairs with video 00b_day_one_welcome. Assumes Pre-Course Setup is already done (VS Code, Python, Git, zsh, GitHub, WSL if Windows) since Week 1 opens with a live terminal session.</aside>
+</section>
+
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Welcome &amp; What This Course Is</h1>
+<aside class="notes">Open live to camera: welcome students, introduce yourself briefly (full background comes later in the AMA section). Set expectations for this session: three things — the website, the syllabus, and me.</aside></section>
+
+<section class="s-point">
+<h2>The gap this course closes</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li>ISM2411 taught you to write scripts. This course teaches you to <strong>build</strong>.</li>
+<li>Direct continuation of ISM2411 — functions, loops, conditionals, lists/dicts assumed.</li>
+<li>Professional developer workflow from Day 1: terminal, virtual environments, ruff, pytest, Git/GitHub.</li>
+<li>Every assignment is a GitHub URL, not a file upload — this mirrors how the industry actually works.</li>
+</ul>
+<aside class="notes">If any ISM2411 fundamentals feel shaky, tell students to review the ISM2411 course website first — this course does not re-teach Python basics.</aside>
+</section>
+
+<section class="s-point">
+<div class="concept" style="max-width:800px;margin:0 auto;">
+<div class="concept-lbl">The destination</div>
+<h2 style="font-size:1.05em;margin-bottom:.3em;">A complete, live business application</h2>
+<ul style="margin-top:.3em;">
+<li>A Streamlit app with a SQLite database backend</li>
+<li>A controlled AI feature (Anthropic API)</li>
+<li>Built over the final 4 weeks, demoed live in Week 16</li>
+<li>16 weeks of GitHub commits — the portfolio is itself a deliverable</li>
+</ul>
+</div>
+<aside class="notes">Emphasize: the GitHub portfolio shows iterative development in a way a folder of uploaded files never could. This is what employers actually look at.</aside>
+</section>
+
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Tour: The Course Website</h1>
+<aside class="notes">markumreed.github.io/ism3232 — primary reference all semester, no textbook. Everything lives here.</aside></section>
+
+<section class="s-demo">
+<div class="demo-card">
+<div class="demo-lbl">⚡ Live Demo</div>
+<div style="font-size:2em;margin:.2em 0;">🖥</div>
+<div class="demo-app">markumreed.github.io/ism3232</div>
+<div class="demo-sub">Screen-share the homepage — students follow along in a second tab</div>
+</div>
+<aside class="notes">LIVE DEMO — share your screen on the course homepage. Have students open the same URL in their own second tab and click along with you rather than just watching.</aside>
+</section>
+
+<section class="s-point">
+<h2>What's on the homepage</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li><strong>Hero banner</strong> — the semester's stack: zsh, Python, Git, SQLite, Streamlit, Anthropic API.</li>
+<li><strong>Interactive Course Map</strong> — four units, click to expand topics, keyboard shortcuts 1–4.</li>
+<li><strong>Pre-course setup</strong> — first section on the page; should already be done.</li>
+<li><strong>Unit overviews</strong> — 4 unit cards (skip "For Instructors" — that's my own notes).</li>
+</ul>
+<aside class="notes">Skip the For Instructors / Course Assembly Guide card — that's my own notes on assembling the course in 6/9/16-week formats, not student-facing.</aside>
+</section>
+
+<section class="s-point">
+<h2>The four units</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li><strong>Unit 1, Developer Foundations</strong> — Modules 1–4: zsh navigation, virtual environments, the nine-step ritual, Git.</li>
+<li><strong>Unit 2, Python Foundations</strong> — Modules 5–8 + Midterm: types, control flow, functions &amp; pytest, debugging &amp; AI literacy.</li>
+<li><strong>Unit 3, Object-Oriented Design</strong> — Modules 10–12: classes, composition, inheritance, applied design.</li>
+<li><strong>Unit 4, Capstone Build</strong> — Modules 13–16: SQL foundations, Python+SQL, Streamlit, GenAI feature &amp; demo.</li>
+</ul>
+<aside class="notes">Read straight down the list — this becomes the mental map students use all semester.</aside>
+</section>
+
+<section class="s-point">
+<h2>Every module card has three pills</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li><strong>Reading</strong> — the why before the how.</li>
+<li><strong>Lecture</strong> — slides and a code walkthrough.</li>
+<li><strong>Lab</strong> — the hands-on exercise you submit.</li>
+</ul>
+<div class="concept" style="max-width:700px;margin:.6em auto 0;">
+<div class="concept-lbl">Weekly rhythm</div>
+<p style="margin:0;">Reading + Lecture online, self-paced — <strong>before</strong> that week's in-person lab. Week 1 has no in-person lab.</p>
+</div>
+<aside class="notes">Week 1 (this week) is fully online — pre-course setup and Assignment 1. The weekly in-person lab begins Week 2.</aside>
+</section>
+
+<section class="s-point">
+<h2>Reference material — keep these open while you work</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li>One cheat sheet per unit (4 total)</li>
+<li>72-term glossary, troubleshooting page (13 common errors), Expectations page</li>
+<li>Interactive SLO mind map</li>
+<li>Syllabus &amp; Reference section — full syllabus, glossary, troubleshooting, expectations, learning outcomes</li>
+</ul>
+<aside class="notes">Point students to the Syllabus in the Reference Resources section — we're going there next.</aside>
+</section>
+
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Tour: The Syllabus</h1>
+<aside class="notes">Not reading it line by line — students read the whole thing themselves before Module 2. This is the "what actually drives your week-to-week experience" version.</aside></section>
+
+<section class="s-demo">
+<div class="demo-card">
+<div class="demo-lbl">⚡ Live Demo</div>
+<div style="font-size:2em;margin:.2em 0;">📋</div>
+<div class="demo-app">Syllabus page</div>
+<div class="demo-sub">Scroll through format, grading, and policies live</div>
+</div>
+<aside class="notes">LIVE DEMO — navigate to the Syllabus page and scroll through the sections as you narrate the next few slides.</aside>
+</section>
+
+<section class="s-point">
+<h2>Course format</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li>Hybrid: reading, concept explanations, live-coding demos online, self-paced, before lab.</li>
+<li>One in-person lab per week — apply the material with real-time instructor support.</li>
+<li>Week 1 (this week) has <strong>no in-person lab</strong> — setup and Assignment 1 done independently online.</li>
+<li>Professional workflow from Day 1: terminal, venv, ruff, pytest, Git/GitHub.</li>
+</ul>
+<aside class="notes">Make sure everyone understands why there's no lab this week — it's not a mistake, it's by design.</aside>
+</section>
+
+<section class="s-point">
+<h2>How your grade breaks down</h2>
+<div class="grade-row"><div class="grade-name">Capstone Project (Wks 13–16)</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:30%;"></div></div><div class="grade-pct">30%</div></div>
+<div class="grade-row"><div class="grade-name">Weekly Assignments &amp; Quizzes</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:25%;"></div></div><div class="grade-pct">25%</div></div>
+<div class="grade-row"><div class="grade-name">Midterm Practical Exam (Wk 9)</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:20%;"></div></div><div class="grade-pct">20%</div></div>
+<div class="grade-row"><div class="grade-name">Developer Workflow</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:15%;"></div></div><div class="grade-pct">15%</div></div>
+<div class="grade-row"><div class="grade-name">Portfolio</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:5%;"></div></div><div class="grade-pct">5%</div></div>
+<div class="grade-row"><div class="grade-name">Lab Participation</div><div class="grade-bar-bg"><div class="grade-bar-fill" style="width:5%;"></div></div><div class="grade-pct">5%</div></div>
+<aside class="notes">Developer Workflow 15% — ritual adherence, ruff, pytest, commit quality, assessed holistically all semester. Weekly Assignments & Quizzes 25% — one per active week, GitHub URL, lowest dropped. Midterm Practical 20% — Week 9, open notes (own materials only), no internet/AI/classmates, covers Weeks 1–8. Capstone 30% — Weeks 13–16: proposal+schema, database, Streamlit, AI feature+demo. Portfolio 5%. Participation 5%. Optional Automation Bonus up to +5%.</aside>
+</section>
+
+<section class="s-warn">
+<div class="warn-card" style="max-width:820px;margin:0 auto;">
+<div class="warn-lbl">⚠ Policies most likely to affect you</div>
+<ul style="margin-top:.4em;">
+<li><strong>Developer Workflow grade:</strong> checked every submission — ritual, clean ruff, passing pytest, descriptive commits, iterative history.</li>
+<li><strong>Late work:</strong> no default late window. Missed work = zero, except verified medical emergency. No rewrites.</li>
+<li><strong>Group work:</strong> none, of any kind — every assignment and assessment is individual.</li>
+<li><strong>AI policy:</strong> Debug-First required — traceback → hypothesis → print statements → ask AI to explain (not fix) only after 10 min stuck.</li>
+</ul>
+</div>
+<aside class="notes">Developer workflow: nine-step ritual, ruff format/check clean, full pytest pass, descriptive commits, iterative commit history not one commit at the deadline. Late work: zero default grace, medical exception only. Group work: none — sharing code by any means is reported to the Office of Student Conduct. AI policy: permitted — explain a traceback, explain code, suggest test cases, understand a concept after attempting it. Prohibited — generating submitted code, asking AI to fix bugs, any AI on the midterm, undisclosed use.</aside>
+</section>
+
+<section class="s-point">
+<div class="concept" style="max-width:800px;margin:0 auto;">
+<div class="concept-lbl">Communication</div>
+<h2 style="font-size:1.05em;margin-bottom:.3em;">Check Canvas daily, not weekly</h2>
+<p style="margin:0;">Email response window: 48 business hours. For code issues, always include your GitHub link and the <em>complete</em> traceback — incomplete messages are returned without a diagnosis.</p>
+</div>
+<aside class="notes">Every message needs name, U Number, section, and the reason in the first sentence. Missing GitHub link or traceback means no diagnosis — this is a hard rule, not a suggestion.</aside>
+</section>
+
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Meet Dr. Reed — Ask Me Anything</h1>
+<aside class="notes">Open live to camera here: who you are, your background, and why you teach this course the way you do. Then move into the scripted Q&amp;A slides that follow.</aside></section>
+
+<section class="s-qa">
+<div class="qa-card">
+<div class="qa-q">"I made it through ISM2411, but this looks like a big jump — should I be worried?"</div>
+<div class="qa-a">It's a real jump, and that's intentional — ISM2411 taught you to script, this course teaches you to build. But it's designed to walk you through it step by step: Unit 1 rebuilds your developer habits before any new Python, and every OOP/database concept gets a small example before it shows up in the capstone.</div>
+</div>
+<aside class="notes">If Unit 1 feels slow, that's the point — it's building the foundation Units 2–4 lean on hard.</aside>
+</section>
+
+<section class="s-qa">
+<div class="qa-card">
+<div class="qa-q">"What's the best way to reach you, and how fast will you respond?"</div>
+<div class="qa-a">Canvas Mail or your USF email, with your name, U Number, section, and reason in the first sentence. For code questions, also attach your GitHub link and the complete traceback. 48 business-hour response window; Friday-evening emails get answered by end of day Monday.</div>
+</div>
+<aside class="notes">Incomplete messages — missing GitHub link or traceback — get returned without a diagnosis. This is by design, not an inconvenience.</aside>
+</section>
+
+<section class="s-qa">
+<div class="qa-card">
+<div class="qa-q">"What if I fall behind on the capstone?"</div>
+<div class="qa-a">Tell me the moment you notice it, not in Week 16. The capstone is built so each week assumes the last one is done — proposal/schema (13), database (14), interface (15), AI feature + demo (16). If Week 13 slips, come to office hours immediately — that's the only week with room to recover.</div>
+</div>
+<aside class="notes">This is the single most important warning to give on Day One for this course — capstone weeks compound fast.</aside>
+</section>
+
+<section class="s-qa">
+<div class="qa-card">
+<div class="qa-q">"What's your grading philosophy?"</div>
+<div class="qa-a">I grade what's actually in your Git log and your submitted repo — the Developer Workflow grade specifically rewards evidence of process, not just a working final product. Ten commits across a week tells a different story than one commit at 11:59 PM, and it's graded that way on purpose.</div>
+</div>
+<aside class="notes">One week from when a grade posts to raise a dispute — after that, it's final.</aside>
+</section>
+
+<section class="s-qa">
+<div class="qa-card">
+<div class="qa-q">"Office hours — when, and what should I bring?"</div>
+<div class="qa-a">Monday and Wednesday, 1:30–3:00 PM, in CIS 2070B. Can't make it in person? Check Canvas for the Teams link. Bring your GitHub link, the complete traceback, and what you already tried.</div>
+</div>
+<aside class="notes">Repeat the room number and days out loud — this is the single most-forgotten detail from Day One.</aside>
+</section>
+
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">Before Module 2</h1>
+<aside class="notes">Close out with the concrete action list — students should leave this session knowing exactly what to do next.</aside></section>
+
+<section class="s-point">
+<h2>Three things before your first lab</h2>
+<ul style="text-align:left;max-width:820px;margin:0 auto;">
+<li>1. Read the full syllabus — Module 1's ritual and Assignment 1 assume you've read format &amp; grading.</li>
+<li>2. Confirm every Pre-Course Setup tool verifies clean — VS Code, Python, Git, zsh, (Windows) WSL.</li>
+<li>3. Skim the Module 2 Reading and Lecture pages before the first in-person lab.</li>
+</ul>
+<div class="warn-card" style="max-width:700px;margin:.6em auto 0;">
+<div class="warn-lbl">⚠ Setup problems?</div>
+<p style="margin:0;">Post to the discussion board with a screenshot before Module 2 — don't walk into the first lab with a broken environment.</p>
+</div>
+<aside class="notes">End the session here. The course website is the source of truth all semester — bookmark it. Welcome to ISM3232 — see you in Module 2.</aside>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+Reveal.initialize({
+  plugins:[RevealHighlight,RevealNotes],
+  hash:true,slideNumber:'c/t',transition:'slide',
+  transitionSpeed:'fast',controls:true,progress:true,
+  center:true,width:1280,height:720,margin:0.05,
+});
+
+/* Draw overlay — freehand annotation, synced across presenter + notes window.
+   Uses its own channel (day1) so it doesn't cross-talk with the week01–16 decks. */
+(function () {
+  'use strict';
+
+  var CHANNEL  = 'ism3232_day1_draw_v1';
+  var bc       = null;
+  try { bc = new BroadcastChannel(CHANNEL); } catch (e) { bc = null; }
+
+  var drawMode = false;
+  var erasing  = false;
+  var col      = '#ffff00';
+  var sz       = 5;
+  var active   = false;
+  var lx = 0, ly = 0;
+  var strokes  = {};
+
+  var canvas      = document.createElement('canvas');
+  canvas.id       = 'dc';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;' +
+                          'pointer-events:none;z-index:799;';
+  document.body.appendChild(canvas);
+
+  function fit() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    redraw(key());
+  }
+  window.addEventListener('resize', fit);
+
+  function key() {
+    try {
+      var s = Reveal.getState();
+      return s.indexh + ',' + s.indexv;
+    } catch (e) { return '0,0'; }
+  }
+
+  function toNorm(x, y) { return [x / window.innerWidth, y / window.innerHeight]; }
+  function fromNorm(nx, ny) { return [nx * window.innerWidth, ny * window.innerHeight]; }
+
+  function renderSeg(seg) {
+    var ctx = canvas.getContext('2d');
+    var p0 = fromNorm(seg[0], seg[1]);
+    var p1 = fromNorm(seg[2], seg[3]);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(p0[0], p0[1]);
+    ctx.lineTo(p1[0], p1[1]);
+    if (seg[6]) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+      ctx.lineWidth   = seg[5] * 4;
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = seg[4];
+      ctx.lineWidth   = seg[5];
+    }
+    ctx.lineCap  = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function redraw(k) {
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var segs = strokes[k];
+    if (segs) segs.forEach(renderSeg);
+  }
+
+  function addSeg(k, seg) {
+    if (!strokes[k]) strokes[k] = [];
+    strokes[k].push(seg);
+  }
+
+  function broadcastSeg(k, seg) { if (bc) { try { bc.postMessage({ t: 'seg', k: k, seg: seg }); } catch (e) {} } }
+  function broadcastClear(k) { if (bc) { try { bc.postMessage({ t: 'clear', k: k }); } catch (e) {} } }
+  function broadcastClearAll() { if (bc) { try { bc.postMessage({ t: 'clearAll' }); } catch (e) {} } }
+
+  if (bc) {
+    bc.onmessage = function (ev) {
+      var d = ev.data;
+      if (!d) return;
+      if (d.t === 'seg') {
+        addSeg(d.k, d.seg);
+        if (d.k === key()) renderSeg(d.seg);
+      } else if (d.t === 'clear') {
+        strokes[d.k] = [];
+        if (d.k === key()) redraw(d.k);
+      } else if (d.t === 'clearAll') {
+        strokes = {};
+        redraw(key());
+      }
+    };
+  }
+
+  function getXY(e) {
+    if (e.touches && e.touches.length) return [e.touches[0].clientX, e.touches[0].clientY];
+    return [e.clientX, e.clientY];
+  }
+
+  function down(e) {
+    if (!drawMode) return;
+    e.preventDefault();
+    active = true;
+    var xy = getXY(e);
+    var n  = toNorm(xy[0], xy[1]);
+    lx = n[0]; ly = n[1];
+  }
+
+  function move(e) {
+    if (!active || !drawMode) return;
+    e.preventDefault();
+    var xy = getXY(e);
+    var n  = toNorm(xy[0], xy[1]);
+    var seg = [lx, ly, n[0], n[1], col, sz, erasing];
+    lx = n[0]; ly = n[1];
+    var k = key();
+    addSeg(k, seg);
+    renderSeg(seg);
+    broadcastSeg(k, seg);
+  }
+
+  function up() { active = false; }
+
+  canvas.addEventListener('mousedown',  down);
+  canvas.addEventListener('mousemove',  move);
+  canvas.addEventListener('mouseup',    up);
+  canvas.addEventListener('mouseleave', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove',  move, { passive: false });
+  canvas.addEventListener('touchend',   up);
+
+  function setMode(on) {
+    drawMode = on;
+    canvas.style.pointerEvents = on ? 'all' : 'none';
+    canvas.style.cursor        = on ? 'crosshair' : 'default';
+    var tb = document.getElementById('dtb');
+    if (tb) tb.style.outline = on ? '2px solid rgba(45,212,191,.5)' : 'none';
+    var tog = document.getElementById('dtog');
+    if (tog) {
+      tog.style.background  = on ? 'rgba(45,212,191,.35)' : 'rgba(255,255,255,.08)';
+      tog.style.color       = on ? '#2dd4bf' : '#ccc';
+    }
+    var ctrl = document.querySelector('.reveal > .controls');
+    if (ctrl) ctrl.style.display = on ? 'none' : '';
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'd' || e.key === 'D') setMode(!drawMode);
+  });
+
+  Reveal.on('slidechanged', function () {
+    active = false;
+    redraw(key());
+  });
+
+  var tb = document.createElement('div');
+  tb.id  = 'dtb';
+  tb.style.cssText = [
+    'position:fixed', 'bottom:10px', 'right:10px', 'z-index:900',
+    'display:flex', 'align-items:center', 'gap:5px', 'flex-wrap:wrap',
+    'background:rgba(8,10,20,.92)', 'border:1px solid rgba(255,255,255,.13)',
+    'border-radius:10px', 'padding:6px 9px',
+    'backdrop-filter:blur(14px)', '-webkit-backdrop-filter:blur(14px)',
+    'box-shadow:0 4px 24px rgba(0,0,0,.55)',
+    'font-family:monospace', 'font-size:11px',
+    'opacity:.5', 'transition:opacity .2s',
+    'user-select:none', '-webkit-user-select:none',
+  ].join(';');
+  tb.onmouseenter = function () { this.style.opacity = '1'; };
+  tb.onmouseleave = function () { this.style.opacity = drawMode ? '1' : '.5'; };
+  document.body.appendChild(tb);
+
+  function btn(txt, cb, title, id) {
+    var b = document.createElement('button');
+    b.textContent = txt;
+    if (title) b.title = title;
+    if (id)    b.id    = id;
+    b.style.cssText = [
+      'font-family:monospace', 'font-size:11px', 'cursor:pointer',
+      'padding:4px 9px', 'border-radius:5px',
+      'border:1px solid rgba(255,255,255,.14)',
+      'background:rgba(255,255,255,.08)', 'color:#ccc',
+      'transition:.15s', 'white-space:nowrap',
+    ].join(';');
+    b.onmouseover = function () { b.style.background='rgba(255,255,255,.22)'; b.style.color='#fff'; };
+    b.onmouseout  = function () {
+      b.style.background = b._on ? 'rgba(255,255,255,.25)' : 'rgba(255,255,255,.08)';
+      b.style.color      = b._on ? '#fff' : '#ccc';
+    };
+    b.onclick = cb;
+    return b;
+  }
+
+  function dot(c, lbl, first) {
+    var d = document.createElement('span');
+    d.className = 'dcdot';
+    d.title     = lbl;
+    d.style.cssText = 'width:15px;height:15px;border-radius:50%;' +
+      'background:' + c + ';cursor:pointer;display:inline-block;' +
+      'border:2px solid ' + (first ? '#fff' : 'transparent') + ';' +
+      'flex-shrink:0;transition:border-color .15s;';
+    d.onclick = function () {
+      col = c; erasing = false;
+      document.querySelectorAll('.dcdot').forEach(function (x) { x.style.borderColor = 'transparent'; });
+      d.style.borderColor = '#fff';
+      if (eraserB) { eraserB._on = false; eraserB.style.background='rgba(255,255,255,.08)'; eraserB.style.color='#ccc'; }
+    };
+    return d;
+  }
+
+  function sep() {
+    var s = document.createElement('span');
+    s.style.cssText = 'width:1px;height:18px;background:rgba(255,255,255,.15);flex-shrink:0;';
+    return s;
+  }
+
+  var togB = btn('✏ Draw', function () { setMode(!drawMode); }, 'Toggle drawing  [D]', 'dtog');
+
+  var palette = [
+    ['#ffff00','Yellow', true],
+    ['#ffffff','White',  false],
+    ['#ff6b6b','Red',    false],
+    ['#4ade80','Green',  false],
+    ['#38bdf8','Blue',   false],
+    ['#f97316','Orange', false],
+    ['#c084fc','Purple', false],
+  ];
+  var colDots = palette.map(function (p) { return dot(p[0], p[1], p[2]); });
+
+  var sizes = [[3,'S'],[5,'M'],[10,'L'],[18,'XL']];
+  var szBtns = sizes.map(function (p) {
+    var b = btn(p[1], null, 'Brush ' + p[1]);
+    b.onclick = function () {
+      sz = p[0]; erasing = false;
+      szBtns.forEach(function (x) { x._on=false; x.style.background='rgba(255,255,255,.08)'; x.style.color='#ccc'; });
+      if (eraserB) { eraserB._on=false; eraserB.style.background='rgba(255,255,255,.08)'; eraserB.style.color='#ccc'; }
+      b._on=true; b.style.background='rgba(255,255,255,.25)'; b.style.color='#fff';
+    };
+    if (p[0]===5) { b._on=true; b.style.background='rgba(255,255,255,.25)'; b.style.color='#fff'; }
+    return b;
+  });
+
+  var eraserB = btn('⌫', null, 'Eraser');
+  eraserB.onclick = function () {
+    erasing = !erasing;
+    eraserB._on = erasing;
+    eraserB.style.background = erasing ? 'rgba(251,191,36,.4)' : 'rgba(255,255,255,.08)';
+    eraserB.style.color      = erasing ? '#fbbf24' : '#ccc';
+    if (erasing) { colDots.forEach(function(d){d.style.borderColor='transparent';}); }
+  };
+
+  var clearB = btn('🗑', function () {
+    var k = key();
+    strokes[k] = [];
+    redraw(k);
+    broadcastClear(k);
+  }, 'Clear this slide');
+
+  var clearAllB = btn('🗑 All', function () {
+    strokes = {};
+    redraw(key());
+    broadcastClearAll();
+  }, 'Clear all');
+
+  [togB, sep()]
+    .concat(colDots)
+    .concat([sep()])
+    .concat(szBtns)
+    .concat([sep(), eraserB, sep(), clearB, clearAllB])
+    .forEach(function (el) { tb.appendChild(el); });
+
+  fit();
+
+})();
+</script></body></html>
