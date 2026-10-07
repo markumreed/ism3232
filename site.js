@@ -97,6 +97,7 @@
         <a href="${pg}week07_reading.html">Module 7 · Functions, Modules &amp; pytest</a>
         <a href="${pg}week08_reading.html">Module 8 · Debugging &amp; AI Literacy</a>
         <a href="${pg}week09_reading.html">Module 9 · Midterm Review</a>
+        <a href="${pg}week09_study_guide.html">Module 9 · Study Guide</a>
       </div>
     </div>
 
@@ -187,6 +188,7 @@
       <a href="${pg}week07_reading.html">Module 7 · Functions, Modules &amp; pytest</a>
       <a href="${pg}week08_reading.html">Module 8 · Debugging &amp; AI Literacy</a>
       <a href="${pg}week09_reading.html">Module 9 · Midterm Review</a>
+      <a href="${pg}week09_study_guide.html">Module 9 · Study Guide</a>
     </div>
     <div class="mob-section">
       <div class="mob-section-label">Unit 3 · Object-Oriented Design</div>

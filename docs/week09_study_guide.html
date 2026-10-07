@@ -1,0 +1,836 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<script>
+(function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<title>ISM3232 Week 9 — Midterm Study Guide</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e2e2ec;--muted:#7a7a95;--dim:#3e3e52;
+  --blue:#7eb8ff;--blue-dim:rgba(126,184,255,.12);--blue-glow:rgba(126,184,255,.25);
+  --green:#6ee7b7;--green-dim:rgba(110,231,183,.1);
+  --amber:#fcd34d;--amber-dim:rgba(252,211,77,.1);
+  --red:#f87171;--red-dim:rgba(248,113,113,.1);
+  --purple:#c4b5fd;--purple-dim:rgba(196,181,253,.1);
+  --mono:'DM Mono','Fira Mono','Courier New',monospace;
+}
+html{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;}
+body{min-height:100vh;width:100%;padding:40px 24px 80px;}
+
+/* ── Week header ── */
+.wk-title{font-size:28px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);line-height:1.2;margin-bottom:10px;}
+.wk-deck{font-size:15px;color:var(--muted);font-style:italic;
+  line-height:1.5;margin-bottom:16px;padding-left:14px;
+  border-left:2px solid var(--dim);}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+
+/* ── Section headings ── */
+h2{font-size:18px;font-weight:700;color:var(--text);margin:44px 0 12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:72px;}
+h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+
+/* ── Body text ── */
+p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+p code, li code, td code, summary code, figcaption code, .diagram-title code{font-family:var(--mono);font-size:.88em;
+  background:var(--bg3);padding:1px 5px;border-radius:3px;
+  color:var(--blue);}
+
+/* ── Callouts ── */
+.concept{background:var(--blue-dim);border:1px solid rgba(126,184,255,.2);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.concept p{color:var(--text);font-size:14px;margin:0;}
+.warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
+  border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin:16px 0;}
+.warn .concept-label{color:var(--amber);}
+.warn p{color:var(--text);font-size:14px;margin:0;}
+
+/* ── Code blocks ── */
+pre{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:16px 0;}
+pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
+  line-height:1.7;background:none;padding:0;}
+[data-theme="light"] pre code{color:#1a1a26;}
+pre .hl{background:rgba(110,231,183,.22);border-radius:3px;padding:1px 0;}
+.code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin:14px 0 -8px;}
+
+/* ── Lists ── */
+ul,ol{padding-left:20px;margin:10px 0 16px;}
+li{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:4px;}
+li strong{color:var(--text);}
+li::marker{color:var(--dim);}
+
+/* ── Tables ── */
+.table-wrap{overflow-x:auto;margin:16px 0;}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:14px;}
+.table-wrap th{background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:10px 14px;
+  border-bottom:1px solid var(--border2);}
+.table-wrap td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+.table-wrap tr:last-child td{border-bottom:none;}
+.table-wrap .num{text-align:right;font-family:var(--mono);}
+
+/* ── Bug teasers: the three bug reports, linked from the top ── */
+.bug-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:16px 0 8px;}
+a.bug-card{display:block;text-decoration:none;background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;transition:border-color .15s,transform .15s;}
+a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
+.bug-card .topic-num{font-family:var(--mono);font-size:10px;color:var(--red);
+  letter-spacing:.12em;margin-bottom:4px;text-transform:uppercase;}
+.bug-card .topic-text{font-size:14px;color:var(--text);font-weight:600;line-height:1.45;}
+
+/* ── Bug report: broken code first, explanation behind a reveal ── */
+.bug{background:var(--red-dim);border:1px solid rgba(248,113,113,.28);border-radius:12px;
+  padding:18px 20px;margin:24px 0 8px;}
+.bug-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.bug-title{font-size:18px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px;}
+.bug p{color:var(--text);}
+.bug pre{margin:12px 0;}
+.reveal{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;margin-top:12px;}
+.reveal summary{cursor:pointer;user-select:none;list-style:none;font-family:var(--mono);
+  font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--blue);}
+.reveal summary::-webkit-details-marker{display:none;}
+.reveal summary::before{content:'▸ ';}
+.reveal[open] summary::before{content:'▾ ';}
+.reveal p{margin:10px 0 2px;font-size:14.5px;}
+.fix-tag{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:20px;
+  color:var(--green);border:1px solid rgba(110,231,183,.4);background:var(--green-dim);}
+
+/* ── Diagrams: inline SVG, coloured from the theme variables ── */
+.diagram{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:16px 16px 14px;margin:20px 0;max-width:860px;}
+.diagram-title{font-weight:700;font-size:15px;color:var(--text);margin-bottom:8px;}
+.diagram-scroll{overflow-x:auto;}
+.diagram svg{display:block;width:100%;min-width:600px;height:auto;font-family:inherit;}
+.diagram figcaption{margin-top:10px;font-size:13.5px;color:var(--muted);line-height:1.6;}
+.diagram-hint{display:none;margin-top:8px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.08em;color:var(--muted);}
+.d-box{fill:none;stroke:var(--muted);stroke-width:1.25;}
+.d-box.on{fill:var(--blue-dim);stroke:var(--blue);stroke-width:2;}
+.d-line{fill:none;stroke:var(--muted);stroke-width:1.25;}
+.d-line.on{stroke:var(--blue);stroke-width:2;}
+.d-arrow{fill:var(--muted);}
+.d-arrow-on{fill:var(--blue);}
+.d-t{fill:var(--text);font-size:13px;}
+.d-b{font-weight:700;}
+.d-m{font-family:var(--mono);font-size:12px;}
+.d-q{fill:var(--muted);font-size:11.5px;}
+.d-false{fill:var(--red);font-weight:700;font-size:12.5px;}
+.d-true{fill:var(--green);font-weight:700;font-size:12.5px;}
+
+/* ── Mistakes: predict, then open to check ── */
+.mistakes{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:16px 0;}
+.mistakes details{background:var(--bg2);border-bottom:1px solid var(--border);}
+.mistakes details:last-child{border-bottom:none;}
+.mistakes summary{cursor:pointer;list-style:none;position:relative;padding:10px 16px 10px 36px;
+  font-weight:600;font-size:14.5px;color:var(--text);}
+.mistakes summary::-webkit-details-marker{display:none;}
+.mistakes summary::before{content:'▸';position:absolute;left:15px;top:11px;color:var(--blue);font-size:12px;}
+.mistakes details[open] summary::before{content:'▾';}
+.mistakes .m-body{padding:0 16px 12px 36px;}
+.mistakes .m-body p{margin:3px 0;font-size:14px;}
+
+/* ── Practice cards ── */
+.quiz-item p{color:var(--text);}
+.quiz-item li{color:var(--text);}
+.quiz-item pre{margin:8px 0 10px;}
+.quiz-item > :last-child{margin-bottom:0;}
+
+/* ── Readiness checklist: ticks are remembered in this browser ── */
+.check-count{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.ready-list{list-style:none;padding:0;margin:10px 0 16px;}
+.ready-list li{margin:0;border-bottom:1px solid var(--border);}
+.ready-list li:last-child{border-bottom:none;}
+.ready-list label{display:flex;gap:12px;align-items:flex-start;padding:8px 2px;cursor:pointer;color:var(--text);}
+.ready-list input{flex:none;width:16px;height:16px;margin-top:6px;accent-color:var(--blue);}
+.ready-list input:checked + span{color:var(--muted);text-decoration:line-through;}
+
+/* ── Footer ── */
+.page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  letter-spacing:.08em;text-align:center;}
+/* ism-mobile */
+@media(max-width:600px){
+  body{padding:16px 14px 48px!important}
+  pre,code{font-size:12px}
+  .diagram-hint{display:block}
+  .table-wrap th,.table-wrap td{padding:8px 10px}
+}
+</style>
+<link rel="stylesheet" href="../site.css">
+<meta name="description" content="ISM3232 Week 9 — Midterm Study Guide — conditionals, loops, and functions at exam difficulty.">
+</head><body>
+<div class="page-eyebrow" style="color:#818cf8;">Unit 2 · Python Foundations · Module 09 · Study Guide</div>
+<h1 class="wk-title">Midterm Study Guide</h1>
+<p class="wk-deck">Conditionals, loops, and functions at midterm difficulty: three bugs to catch, three patterns to master, three problems to solve.</p>
+<div class="meta">
+<span class="chip accent">Module 09</span>
+<span class="chip">Unit 2 · Python Foundations</span>
+<span class="chip">Study guide · Conditionals, loops, functions</span>
+<span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm Exam</span>
+</div>
+<div class="weekjump" style="margin-bottom:12px;">
+<span class="weekjump-label">This module:</span>
+<a href="week09_reading.html" class="weekjump-link">Reading</a>
+<a href="week09_lecture.html" class="weekjump-link">Lecture</a>
+<a href="week09_study_guide.html" class="weekjump-link current">Study Guide</a>
+</div>
+<div class="weekjump">
+<span class="weekjump-label">On this page:</span>
+<a href="#conditionals" class="weekjump-link">Conditionals</a>
+<a href="#loops" class="weekjump-link">Loops</a>
+<a href="#functions" class="weekjump-link">Functions</a>
+<a href="#tracing" class="weekjump-link">Tracing</a>
+<a href="#mistakes" class="weekjump-link">Mistakes</a>
+<a href="#practice" class="weekjump-link">Practice</a>
+<a href="#notes" class="weekjump-link">Final check</a>
+</div>
+
+<p>Every Python question on the midterm asks for the same move. Someone describes a business rule in plain English, and you turn it into code that gets the right answer. This guide trains that move on rules with more parts and data with more fields than the weekly assignments. Start with the bugs:</p>
+<div class="bug-grid">
+<a class="bug-card" href="#conditionals"><div class="topic-num">Bug 1 · Conditionals</div><div class="topic-text">A preferred customer paid 45 days late and was charged nothing.</div></a>
+<a class="bug-card" href="#loops"><div class="topic-num">Bug 2 · Loops</div><div class="topic-text">The report named the wrong top requester.</div></a>
+<a class="bug-card" href="#functions"><div class="topic-num">Bug 3 · Functions</div><div class="topic-text">Payroll for four people came to one paycheck.</div></a>
+</div>
+
+<h2 id="covers">What this guide covers</h2>
+<p>This guide covers the Python core of the midterm: conditionals, loops, and functions. You have used all three since Week 6. The midterm asks for more of each.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Skill</th><th>In the assignments</th><th>At midterm difficulty</th></tr></thead>
+<tbody>
+<tr><td><strong>Conditionals</strong></td><td>One input, one chain of tiers</td><td>Several inputs joined with <code>and</code> / <code>or</code>, named limits, and a second decision that depends on a calculated value</td></tr>
+<tr><td><strong>Loops</strong></td><td>One total from a list of numbers</td><td>A list of dictionaries, with several answers from one pass: a total, a filtered total, a list of matches, and the largest record</td></tr>
+<tr><td><strong>Functions</strong></td><td>One function, one parameter</td><td>Several parameters, a default value, one function calling another, and <code>assert</code> tests on both sides of each boundary</td></tr>
+</tbody>
+</table>
+</div>
+<div class="concept">
+<div class="concept-label">Exam logistics</div>
+<p>This page is practice. For how the exam runs and what you may bring, see the Week 9 <a href="week09_reading.html" style="color:var(--blue);">Reading</a>.</p>
+</div>
+
+<h2 id="method">Turn a business rule into code in four steps</h2>
+<p>Plan on paper before you write any Python. Most lost points come from the structure, not the syntax.</p>
+<ol>
+<li><strong>Mark up the prompt.</strong> Underline each input, circle each rule, and box each value you must return or print. Circle the words "unless", "only if", and "except" twice.</li>
+<li><strong>Name the limits and the variables.</strong> Every number in a rule becomes a constant in capitals. Every value you must calculate gets a variable name.</li>
+<li><strong>Pick the structure.</strong> Match the wording of the prompt to a tool using the table below.</li>
+<li><strong>Order the steps, then trace and test.</strong> Each value must be calculated above any line that uses it. Trace the given numbers by hand, then try the value on each side of every limit.</li>
+</ol>
+<div class="table-wrap">
+<table>
+<thead><tr><th>The prompt says</th><th>The job</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>"up to", "more than", "unless", "only if"</td><td>Choose one outcome from several</td><td><code>if</code> / <code>elif</code> / <code>else</code>, with <code>and</code> / <code>or</code> for rules that have two conditions</td></tr>
+<tr><td>"each", "every", "total", "how many", "which ones", "largest" about a list of records</td><td>Repeat the same steps for every record</td><td><code>for</code> loop over the list, with one variable per answer set up before it</td></tr>
+<tr><td>"write a function", or one rule applied to many records</td><td>Package a calculation for reuse and testing</td><td><code>def</code> with parameters, type hints, and <code>return</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="conditionals">Conditionals: rules with more than one input</h2>
+<p>A business rule with an exception is still one decision. The exception becomes a second condition inside the same test, not a separate afterthought.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 1</div>
+<div class="bug-title">A preferred customer paid 45 days late and was charged nothing</div>
+<p>A supplier charges late fees on overdue invoices. Invoices paid on time owe nothing. Invoices 1 through 30 days late owe 2% of the invoice. Invoices more than 30 days late owe 5%. Preferred customers owe no fee, unless they are more than 30 days late.</p>
+<p>A preferred customer paid a $1,200 invoice 45 days late, and this function charged nothing.</p>
+<pre><code>def calculate_late_fee(amount: float, days_late: int,
+                       preferred: bool = False) -&gt; float:
+    if days_late == 0 or preferred:
+        rate = 0.0
+    elif days_late &lt;= 30:
+        rate = 0.02
+    else:
+        rate = 0.05
+    return amount * rate
+
+print(calculate_late_fee(1200.00, 45, preferred=True))    # prints 0.0</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p>The rule has two parts: preferred customers owe nothing, <em>unless</em> they are more than 30 days late. The code kept the first part and dropped the second, so <code>preferred</code> alone switches the fee off. A rule with an exception needs both conditions, joined with <code>and</code>.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Translate the whole rule</h3>
+<p>The waiver now needs two things to be true: the customer is preferred <strong>and</strong> the invoice is no more than 30 days late. This version also names its limits as constants and adds the supplier's second rule: any fee that is charged is at least $10.</p>
+<pre><code>LATE_LIMIT_DAYS = 30
+RATE_LATE       = 0.02
+RATE_VERY_LATE  = 0.05
+MINIMUM_FEE     = 10.00
+
+def calculate_late_fee(amount: float, days_late: int,
+                       preferred: bool = False) -&gt; float:
+    """Return the late fee for one invoice."""
+    # Decision 1: choose the rate
+<span class="hl">    if days_late == 0 or (preferred and days_late &lt;= LATE_LIMIT_DAYS):</span>
+        rate = 0.0
+    elif days_late &lt;= LATE_LIMIT_DAYS:
+        rate = RATE_LATE
+    else:
+        rate = RATE_VERY_LATE
+
+    fee = amount * rate
+
+    # Decision 2: a separate rule, based on the calculated fee
+    if fee &gt; 0 and fee &lt; MINIMUM_FEE:
+        fee = MINIMUM_FEE
+
+    return fee</code></pre>
+<p>Five calls check five different paths through the function:</p>
+<pre><code>print(f'{calculate_late_fee(1200.00, 0):.2f}')                    # on time
+print(f'{calculate_late_fee(1200.00, 12):.2f}')                   # 12 days late
+print(f'{calculate_late_fee(1200.00, 12, preferred=True):.2f}')   # preferred, 12 days late
+print(f'{calculate_late_fee(1200.00, 45, preferred=True):.2f}')   # preferred, 45 days late
+print(f'{calculate_late_fee(300.00, 12):.2f}')                    # 2% is $6.00, raised to the minimum</code></pre>
+<div class="code-label">Output</div>
+<pre><code>0.00
+24.00
+0.00
+60.00
+10.00</code></pre>
+
+<figure class="diagram">
+<div class="diagram-title">One False part sinks an <code>and</code></div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 760 262" role="img" aria-label="How the first test evaluates for a preferred customer who is 45 days late. days_late equals 0 is False. preferred is True. days_late is at most 30 is False. The and of the last two is False, so the or of all three is False and Python moves on to the next test.">
+<rect class="d-box" x="20" y="12" width="220" height="56" rx="8"/>
+<text class="d-t d-m" x="130" y="36" text-anchor="middle">days_late == 0</text>
+<text class="d-false" x="130" y="56" text-anchor="middle">False</text>
+<rect class="d-box" x="270" y="12" width="220" height="56" rx="8"/>
+<text class="d-t d-m" x="380" y="36" text-anchor="middle">preferred</text>
+<text class="d-true" x="380" y="56" text-anchor="middle">True</text>
+<rect class="d-box" x="520" y="12" width="220" height="56" rx="8"/>
+<text class="d-t d-m" x="630" y="36" text-anchor="middle">days_late &lt;= 30</text>
+<text class="d-false" x="630" y="56" text-anchor="middle">False</text>
+<path class="d-line" d="M380 68V108"/>
+<path class="d-line" d="M630 68V108"/>
+<rect class="d-box" x="270" y="108" width="470" height="56" rx="8"/>
+<text class="d-t d-m" x="505" y="132" text-anchor="middle">preferred and days_late &lt;= 30</text>
+<text class="d-false" x="505" y="152" text-anchor="middle">False, because and needs both parts True</text>
+<path class="d-line" d="M130 68V196"/>
+<path class="d-line" d="M505 164V196"/>
+<rect class="d-box on" x="20" y="196" width="720" height="56" rx="8"/>
+<text class="d-t d-m d-b" x="380" y="220" text-anchor="middle">days_late == 0 or (preferred and days_late &lt;= 30)</text>
+<text class="d-false" x="380" y="240" text-anchor="middle">False, so no waiver: Python moves on to the elif</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>For a preferred customer who is 45 days late, <code>preferred</code> is True but <code>days_late &lt;= 30</code> is False. The parentheses show which two parts belong together.</figcaption>
+</figure>
+
+<p>Five habits keep a multi-part rule safe:</p>
+<ul>
+<li><strong>Translate the whole sentence.</strong> Words like "unless", "only if", and "except" add a second condition. If your test has fewer conditions than the sentence, part of the rule is missing.</li>
+<li><strong>Use parentheses when a test mixes <code>and</code> with <code>or</code>.</strong> They show which parts belong together, to Python and to the person grading.</li>
+<li><strong>Name each limit once, as a constant.</strong> <code>LATE_LIMIT_DAYS</code> appears in two tests. Changing it in one place keeps both in step.</li>
+<li><strong>Check tiers in one direction.</strong> Go up with <code>&lt;=</code> or down with <code>&gt;=</code>, and never mix the two in one chain.</li>
+<li><strong>Read which value the rule names.</strong> The minimum applies to the calculated fee, not to the invoice amount, so that decision comes after the calculation.</li>
+</ul>
+
+<h3>Translate boundary words exactly</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>The rule says</th><th>Write</th></tr></thead>
+<tbody>
+<tr><td>up to 30 days, 30 or fewer, no more than 30</td><td><code>&lt;= 30</code></td></tr>
+<tr><td>more than 30, over 30</td><td><code>&gt; 30</code></td></tr>
+<tr><td>at least $10, $10 or more</td><td><code>&gt;= 10</code></td></tr>
+<tr><td>under $10, less than $10</td><td><code>&lt; 10</code></td></tr>
+<tr><td>1 through 30 days</td><td><code>days_late &gt;= 1 and days_late &lt;= 30</code>, or just <code>&lt;= 30</code> once 0 has been handled above it</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Test both sides of every limit</h3>
+<p>Every limit has two neighbours, and a wrong comparison only shows up at one of them. These tests pass for the fixed function. Work out by hand why each one is true.</p>
+<pre><code>assert calculate_late_fee(1000.00, 30) == 20.00    # day 30 is still the 2% tier
+assert calculate_late_fee(1000.00, 31) == 50.00    # day 31 moves to 5%
+assert calculate_late_fee(1000.00, 30, preferred=True) == 0.0
+assert calculate_late_fee(1000.00, 31, preferred=True) == 50.00
+assert calculate_late_fee(500.00, 5) == 10.00      # 2% is exactly $10.00</code></pre>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Say out loud what <code>preferred and days_late &lt;= LATE_LIMIT_DAYS</code> means in business words. If your sentence does not match the policy, the code does not either.</p>
+</div>
+
+<h2 id="loops">Loops: one pass, several answers</h2>
+<p>A loop over records can answer several questions in one pass, as long as every answer has its own variable set up before the loop starts.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Goal</th><th>Before the loop</th><th>Inside the loop</th></tr></thead>
+<tbody>
+<tr><td>Total</td><td><code>total = 0.0</code></td><td><code>total += r['amount']</code></td></tr>
+<tr><td>Total for some records</td><td><code>pending_total = 0.0</code></td><td><code>if r['status'] == 'Pending':</code> then add</td></tr>
+<tr><td>Collect the matches</td><td><code>needs_review = []</code></td><td><code>if r['amount'] &gt; REVIEW_LIMIT:</code> then <code>.append()</code></td></tr>
+<tr><td>Largest, and who it belongs to</td><td><code>highest = 0.0</code> and <code>top_requester = ''</code></td><td><code>if r['amount'] &gt; highest:</code> then update both</td></tr>
+<tr><td>Average</td><td>nothing extra</td><td>nothing; divide <code>total</code> by <code>len(requests)</code> after the loop</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="bug">
+<div class="bug-tag">Bug report 2</div>
+<div class="bug-title">The report named the wrong top requester</div>
+<p>Finance wants the largest purchase request and who made it. Casey asked for $2,200, the largest amount on the list. The report got the amount right and gave the credit to Morgan.</p>
+<pre><code>requests = [
+    {'requester': 'Taylor', 'amount': 1250.00, 'status': 'Pending'},
+    {'requester': 'Jordan', 'amount':  350.00, 'status': 'Approved'},
+    {'requester': 'Casey',  'amount': 2200.00, 'status': 'Pending'},
+    {'requester': 'Morgan', 'amount':  900.00, 'status': 'Pending'},
+]
+
+highest = 0.0
+top_requester = ''
+
+for r in requests:
+    if r['amount'] &gt; highest:
+        highest = r['amount']
+    top_requester = r['requester']
+
+print(f'Largest request: ${highest:,.2f} by {top_requester}')
+# Largest request: $2,200.00 by Morgan</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p>The line <code>top_requester = r['requester']</code> sits outside the <code>if</code>, so it runs on every pass and ends up holding the last name on the list. Two variables that describe the same record must change together, inside the same <code>if</code>.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Update both together</h3>
+<p>Indent the name so it moves with the amount. The corrected loop also answers four more questions in the same pass, each with its own variable and its own <code>if</code>.</p>
+<pre><code>REVIEW_LIMIT = 1000.00
+
+# Set up every answer before the loop
+total = 0.0
+pending_total = 0.0
+needs_review = []
+highest = 0.0
+top_requester = ''
+
+for r in requests:
+    total += r['amount']
+
+    if r['status'] == 'Pending':
+        pending_total += r['amount']
+
+    if r['amount'] &gt; REVIEW_LIMIT:
+        needs_review.append(r['requester'])
+
+    if r['amount'] &gt; highest:
+        highest = r['amount']
+<span class="hl">        top_requester = r['requester']</span>
+
+# The average needs the finished total, so it comes after the loop
+average = total / len(requests)
+
+print(f'Total requested: ${total:,.2f}')
+print(f'Pending total:   ${pending_total:,.2f}')
+print(f'Needs review:    {needs_review}')
+print(f'Largest request: ${highest:,.2f} by {top_requester}')
+print(f'Average request: ${average:,.2f}')</code></pre>
+<div class="code-label">Output</div>
+<pre><code>Total requested: $4,700.00
+Pending total:   $4,350.00
+Needs review:    ['Taylor', 'Casey']
+Largest request: $2,200.00 by Casey
+Average request: $1,175.00</code></pre>
+
+<p>Five checks work on any list of records:</p>
+<ul>
+<li><strong>Set up every answer before the loop.</strong> A number starts at 0, a list starts empty, a name starts as an empty string.</li>
+<li><strong>Give each question its own <code>if</code>.</strong> One request can be pending, over the limit, and the largest so far, all at once. An <code>elif</code> would let only one of those count.</li>
+<li><strong>Keep linked variables in step.</strong> A value and its label are updated on neighbouring lines, at the same indentation.</li>
+<li><strong>Finish before you divide.</strong> An average, a percentage, or any result that needs the final total belongs after the loop.</li>
+<li><strong>Read fields with their keys.</strong> Inside the loop it is <code>r['amount']</code>. A bare <code>amount</code> is a different variable, or no variable at all.</li>
+</ul>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Explain why Morgan's $900 request changes <code>total</code> and <code>pending_total</code> but not <code>needs_review</code>, <code>highest</code>, or <code>top_requester</code>.</p>
+</div>
+
+<h2 id="functions">Functions: small functions that work together</h2>
+<p>A function does one job, takes what it needs as parameters, and returns its answer. Bigger jobs are built by one function calling another.</p>
+<p><strong>Example.</strong> A company pays hourly staff each week. Hours up to 40 are paid at the normal rate. Hours above 40 are paid at 1.5 times the rate.</p>
+<pre><code>REGULAR_HOURS       = 40
+OVERTIME_MULTIPLIER = 1.5
+
+def calculate_pay(hours: float, rate: float,
+                  multiplier: float = OVERTIME_MULTIPLIER) -&gt; float:
+    """Return gross pay for one week. Hours above 40 earn overtime."""
+    if hours &lt;= REGULAR_HOURS:
+        return hours * rate
+    overtime_hours = hours - REGULAR_HOURS
+    return REGULAR_HOURS * rate + overtime_hours * rate * multiplier</code></pre>
+<p>That function pays one person. A second function adds up a whole list by calling the first one for each timesheet.</p>
+
+<figure class="diagram">
+<div class="diagram-title">Each <code>return</code> goes back to the line that made the call</div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 760 176" role="img" aria-label="The script calls total_payroll with the timesheets. total_payroll calls calculate_pay with 45 hours at 20 dollars. calculate_pay returns 950.0 to total_payroll, and total_payroll returns 4120.0 to the script.">
+<defs>
+<marker id="call-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker>
+<marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow-on" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="d-box" x="8" y="10" width="204" height="156" rx="8"/>
+<text class="d-t d-b" x="22" y="36">The script</text>
+<text class="d-t d-m" x="22" y="64">payroll =</text>
+<text class="d-t d-m" x="22" y="82">total_payroll(timesheets)</text>
+<text class="d-q" x="22" y="146">payroll now holds 4120.0</text>
+<rect class="d-box" x="278" y="10" width="204" height="156" rx="8"/>
+<text class="d-t d-b" x="292" y="36">total_payroll</text>
+<text class="d-t d-m" x="292" y="64">for t in timesheets:</text>
+<text class="d-t d-m" x="306" y="82">total += calculate_pay(…)</text>
+<text class="d-t d-m d-b" x="292" y="146">return total</text>
+<rect class="d-box" x="548" y="10" width="204" height="156" rx="8"/>
+<text class="d-t d-b" x="562" y="36">calculate_pay</text>
+<text class="d-t d-m" x="562" y="64">hours = 45, rate = 20.00</text>
+<text class="d-t d-m" x="562" y="82">800.00 + 150.00</text>
+<text class="d-t d-m d-b" x="562" y="146">return 950.0</text>
+<path class="d-line" d="M212 104H278" marker-end="url(#call-arrow)"/>
+<text class="d-q" x="245" y="98" text-anchor="middle">timesheets</text>
+<path class="d-line" d="M482 104H548" marker-end="url(#call-arrow)"/>
+<text class="d-q" x="515" y="98" text-anchor="middle">45, 20.00</text>
+<path class="d-line on" d="M548 128H482" marker-end="url(#return-arrow)"/>
+<text class="d-t d-b" x="515" y="122" text-anchor="middle" style="font-size:11.5px">950.0</text>
+<path class="d-line on" d="M278 128H212" marker-end="url(#return-arrow)"/>
+<text class="d-t d-b" x="245" y="122" text-anchor="middle" style="font-size:11.5px">4120.0</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>For a 45-hour week at $20.00, <code>calculate_pay</code> returns 950.0 to <code>total_payroll</code>, which adds it to the total. When the loop ends, <code>total_payroll</code> returns 4120.0 to the script.</figcaption>
+</figure>
+
+<div class="bug">
+<div class="bug-tag">Bug report 3</div>
+<div class="bug-title">Payroll for four people came to one paycheck</div>
+<p>Four timesheets went in. The total that came back was $1,000.00, which is exactly what Avery earned.</p>
+<pre><code>timesheets = [
+    {'name': 'Avery', 'hours': 40, 'rate': 25.00},
+    {'name': 'Blake', 'hours': 45, 'rate': 20.00},
+    {'name': 'Devon', 'hours': 32, 'rate': 30.00},
+    {'name': 'Emery', 'hours': 50, 'rate': 22.00},
+]
+
+def total_payroll(timesheets: list) -&gt; float:
+    total = 0.0
+    for t in timesheets:
+        total += calculate_pay(t['hours'], t['rate'])
+        return total
+
+print(f'Total payroll: ${total_payroll(timesheets):,.2f}')
+# Total payroll: $1,000.00</code></pre>
+<p><strong>Find the bug before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p><code>return</code> is indented inside the loop, so the function hands back the total and stops during the first pass. A <code>return</code> ends the function immediately, even in the middle of a loop. It belongs one level out, lined up with <code>for</code>.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Return after the loop</h3>
+<p>Move <code>return</code> out one level so the loop can finish. The function returns the total and prints nothing, so the script decides how to display it.</p>
+<pre><code>def total_payroll(timesheets: list) -&gt; float:
+    """Return total gross pay for a list of timesheet records."""
+    total = 0.0
+    for t in timesheets:
+        total += calculate_pay(t['hours'], t['rate'])
+<span class="hl">    return total</span>
+
+payroll = total_payroll(timesheets)
+print(f'Total payroll: ${payroll:,.2f}')</code></pre>
+<div class="code-label">Output</div>
+<pre><code>Total payroll: $4,120.00</code></pre>
+
+<p>Check six things on any function answer:</p>
+<ul>
+<li><strong>One job per function.</strong> <code>calculate_pay</code> knows the overtime rule. <code>total_payroll</code> knows how to add up a list. Neither does the other's work.</li>
+<li><strong>Parameters in, <code>return</code> out.</strong> A function that reads a list defined somewhere else, or prints its answer instead of returning it, cannot be reused or tested.</li>
+<li><strong>Defaults go last.</strong> <code>multiplier</code> has a default value, so it comes after <code>hours</code> and <code>rate</code>.</li>
+<li><strong><code>return</code> ends the function.</strong> Inside a loop it ends the loop too, so the final <code>return</code> lines up with <code>for</code>.</li>
+<li><strong>Catch what comes back.</strong> <code>payroll = total_payroll(timesheets)</code> stores the answer. A call on a line by itself throws it away.</li>
+<li><strong>Local names stay local.</strong> The <code>total</code> inside <code>total_payroll</code> does not exist outside it. The script sees only the returned value.</li>
+</ul>
+
+<h3>Test both sides of the limit</h3>
+<p>The overtime rule changes at 40 hours, so the tests sit at 40 and 41. The last test overrides the default multiplier.</p>
+<pre><code>assert calculate_pay(40, 20.00) == 800.00                    # exactly at the limit: no overtime
+assert calculate_pay(41, 20.00) == 830.00                    # one hour over: 800 + 1 * 20 * 1.5
+assert calculate_pay(0, 20.00) == 0.0
+assert calculate_pay(45, 20.00, multiplier=2.0) == 1000.00   # 800 + 5 * 20 * 2.0</code></pre>
+
+<h3>Why small functions beat one long script</h3>
+<p>Expect to explain this in a sentence or two. Four reasons are worth knowing:</p>
+<ul>
+<li><strong>One place to change.</strong> If overtime becomes double time, you edit one constant, not every line that calculates pay.</li>
+<li><strong>Consistency.</strong> Every timesheet goes through identical logic.</li>
+<li><strong>Readability.</strong> <code>total_payroll</code> reads like the business process it describes.</li>
+<li><strong>Testability.</strong> Each rule can be checked on its own with an <code>assert</code>, without running the whole script.</li>
+</ul>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Explain what the fixed <code>total_payroll</code> returns when <code>timesheets</code> is an empty list, and why it does not crash.</p>
+</div>
+
+<h2 id="tracing">Tracing: be the computer</h2>
+<p>Tracing means running the code on paper one line at a time and writing down each variable as it changes. It is how you answer "what is the output?" questions, and how you check your own code without a laptop.</p>
+
+<h3>Trace a loop with a table</h3>
+<p>Give each variable a column and each pass a row. This table traces the corrected loop over the four purchase requests.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Pass</th><th>Record</th><th class="num">total</th><th class="num">pending_total</th><th>needs_review</th><th class="num">highest</th><th>top_requester</th></tr></thead>
+<tbody>
+<tr><td>Before</td><td>none yet</td><td class="num">0.0</td><td class="num">0.0</td><td><code>[]</code></td><td class="num">0.0</td><td><code>''</code></td></tr>
+<tr><td>1</td><td>Taylor, 1250.00, Pending</td><td class="num">1250.0</td><td class="num">1250.0</td><td><code>['Taylor']</code></td><td class="num">1250.0</td><td>Taylor</td></tr>
+<tr><td>2</td><td>Jordan, 350.00, Approved</td><td class="num">1600.0</td><td class="num">1250.0</td><td><code>['Taylor']</code></td><td class="num">1250.0</td><td>Taylor</td></tr>
+<tr><td>3</td><td>Casey, 2200.00, Pending</td><td class="num">3800.0</td><td class="num">3450.0</td><td><code>['Taylor', 'Casey']</code></td><td class="num">2200.0</td><td>Casey</td></tr>
+<tr><td>4</td><td>Morgan, 900.00, Pending</td><td class="num">4700.0</td><td class="num">4350.0</td><td><code>['Taylor', 'Casey']</code></td><td class="num">2200.0</td><td>Casey</td></tr>
+</tbody>
+</table>
+</div>
+<p>The last row holds the values the <code>print</code> lines display. In pass 2 only <code>total</code> changes, because Jordan's request is approved, under the limit, and smaller than the largest so far.</p>
+
+<h3>Trace a call chain in five moves</h3>
+<p>Follow Blake's timesheet (45 hours at $20.00) through the fixed code:</p>
+<ol>
+<li>The script calls <code>total_payroll(timesheets)</code> and waits for an answer.</li>
+<li>On the second pass of the loop, <code>total_payroll</code> calls <code>calculate_pay(45, 20.00)</code> and waits. <code>multiplier</code> takes its default, 1.5.</li>
+<li>Inside <code>calculate_pay</code>, <code>45 &lt;= 40</code> is false. <code>overtime_hours</code> is 5, and the function returns <code>40 * 20.00 + 5 * 20.00 * 1.5</code>, which is 950.0.</li>
+<li>Back in <code>total_payroll</code>, 950.0 is added to <code>total</code>, which goes from 1000.0 to 1950.0.</li>
+<li>After the fourth pass, <code>return total</code> sends 4120.0 back to the script, where it is stored in <code>payroll</code>.</li>
+</ol>
+
+<h2 id="mistakes">Mistakes that cost points</h2>
+<p>These fourteen mistakes change what the program does, so neat handwriting will not save them. Read each one, predict what goes wrong, then open it to check.</p>
+<div class="mistakes">
+<details><summary>Translating only half of a rule that says "unless" or "only if"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The exception never applies, or always applies.</p><p><strong>Fix:</strong> Count the conditions in the sentence, then count them in your test.</p></div></details>
+<details><summary>Mixing <code>and</code> with <code>or</code> without parentheses</summary><div class="m-body"><p><strong>What goes wrong:</strong> Python groups the parts differently from the way you read them.</p><p><strong>Fix:</strong> Put parentheses around the parts that belong together.</p></div></details>
+<details><summary>Checking tiers in a mixed order</summary><div class="m-body"><p><strong>What goes wrong:</strong> A wide test near the top catches values meant for a tier below it.</p><p><strong>Fix:</strong> Go up with <code>&lt;=</code> or down with <code>&gt;=</code>, all the way through.</p></div></details>
+<details><summary><code>&gt;</code> where the rule says "at least", or <code>&gt;=</code> where it says "more than"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The value exactly at the limit lands in the wrong tier.</p><p><strong>Fix:</strong> Translate the words, then test the limit and the value next to it.</p></div></details>
+<details><summary>Testing the original input when the rule names a calculated value</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second decision uses the wrong number.</p><p><strong>Fix:</strong> Reread which value the rule names, and calculate it first.</p></div></details>
+<details><summary>Typing the same limit in several places instead of naming a constant</summary><div class="m-body"><p><strong>What goes wrong:</strong> One copy gets changed, the others do not, and the tiers stop agreeing.</p><p><strong>Fix:</strong> One constant in capitals, used everywhere.</p></div></details>
+<details><summary>Setting up an accumulator inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> It resets on every pass, so only the last record counts.</p><p><strong>Fix:</strong> Set it up above the <code>for</code> line.</p></div></details>
+<details><summary>Updating a value inside an <code>if</code> and its label outside it</summary><div class="m-body"><p><strong>What goes wrong:</strong> The label ends up describing the last record, not the winning one.</p><p><strong>Fix:</strong> Update both on neighbouring lines at the same indentation.</p></div></details>
+<details><summary>Using <code>elif</code> between two questions that can both be true</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second question is skipped whenever the first one is true.</p><p><strong>Fix:</strong> A separate <code>if</code> for each question.</p></div></details>
+<details><summary>Writing <code>==</code> where you meant <code>=</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>r['status'] == 'Approved'</code> on a line by itself compares, throws the answer away, and changes nothing.</p><p><strong>Fix:</strong> One <code>=</code> to store a value, two to compare.</p></div></details>
+<details><summary><code>return</code> indented inside a loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The function stops during the first pass.</p><p><strong>Fix:</strong> Line the final <code>return</code> up with <code>for</code>.</p></div></details>
+<details><summary><code>print</code> instead of <code>return</code> in a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The caller receives <code>None</code>, and every <code>assert</code> on the function fails.</p><p><strong>Fix:</strong> Return the value and let the script print it.</p></div></details>
+<details><summary>Calling a function without storing what it returns</summary><div class="m-body"><p><strong>What goes wrong:</strong> The answer is thrown away, and the variable you passed in is unchanged.</p><p><strong>Fix:</strong> <code>balance = apply_fee(balance)</code></p></div></details>
+<details><summary>Using a function's local variable outside the function</summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>NameError</code>, because the name only existed while the function ran.</p><p><strong>Fix:</strong> Return the value and store it under a name in the script.</p></div></details>
+</div>
+
+<h2 id="practice">Practice problems</h2>
+<p>Write every answer by hand before you touch a keyboard. Then trace each answer with the given data to check your own work.</p>
+
+<h3>Warm-up: trace these</h3>
+<p>Each snippet contains one mistake. Write the exact output, then name the mistake and the fix.</p>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up A · Code trace</div>
+<pre><code>LIMIT_AUTO    = 500
+LIMIT_MANAGER = 2000
+
+amount = 40
+
+if amount &lt;= LIMIT_MANAGER:
+    approver = 'Manager'
+elif amount &lt;= LIMIT_AUTO:
+    approver = 'Auto-approved'
+else:
+    approver = 'Director'
+
+print(approver)</code></pre>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up B · Code trace</div>
+<pre><code>requests = [
+    {'id': 1, 'amount': 800, 'status': 'Pending'},
+    {'id': 2, 'amount': 300, 'status': 'Pending'},
+]
+
+approved = 0
+
+for r in requests:
+    if r['amount'] &lt;= 500:
+        r['status'] == 'Approved'
+    if r['status'] == 'Approved':
+        approved += 1
+
+print(approved)</code></pre>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Warm-up C · Code trace</div>
+<pre><code>def apply_fee(balance: float) -&gt; float:
+    balance = balance + 25.00
+    return balance
+
+balance = 100.00
+apply_fee(balance)
+print(balance)</code></pre>
+</div>
+
+<h3>Practice 1: Event booking</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 1 · Conditionals with several inputs</div>
+<p>A venue prices event bookings with these rules:</p>
+<ul>
+<li>Events of up to 50 guests have a $400 room fee.</li>
+<li>Events of 51 through 150 guests have a $900 room fee.</li>
+<li>Events of more than 150 guests have a $1,600 room fee.</li>
+<li>Weekend events add a 20% surcharge to the room fee.</li>
+<li>Nonprofit clients have the weekend surcharge waived, but only for events of 150 guests or fewer.</li>
+<li>A $150 cleaning deposit is added when the fee, after any surcharge, is $1,000 or more.</li>
+</ul>
+<p>Write a function <code>quote_booking(guests, is_weekend, nonprofit=False)</code> that returns the total price for one booking. Name every limit and amount as a constant, and add type hints and a docstring.</p>
+<p>Then write three lines that print the quote for each of these bookings:</p>
+<ol>
+<li>120 guests, on a weekend, not a nonprofit</li>
+<li>150 guests, on a weekend, nonprofit</li>
+<li>151 guests, on a weekend, nonprofit</li>
+</ol>
+<p>Finally, write two <code>assert</code> tests for the 50-guest limit: one exactly at it and one just above it, both on a weekday.</p>
+</div>
+
+<h3>Practice 2: Support tickets</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 2 · One loop over records</div>
+<p>A support manager reviews this week's tickets. A ticket is <strong>slow</strong> if it took 8 hours or more.</p>
+<pre><code>tickets = [
+    {'id': 201, 'team': 'Billing', 'hours': 3.5, 'status': 'Closed'},
+    {'id': 202, 'team': 'Tech',    'hours': 9.0, 'status': 'Open'},
+    {'id': 203, 'team': 'Billing', 'hours': 1.5, 'status': 'Closed'},
+    {'id': 204, 'team': 'Tech',    'hours': 6.0, 'status': 'Closed'},
+    {'id': 205, 'team': 'Sales',   'hours': 8.0, 'status': 'Open'},
+]</code></pre>
+<p>Write code that uses <strong>one loop</strong> to find all of the following, then prints them:</p>
+<ol>
+<li>The total hours spent on closed tickets.</li>
+<li>The number of open tickets.</li>
+<li>A list of the ids of the slow tickets.</li>
+<li>The total hours on tickets that belong to the Tech team and are still open.</li>
+<li>The id and hours of the longest ticket.</li>
+<li>The average hours per ticket, across all tickets.</li>
+</ol>
+<p>When you finish, build a trace table with one row per ticket and check your printed values against its last row.</p>
+</div>
+
+<h3>Practice 3: Subscription billing</h3>
+<div class="quiz-item">
+<div class="quiz-q">Practice 3 · Functions that work together</div>
+<p>A software company bills each customer account monthly, by the number of seats:</p>
+<ul>
+<li>Accounts with up to 10 seats pay the full price per seat.</li>
+<li>Accounts with 11 through 50 seats get 10% off the whole bill.</li>
+<li>Accounts with more than 50 seats get 20% off the whole bill.</li>
+</ul>
+<pre><code>accounts = [
+    {'name': 'Apex',   'seats': 8},
+    {'name': 'Birch',  'seats': 10},
+    {'name': 'Cobalt', 'seats': 11},
+    {'name': 'Delta',  'seats': 60},
+]</code></pre>
+<p><strong>Part A.</strong> Write a function <code>monthly_charge(seats, price_per_seat=12.00)</code> that returns the monthly charge for one account. Use constants, type hints, and a docstring.</p>
+<p><strong>Part B.</strong> Write a function <code>invoice_total(accounts)</code> that calls <code>monthly_charge()</code> for every account and returns the total billed. Then write the script lines that print each account's name with its charge, and the total.</p>
+<p><strong>Part C.</strong> Write four <code>assert</code> tests for <code>monthly_charge()</code>, one on each side of both limits. Use a price of $10.00 per seat so the arithmetic is easy to do by hand.</p>
+<p><strong>Part D.</strong> Cobalt has one more seat than Birch. Which account pays more this month? In one or two sentences, explain what your answer says about the discount rule.</p>
+<p><strong>Part E.</strong> In one or two sentences, explain why this is written as two functions instead of one loop with the pricing rule inside it.</p>
+</div>
+
+<h3>Explain it</h3>
+<p>Answer each in one or two sentences.</p>
+<ol>
+<li>Why must the tiers in an <code>if</code> / <code>elif</code> chain be checked in one direction?</li>
+<li>In the purchase-request loop, why do <code>highest</code> and <code>top_requester</code> have to be updated inside the same <code>if</code>?</li>
+<li>What happens when <code>return</code> is indented inside a <code>for</code> loop?</li>
+<li>Why do boundary tests use the value exactly at a limit and the value just past it?</li>
+</ol>
+
+<h2 id="notes">Your notes and final check</h2>
+<p>Whatever notes you bring, fill them with patterns and reminders, not finished programs. The exam uses scenarios you have not seen.</p>
+
+<h3>Patterns worth having in front of you</h3>
+<ul>
+<li>A three-tier <code>if</code> / <code>elif</code> / <code>else</code> chain in one direction, with its limits as constants</li>
+<li>A test that joins two conditions with <code>and</code>, and one that mixes <code>and</code> with <code>or</code> in parentheses</li>
+<li>The boundary-word table: up to, more than, at least, under, 1 through 30</li>
+<li>The loop skeleton over a list of dictionaries: set up, update, report after</li>
+<li>The five loop patterns: total, filtered total, collect matches, largest with its label, average</li>
+<li>A function with type hints, a docstring, a default parameter, and <code>return</code></li>
+<li>One function calling another inside a loop, with <code>return</code> lined up with <code>for</code></li>
+<li>Two <code>assert</code> lines that test both sides of a limit</li>
+<li>Your own three most frequent mistakes from the practice problems</li>
+</ul>
+
+<h3>During the exam</h3>
+<ul>
+<li>Mark up the prompt before you write: inputs, rules, limits, and values to return or print.</li>
+<li>Make indentation obvious. On paper, indentation is the only thing that shows what is inside a loop, a branch, or a function.</li>
+<li>Trace your finished answer with the data given in the question, including the value at each limit.</li>
+</ul>
+
+<h3>Readiness checklist</h3>
+<p class="check-count" id="check-count" aria-live="polite">Tick each item when it is true. Your ticks are saved in this browser.</p>
+<ul class="ready-list">
+<li><label><input type="checkbox" id="chk-unless"><span>I can translate a rule that says "unless" or "only if" into one test with <code>and</code> / <code>or</code></span></label></li>
+<li><label><input type="checkbox" id="chk-chain"><span>I can write a three-tier chain in one direction, with its limits as constants</span></label></li>
+<li><label><input type="checkbox" id="chk-second"><span>I can make a second decision that uses a value I calculated</span></label></li>
+<li><label><input type="checkbox" id="chk-records"><span>I can loop over a list of dictionaries and read fields with their keys</span></label></li>
+<li><label><input type="checkbox" id="chk-onepass"><span>I can total, filter, collect, and find the largest record in one pass</span></label></li>
+<li><label><input type="checkbox" id="chk-linked"><span>I can keep a value and its label in step</span></label></li>
+<li><label><input type="checkbox" id="chk-def"><span>I can write a function with type hints, a docstring, a default parameter, and a <code>return</code></span></label></li>
+<li><label><input type="checkbox" id="chk-call"><span>I can write one function that calls another inside a loop</span></label></li>
+<li><label><input type="checkbox" id="chk-assert"><span>I can write <code>assert</code> tests for both sides of a limit</span></label></li>
+<li><label><input type="checkbox" id="chk-trace"><span>I can trace a loop and a call chain by hand</span></label></li>
+<li><label><input type="checkbox" id="chk-practice"><span>I solved all three practice problems by hand and traced each answer</span></label></li>
+</ul>
+
+<!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm Exam — Reading</span></a><span></span><a href="week10_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 10</span>OOP I — Classes &amp; Objects</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 9 &nbsp;·&nbsp; Midterm Study Guide</div>
+<script>
+/* readiness checklist: remember ticks per browser; the page works without storage */
+(function(){
+  var KEY='ism3232-w09-study-checklist';
+  var boxes=document.querySelectorAll('.ready-list input[type=checkbox]');
+  var count=document.getElementById('check-count');
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){}
+  function update(){
+    var n=0;
+    boxes.forEach(function(b){if(b.checked)n++});
+    count.textContent=n+' of '+boxes.length+' ticked · saved in this browser';
+  }
+  boxes.forEach(function(b){
+    if(saved[b.id])b.checked=true;
+    b.addEventListener('change',function(){
+      saved[b.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}
+      update();
+    });
+  });
+  update();
+})();
+</script>
+<script src="../site.js"></script>
+</body></html>
