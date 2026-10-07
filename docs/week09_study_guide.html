@@ -183,6 +183,7 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
 <span class="chip accent">Module 09</span>
 <span class="chip">Unit 2 · Python Foundations</span>
 <span class="chip">Study guide · Conditionals, loops, functions</span>
+<span class="chip">Loop only · no sum(), max(), min(), sorted()</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm Exam</span>
 </div>
 <div class="weekjump" style="margin-bottom:12px;">
@@ -386,6 +387,11 @@ assert calculate_late_fee(500.00, 5) == 10.00      # 2% is exactly $10.00</code>
 <tr><td>Average</td><td>nothing extra</td><td>nothing; divide <code>total</code> by <code>len(requests)</code> after the loop</td></tr>
 </tbody>
 </table>
+</div>
+
+<div class="warn">
+<div class="concept-label">⚠ Loop only</div>
+<p>On the exam, every result in the loop question must be calculated inside your loop. <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, and comprehensions are not accepted, and neither are hard-coded results.</p>
 </div>
 
 <div class="bug">
@@ -620,7 +626,7 @@ assert calculate_pay(45, 20.00, multiplier=2.0) == 1000.00   # 800 + 5 * 20 * 2.
 </ol>
 
 <h2 id="mistakes">Mistakes that cost points</h2>
-<p>These fourteen mistakes change what the program does, so neat handwriting will not save them. Read each one, predict what goes wrong, then open it to check.</p>
+<p>These fifteen mistakes break the logic or the rules of the exam, so neat handwriting will not save them. Read each one, predict what goes wrong, then open it to check.</p>
 <div class="mistakes">
 <details><summary>Translating only half of a rule that says "unless" or "only if"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The exception never applies, or always applies.</p><p><strong>Fix:</strong> Count the conditions in the sentence, then count them in your test.</p></div></details>
 <details><summary>Mixing <code>and</code> with <code>or</code> without parentheses</summary><div class="m-body"><p><strong>What goes wrong:</strong> Python groups the parts differently from the way you read them.</p><p><strong>Fix:</strong> Put parentheses around the parts that belong together.</p></div></details>
@@ -631,6 +637,7 @@ assert calculate_pay(45, 20.00, multiplier=2.0) == 1000.00   # 800 + 5 * 20 * 2.
 <details><summary>Setting up an accumulator inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> It resets on every pass, so only the last record counts.</p><p><strong>Fix:</strong> Set it up above the <code>for</code> line.</p></div></details>
 <details><summary>Updating a value inside an <code>if</code> and its label outside it</summary><div class="m-body"><p><strong>What goes wrong:</strong> The label ends up describing the last record, not the winning one.</p><p><strong>Fix:</strong> Update both on neighbouring lines at the same indentation.</p></div></details>
 <details><summary>Using <code>elif</code> between two questions that can both be true</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second question is skipped whenever the first one is true.</p><p><strong>Fix:</strong> A separate <code>if</code> for each question.</p></div></details>
+<details><summary><code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or a comprehension instead of the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> Built-in shortcuts are not accepted on the exam.</p><p><strong>Fix:</strong> Add, count, collect, and compare inside the loop.</p></div></details>
 <details><summary>Writing <code>==</code> where you meant <code>=</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>r['status'] == 'Approved'</code> on a line by itself compares, throws the answer away, and changes nothing.</p><p><strong>Fix:</strong> One <code>=</code> to store a value, two to compare.</p></div></details>
 <details><summary><code>return</code> indented inside a loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The function stops during the first pass.</p><p><strong>Fix:</strong> Line the final <code>return</code> up with <code>for</code>.</p></div></details>
 <details><summary><code>print</code> instead of <code>return</code> in a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The caller receives <code>None</code>, and every <code>assert</code> on the function fails.</p><p><strong>Fix:</strong> Return the value and let the script print it.</p></div></details>
@@ -732,6 +739,7 @@ print(balance)</code></pre>
 <li>The id and hours of the longest ticket.</li>
 <li>The average hours per ticket, across all tickets.</li>
 </ol>
+<p>Your loop must do the work. Do not use <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or comprehensions, and do not work out any result by hand.</p>
 <p>When you finish, build a trace table with one row per ticket and check your printed values against its last row.</p>
 </div>
 
@@ -796,7 +804,7 @@ print(balance)</code></pre>
 <li><label><input type="checkbox" id="chk-chain"><span>I can write a three-tier chain in one direction, with its limits as constants</span></label></li>
 <li><label><input type="checkbox" id="chk-second"><span>I can make a second decision that uses a value I calculated</span></label></li>
 <li><label><input type="checkbox" id="chk-records"><span>I can loop over a list of dictionaries and read fields with their keys</span></label></li>
-<li><label><input type="checkbox" id="chk-onepass"><span>I can total, filter, collect, and find the largest record in one pass</span></label></li>
+<li><label><input type="checkbox" id="chk-onepass"><span>I can total, filter, collect, and find the largest record in one pass, without <code>sum()</code> or <code>max()</code></span></label></li>
 <li><label><input type="checkbox" id="chk-linked"><span>I can keep a value and its label in step</span></label></li>
 <li><label><input type="checkbox" id="chk-def"><span>I can write a function with type hints, a docstring, a default parameter, and a <code>return</code></span></label></li>
 <li><label><input type="checkbox" id="chk-call"><span>I can write one function that calls another inside a loop</span></label></li>
