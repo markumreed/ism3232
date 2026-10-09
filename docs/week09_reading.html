@@ -126,6 +126,19 @@ li::marker{color:var(--dim);}
   border-radius:10px;padding:20px;margin:20px 0;}
 .check-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
 
+/* ── Tables ── */
+.table-wrap{overflow-x:auto;margin:16px 0;}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:14px;}
+.table-wrap th{background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:10px 14px;
+  border-bottom:1px solid var(--border2);}
+.table-wrap td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+.table-wrap tr:last-child td{border-bottom:none;}
+.table-wrap .num{text-align:right;font-family:var(--mono);}
+.table-wrap td code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:1px 5px;
+  border-radius:3px;color:var(--blue);}
+[data-theme="light"] pre code{color:#1a1a26;}
+
 /* ── Footer ── */
 .page-footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10px;color:var(--dim);
@@ -143,15 +156,16 @@ li::marker{color:var(--dim);}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 9 — Midterm Exam — ISM3232 Business Application Development course material.">
+<meta name="description" content="ISM3232 Week 9 — Midterm Exam Guide — an at-home project in the shape of Lab 7, submitted as a GitHub URL.">
 </head><body>
 <div class="page-eyebrow" style="color:#818cf8;">Unit 2 · Python Foundations · Module 09 · Reading</div>
 <h1 class="wk-title">Midterm Exam</h1>
-<p class="wk-deck">Three handwritten questions worth 100 points, covering Weeks 1 through 8. One handwritten page of notes &mdash; no laptops or phones. Approximately 60 minutes. No new content this week.</p>
+<p class="wk-deck">The midterm is a project you build at home: a small, tested Python repository in the shape of Lab 7, worth 100 points. You submit its GitHub URL. No new content this week.</p>
 <div class="meta">
 <span class="chip accent">Module 09</span>
 <span class="chip">Unit 2 · Python Foundations</span>
-<span class="chip">Reading · Midterm exam — Weeks 1–8</span>
+<span class="chip">Reading · Exam Guide</span>
+<span class="chip">Online · 100 points · GitHub URL</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm Exam</span>
 </div>
 <div class="weekjump">
@@ -165,23 +179,73 @@ li::marker{color:var(--dim);}
   padding:14px 18px;margin-bottom:28px;">
   <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
     text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">This week is the midterm. This reading tells you what the exam covers, what its three questions ask for, what you may bring, and how to prepare.</p>
+  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">This week is the midterm. This reading tells you what you build, what you submit, how the 100 points are earned, what you may use, and how to prepare.</p>
 </div>
 <div style="font-family:var(--mono);font-size:11px;color:var(--muted);
   background:var(--bg2);border:1px solid var(--border);border-radius:6px;
   padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
   <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
+  <span><strong style="color:var(--text);">Read this before the exam opens.</strong>
   The <a href="week09_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>Exam format</h2><p>The midterm is <strong>three handwritten questions worth 100 points</strong>. Each one gives you a business rule in plain English and asks you to write the Python that carries it out. You write all code by hand.</p>
+  walks through the same format with short code samples, and the
+  <a href="week09_study_guide.html" style="color:var(--muted);">Study Guide</a> has the practice.</span>
+</div><h2>Exam format</h2><p>The midterm is <strong>a take-home project worth 100 points</strong>. You get a project brief: one business and its pricing rules, written in plain English. You turn those rules into a small, tested Python project, the same shape as <a href="week07_lab.html" style="color:var(--blue);">Lab 7</a>, and submit the link to your GitHub repository.</p>
 <div class="topics-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
-<div class="topic-item"><div class="topic-num">Question 1</div><div class="topic-text">Conditionals</div><div class="topic-sub">Business rules turned into if / elif / else logic</div></div>
-<div class="topic-item"><div class="topic-num">Question 2</div><div class="topic-text">Loops</div><div class="topic-sub">Processing a list with a loop and conditions</div></div>
-<div class="topic-item"><div class="topic-num">Question 3</div><div class="topic-text">Functions</div><div class="topic-sub">Functions, loops, and conditionals working together</div></div>
+<div class="topic-item"><div class="topic-num">Where</div><div class="topic-text">At home</div><div class="topic-sub">On your own computer, in your own editor and terminal</div></div>
+<div class="topic-item"><div class="topic-num">When</div><div class="topic-text">About a week</div><div class="topic-sub">Opens at the start of Week 9. The exact dates are in Canvas</div></div>
+<div class="topic-item"><div class="topic-num">How long</div><div class="topic-text">2 to 3 hours of work</div><div class="topic-sub">You do not have to finish in one sitting</div></div>
+<div class="topic-item"><div class="topic-num">Submission</div><div class="topic-text">A GitHub URL only</div><div class="topic-sub">Your public repository is the entire submission</div></div>
 </div>
-<p>Expect each question to go further than the weekly assignments. The <a href="week09_study_guide.html" style="color:var(--blue);">Study Guide</a> shows what that level looks like, with worked examples and practice problems.</p><div class="warn"><div class="concept-label">⚠ Loop only</div><p>On the loop question, calculate every result inside your loop. Do not use <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or comprehensions, and do not hard-code the results.</p></div><h2>What it covers</h2><p>The exam covers <strong>all course material from Week 1 through Week 8</strong>. The three questions are built on conditionals, loops, and functions.</p><h2>What you may bring</h2><div class="ok"><div class="concept-label">✓ You may use</div><p>One handwritten page of notes, using one side only of a standard 8.5 × 11-inch sheet of printer paper · A pen or pencil.</p></div><div class="warn"><div class="concept-label">⚠ You may not use</div><p>Laptops, phones, or any other electronic device · Printed notes, printed code, or printed slides · The internet · AI tools of any kind · Communicating with classmates.</p></div><h2>Study strategy</h2><ul class="checklist"><li><span>Work through the <a href="week09_study_guide.html" style="color:var(--blue);">Study Guide</a> — find each bug before you open the answer</span></li><li>Solve its three practice problems by hand, then trace each answer</li><li>Redo any assignments where you lost points</li><li>Practice tracing accumulator loops on paper</li><li>Write three boundary tests for a function you wrote earlier in the semester</li><li>Rewatch the Week 5–8 video scripts — especially Week 5 (types, operators, input)</li><li>Read one traceback from your own code — bottom-up — and explain it aloud</li><li>Prepare your one handwritten page of notes — patterns and reminders, not finished programs</li></ul><h2>After the midterm</h2><p>The second half of the course builds directly on what you just proved you know. Unit 3 takes the functions and data structures from Unit 2 and organises them into classes. Unit 4 connects those classes to a real database and a real user interface. Nothing from Units 1 and 2 was wasted.</p><!-- prev-next -->
+<p>Your project brief is in the Canvas assignment. Expect it to go further than Lab 7: the rules have more parts, one function works through a list of records, and you write the tests yourself.</p><h2>What you build</h2><p>One new public repository with exactly this structure:</p>
+<pre><code>ism3232-midterm/
+├── business_rules.py
+├── main.py
+├── README.md
+├── requirements.txt
+├── .gitignore
+└── tests/
+    ├── __init__.py
+    └── test_business_rules.py</code></pre>
+<div class="table-wrap">
+<table>
+<thead><tr><th>File</th><th>What goes in it</th></tr></thead>
+<tbody>
+<tr><td><code>business_rules.py</code></td><td>Five functions that carry out the brief's rules. Each has type hints, a docstring, and a <code>return</code>. Every number from the rules is a named constant. No <code>print()</code>.</td></tr>
+<tr><td><code>main.py</code></td><td>Imports your functions, loops over a list of records given in the brief, and prints a report. Your output must match the brief line for line.</td></tr>
+<tr><td><code>tests/test_business_rules.py</code></td><td>At least 10 pytest tests that you write, including the value on each side of a limit.</td></tr>
+<tr><td><code>README.md</code></td><td>Six sections: a title block, what the program does, the business rules, how to run it, how to test it, and your AI use statement.</td></tr>
+<tr><td><code>requirements.txt</code>, <code>.gitignore</code></td><td>The same two files every project has had since Week 3.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Your Git history is part of the exam too. Commit as you finish each part, with at least five commits whose messages say what changed.</p><div class="warn"><div class="concept-label">⚠ Loop only</div><p>One of your functions adds up a list of records. Its total must come from your own <code>for</code> loop. <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, and comprehensions are not accepted.</p></div><h2>How the 100 points are earned</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Criterion</th><th class="num">Points</th><th>What earns them</th></tr></thead>
+<tbody>
+<tr><td><strong>Complete submission</strong></td><td class="num">15</td><td>A public repository with every required file, a <code>main.py</code> that runs and matches the expected output, and functions with type hints, docstrings, and named constants</td></tr>
+<tr><td><strong>Functions correct</strong></td><td class="num">30</td><td>The instructor's own tests run against your functions. They check ordinary cases and the value on each side of every limit</td></tr>
+<tr><td><strong>Tests you wrote</strong></td><td class="num">20</td><td>At least 10 passing tests that cover every function, both sides of at least two limits, and a list you build inside a test</td></tr>
+<tr><td><strong>ruff</strong></td><td class="num">10</td><td><code>ruff format --check .</code> and <code>ruff check .</code> both come back clean</td></tr>
+<tr><td><strong>Commit history</strong></td><td class="num">15</td><td>At least five commits with descriptive messages, showing the project built in stages</td></tr>
+<tr><td><strong>README.md</strong></td><td class="num">10</td><td>All six sections filled in, correct run and test commands, and clean Markdown on GitHub</td></tr>
+<tr><td><strong>Total</strong></td><td class="num"><strong>100</strong></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p>Your functions are tested by name, so use the function names and the parameter order exactly as the brief gives them. Thirty points depend on it.</p><h2>What it covers</h2><p>The project uses <strong>all course material from Week 1 through Week 8</strong>. Nothing here is new.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Weeks</th><th>Where it shows up in the exam</th></tr></thead>
+<tbody>
+<tr><td>1–3</td><td>The terminal, a project folder, a virtual environment, <code>requirements.txt</code>, <code>.gitignore</code>, and a README</td></tr>
+<tr><td>4</td><td>The ritual before every push, a public GitHub repository, and commit messages that say what changed</td></tr>
+<tr><td>5–6</td><td>Constants, arithmetic, <code>if</code> / <code>elif</code> / <code>else</code> with <code>and</code> / <code>or</code>, a <code>for</code> loop over a list of dictionaries</td></tr>
+<tr><td>7</td><td>Functions with type hints, docstrings, default parameters, and <code>return</code>; importing a module; pytest tests on both sides of a limit</td></tr>
+<tr><td>8</td><td>Reading a traceback bottom-up and debugging your own code before you ask for help</td></tr>
+</tbody>
+</table>
+</div><h2>What you may use</h2><div class="ok"><div class="concept-label">✓ You may use</div><p>Your own notes · Your own labs and assignments · The course site: readings, lectures, labs, and the Study Guide.</p></div><div class="warn"><div class="concept-label">⚠ You may not use</div><p>AI tools of any kind, including chat assistants and AI code completion in your editor · Help from another person · Another student's code or repository.</p></div><p>This is an individual exam. Your README ends with a one-sentence AI use statement, the same way your Lab 1 README did.</p><h2>Before you submit</h2><ul class="checklist"><li><span><code>ruff format .</code>, then <code>ruff check .</code>, then <code>pytest -v</code>: all three come back clean</span></li><li><span><code>python3 main.py</code> prints exactly what the brief shows</span></li><li><span><code>git status</code> says there is nothing to commit, and <code>git log --oneline</code> shows at least five commits you would be happy for a manager to read</span></li><li><span>The repository is <strong>Public</strong>. Open its URL in a private browser window: if you cannot see your files without logging in, the grader cannot either</span></li><li>The README renders cleanly on GitHub, with no brackets or template text left</li><li>The URL is pasted into the Canvas text box</li></ul><p>Only what is pushed to GitHub by the deadline is graded.</p><h2>How to prepare</h2><ul class="checklist"><li><span>Work through the <a href="week09_study_guide.html" style="color:var(--blue);">Study Guide</a>, and find each bug before you open the answer</span></li><li><span>Build its practice project from an empty folder to a pushed repository. It has the same six parts as the exam</span></li><li><span>Open your Lab 7 project and run the ritual again. If <code>ruff check .</code> or <code>pytest</code> complains, find out why now</span></li><li>Redo any assignment where you lost points</li><li>Write boundary tests for a function you wrote earlier in the semester</li><li>Read one traceback from your own code, bottom-up, and explain it aloud</li><li>Push a small change to GitHub from your terminal before the exam opens, so you know your login still works</li></ul><h2>After the midterm</h2><p>The second half of the course builds directly on what you just proved you know. Unit 3 takes the functions and data structures from Unit 2 and organises them into classes. Unit 4 connects those classes to a real database and a real user interface. Nothing from Units 1 and 2 was wasted.</p><!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week08_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 8</span>Debugging, AI Literacy &amp; Review</span></a><span></span><a href="week10_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 10</span>OOP I — Classes &amp; Objects</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 9 &nbsp;·&nbsp; Midterm Exam</div>
 <script src="../site.js"></script>

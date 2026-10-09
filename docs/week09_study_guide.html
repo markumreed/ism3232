@@ -38,6 +38,9 @@ h2{font-size:18px;font-weight:700;color:var(--text);margin:44px 0 12px;
   padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:72px;}
 h3{font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--muted);margin:28px 0 8px;}
+.pts{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 9px;margin-left:8px;border-radius:20px;border:1px solid rgba(252,211,77,.35);
+  color:var(--amber);background:var(--amber-dim);vertical-align:middle;white-space:nowrap;}
 
 /* ── Body text ── */
 p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:12px;}
@@ -52,7 +55,9 @@ p code, li code, td code, summary code, figcaption code, .diagram-title code{fon
   padding:14px 18px;margin:16px 0;}
 .concept-label{font-family:var(--mono);font-size:10px;font-weight:700;
   letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
-.concept p{color:var(--text);font-size:14px;margin:0;}
+.concept p{color:var(--text);font-size:14px;margin:0 0 8px;}
+.concept > :last-child{margin-bottom:0;}
+.concept li{color:var(--text);font-size:14px;}
 .warn{background:var(--amber-dim);border:1px solid rgba(252,211,77,.2);
   border-left:3px solid var(--amber);border-radius:0 8px 8px 0;
   padding:14px 18px;margin:16px 0;}
@@ -66,8 +71,11 @@ pre code{font-family:var(--mono);font-size:13px;color:#c9d1d9;
   line-height:1.7;background:none;padding:0;}
 [data-theme="light"] pre code{color:#1a1a26;}
 pre .hl{background:rgba(110,231,183,.22);border-radius:3px;padding:1px 0;}
+pre .bad{background:rgba(248,113,113,.2);border-radius:3px;padding:1px 0;}
 .code-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted);margin:14px 0 -8px;}
+/* terminal output: what the tool printed, not something to type */
+pre.term{border-left:3px solid var(--dim);}
 
 /* ── Lists ── */
 ul,ol{padding-left:20px;margin:10px 0 16px;}
@@ -84,8 +92,9 @@ li::marker{color:var(--dim);}
 .table-wrap td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
 .table-wrap tr:last-child td{border-bottom:none;}
 .table-wrap .num{text-align:right;font-family:var(--mono);}
+.table-wrap td a{color:var(--blue);}
 
-/* ── Bug teasers: the three bug reports, linked from the top ── */
+/* ── Bug teasers: the bug reports, linked from the top ── */
 .bug-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:16px 0 8px;}
 a.bug-card{display:block;text-decoration:none;background:var(--bg2);border:1px solid var(--border);
   border-radius:10px;padding:12px 16px;transition:border-color .15s,transform .15s;}
@@ -94,7 +103,7 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
   letter-spacing:.12em;margin-bottom:4px;text-transform:uppercase;}
 .bug-card .topic-text{font-size:14px;color:var(--text);font-weight:600;line-height:1.45;}
 
-/* ── Bug report: broken code first, explanation behind a reveal ── */
+/* ── Bug report: broken work first, explanation behind a reveal ── */
 .bug{background:var(--red-dim);border:1px solid rgba(248,113,113,.28);border-radius:12px;
   padding:18px 20px;margin:24px 0 8px;}
 .bug-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;
@@ -109,6 +118,8 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
 .reveal summary::before{content:'▸ ';}
 .reveal[open] summary::before{content:'▾ ';}
 .reveal p{margin:10px 0 2px;font-size:14.5px;}
+.reveal ol{margin:10px 0 2px;}
+.reveal li{color:var(--text);font-size:14.5px;}
 .fix-tag{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:20px;
   color:var(--green);border:1px solid rgba(110,231,183,.4);background:var(--green-dim);}
 
@@ -133,6 +144,10 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
 .d-q{fill:var(--muted);font-size:11.5px;}
 .d-false{fill:var(--red);font-weight:700;font-size:12.5px;}
 .d-true{fill:var(--green);font-weight:700;font-size:12.5px;}
+.d-seg-false{fill:none;stroke:var(--red);stroke-width:4;stroke-linecap:round;}
+.d-seg-true{fill:none;stroke:var(--green);stroke-width:4;stroke-linecap:round;}
+.d-dot{fill:var(--bg2);stroke:var(--text);stroke-width:2;}
+.d-dot.on{fill:var(--blue);stroke:var(--blue);}
 
 /* ── Mistakes: predict, then open to check ── */
 .mistakes{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:16px 0;}
@@ -171,18 +186,19 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
   pre,code{font-size:12px}
   .diagram-hint{display:block}
   .table-wrap th,.table-wrap td{padding:8px 10px}
+  .pts{display:inline-block;margin:4px 0 0 0}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 9 — Midterm Study Guide — conditionals, loops, and functions at exam difficulty.">
+<meta name="description" content="ISM3232 Week 9 — Midterm Study Guide — functions, tests, ruff, Git, and a README for the at-home midterm project.">
 </head><body>
 <div class="page-eyebrow" style="color:#818cf8;">Unit 2 · Python Foundations · Module 09 · Study Guide</div>
 <h1 class="wk-title">Midterm Study Guide</h1>
-<p class="wk-deck">Conditionals, loops, and functions at midterm difficulty: three bugs to catch, three patterns to master, three problems to solve.</p>
+<p class="wk-deck">The midterm is Lab 7 at full size: rules into functions, functions into tests, and all of it into a repository a stranger can run. Seven bugs to catch, one practice project to build.</p>
 <div class="meta">
 <span class="chip accent">Module 09</span>
 <span class="chip">Unit 2 · Python Foundations</span>
-<span class="chip">Study guide · Conditionals, loops, functions</span>
+<span class="chip">Study guide · Functions, tests, ruff, Git, README</span>
 <span class="chip">Loop only · no sum(), max(), min(), sorted()</span>
 <span class="chip" style="color:#fbbf24;border-color:#fbbf2455;">★ Midterm Exam</span>
 </div>
@@ -194,357 +210,202 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
 </div>
 <div class="weekjump">
 <span class="weekjump-label">On this page:</span>
-<a href="#conditionals" class="weekjump-link">Conditionals</a>
-<a href="#loops" class="weekjump-link">Loops</a>
 <a href="#functions" class="weekjump-link">Functions</a>
-<a href="#tracing" class="weekjump-link">Tracing</a>
+<a href="#tests" class="weekjump-link">Tests</a>
+<a href="#project" class="weekjump-link">Project</a>
+<a href="#ruff" class="weekjump-link">ruff</a>
+<a href="#commits" class="weekjump-link">Commits</a>
+<a href="#readme" class="weekjump-link">README</a>
 <a href="#mistakes" class="weekjump-link">Mistakes</a>
 <a href="#practice" class="weekjump-link">Practice</a>
 <a href="#notes" class="weekjump-link">Final check</a>
 </div>
 
-<p>Every Python question on the midterm asks for the same move. Someone describes a business rule in plain English, and you turn it into code that gets the right answer. This guide trains that move on rules with more parts and data with more fields than the weekly assignments. Start with the bugs:</p>
+<p>The exam hands you a business's rules in plain English and asks for a repository that someone else can clone, run, and trust. Each line of the rubric has its own way of going wrong. Start with the bugs:</p>
 <div class="bug-grid">
-<a class="bug-card" href="#conditionals"><div class="topic-num">Bug 1 · Conditionals</div><div class="topic-text">A preferred customer paid 45 days late and was charged nothing.</div></a>
-<a class="bug-card" href="#loops"><div class="topic-num">Bug 2 · Loops</div><div class="topic-text">The report named the wrong top requester.</div></a>
-<a class="bug-card" href="#functions"><div class="topic-num">Bug 3 · Functions</div><div class="topic-text">Payroll for four people came to one paycheck.</div></a>
+<a class="bug-card" href="#functions"><div class="topic-num">Bug 1 · Functions</div><div class="topic-text">A company retreat was billed at the school-group rate.</div></a>
+<a class="bug-card" href="#bug-loop"><div class="topic-num">Bug 2 · Functions</div><div class="topic-text">Four bookings went in. Revenue came back as one.</div></a>
+<a class="bug-card" href="#tests"><div class="topic-num">Bug 3 · Tests</div><div class="topic-text">Two green tests, and a tour that left one guide short.</div></a>
+<a class="bug-card" href="#project"><div class="topic-num">Bug 4 · Project</div><div class="topic-text">It ran on my laptop. The grader's pytest never started.</div></a>
+<a class="bug-card" href="#ruff"><div class="topic-num">Bug 5 · ruff</div><div class="topic-text">ruff format said all clear. ruff check found four problems.</div></a>
+<a class="bug-card" href="#commits"><div class="topic-num">Bug 6 · Commits</div><div class="topic-text">Three hours of work, one commit, and it is called "final".</div></a>
+<a class="bug-card" href="#readme"><div class="topic-num">Bug 7 · README</div><div class="topic-text">The README that could not run the project.</div></a>
 </div>
 
-<h2 id="covers">What this guide covers</h2>
-<p>This guide covers the Python core of the midterm: conditionals, loops, and functions. You have used all three since Week 6. The midterm asks for more of each.</p>
+<h2 id="covers">What the exam asks for</h2>
+<p>The midterm is one project worth 100 points. This guide has a section for each line of the rubric, in the order you will build them.</p>
 <div class="table-wrap">
 <table>
-<thead><tr><th>Skill</th><th>In the assignments</th><th>At midterm difficulty</th></tr></thead>
+<thead><tr><th>Rubric line</th><th class="num">Points</th><th>What it rewards</th><th>Section</th></tr></thead>
 <tbody>
-<tr><td><strong>Conditionals</strong></td><td>One input, one chain of tiers</td><td>Several inputs joined with <code>and</code> / <code>or</code>, named limits, and a second decision that depends on a calculated value</td></tr>
-<tr><td><strong>Loops</strong></td><td>One total from a list of numbers</td><td>A list of dictionaries, with several answers from one pass: a total, a filtered total, a list of matches, and the largest record</td></tr>
-<tr><td><strong>Functions</strong></td><td>One function, one parameter</td><td>Several parameters, a default value, one function calling another, and <code>assert</code> tests on both sides of each boundary</td></tr>
+<tr><td><strong>Functions correct</strong></td><td class="num">30</td><td>Five functions that return the right answer, including at every limit</td><td><a href="#functions">Functions</a></td></tr>
+<tr><td><strong>Tests you wrote</strong></td><td class="num">20</td><td>At least 10 passing pytest tests that would catch a wrong comparison</td><td><a href="#tests">Tests</a></td></tr>
+<tr><td><strong>Complete submission</strong></td><td class="num">15</td><td>Every required file, a <code>main.py</code> whose output matches, and well-formed functions</td><td><a href="#project">Project</a></td></tr>
+<tr><td><strong>Commit history</strong></td><td class="num">15</td><td>At least five commits that show the project built in stages</td><td><a href="#commits">Commits</a></td></tr>
+<tr><td><strong>ruff</strong></td><td class="num">10</td><td>Clean formatting and a clean check</td><td><a href="#ruff">ruff</a></td></tr>
+<tr><td><strong>README.md</strong></td><td class="num">10</td><td>Six sections a stranger could follow</td><td><a href="#readme">README</a></td></tr>
 </tbody>
 </table>
 </div>
 <div class="concept">
 <div class="concept-label">Exam logistics</div>
-<p>This page is practice. For how the exam runs and what you may bring, see the Week 9 <a href="week09_reading.html" style="color:var(--blue);">Reading</a>.</p>
+<p>This page is practice. For how the exam runs, what you submit, and what you may use, see the Week 9 <a href="week09_reading.html" style="color:var(--blue);">Reading</a>.</p>
 </div>
 
-<h2 id="method">Turn a business rule into code in four steps</h2>
-<p>Plan on paper before you write any Python. Code with the wrong structure gives the wrong answer, however clean its syntax.</p>
+<h2 id="method">From rules to repository in six moves</h2>
+<p>Every example on this page comes from one small business, so you can watch a whole project come together.</p>
+<div class="concept">
+<div class="concept-label">The running example · Lakeshore Kayak Tours</div>
+<p>Lakeshore Kayak Tours prices each booking by the seat. Its five rules:</p>
 <ol>
-<li><strong>Mark up the prompt.</strong> Underline each input, circle each rule, and box each value you must return or print. Circle the words "unless", "only if", and "except" twice.</li>
-<li><strong>Name the limits and the variables.</strong> Every number in a rule becomes a constant in capitals. Every value you must calculate gets a variable name.</li>
-<li><strong>Pick the structure.</strong> Match the wording of the prompt to a tool using the table below.</li>
-<li><strong>Order the steps, then trace and test.</strong> Each value must be calculated above any line that uses it. Trace the given numbers by hand, then try the value on each side of every limit.</li>
+<li>The tour cost is the seat price times the number of seats.</li>
+<li>The discount depends on the number of seats: fewer than 6 seats, no discount; 6 through 19 seats, 10%; 20 seats or more, 25%.</li>
+<li>The 25% discount is only for school groups. Any other booking of 20 seats or more gets the 10% discount.</li>
+<li>A $30 launch fee is added when the discounted cost is below $200.</li>
+<li>A booking total of $1,000 or more needs a second guide.</li>
+</ol>
+</div>
+<p>Work in this order. Each move ends with something that runs.</p>
+<ol>
+<li><strong>Mark up the rules.</strong> Circle every number, because each one becomes a named constant. Underline every boundary word, such as "fewer than", "or more", and "below". Box the sentence that mentions a True/False input.</li>
+<li><strong>Build the skeleton and commit it.</strong> Folder, virtual environment, pytest and ruff, the seven files, a public repository. Make your first commit before any logic exists.</li>
+<li><strong>Write one function, then its tests, then commit.</strong> Do not write five functions and then fifteen tests. A function is finished when its tests pass.</li>
+<li><strong>Write <code>main.py</code> last.</strong> It only imports, loops, and prints. Compare its output with the brief one line at a time.</li>
+<li><strong>Run the ritual.</strong> <code>ruff format .</code>, then <code>ruff check .</code>, then <code>pytest -v</code>. Fix and repeat until all three are clean.</li>
+<li><strong>Write the README, push, and look.</strong> Open the repository in a private browser window and read it the way the grader will.</li>
 </ol>
 <div class="table-wrap">
 <table>
-<thead><tr><th>The prompt says</th><th>The job</th><th>Use</th></tr></thead>
+<thead><tr><th>The rule says</th><th>The job</th><th>Use</th></tr></thead>
 <tbody>
-<tr><td>"up to", "more than", "unless", "only if"</td><td>Choose one outcome from several</td><td><code>if</code> / <code>elif</code> / <code>else</code>, with <code>and</code> / <code>or</code> for rules that have two conditions</td></tr>
-<tr><td>"each", "every", "total", "how many", "which ones", "largest" about a list of records</td><td>Repeat the same steps for every record</td><td><code>for</code> loop over the list, with one variable per answer set up before it</td></tr>
-<tr><td>"write a function", or one rule applied to many records</td><td>Package a calculation for reuse and testing</td><td><code>def</code> with parameters, type hints, and <code>return</code></td></tr>
+<tr><td>"fewer than", "through", "or more", "below"</td><td>Choose one outcome from several</td><td><code>if</code> / <code>elif</code> / <code>else</code>, checked in one direction</td></tr>
+<tr><td>"only for", "always at least", "an extra … but only on"</td><td>Let a True/False input bend the rule</td><td>A second condition joined with <code>and</code> or <code>or</code>, or a second <code>if</code> after the chain</td></tr>
+<tr><td>"is added when the discounted cost is …"</td><td>Make a second decision from a value you calculated</td><td>Calculate first, then a separate <code>if</code></td></tr>
+<tr><td>"for every booking in the list"</td><td>Repeat the same steps for every record</td><td>A <code>for</code> loop with the total set up before it</td></tr>
 </tbody>
 </table>
 </div>
 
-<h2 id="conditionals">Conditionals: rules with more than one input</h2>
-<p>A business rule with an exception is still one decision. The exception becomes a second condition inside the same test, not a separate afterthought.</p>
+<h2 id="functions">Functions: rules with a True/False input <span class="pts">30 points</span></h2>
+<p>Two inputs decide the discount: how many seats, and whether the group is a school. The sentence that mentions the True/False input is where most of the points are lost.</p>
 
 <div class="bug">
 <div class="bug-tag">Bug report 1</div>
-<div class="bug-title">A preferred customer paid 45 days late and was charged nothing</div>
-<p>A supplier charges late fees on overdue invoices. Invoices paid on time owe nothing. Invoices 1 through 30 days late owe 2% of the invoice. Invoices more than 30 days late owe 5%. Preferred customers owe no fee, unless they are more than 30 days late.</p>
-<p>A preferred customer paid a $1,200 invoice 45 days late, and this function charged nothing.</p>
-<pre><code>def calculate_late_fee(amount: float, days_late: int,
-                       preferred: bool = False) -&gt; float:
-    if days_late == 0 or preferred:
-        rate = 0.0
-    elif days_late &lt;= 30:
-        rate = 0.02
-    else:
-        rate = 0.05
-    return amount * rate
+<div class="bug-title">A company retreat was billed at the school-group rate</div>
+<p>Orbit Robotics booked 40 seats at $30.00 for a company retreat. The invoice came to $900.00. It should have been $1,080.00.</p>
+<pre><code>MID_TIER_SEATS = 6
+TOP_TIER_SEATS = 20
+MID_TIER_RATE = 0.10
+TOP_TIER_RATE = 0.25
 
-print(calculate_late_fee(1200.00, 45, preferred=True))    # prints 0.0</code></pre>
+
+def get_group_discount(seats: int, school: bool = False) -&gt; float:
+    """Return the discount rate as a decimal."""
+    if seats &gt;= TOP_TIER_SEATS:
+        return TOP_TIER_RATE
+    elif seats &gt;= MID_TIER_SEATS:
+        return MID_TIER_RATE
+    else:
+        return 0.0
+
+
+print(get_group_discount(40))    # prints 0.25</code></pre>
 <p><strong>Find the bug before you open the answer.</strong></p>
 <details class="reveal"><summary>Reveal the bug</summary>
-<p>The rule has two parts: preferred customers owe nothing, <em>unless</em> they are more than 30 days late. The code kept the first part and dropped the second, so <code>preferred</code> alone switches the fee off. A rule with an exception needs both conditions, joined with <code>and</code>.</p>
+<p>Rule 3 says the 25% discount is <em>only for</em> school groups. The function takes a <code>school</code> parameter and never reads it, so every booking of 20 seats or more gets the top rate. "Only for" adds a second condition to the top tier, joined with <code>and</code>.</p>
 </details>
 </div>
 
-<h3><span class="fix-tag">Fix</span>Translate the whole rule</h3>
-<p>The waiver now needs two things to be true: the customer is preferred <strong>and</strong> the invoice is no more than 30 days late. This version also names its limits as constants and adds the supplier's second rule: any fee that is charged is at least $10.</p>
-<pre><code>LATE_LIMIT_DAYS = 30
-RATE_LATE       = 0.02
-RATE_VERY_LATE  = 0.05
-MINIMUM_FEE     = 10.00
-
-def calculate_late_fee(amount: float, days_late: int,
-                       preferred: bool = False) -&gt; float:
-    """Return the late fee for one invoice."""
-    # Decision 1: choose the rate
-<span class="hl">    if days_late == 0 or (preferred and days_late &lt;= LATE_LIMIT_DAYS):</span>
-        rate = 0.0
-    elif days_late &lt;= LATE_LIMIT_DAYS:
-        rate = RATE_LATE
+<h3><span class="fix-tag">Fix</span>Read every parameter the rule mentions</h3>
+<p>The top tier now needs two things to be true: 20 seats or more <strong>and</strong> a school group. A company with 40 seats fails that test and falls through to the next one.</p>
+<pre><code>def get_group_discount(seats: int, school: bool = False) -&gt; float:
+    """Return the discount rate as a decimal."""
+<span class="hl">    if seats &gt;= TOP_TIER_SEATS and school:</span>
+        return TOP_TIER_RATE
+    elif seats &gt;= MID_TIER_SEATS:
+        return MID_TIER_RATE
     else:
-        rate = RATE_VERY_LATE
-
-    fee = amount * rate
-
-    # Decision 2: a separate rule, based on the calculated fee
-    if fee &gt; 0 and fee &lt; MINIMUM_FEE:
-        fee = MINIMUM_FEE
-
-    return fee</code></pre>
-<p>Five calls check five different paths through the function:</p>
-<pre><code>print(f'{calculate_late_fee(1200.00, 0):.2f}')                    # on time
-print(f'{calculate_late_fee(1200.00, 12):.2f}')                   # 12 days late
-print(f'{calculate_late_fee(1200.00, 12, preferred=True):.2f}')   # preferred, 12 days late
-print(f'{calculate_late_fee(1200.00, 45, preferred=True):.2f}')   # preferred, 45 days late
-print(f'{calculate_late_fee(300.00, 12):.2f}')                    # 2% is $6.00, raised to the minimum</code></pre>
+        return 0.0</code></pre>
+<p>Four calls check four different paths through the function:</p>
+<pre><code>print(get_group_discount(5))                  # below the first tier
+print(get_group_discount(6))                  # the first tier starts here
+print(get_group_discount(20))                 # 20 seats, not a school
+print(get_group_discount(20, school=True))    # 20 seats, a school</code></pre>
 <div class="code-label">Output</div>
-<pre><code>0.00
-24.00
-0.00
-60.00
-10.00</code></pre>
+<pre class="term"><code>0.0
+0.1
+0.1
+0.25</code></pre>
 
-<figure class="diagram">
-<div class="diagram-title">One False part sinks an <code>and</code></div>
-<div class="diagram-scroll" tabindex="0">
-<svg viewBox="0 0 760 262" role="img" aria-label="How the first test evaluates for a preferred customer who is 45 days late. days_late equals 0 is False. preferred is True. days_late is at most 30 is False. The and of the last two is False, so the or of all three is False and Python moves on to the next test.">
-<rect class="d-box" x="20" y="12" width="220" height="56" rx="8"/>
-<text class="d-t d-m" x="130" y="36" text-anchor="middle">days_late == 0</text>
-<text class="d-false" x="130" y="56" text-anchor="middle">False</text>
-<rect class="d-box" x="270" y="12" width="220" height="56" rx="8"/>
-<text class="d-t d-m" x="380" y="36" text-anchor="middle">preferred</text>
-<text class="d-true" x="380" y="56" text-anchor="middle">True</text>
-<rect class="d-box" x="520" y="12" width="220" height="56" rx="8"/>
-<text class="d-t d-m" x="630" y="36" text-anchor="middle">days_late &lt;= 30</text>
-<text class="d-false" x="630" y="56" text-anchor="middle">False</text>
-<path class="d-line" d="M380 68V108"/>
-<path class="d-line" d="M630 68V108"/>
-<rect class="d-box" x="270" y="108" width="470" height="56" rx="8"/>
-<text class="d-t d-m" x="505" y="132" text-anchor="middle">preferred and days_late &lt;= 30</text>
-<text class="d-false" x="505" y="152" text-anchor="middle">False, because and needs both parts True</text>
-<path class="d-line" d="M130 68V196"/>
-<path class="d-line" d="M505 164V196"/>
-<rect class="d-box on" x="20" y="196" width="720" height="56" rx="8"/>
-<text class="d-t d-m d-b" x="380" y="220" text-anchor="middle">days_late == 0 or (preferred and days_late &lt;= 30)</text>
-<text class="d-false" x="380" y="240" text-anchor="middle">False, so no waiver: Python moves on to the elif</text>
-</svg>
+<h3>Three wordings, three shapes</h3>
+<p>A True/False input can bend a tiered rule in more than one way. Read the sentence for which of these it is saying.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>The rule says</th><th>What it means</th><th>Shape in code</th></tr></thead>
+<tbody>
+<tr><td>"The 25% discount is <strong>only for</strong> school groups."</td><td>The top tier needs both conditions</td><td><code>if seats &gt;= TOP_TIER_SEATS and school:</code></td></tr>
+<tr><td>"School groups <strong>always get at least</strong> the 10% discount, even on bookings of fewer than 6 seats."</td><td>The flag opens the middle tier by itself</td><td><code>elif seats &gt;= MID_TIER_SEATS or school:</code></td></tr>
+<tr><td>"School groups get <strong>an extra</strong> 5 percentage points, <strong>but only on</strong> bookings of 6 seats or more."</td><td>Find the tier first, then add to it</td><td>Store the tier's rate in a variable. After the chain, a separate <code>if</code> with both conditions adds the extra</td></tr>
+</tbody>
+</table>
 </div>
-<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
-<figcaption>For a preferred customer who is 45 days late, <code>preferred</code> is True but <code>days_late &lt;= 30</code> is False. The parentheses show which two parts belong together.</figcaption>
-</figure>
-
-<p>Five habits keep a multi-part rule safe:</p>
-<ul>
-<li><strong>Translate the whole sentence.</strong> Words like "unless", "only if", and "except" add a second condition. If your test has fewer conditions than the sentence, part of the rule is missing.</li>
-<li><strong>Use parentheses when a test mixes <code>and</code> with <code>or</code>.</strong> They show which parts belong together, to Python and to the person grading.</li>
-<li><strong>Name each limit once, as a constant.</strong> <code>LATE_LIMIT_DAYS</code> appears in two tests. Changing it in one place keeps both in step.</li>
-<li><strong>Check tiers in one direction.</strong> Go up with <code>&lt;=</code> or down with <code>&gt;=</code>, and never mix the two in one chain.</li>
-<li><strong>Read which value the rule names.</strong> The minimum applies to the calculated fee, not to the invoice amount, so that decision comes after the calculation.</li>
-</ul>
+<p>In the second wording the top tier is still checked first, so a school with 20 seats gets the top rate, not the middle one. In the third, "5 percentage points" means 10% becomes 15%: you add <code>0.05</code> to the rate.</p>
 
 <h3>Translate boundary words exactly</h3>
 <div class="table-wrap">
 <table>
 <thead><tr><th>The rule says</th><th>Write</th></tr></thead>
 <tbody>
-<tr><td>up to 30 days, 30 or fewer, no more than 30</td><td><code>&lt;= 30</code></td></tr>
-<tr><td>more than 30, over 30</td><td><code>&gt; 30</code></td></tr>
-<tr><td>at least $10, $10 or more</td><td><code>&gt;= 10</code></td></tr>
-<tr><td>under $10, less than $10</td><td><code>&lt; 10</code></td></tr>
-<tr><td>1 through 30 days</td><td><code>days_late &gt;= 1 and days_late &lt;= 30</code>, or just <code>&lt;= 30</code> once 0 has been handled above it</td></tr>
+<tr><td>fewer than 6, below 6, under 6</td><td><code>&lt; 6</code></td></tr>
+<tr><td>6 or more, at least 6</td><td><code>&gt;= 6</code></td></tr>
+<tr><td>more than $1,000, over $1,000</td><td><code>&gt; 1000</code></td></tr>
+<tr><td>$200 or less, up to $200</td><td><code>&lt;= 200</code></td></tr>
+<tr><td>6 through 19</td><td><code>&gt;= 6</code>, once the tier above it (20 or more) has been checked first</td></tr>
 </tbody>
 </table>
 </div>
 
-<h3>Test both sides of every limit</h3>
-<p>Every limit has two neighbours, and a wrong comparison only shows up at one of them. These tests pass for the fixed function. Work out by hand why each one is true.</p>
-<pre><code>assert calculate_late_fee(1000.00, 30) == 20.00    # day 30 is still the 2% tier
-assert calculate_late_fee(1000.00, 31) == 50.00    # day 31 moves to 5%
-assert calculate_late_fee(1000.00, 30, preferred=True) == 0.0
-assert calculate_late_fee(1000.00, 31, preferred=True) == 50.00
-assert calculate_late_fee(500.00, 5) == 10.00      # 2% is exactly $10.00</code></pre>
+<h3>One function calls the others</h3>
+<p>Rule 4 needs the cost and the discount, and both already have a function. The third function calls them. It does not repeat their logic.</p>
+<pre><code>LAUNCH_FEE = 30.00
+LAUNCH_FEE_LIMIT = 200.00
 
-<div class="warn">
-<div class="concept-label">🦆 Tell the duck</div>
-<p>Say out loud what <code>preferred and days_late &lt;= LATE_LIMIT_DAYS</code> means in business words. If your sentence does not match the policy, the code does not either.</p>
-</div>
 
-<h2 id="loops">Loops: one pass, several answers</h2>
-<p>A loop over records can answer several questions in one pass, as long as every answer has its own variable set up before the loop starts.</p>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Goal</th><th>Before the loop</th><th>Inside the loop</th></tr></thead>
-<tbody>
-<tr><td>Total</td><td><code>total = 0.0</code></td><td><code>total += r['amount']</code></td></tr>
-<tr><td>Total for some records</td><td><code>pending_total = 0.0</code></td><td><code>if r['status'] == 'Pending':</code> then add</td></tr>
-<tr><td>Collect the matches</td><td><code>needs_review = []</code></td><td><code>if r['amount'] &gt; REVIEW_LIMIT:</code> then <code>.append()</code></td></tr>
-<tr><td>Largest, and who it belongs to</td><td><code>highest = 0.0</code> and <code>top_requester = ''</code></td><td><code>if r['amount'] &gt; highest:</code> then update both</td></tr>
-<tr><td>Average</td><td>nothing extra</td><td>nothing; divide <code>total</code> by <code>len(requests)</code> after the loop</td></tr>
-</tbody>
-</table>
-</div>
+def calculate_booking_total(
+    seat_price: float, seats: int, school: bool = False
+) -&gt; float:
+    """Return the total for one booking, with the launch fee if it applies."""
+    cost = calculate_tour_cost(seat_price, seats)
+    rate = get_group_discount(seats, school)
+    discounted = cost * (1 - rate)
+<span class="hl">    if discounted &lt; LAUNCH_FEE_LIMIT:</span>
+        return discounted + LAUNCH_FEE
+    return discounted</code></pre>
+<p>The fee test reads <code>discounted</code>, because the rule says "when the <em>discounted</em> cost is below $200". Testing <code>cost</code> would be a different rule. Calculate the value the sentence names, then test it.</p>
 
-<div class="warn">
-<div class="concept-label">⚠ Loop only</div>
-<p>On the exam, every result in the loop question must be calculated inside your loop. <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, and comprehensions are not accepted, and neither are hard-coded results.</p>
-</div>
-
-<div class="bug">
+<div class="bug" id="bug-loop">
 <div class="bug-tag">Bug report 2</div>
-<div class="bug-title">The report named the wrong top requester</div>
-<p>Finance wants the largest purchase request and who made it. Casey asked for $2,200, the largest amount on the list. The report got the amount right and gave the credit to Morgan.</p>
-<pre><code>requests = [
-    {'requester': 'Taylor', 'amount': 1250.00, 'status': 'Pending'},
-    {'requester': 'Jordan', 'amount':  350.00, 'status': 'Approved'},
-    {'requester': 'Casey',  'amount': 2200.00, 'status': 'Pending'},
-    {'requester': 'Morgan', 'amount':  900.00, 'status': 'Pending'},
+<div class="bug-title">Four bookings went in. Revenue came back as one</div>
+<p>The week's four bookings were totalled for the owner. The report said $130.00, which is exactly what the first booking came to.</p>
+<pre><code>bookings = [
+    {"group": "Harbor Scouts", "seat_price": 25.00, "seats": 4, "school": False},
+    {"group": "Pinecrest Middle", "seat_price": 22.00, "seats": 24, "school": True},
+    {"group": "Orbit Robotics", "seat_price": 30.00, "seats": 40, "school": False},
+    {"group": "Marsh Birders", "seat_price": 28.00, "seats": 8, "school": False},
 ]
 
-highest = 0.0
-top_requester = ''
 
-for r in requests:
-    if r['amount'] &gt; highest:
-        highest = r['amount']
-    top_requester = r['requester']
-
-print(f'Largest request: ${highest:,.2f} by {top_requester}')
-# Largest request: $2,200.00 by Morgan</code></pre>
-<p><strong>Find the bug before you open the answer.</strong></p>
-<details class="reveal"><summary>Reveal the bug</summary>
-<p>The line <code>top_requester = r['requester']</code> sits outside the <code>if</code>, so it runs on every pass and ends up holding the last name on the list. Two variables that describe the same record must change together, inside the same <code>if</code>.</p>
-</details>
-</div>
-
-<h3><span class="fix-tag">Fix</span>Update both together</h3>
-<p>Indent the name so it moves with the amount. The corrected loop also answers four more questions in the same pass, each with its own variable and its own <code>if</code>.</p>
-<pre><code>REVIEW_LIMIT = 1000.00
-
-# Set up every answer before the loop
-total = 0.0
-pending_total = 0.0
-needs_review = []
-highest = 0.0
-top_requester = ''
-
-for r in requests:
-    total += r['amount']
-
-    if r['status'] == 'Pending':
-        pending_total += r['amount']
-
-    if r['amount'] &gt; REVIEW_LIMIT:
-        needs_review.append(r['requester'])
-
-    if r['amount'] &gt; highest:
-        highest = r['amount']
-<span class="hl">        top_requester = r['requester']</span>
-
-# The average needs the finished total, so it comes after the loop
-average = total / len(requests)
-
-print(f'Total requested: ${total:,.2f}')
-print(f'Pending total:   ${pending_total:,.2f}')
-print(f'Needs review:    {needs_review}')
-print(f'Largest request: ${highest:,.2f} by {top_requester}')
-print(f'Average request: ${average:,.2f}')</code></pre>
-<div class="code-label">Output</div>
-<pre><code>Total requested: $4,700.00
-Pending total:   $4,350.00
-Needs review:    ['Taylor', 'Casey']
-Largest request: $2,200.00 by Casey
-Average request: $1,175.00</code></pre>
-
-<p>Five checks work on any list of records:</p>
-<ul>
-<li><strong>Set up every answer before the loop.</strong> A number starts at 0, a list starts empty, a name starts as an empty string.</li>
-<li><strong>Give each question its own <code>if</code>.</strong> One request can be pending, over the limit, and the largest so far, all at once. An <code>elif</code> would let only one of those count.</li>
-<li><strong>Keep linked variables in step.</strong> A value and its label are updated on neighbouring lines, at the same indentation.</li>
-<li><strong>Finish before you divide.</strong> An average, a percentage, or any result that needs the final total belongs after the loop.</li>
-<li><strong>Read fields with their keys.</strong> Inside the loop it is <code>r['amount']</code>. A bare <code>amount</code> is a different variable, or no variable at all.</li>
-</ul>
-
-<div class="warn">
-<div class="concept-label">🦆 Tell the duck</div>
-<p>Explain why Morgan's $900 request changes <code>total</code> and <code>pending_total</code> but not <code>needs_review</code>, <code>highest</code>, or <code>top_requester</code>.</p>
-</div>
-
-<h2 id="functions">Functions: small functions that work together</h2>
-<p>A function does one job, takes what it needs as parameters, and returns its answer. Bigger jobs are built by one function calling another.</p>
-<p><strong>Example.</strong> A company pays hourly staff each week. Hours up to 40 are paid at the normal rate. Hours above 40 are paid at 1.5 times the rate.</p>
-<pre><code>REGULAR_HOURS       = 40
-OVERTIME_MULTIPLIER = 1.5
-
-def calculate_pay(hours: float, rate: float,
-                  multiplier: float = OVERTIME_MULTIPLIER) -&gt; float:
-    """Return gross pay for one week. Hours above 40 earn overtime."""
-    if hours &lt;= REGULAR_HOURS:
-        return hours * rate
-    overtime_hours = hours - REGULAR_HOURS
-    return REGULAR_HOURS * rate + overtime_hours * rate * multiplier</code></pre>
-<p>That function pays one person. A second function adds up a whole list by calling the first one for each timesheet.</p>
-
-<figure class="diagram">
-<div class="diagram-title">Each <code>return</code> goes back to the line that made the call</div>
-<div class="diagram-scroll" tabindex="0">
-<svg viewBox="0 0 760 176" role="img" aria-label="The script calls total_payroll with the timesheets. total_payroll calls calculate_pay with 45 hours at 20 dollars. calculate_pay returns 950.0 to total_payroll, and total_payroll returns 4120.0 to the script.">
-<defs>
-<marker id="call-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker>
-<marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow-on" d="M0 0L10 5L0 10z"/></marker>
-</defs>
-<rect class="d-box" x="8" y="10" width="204" height="156" rx="8"/>
-<text class="d-t d-b" x="22" y="36">The script</text>
-<text class="d-t d-m" x="22" y="64">payroll =</text>
-<text class="d-t d-m" x="22" y="82">total_payroll(timesheets)</text>
-<text class="d-q" x="22" y="146">payroll now holds 4120.0</text>
-<rect class="d-box" x="278" y="10" width="204" height="156" rx="8"/>
-<text class="d-t d-b" x="292" y="36">total_payroll</text>
-<text class="d-t d-m" x="292" y="64">for t in timesheets:</text>
-<text class="d-t d-m" x="306" y="82">total += calculate_pay(…)</text>
-<text class="d-t d-m d-b" x="292" y="146">return total</text>
-<rect class="d-box" x="548" y="10" width="204" height="156" rx="8"/>
-<text class="d-t d-b" x="562" y="36">calculate_pay</text>
-<text class="d-t d-m" x="562" y="64">hours = 45, rate = 20.00</text>
-<text class="d-t d-m" x="562" y="82">800.00 + 150.00</text>
-<text class="d-t d-m d-b" x="562" y="146">return 950.0</text>
-<path class="d-line" d="M212 104H278" marker-end="url(#call-arrow)"/>
-<text class="d-q" x="245" y="98" text-anchor="middle">timesheets</text>
-<path class="d-line" d="M482 104H548" marker-end="url(#call-arrow)"/>
-<text class="d-q" x="515" y="98" text-anchor="middle">45, 20.00</text>
-<path class="d-line on" d="M548 128H482" marker-end="url(#return-arrow)"/>
-<text class="d-t d-b" x="515" y="122" text-anchor="middle" style="font-size:11.5px">950.0</text>
-<path class="d-line on" d="M278 128H212" marker-end="url(#return-arrow)"/>
-<text class="d-t d-b" x="245" y="122" text-anchor="middle" style="font-size:11.5px">4120.0</text>
-</svg>
-</div>
-<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
-<figcaption>For a 45-hour week at $20.00, <code>calculate_pay</code> returns 950.0 to <code>total_payroll</code>, which adds it to the total. When the loop ends, <code>total_payroll</code> returns 4120.0 to the script.</figcaption>
-</figure>
-
-<div class="bug">
-<div class="bug-tag">Bug report 3</div>
-<div class="bug-title">Payroll for four people came to one paycheck</div>
-<p>Four timesheets went in. The total that came back was $1,000.00, which is exactly what Avery earned.</p>
-<pre><code>timesheets = [
-    {'name': 'Avery', 'hours': 40, 'rate': 25.00},
-    {'name': 'Blake', 'hours': 45, 'rate': 20.00},
-    {'name': 'Devon', 'hours': 32, 'rate': 30.00},
-    {'name': 'Emery', 'hours': 50, 'rate': 22.00},
-]
-
-def total_payroll(timesheets: list) -&gt; float:
+def total_revenue(bookings: list) -&gt; float:
     total = 0.0
-    for t in timesheets:
-        total += calculate_pay(t['hours'], t['rate'])
+    for booking in bookings:
+        total += calculate_booking_total(
+            booking["seat_price"], booking["seats"], booking["school"]
+        )
         return total
 
-print(f'Total payroll: ${total_payroll(timesheets):,.2f}')
-# Total payroll: $1,000.00</code></pre>
+
+print(f"Total revenue: ${total_revenue(bookings):.2f}")
+# Total revenue: $130.00</code></pre>
 <p><strong>Find the bug before you open the answer.</strong></p>
 <details class="reveal"><summary>Reveal the bug</summary>
 <p><code>return</code> is indented inside the loop, so the function hands back the total and stops during the first pass. A <code>return</code> ends the function immediately, even in the middle of a loop. It belongs one level out, lined up with <code>for</code>.</p>
@@ -552,265 +413,719 @@ print(f'Total payroll: ${total_payroll(timesheets):,.2f}')
 </div>
 
 <h3><span class="fix-tag">Fix</span>Return after the loop</h3>
-<p>Move <code>return</code> out one level so the loop can finish. The function returns the total and prints nothing, so the script decides how to display it.</p>
-<pre><code>def total_payroll(timesheets: list) -&gt; float:
-    """Return total gross pay for a list of timesheet records."""
+<pre><code>def total_revenue(bookings: list) -&gt; float:
+    """Return the sum of the booking totals for every booking in the list."""
     total = 0.0
-    for t in timesheets:
-        total += calculate_pay(t['hours'], t['rate'])
-<span class="hl">    return total</span>
-
-payroll = total_payroll(timesheets)
-print(f'Total payroll: ${payroll:,.2f}')</code></pre>
+    for booking in bookings:
+        total += calculate_booking_total(
+            booking["seat_price"], booking["seats"], booking["school"]
+        )
+<span class="hl">    return total</span></code></pre>
 <div class="code-label">Output</div>
-<pre><code>Total payroll: $4,120.00</code></pre>
+<pre class="term"><code>Total revenue: $1807.60</code></pre>
 
-<p>Check six things on any function answer:</p>
+<figure class="diagram">
+<div class="diagram-title">Each <code>return</code> goes back to the line that made the call</div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 860 180" role="img" aria-label="main.py calls total_revenue with the bookings. total_revenue calls calculate_booking_total once for each booking. For Orbit Robotics, calculate_booking_total returns 1080.00 to total_revenue. When the loop ends, total_revenue returns 1807.60 to main.py.">
+<defs>
+<marker id="call-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker>
+<marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow-on" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="d-box" x="8" y="10" width="236" height="160" rx="8"/>
+<text class="d-t d-b" x="22" y="36">main.py</text>
+<text class="d-t d-m" x="22" y="64">revenue =</text>
+<text class="d-t d-m" x="36" y="82">total_revenue(bookings)</text>
+<text class="d-q" x="22" y="152">revenue now holds 1807.60</text>
+<rect class="d-box" x="312" y="10" width="236" height="160" rx="8"/>
+<text class="d-t d-b" x="326" y="36">total_revenue</text>
+<text class="d-t d-m" x="326" y="64">for booking in bookings:</text>
+<text class="d-t d-m" x="340" y="82">total +=</text>
+<text class="d-t d-m" x="344" y="100">calculate_booking_total(…)</text>
+<text class="d-t d-m d-b" x="326" y="152">return total</text>
+<rect class="d-box" x="616" y="10" width="236" height="160" rx="8"/>
+<text class="d-t d-b" x="630" y="36">calculate_booking_total</text>
+<text class="d-t d-m" x="630" y="64">30.00, 40, False</text>
+<text class="d-t d-m" x="630" y="82">1200.00 * (1 - 0.10)</text>
+<text class="d-t d-m d-b" x="630" y="152">return 1080.00</text>
+<path class="d-line" d="M244 116H312" marker-end="url(#call-arrow)"/>
+<text class="d-q" x="278" y="110" text-anchor="middle">bookings</text>
+<path class="d-line" d="M548 116H616" marker-end="url(#call-arrow)"/>
+<text class="d-q" x="582" y="110" text-anchor="middle">booking</text>
+<path class="d-line on" d="M616 140H548" marker-end="url(#return-arrow)"/>
+<text class="d-t d-b" x="582" y="134" text-anchor="middle" style="font-size:11.5px">1080.00</text>
+<path class="d-line on" d="M312 140H244" marker-end="url(#return-arrow)"/>
+<text class="d-t d-b" x="278" y="134" text-anchor="middle" style="font-size:11.5px">1807.60</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>On the Orbit Robotics pass, <code>calculate_booking_total</code> returns 1080.00 to <code>total_revenue</code>, which adds it to the total. When the loop ends, <code>total_revenue</code> returns 1807.60 to <code>main.py</code>.</figcaption>
+</figure>
+
+<div class="warn">
+<div class="concept-label">⚠ Loop only</div>
+<p>On the exam, the function that adds up a list must get its total from your own <code>for</code> loop. <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, and comprehensions are not accepted.</p>
+</div>
+
+<p>Check six things on every function:</p>
 <ul>
-<li><strong>One job per function.</strong> <code>calculate_pay</code> knows the overtime rule. <code>total_payroll</code> knows how to add up a list. Neither does the other's work.</li>
-<li><strong>Parameters in, <code>return</code> out.</strong> A function that reads a list defined somewhere else, or prints its answer instead of returning it, cannot be reused or tested.</li>
-<li><strong>Defaults go last.</strong> <code>multiplier</code> has a default value, so it comes after <code>hours</code> and <code>rate</code>.</li>
-<li><strong><code>return</code> ends the function.</strong> Inside a loop it ends the loop too, so the final <code>return</code> lines up with <code>for</code>.</li>
-<li><strong>Catch what comes back.</strong> <code>payroll = total_payroll(timesheets)</code> stores the answer. A call on a line by itself throws it away.</li>
-<li><strong>Local names stay local.</strong> The <code>total</code> inside <code>total_payroll</code> does not exist outside it. The script sees only the returned value.</li>
-</ul>
-
-<h3>Test both sides of the limit</h3>
-<p>The overtime rule changes at 40 hours, so the tests sit at 40 and 41. The last test overrides the default multiplier.</p>
-<pre><code>assert calculate_pay(40, 20.00) == 800.00                    # exactly at the limit: no overtime
-assert calculate_pay(41, 20.00) == 830.00                    # one hour over: 800 + 1 * 20 * 1.5
-assert calculate_pay(0, 20.00) == 0.0
-assert calculate_pay(45, 20.00, multiplier=2.0) == 1000.00   # 800 + 5 * 20 * 2.0</code></pre>
-
-<h3>Why small functions beat one long script</h3>
-<p>Expect to explain this in a sentence or two. Four reasons are worth knowing:</p>
-<ul>
-<li><strong>One place to change.</strong> If overtime becomes double time, you edit one constant, not every line that calculates pay.</li>
-<li><strong>Consistency.</strong> Every timesheet goes through identical logic.</li>
-<li><strong>Readability.</strong> <code>total_payroll</code> reads like the business process it describes.</li>
-<li><strong>Testability.</strong> Each rule can be checked on its own with an <code>assert</code>, without running the whole script.</li>
+<li><strong>The name and parameter order match the brief exactly.</strong> Your functions are tested by name. A function called <code>get_discount</code> when the brief says <code>get_group_discount</code> fails every test written for it.</li>
+<li><strong>Every number is a constant.</strong> <code>TOP_TIER_SEATS</code>, not a bare <code>20</code> typed inside the function.</li>
+<li><strong>Type hints and a docstring.</strong> One line that says what the function returns.</li>
+<li><strong><code>return</code>, never <code>print</code>.</strong> A function that prints gives its caller <code>None</code>, and every test of it fails.</li>
+<li><strong>Defaults go last.</strong> <code>school: bool = False</code> comes after the parameters that have no default.</li>
+<li><strong>Rates are decimals.</strong> Return <code>0.10</code>, not <code>10</code>, so <code>cost * (1 - rate)</code> works.</li>
 </ul>
 
 <div class="warn">
 <div class="concept-label">🦆 Tell the duck</div>
-<p>Explain what the fixed <code>total_payroll</code> returns when <code>timesheets</code> is an empty list, and why it does not crash.</p>
+<p>Explain what the fixed <code>total_revenue</code> returns when <code>bookings</code> is an empty list, and why it does not crash.</p>
 </div>
 
-<h2 id="tracing">Tracing: be the computer</h2>
-<p>Tracing means running the code on paper one line at a time and writing down each variable as it changes. It is how you answer "what is the output?" questions, and how you check your own code without a laptop.</p>
+<h2 id="tests">Tests: both sides of every limit <span class="pts">20 points</span></h2>
+<p>A test suite can be completely green and still let a wrong rule through. The instructor's tests check the value exactly at each limit. Yours should get there first.</p>
 
-<h3>Trace a loop with a table</h3>
-<p>Give each variable a column and each pass a row. This table traces the corrected loop over the four purchase requests.</p>
+<div class="bug">
+<div class="bug-tag">Bug report 3</div>
+<div class="bug-title">Two green tests, and a tour that left one guide short</div>
+<p>A sunset charter of 5 seats at $200.00 came to exactly $1,000.00. It went out with one guide. The function had two tests, and both passed.</p>
+<pre><code>SECOND_GUIDE_LIMIT = 1000.00
+
+
+def needs_second_guide(total: float) -&gt; bool:
+    """Return True when the booking needs a second guide."""
+    return total &gt; SECOND_GUIDE_LIMIT</code></pre>
+<pre><code>def test_small_booking_needs_one_guide():
+    assert needs_second_guide(400.00) is False
+
+
+def test_large_booking_needs_second_guide():
+    assert needs_second_guide(1500.00) is True</code></pre>
+<pre class="term"><code>2 passed in 0.00s</code></pre>
+<p><strong>Find the bug, and say why neither test caught it, before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the bug</summary>
+<p>Rule 5 says $1,000 <em>or more</em>, which is <code>&gt;=</code>. The function uses <code>&gt;</code>. At 400 and at 1500 the two comparisons give the same answer, so tests that far from the limit cannot tell them apart. Only a test at exactly 1000.00 can.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Test the limit and its neighbour</h3>
+<p>Add one test exactly at the limit and one just on the other side of it.</p>
+<pre><code>def test_second_guide_at_exactly_1000():
+    assert needs_second_guide(1000.00) is True
+
+
+def test_no_second_guide_one_cent_below_1000():
+    assert needs_second_guide(999.99) is False</code></pre>
+<p>Run pytest against the buggy function and the new test fails:</p>
+<pre class="term"><code>    def test_second_guide_at_exactly_1000():
+&gt;       assert needs_second_guide(1000.00) is True
+E       assert False is True
+E        +  where False = needs_second_guide(1000.0)
+
+tests/test_business_rules.py:34: AssertionError
+========================= 1 failed, 9 passed in 0.01s ==========================</code></pre>
+<p>A failing test is the test doing its job. Read the <code>E</code> lines: the function returned <code>False</code> where the rule says <code>True</code>. Fix the function, not the test. Change <code>&gt;</code> to <code>&gt;=</code> and all ten pass.</p>
+
+<figure class="diagram">
+<div class="diagram-title">Only the value at the limit can tell <code>&gt;</code> from <code>&gt;=</code></div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 760 160" role="img" aria-label="A number line for the second-guide rule. At 999.99 both comparisons say False. At 1000.01 both say True. At exactly 1000.00 the correct comparison says True and the wrong one says False.">
+<text class="d-false" x="120" y="42" text-anchor="middle">no second guide</text>
+<text class="d-true" x="590" y="42" text-anchor="middle">second guide: $1,000 or more</text>
+<path class="d-seg-false" d="M40 74H370"/>
+<path class="d-seg-true" d="M390 74H720"/>
+<circle class="d-dot" cx="200" cy="74" r="6"/>
+<circle class="d-dot on" cx="380" cy="74" r="8"/>
+<circle class="d-dot" cx="560" cy="74" r="6"/>
+<text class="d-t d-m" x="200" y="104" text-anchor="middle">999.99</text>
+<text class="d-t d-m d-b" x="380" y="104" text-anchor="middle">1000.00</text>
+<text class="d-t d-m" x="560" y="104" text-anchor="middle">1000.01</text>
+<text class="d-q" x="200" y="126" text-anchor="middle">False either way</text>
+<text class="d-q" x="380" y="126" text-anchor="middle">&gt;= says True</text>
+<text class="d-q" x="380" y="142" text-anchor="middle">&gt; says False</text>
+<text class="d-q" x="560" y="126" text-anchor="middle">True either way</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>The test at 1000.00 catches a wrong comparison. The test at 999.99 catches a limit typed with the wrong number. You need both.</figcaption>
+</figure>
+
+<p>Every limit in the kayak rules has two neighbours worth a test:</p>
 <div class="table-wrap">
 <table>
-<thead><tr><th>Pass</th><th>Record</th><th class="num">total</th><th class="num">pending_total</th><th>needs_review</th><th class="num">highest</th><th>top_requester</th></tr></thead>
+<thead><tr><th>Limit</th><th>The rule's words</th><th>Just before</th><th>Exactly at</th></tr></thead>
 <tbody>
-<tr><td>Before</td><td>none yet</td><td class="num">0.0</td><td class="num">0.0</td><td><code>[]</code></td><td class="num">0.0</td><td><code>''</code></td></tr>
-<tr><td>1</td><td>Taylor, 1250.00, Pending</td><td class="num">1250.0</td><td class="num">1250.0</td><td><code>['Taylor']</code></td><td class="num">1250.0</td><td>Taylor</td></tr>
-<tr><td>2</td><td>Jordan, 350.00, Approved</td><td class="num">1600.0</td><td class="num">1250.0</td><td><code>['Taylor']</code></td><td class="num">1250.0</td><td>Taylor</td></tr>
-<tr><td>3</td><td>Casey, 2200.00, Pending</td><td class="num">3800.0</td><td class="num">3450.0</td><td><code>['Taylor', 'Casey']</code></td><td class="num">2200.0</td><td>Casey</td></tr>
-<tr><td>4</td><td>Morgan, 900.00, Pending</td><td class="num">4700.0</td><td class="num">4350.0</td><td><code>['Taylor', 'Casey']</code></td><td class="num">2200.0</td><td>Casey</td></tr>
+<tr><td>6 seats</td><td>"fewer than 6" has no discount</td><td><code>get_group_discount(5)</code> is 0.0</td><td><code>get_group_discount(6)</code> is 0.10</td></tr>
+<tr><td>20 seats</td><td>"20 or more", and only for schools</td><td><code>get_group_discount(19, school=True)</code> is 0.10</td><td><code>get_group_discount(20, school=True)</code> is 0.25</td></tr>
+<tr><td>$200</td><td>fee "below $200"</td><td><code>calculate_booking_total(199.99, 1)</code> is 229.99</td><td><code>calculate_booking_total(200.00, 1)</code> is 200.00</td></tr>
+<tr><td>$1,000</td><td>"$1,000 or more"</td><td><code>needs_second_guide(999.99)</code> is False</td><td><code>needs_second_guide(1000.00)</code> is True</td></tr>
 </tbody>
 </table>
 </div>
-<p>The last row holds the values the <code>print</code> lines display. In pass 2 only <code>total</code> changes, because Jordan's request is approved, under the limit, and smaller than the largest so far.</p>
+<p>One seat at $200.00 is an odd booking, and that is fine. A test picks whatever inputs land exactly on the limit.</p>
 
-<h3>Trace a call chain in five moves</h3>
-<p>Follow Blake's timesheet (45 hours at $20.00) through the fixed code:</p>
+<h3>What a full-credit test file has</h3>
+<ul>
+<li><strong>At least 10 tests, all passing.</strong> Run <code>pytest -v</code> and count the lines that say PASSED.</li>
+<li><strong>Every function tested at least once.</strong> Five functions, so five is the floor.</li>
+<li><strong>Both sides of at least two different limits.</strong> The table above gives you four to choose from.</li>
+<li><strong>A test where the True/False input changes the answer.</strong> Same seats, with and without <code>school=True</code>.</li>
+<li><strong>A test of the list function that builds its own short list.</strong> Do not import the list from <code>main.py</code>.</li>
+<li><strong>Names that say what is checked.</strong> <code>test_no_launch_fee_at_exactly_200</code>, not <code>test_3</code>.</li>
+</ul>
+<pre><code>from business_rules import get_group_discount, total_revenue
+
+
+def test_20_seats_without_school_stays_at_first_tier():
+    assert get_group_discount(20) == 0.10
+
+
+def test_school_gets_top_tier_at_20_seats():
+    assert get_group_discount(20, school=True) == 0.25
+
+
+def test_total_revenue_adds_every_booking():
+    bookings = [
+        {"group": "A", "seat_price": 25.00, "seats": 4, "school": False},
+        {"group": "B", "seat_price": 30.00, "seats": 40, "school": False},
+    ]
+    assert round(total_revenue(bookings), 2) == 1210.00
+
+
+def test_total_revenue_of_empty_list_is_zero():
+    assert total_revenue([]) == 0</code></pre>
+<p>Work out 1210.00 by hand before you trust it: 4 seats at $25.00 is $100.00 with no discount, plus the $30 fee, which is $130.00. 40 seats at $30.00 is $1,200.00 less 10%, which is $1,080.00. The expected value in a test always comes from the rules, never from running your own function.</p>
+
+<div class="concept">
+<div class="concept-label">Money and round()</div>
+<p>Floats carry tiny errors: in Python, <code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. When a test compares a money result, round it to 2 places first, the way Lab 7 does: <code>assert round(calculate_booking_total(22.00, 24, school=True), 2) == 396.00</code>.</p>
+</div>
+
+<div class="concept">
+<div class="concept-label">Break it on purpose</div>
+<p>To find out whether your tests are any good, damage your own function and see if they notice.</p>
 <ol>
-<li>The script calls <code>total_payroll(timesheets)</code> and waits for an answer.</li>
-<li>On the second pass of the loop, <code>total_payroll</code> calls <code>calculate_pay(45, 20.00)</code> and waits. <code>multiplier</code> takes its default, 1.5.</li>
-<li>Inside <code>calculate_pay</code>, <code>45 &lt;= 40</code> is false. <code>overtime_hours</code> is 5, and the function returns <code>40 * 20.00 + 5 * 20.00 * 1.5</code>, which is 950.0.</li>
-<li>Back in <code>total_payroll</code>, 950.0 is added to <code>total</code>, which goes from 1000.0 to 1950.0.</li>
-<li>After the fourth pass, <code>return total</code> sends 4120.0 back to the script, where it is stored in <code>payroll</code>.</li>
+<li>Change one comparison, such as <code>&gt;=</code> to <code>&gt;</code>, and save.</li>
+<li>Run <code>pytest</code>. At least one test should fail.</li>
+<li>If everything still passes, you are missing the test at that limit. Write it.</li>
+<li>Change the comparison back and run <code>pytest</code> again.</li>
 </ol>
+</div>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Say why a test at 999.99 and a test at 1500.00, together, still cannot catch <code>&gt;</code> written where the rule needs <code>&gt;=</code>.</p>
+</div>
+
+<h2 id="project">Project: a repository someone else can run <span class="pts">15 points</span></h2>
+<p>Your code is graded on another computer. It gets cloned from GitHub, its requirements are installed, and then <code>pytest</code> and <code>python3 main.py</code> are run. Anything that only exists on your laptop does not exist.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 4</div>
+<div class="bug-title">It ran on my laptop. The grader's pytest never started</div>
+<p>This is what the grader saw after cloning a finished project:</p>
+<pre><code>ism3232-midterm/
+├── .venv/
+├── Business_Rules.py
+├── main.py
+├── readme.txt
+└── tests/
+    └── test_rules.py</code></pre>
+<p><strong>Find five problems before you open the answer.</strong> The required structure is in the <a href="week09_reading.html" style="color:var(--blue);">Reading</a>.</p>
+<details class="reveal"><summary>Reveal the problems</summary>
+<ol>
+<li><code>.venv/</code> is in the repository. It holds thousands of files that belong on one machine only. There is no <code>.gitignore</code> to keep it out.</li>
+<li><code>Business_Rules.py</code> is not <code>business_rules.py</code>. File names are case-sensitive on many computers, so <code>from business_rules import …</code> can work on your laptop and fail everywhere else.</li>
+<li>There is no <code>requirements.txt</code>, so nobody can install the same pytest and ruff you used.</li>
+<li><code>readme.txt</code> is not <code>README.md</code>. GitHub will not display it as the project's front page.</li>
+<li><code>tests/</code> has no <code>__init__.py</code>, and the test file is not named <code>test_business_rules.py</code>.</li>
+</ol>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>The seven files, with these exact names</h3>
+<pre><code>ism3232-midterm/
+├── business_rules.py
+├── main.py
+├── README.md
+├── requirements.txt
+├── .gitignore
+└── tests/
+    ├── __init__.py
+    └── test_business_rules.py</code></pre>
+<p>The empty <code>tests/__init__.py</code> looks optional. It is not. Without it, <code>pytest</code> stops before running a single test. These are the last lines of what it prints:</p>
+<pre class="term"><code>tests/test_business_rules.py:1: in &lt;module&gt;
+    from business_rules import (
+E   ModuleNotFoundError: No module named 'business_rules'
+=========================== short test summary info ============================
+ERROR tests/test_business_rules.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 0.04s ===============================</code></pre>
+<p>When you see <code>ModuleNotFoundError: No module named 'business_rules'</code>, check three things in order: you are in the project folder (<code>pwd</code>), the file is named exactly <code>business_rules.py</code>, and <code>tests/__init__.py</code> exists.</p>
+
+<figure class="diagram">
+<div class="diagram-title">Two files import from <code>business_rules.py</code>. It imports from neither</div>
+<div class="diagram-scroll" tabindex="0">
+<svg viewBox="0 0 760 160" role="img" aria-label="main.py imports from business_rules.py and prints the results. tests/test_business_rules.py imports from business_rules.py and asserts on the results. business_rules.py holds the constants and functions, returns values, and prints nothing.">
+<defs>
+<marker id="imp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow-on" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="d-box" x="8" y="20" width="210" height="120" rx="8"/>
+<text class="d-t d-b" x="22" y="46">main.py</text>
+<text class="d-q" x="22" y="74">holds the list of records</text>
+<text class="d-q" x="22" y="94">loops and calls the functions</text>
+<text class="d-q" x="22" y="114">prints the report</text>
+<rect class="d-box on" x="275" y="20" width="210" height="120" rx="8"/>
+<text class="d-t d-b" x="289" y="46">business_rules.py</text>
+<text class="d-q" x="289" y="74">constants and five functions</text>
+<text class="d-q" x="289" y="94">returns values</text>
+<text class="d-q" x="289" y="114">prints nothing</text>
+<rect class="d-box" x="542" y="20" width="210" height="120" rx="8"/>
+<text class="d-t d-b" x="556" y="46">tests/</text>
+<text class="d-t d-b" x="556" y="64">test_business_rules.py</text>
+<text class="d-q" x="556" y="94">calls the functions</text>
+<text class="d-q" x="556" y="114">asserts on what they return</text>
+<path class="d-line on" d="M218 80H275" marker-end="url(#imp-arrow)"/>
+<text class="d-q" x="246" y="72" text-anchor="middle">imports</text>
+<path class="d-line on" d="M542 80H485" marker-end="url(#imp-arrow)"/>
+<text class="d-q" x="514" y="72" text-anchor="middle">imports</text>
+</svg>
+</div>
+<div class="diagram-hint">Swipe sideways to see the whole diagram →</div>
+<figcaption>Because <code>business_rules.py</code> only returns values, the same functions serve the report and the tests. A <code>print()</code> inside it would show up in both.</figcaption>
+</figure>
+
+<h3>main.py: match the output line for line</h3>
+<p><code>main.py</code> holds the list, loops over it, and prints. All of the arithmetic stays in <code>business_rules.py</code>.</p>
+<pre><code>from business_rules import calculate_booking_total, needs_second_guide, total_revenue
+
+# the bookings list from Bug report 2 goes here
+
+second_guides = 0
+for booking in bookings:
+    total = calculate_booking_total(
+        booking["seat_price"], booking["seats"], booking["school"]
+    )
+    extra_guide = needs_second_guide(total)
+    if extra_guide:
+        second_guides += 1
+    name = booking["group"]
+    print(f"{name}: ${total:.2f} | second guide: {extra_guide}")
+
+revenue = total_revenue(bookings)
+print(f"Total revenue: ${revenue:.2f}")
+print(f"Second guides needed: {second_guides}")</code></pre>
+<div class="code-label">Output</div>
+<pre class="term"><code>Harbor Scouts: $130.00 | second guide: False
+Pinecrest Middle: $396.00 | second guide: False
+Orbit Robotics: $1080.00 | second guide: True
+Marsh Birders: $201.60 | second guide: False
+Total revenue: $1807.60
+Second guides needed: 1</code></pre>
+<p>"Matches" means every character. These three near-misses all lose the point:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>You printed</th><th>The brief shows</th><th>What happened</th></tr></thead>
+<tbody>
+<tr><td><code>Total revenue: $1807.6</code></td><td><code>Total revenue: $1807.60</code></td><td>The f-string is missing <code>:.2f</code></td></tr>
+<tr><td><code>Total Revenue: $1807.60</code></td><td><code>Total revenue: $1807.60</code></td><td>A capital letter that is not in the brief</td></tr>
+<tr><td><code>DEBUG total = 130.0</code> above the report</td><td>six lines, nothing else</td><td>A debugging <code>print</code> was left in</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Explain why <code>business_rules.py</code> must not print anything when <code>main.py</code> prints everything.</p>
+</div>
+
+<h2 id="ruff">ruff: two commands, two different jobs <span class="pts">10 points</span></h2>
+<p><code>ruff format</code> and <code>ruff check</code> are both in the ritual because neither one does the other's job.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 5</div>
+<div class="bug-title">ruff format said all clear. ruff check found four problems</div>
+<p>This file, <code>report.py</code>, was formatted, and ruff reported nothing to change. Then came the check. Below the code are the last two lines of its report.</p>
+<pre><code>import os
+from business_rules import needs_second_guide, calculate_booking_total
+
+
+def is_big_booking(seat_price: float, seats: int) -&gt; bool:
+    """Return True when the booking needs a second guide."""
+    label = "big"
+    total = calculate_booking_total(seat_price, seats)
+    if needs_second_guide(total):
+        return True
+    else:
+        return False</code></pre>
+<pre class="term"><code>$ ruff format .
+5 files left unchanged</code></pre>
+<pre class="term"><code>Found 4 errors.
+[*] 2 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).</code></pre>
+<p><strong>The code runs and gives the right answer. Find the four things ruff objects to before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the four problems</summary>
+<ol>
+<li><code>F401</code>: <code>os</code> is imported and never used.</li>
+<li><code>I001</code>: the import block is not sorted. The two names on the <code>from</code> line are out of alphabetical order, and ruff wants the standard-library import in its own group.</li>
+<li><code>F841</code>: <code>label</code> is assigned and never used.</li>
+<li><code>SIM103</code>: the <code>if</code> / <code>else</code> that returns <code>True</code> or <code>False</code> can return the condition directly.</li>
+</ol>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Read the message, then fix the cause</h3>
+<pre><code>from business_rules import calculate_booking_total, needs_second_guide
+
+
+def is_big_booking(seat_price: float, seats: int) -&gt; bool:
+    """Return True when the booking needs a second guide."""
+    total = calculate_booking_total(seat_price, seats)
+    return needs_second_guide(total)</code></pre>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Command</th><th>What it looks at</th><th>What it changes</th></tr></thead>
+<tbody>
+<tr><td><code>ruff format .</code></td><td>Layout: quotes, spacing, blank lines, long lines</td><td>Rewrites your files. It never changes what the code does</td></tr>
+<tr><td><code>ruff format --check .</code></td><td>The same layout rules</td><td>Nothing. It only reports which files would change. This is how your formatting is graded</td></tr>
+<tr><td><code>ruff check .</code></td><td>Mistakes: unused imports and variables, unsorted imports, code that can be simpler</td><td>Nothing, unless you add <code>--fix</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Each <code>ruff check</code> message has the same parts. This is the first of the four, exactly as ruff printed it:</p>
+<pre class="term"><code>I001 [*] Import block is un-sorted or un-formatted
+ --&gt; report.py:1:1
+  |
+1 | / import os
+2 | | from business_rules import needs_second_guide, calculate_booking_total
+  | |______________________________________________________________________^
+help: Organize imports
+  |
+1 | import os
+  - from business_rules import needs_second_guide, calculate_booking_total
+2 |
+3 + from business_rules import calculate_booking_total, needs_second_guide
+4 +
+5 |
+  |</code></pre>
+<ul>
+<li><strong>The code</strong> (<code>I001</code>) names the rule.</li>
+<li><strong>The arrow line</strong> gives the file, the line, and the column.</li>
+<li><strong>The help section</strong> says what to do. Lines marked <code>-</code> would be removed, and lines marked <code>+</code> would be added.</li>
+<li><strong><code>[*]</code></strong> means ruff can make this fix for you. Run <code>ruff check --fix .</code>, then run <code>ruff check .</code> again, because some problems only you can fix. Here the fix sorted the imports and removed <code>os</code>, and left the unused variable and the <code>if</code> / <code>else</code> for a person. Make those changes yourself, and leave <code>--unsafe-fixes</code> alone.</li>
+</ul>
+<p>The exact wording varies between ruff versions, and newer versions check more. The parts of a message stay the same.</p>
+<p>The order matters: format, then check, then pytest. Run all three again after any change, including a change ruff made for you.</p>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Explain the difference between <code>ruff format --check .</code> and <code>ruff check .</code>, and why passing one says nothing about the other.</p>
+</div>
+
+<h2 id="commits">Commits: a history that shows the work <span class="pts">15 points</span></h2>
+<p>Your Git log is read as part of the exam. It should tell the story of the project to someone who never saw you build it.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 6</div>
+<div class="bug-title">Three hours of work, one commit, and it is called "final"</div>
+<p>Two students finished with identical files. Here are their logs, newest commit first.</p>
+<div class="code-label">Repository A</div>
+<pre class="term"><code>$ git log --oneline
+a41c9e2 final</code></pre>
+<div class="code-label">Repository B</div>
+<pre class="term"><code>$ git log --oneline
+7c2e1b4 Add README with run and test instructions
+5d09a37 Add boundary tests for launch fee and second guide
+e83f6c1 Add main.py report over the sample bookings
+b17a4d9 Add booking total and revenue functions with tests
+3f6c2a8 Add tour cost and group discount with tests
+9a1d5e0 Set up project structure and gitignore</code></pre>
+<p><strong>Which repository earns the commit-history points? Name two reasons before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the answer</summary>
+<p>Repository B. Its log shows six stages, each one small enough to describe in a line, and each message says what changed. Repository A shows one moment in time, and "final" describes no change at all. If something had broken along the way, B could go back one step. A has nowhere to go back to.</p>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Commit when a part works</h3>
+<p>Commit each time a part passes the ritual. The exam's six parts give you a natural rhythm:</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>You just finished</th><th>A message that says so</th></tr></thead>
+<tbody>
+<tr><td>The folder, the virtual environment, and the empty files</td><td><code>Set up project structure and gitignore</code></td></tr>
+<tr><td>The first two functions and their tests</td><td><code>Add tour cost and group discount with tests</code></td></tr>
+<tr><td>The remaining functions and their tests</td><td><code>Add booking total and revenue functions with tests</code></td></tr>
+<tr><td><code>main.py</code>, with output that matches</td><td><code>Add main.py report over the sample bookings</code></td></tr>
+<tr><td>More tests at the limits</td><td><code>Add boundary tests for launch fee and second guide</code></td></tr>
+<tr><td>The README</td><td><code>Add README with run and test instructions</code></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest
+git status
+git add .
+git commit -m "Add tour cost and group discount with tests"
+git push</code></pre>
+<ul>
+<li><strong>At least five commits.</strong> One commit that holds the whole project earns nothing for history.</li>
+<li><strong>A message is a verb and a thing.</strong> "Add", "Fix", "Rename", followed by what. <code>final</code>, <code>update</code>, <code>done</code>, and <code>stuff</code> say nothing.</li>
+<li><strong>Spread it out.</strong> The history should show stages, with more than an hour between the first commit and the last, and with the tests and the README arriving in their own commits.</li>
+<li><strong>Push, then look.</strong> <code>git status</code> should say there is nothing to commit, and the commits should be visible on GitHub. A commit that was never pushed is not graded.</li>
+</ul>
+
+<div class="warn">
+<div class="concept-label">🦆 Tell the duck</div>
+<p>Read your last five commit messages from any lab out loud. Could a teammate tell what each one changed without opening the code?</p>
+</div>
+
+<h2 id="readme">README: the front page of your project <span class="pts">10 points</span></h2>
+<p>The README is the first thing anyone sees when they open your repository. A good one lets a stranger run the project without asking you a question.</p>
+
+<div class="bug">
+<div class="bug-tag">Bug report 7</div>
+<div class="bug-title">The README that could not run the project</div>
+<pre><code>#ISM3232 Midterm
+Name: [Your Name]
+
+this is my midterm it has functions and tests
+
+How to Run
+run the main file</code></pre>
+<p><strong>Find four problems before you open the answer.</strong></p>
+<details class="reveal"><summary>Reveal the problems</summary>
+<ol>
+<li><code>#ISM3232</code> has no space after the <code>#</code>, so GitHub shows it as plain text, not a heading. "How to Run" has no <code>##</code> at all.</li>
+<li><code>[Your Name]</code> is template text that was never replaced.</li>
+<li>"run the main file" is not a command. A stranger needs the exact lines to type, in a code block.</li>
+<li>It says nothing about what the program does, and the Business Rules, How to Test, and AI Use Statement sections are missing.</li>
+</ol>
+</details>
+</div>
+
+<h3><span class="fix-tag">Fix</span>Six sections, every one filled in</h3>
+<p>This is the Markdown source of a README for the kayak project. Notice the space after every <code>#</code>, the blank line after every heading, and the three backticks around every block of commands.</p>
+<pre><code># ISM3232 Midterm: Lakeshore Kayak Tours
+
+- **Name:** Jordan Rivera
+- **Version:** Practice
+- **Date:** October 14, 2026
+
+## What This Program Does
+
+This project prices kayak tour bookings. `business_rules.py` turns the
+company's five pricing rules into functions, and `main.py` runs them over
+four sample bookings and prints each total and the week's revenue.
+
+## Business Rules
+
+1. The tour cost is the seat price times the number of seats.
+2. Bookings of 6 to 19 seats get 10% off. Bookings of 20 or more get 25% off.
+3. The 25% rate is for school groups only. Other large groups get 10%.
+4. A $30 launch fee is added when the discounted cost is under $200.
+5. A total of $1,000 or more needs a second guide.
+
+## How to Run
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 main.py
+```
+
+## How to Test
+
+```
+ruff format .
+ruff check .
+pytest -v
+```
+
+The test file has 10 tests, including both sides of every limit.
+
+## AI Use Statement
+
+I did not use AI on this exam.</code></pre>
+<ul>
+<li><strong>Write the rules in your own words.</strong> Restating them shows you understood them. Pasting the brief does not.</li>
+<li><strong>Test your own instructions.</strong> Copy the How to Run lines into a fresh terminal. If they do not work for you, they will not work for anyone.</li>
+<li><strong>Look at it on GitHub.</strong> Open the repository page and read the README as it is displayed there. Headings should be large, lists numbered, and commands in grey boxes.</li>
+</ul>
 
 <h2 id="mistakes">Mistakes that cost points</h2>
-<p>These fifteen mistakes break the logic or the rules of the exam, so neat handwriting will not save them. Read each one, predict what goes wrong, then open it to check.</p>
+<p>Read each one, predict what goes wrong, then open it to check.</p>
 <div class="mistakes">
-<details><summary>Translating only half of a rule that says "unless" or "only if"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The exception never applies, or always applies.</p><p><strong>Fix:</strong> Count the conditions in the sentence, then count them in your test.</p></div></details>
-<details><summary>Mixing <code>and</code> with <code>or</code> without parentheses</summary><div class="m-body"><p><strong>What goes wrong:</strong> Python groups the parts differently from the way you read them.</p><p><strong>Fix:</strong> Put parentheses around the parts that belong together.</p></div></details>
-<details><summary>Checking tiers in a mixed order</summary><div class="m-body"><p><strong>What goes wrong:</strong> A wide test near the top catches values meant for a tier below it.</p><p><strong>Fix:</strong> Go up with <code>&lt;=</code> or down with <code>&gt;=</code>, all the way through.</p></div></details>
-<details><summary><code>&gt;</code> where the rule says "at least", or <code>&gt;=</code> where it says "more than"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The value exactly at the limit lands in the wrong tier.</p><p><strong>Fix:</strong> Translate the words, then test the limit and the value next to it.</p></div></details>
-<details><summary>Testing the original input when the rule names a calculated value</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second decision uses the wrong number.</p><p><strong>Fix:</strong> Reread which value the rule names, and calculate it first.</p></div></details>
-<details><summary>Typing the same limit in several places instead of naming a constant</summary><div class="m-body"><p><strong>What goes wrong:</strong> One copy gets changed, the others do not, and the tiers stop agreeing.</p><p><strong>Fix:</strong> One constant in capitals, used everywhere.</p></div></details>
-<details><summary>Setting up an accumulator inside the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> It resets on every pass, so only the last record counts.</p><p><strong>Fix:</strong> Set it up above the <code>for</code> line.</p></div></details>
-<details><summary>Updating a value inside an <code>if</code> and its label outside it</summary><div class="m-body"><p><strong>What goes wrong:</strong> The label ends up describing the last record, not the winning one.</p><p><strong>Fix:</strong> Update both on neighbouring lines at the same indentation.</p></div></details>
-<details><summary>Using <code>elif</code> between two questions that can both be true</summary><div class="m-body"><p><strong>What goes wrong:</strong> The second question is skipped whenever the first one is true.</p><p><strong>Fix:</strong> A separate <code>if</code> for each question.</p></div></details>
-<details><summary><code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or a comprehension instead of the loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> Built-in shortcuts are not accepted on the exam.</p><p><strong>Fix:</strong> Add, count, collect, and compare inside the loop.</p></div></details>
-<details><summary>Writing <code>==</code> where you meant <code>=</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>r['status'] == 'Approved'</code> on a line by itself compares, throws the answer away, and changes nothing.</p><p><strong>Fix:</strong> One <code>=</code> to store a value, two to compare.</p></div></details>
-<details><summary><code>return</code> indented inside a loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The function stops during the first pass.</p><p><strong>Fix:</strong> Line the final <code>return</code> up with <code>for</code>.</p></div></details>
-<details><summary><code>print</code> instead of <code>return</code> in a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The caller receives <code>None</code>, and every <code>assert</code> on the function fails.</p><p><strong>Fix:</strong> Return the value and let the script print it.</p></div></details>
-<details><summary>Calling a function without storing what it returns</summary><div class="m-body"><p><strong>What goes wrong:</strong> The answer is thrown away, and the variable you passed in is unchanged.</p><p><strong>Fix:</strong> <code>balance = apply_fee(balance)</code></p></div></details>
-<details><summary>Using a function's local variable outside the function</summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>NameError</code>, because the name only existed while the function ran.</p><p><strong>Fix:</strong> Return the value and store it under a name in the script.</p></div></details>
+<details><summary>Ignoring a parameter the rule mentions</summary><div class="m-body"><p><strong>What goes wrong:</strong> The True/False input never changes the answer, so one whole rule is missing.</p><p><strong>Fix:</strong> Every parameter in the signature should be read somewhere in the body.</p></div></details>
+<details><summary>Reading "only for" as "also for"</summary><div class="m-body"><p><strong>What goes wrong:</strong> Everyone in the top tier gets the rate meant for one group.</p><p><strong>Fix:</strong> "Only for" is <code>and</code>. Say the condition out loud and compare it with the sentence.</p></div></details>
+<details><summary><code>&gt;</code> where the rule says "or more", or <code>&lt;=</code> where it says "below"</summary><div class="m-body"><p><strong>What goes wrong:</strong> The value exactly at the limit lands on the wrong side.</p><p><strong>Fix:</strong> Translate the words, then test the limit and the value next to it.</p></div></details>
+<details><summary>Testing the original cost when the rule names the discounted cost</summary><div class="m-body"><p><strong>What goes wrong:</strong> The fee is decided by the wrong number.</p><p><strong>Fix:</strong> Reread which value the rule names, and calculate it first.</p></div></details>
+<details><summary>Typing a limit as a bare number inside a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The same number appears in several places and they drift apart. It also costs points under Complete submission.</p><p><strong>Fix:</strong> One constant in capitals at the top of the file, used everywhere.</p></div></details>
+<details><summary>Returning a percentage (<code>10</code>) where the brief asks for a decimal (<code>0.10</code>)</summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>cost * (1 - 10)</code> is a large negative number.</p><p><strong>Fix:</strong> Return the rate as a decimal and let the caller do the multiplication.</p></div></details>
+<details><summary><code>print</code> instead of <code>return</code> in a function</summary><div class="m-body"><p><strong>What goes wrong:</strong> The caller receives <code>None</code>, and every test of the function fails.</p><p><strong>Fix:</strong> Return the value. Only <code>main.py</code> prints.</p></div></details>
+<details><summary><code>return</code> indented inside a loop</summary><div class="m-body"><p><strong>What goes wrong:</strong> The function stops during the first pass and returns one record's amount.</p><p><strong>Fix:</strong> Line the final <code>return</code> up with <code>for</code>.</p></div></details>
+<details><summary><code>sum()</code> or a comprehension in the list function</summary><div class="m-body"><p><strong>What goes wrong:</strong> Built-in shortcuts are not accepted on the exam, so the function earns nothing for its tests.</p><p><strong>Fix:</strong> Set up a total before the loop and add to it inside the loop.</p></div></details>
+<details><summary>A function name that differs from the brief</summary><div class="m-body"><p><strong>What goes wrong:</strong> The instructor's tests call your functions by name. A different name fails every test for that function.</p><p><strong>Fix:</strong> Copy the names and the parameter order from the brief before you write any logic.</p></div></details>
+<details><summary>Tests that only use comfortable numbers</summary><div class="m-body"><p><strong>What goes wrong:</strong> Everything passes while a comparison is wrong at the limit.</p><p><strong>Fix:</strong> For each limit, one test exactly at it and one just beside it.</p></div></details>
+<details><summary>Changing a test's expected value until it passes</summary><div class="m-body"><p><strong>What goes wrong:</strong> The test now agrees with the bug.</p><p><strong>Fix:</strong> Work out the expected value from the rules, by hand. If the test fails, fix the function.</p></div></details>
+<details><summary>Comparing money with <code>==</code> without rounding</summary><div class="m-body"><p><strong>What goes wrong:</strong> A correct function fails its test because of a float error in the fifteenth decimal place.</p><p><strong>Fix:</strong> <code>assert round(result, 2) == 396.00</code></p></div></details>
+<details><summary>Leaving out <code>tests/__init__.py</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> <code>ModuleNotFoundError: No module named 'business_rules'</code>, and no test runs.</p><p><strong>Fix:</strong> Create the empty file when you create the folder.</p></div></details>
+<details><summary>Committing <code>.venv/</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> Thousands of files that do not work on any other machine, and lost points under Complete submission.</p><p><strong>Fix:</strong> Write <code>.gitignore</code> before your first <code>git add</code>.</p></div></details>
+<details><summary>Running <code>ruff format</code> and skipping <code>ruff check</code></summary><div class="m-body"><p><strong>What goes wrong:</strong> The layout is perfect and the unused import is still there.</p><p><strong>Fix:</strong> All three ritual commands, every time, in order.</p></div></details>
+<details><summary>Committing everything at the end</summary><div class="m-body"><p><strong>What goes wrong:</strong> One commit shows no stages, so the history earns nothing.</p><p><strong>Fix:</strong> Commit each time a part passes the ritual.</p></div></details>
+<details><summary>Forgetting to push, or leaving the repository private</summary><div class="m-body"><p><strong>What goes wrong:</strong> The grader sees an old version, or nothing.</p><p><strong>Fix:</strong> Open your URL in a private browser window before you submit it.</p></div></details>
 </div>
 
-<h2 id="practice">Practice problems</h2>
-<p>Write every answer by hand before you touch a keyboard. Then trace each answer with the given data to check your own work.</p>
-
-<h3>Warm-up: trace these</h3>
-<p>Each snippet contains one mistake. Write the exact output, then name the mistake and the fix.</p>
+<h2 id="practice">Practice project: Stitchline Uniforms</h2>
+<p>This project has the same six parts as the exam, with a different business and different numbers. Build it from an empty folder to a pushed repository. Use your notes, your labs, and the course site, and nothing else, exactly as you will on the exam.</p>
 
 <div class="quiz-item">
-<div class="quiz-q">Warm-up A · Code trace</div>
-<pre><code>LIMIT_AUTO    = 500
-LIMIT_MANAGER = 2000
-
-amount = 40
-
-if amount &lt;= LIMIT_MANAGER:
-    approver = 'Manager'
-elif amount &lt;= LIMIT_AUTO:
-    approver = 'Auto-approved'
-else:
-    approver = 'Director'
-
-print(approver)</code></pre>
-</div>
-
-<div class="quiz-item">
-<div class="quiz-q">Warm-up B · Code trace</div>
-<pre><code>requests = [
-    {'id': 1, 'amount': 800, 'status': 'Pending'},
-    {'id': 2, 'amount': 300, 'status': 'Pending'},
-]
-
-approved = 0
-
-for r in requests:
-    if r['amount'] &lt;= 500:
-        r['status'] == 'Approved'
-    if r['status'] == 'Approved':
-        approved += 1
-
-print(approved)</code></pre>
-</div>
-
-<div class="quiz-item">
-<div class="quiz-q">Warm-up C · Code trace</div>
-<pre><code>def apply_fee(balance: float) -&gt; float:
-    balance = balance + 25.00
-    return balance
-
-balance = 100.00
-apply_fee(balance)
-print(balance)</code></pre>
-</div>
-
-<h3>Practice 1: Event booking</h3>
-<div class="quiz-item">
-<div class="quiz-q">Practice 1 · Conditionals with several inputs</div>
-<p>A venue prices event bookings with these rules:</p>
-<ul>
-<li>Events of up to 50 guests have a $400 room fee.</li>
-<li>Events of 51 through 150 guests have a $900 room fee.</li>
-<li>Events of more than 150 guests have a $1,600 room fee.</li>
-<li>Weekend events add a 20% surcharge to the room fee.</li>
-<li>Nonprofit clients have the weekend surcharge waived, but only for events of 150 guests or fewer.</li>
-<li>A $150 cleaning deposit is added when the fee, after any surcharge, is $1,000 or more.</li>
-</ul>
-<p>Write a function <code>quote_booking(guests, is_weekend, nonprofit=False)</code> that returns the total price for one booking. Name every limit and amount as a constant, and add type hints and a docstring.</p>
-<p>Then write three lines that print the quote for each of these bookings:</p>
+<div class="quiz-q">The business and its rules</div>
+<p>Stitchline Uniforms prints team shirts and prices each order by the shirt.</p>
 <ol>
-<li>120 guests, on a weekend, not a nonprofit</li>
-<li>150 guests, on a weekend, nonprofit</li>
-<li>151 guests, on a weekend, nonprofit</li>
+<li>The shirt cost is the price per shirt times the number of shirts.</li>
+<li>The discount depends on the number of shirts: fewer than 12 shirts, no discount; 12 through 47 shirts, 5%; 48 shirts or more, 10%.</li>
+<li>Schools get an extra 3 percentage points of discount, but only on orders of 12 shirts or more. For them, 5% becomes 8% and 10% becomes 13%.</li>
+<li>A $20 artwork fee is added when the discounted cost is below $100.</li>
+<li>An order total of $750 or more needs the owner's approval.</li>
 </ol>
-<p>Finally, write two <code>assert</code> tests for the 50-guest limit: one exactly at it and one just above it, both on a weekday.</p>
 </div>
 
-<h3>Practice 2: Support tickets</h3>
 <div class="quiz-item">
-<div class="quiz-q">Practice 2 · One loop over records</div>
-<p>A support manager reviews this week's tickets. A ticket is <strong>slow</strong> if it took 8 hours or more.</p>
-<pre><code>tickets = [
-    {'id': 201, 'team': 'Billing', 'hours': 3.5, 'status': 'Closed'},
-    {'id': 202, 'team': 'Tech',    'hours': 9.0, 'status': 'Open'},
-    {'id': 203, 'team': 'Billing', 'hours': 1.5, 'status': 'Closed'},
-    {'id': 204, 'team': 'Tech',    'hours': 6.0, 'status': 'Closed'},
-    {'id': 205, 'team': 'Sales',   'hours': 8.0, 'status': 'Open'},
+<div class="quiz-q">Part 1 · Set up the project</div>
+<p>Create a new folder and a new public GitHub repository named <code>ism3232-midterm-practice</code>, with a virtual environment, pytest, and ruff. It needs the seven files shown in the <a href="#project" style="color:var(--blue);">Project</a> section. Commit the skeleton before you write any logic.</p>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Part 2 · business_rules.py</div>
+<p>Write these five functions, with these exact names and parameters. Each needs type hints, a one-line docstring, and a <code>return</code>. Every number in the rules is a named constant. The file contains no <code>print()</code>.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Function</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>calculate_shirt_cost(shirt_price: float, shirts: int) -&gt; float</code></td><td>Returns the shirt cost before any discount (rule 1)</td></tr>
+<tr><td><code>get_order_discount(shirts: int, school: bool = False) -&gt; float</code></td><td>Returns the discount rate as a decimal, so 5% is 0.05 (rules 2 and 3)</td></tr>
+<tr><td><code>calculate_order_total(shirt_price: float, shirts: int, school: bool = False) -&gt; float</code></td><td>Returns the order total: the discounted cost, plus the artwork fee when it applies (rule 4). It must call your first two functions</td></tr>
+<tr><td><code>needs_approval(total: float) -&gt; bool</code></td><td>Returns True when the order total needs the owner's approval (rule 5), otherwise False</td></tr>
+<tr><td><code>total_ordered(orders: list) -&gt; float</code></td><td>Returns the sum of the order totals for every order in the list. It must use a <code>for</code> loop that calls <code>calculate_order_total</code>. Loop only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Part 3 · main.py</div>
+<p>Copy this list into <code>main.py</code> exactly as shown:</p>
+<pre><code>orders = [
+    {"team": "Bayside Runners", "shirt_price": 9.00, "shirts": 8, "school": False},
+    {"team": "Cedar Elementary", "shirt_price": 8.50, "shirts": 10, "school": True},
+    {"team": "Dockside Grill", "shirt_price": 11.00, "shirts": 20, "school": False},
+    {"team": "Eastlake High", "shirt_price": 10.00, "shirts": 60, "school": True},
+    {"team": "Foundry Gym", "shirt_price": 12.00, "shirts": 80, "school": False},
 ]</code></pre>
-<p>Write code that uses <strong>one loop</strong> to find all of the following, then prints them:</p>
-<ol>
-<li>The total hours spent on closed tickets.</li>
-<li>The number of open tickets.</li>
-<li>A list of the ids of the slow tickets.</li>
-<li>The total hours on tickets that belong to the Tech team and are still open.</li>
-<li>The id and hours of the longest ticket.</li>
-<li>The average hours per ticket, across all tickets.</li>
-</ol>
-<p>Your loop must do the work. Do not use <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or comprehensions, and do not work out any result by hand.</p>
-<p>When you finish, build a trace table with one row per ticket and check your printed values against its last row.</p>
+<p>Import your functions, loop over the list, and print one line per order followed by two summary lines. Work out the count on the last line with your own loop. Your output must match this exactly:</p>
+<pre class="term"><code>Bayside Runners: $92.00 | approval: False
+Cedar Elementary: $105.00 | approval: False
+Dockside Grill: $209.00 | approval: False
+Eastlake High: $522.00 | approval: False
+Foundry Gym: $864.00 | approval: True
+Total ordered: $1792.00
+Approvals needed: 1</code></pre>
 </div>
 
-<h3>Practice 3: Subscription billing</h3>
 <div class="quiz-item">
-<div class="quiz-q">Practice 3 · Functions that work together</div>
-<p>A software company bills each customer account monthly, by the number of seats:</p>
+<div class="quiz-q">Part 4 · tests/test_business_rules.py</div>
+<p>Write at least 10 pytest tests, all passing.</p>
 <ul>
-<li>Accounts with up to 10 seats pay the full price per seat.</li>
-<li>Accounts with 11 through 50 seats get 10% off the whole bill.</li>
-<li>Accounts with more than 50 seats get 20% off the whole bill.</li>
+<li>Test each of the five functions at least once.</li>
+<li>Test both sides of at least two different limits.</li>
+<li>Write one test where passing <code>school=True</code> changes the answer.</li>
+<li>Write one test of <code>total_ordered</code> that builds its own short list inside the test.</li>
+<li>Name each test for what it checks, and compare money results with <code>round(..., 2)</code>.</li>
 </ul>
-<pre><code>accounts = [
-    {'name': 'Apex',   'seats': 8},
-    {'name': 'Birch',  'seats': 10},
-    {'name': 'Cobalt', 'seats': 11},
-    {'name': 'Delta',  'seats': 60},
-]</code></pre>
-<p><strong>Part A.</strong> Write a function <code>monthly_charge(seats, price_per_seat=12.00)</code> that returns the monthly charge for one account. Use constants, type hints, and a docstring.</p>
-<p><strong>Part B.</strong> Write a function <code>invoice_total(accounts)</code> that calls <code>monthly_charge()</code> for every account and returns the total billed. Then write the script lines that print each account's name with its charge, and the total.</p>
-<p><strong>Part C.</strong> Write four <code>assert</code> tests for <code>monthly_charge()</code>, one on each side of both limits. Use a price of $10.00 per seat so the arithmetic is easy to do by hand.</p>
-<p><strong>Part D.</strong> Cobalt has one more seat than Birch. Which account pays more this month? In one or two sentences, explain what your answer says about the discount rule.</p>
-<p><strong>Part E.</strong> In one or two sentences, explain why this is written as two functions instead of one loop with the pricing rule inside it.</p>
 </div>
+
+<div class="quiz-item">
+<div class="quiz-q">Part 5 · README.md</div>
+<p>Write a README with the six sections shown in the <a href="#readme" style="color:var(--blue);">README</a> section: the title block, What This Program Does, Business Rules, How to Run, How to Test, and AI Use Statement. Put the rules in your own words.</p>
+</div>
+
+<div class="quiz-item">
+<div class="quiz-q">Part 6 · The ritual and your commits</div>
+<p>Run <code>ruff format .</code>, <code>ruff check .</code>, and <code>pytest -v</code> before every push. Finish with at least five commits whose messages say what changed, then open the repository in a private browser window.</p>
+</div>
+
+<h3>Check your functions</h3>
+<p>The instructor's tests on the exam look like the rows of this table: a call and the value it must return. When your practice project is finished, try each call and compare.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Call</th><th class="num">Must return</th><th>Why this one is checked</th></tr></thead>
+<tbody>
+<tr><td><code>calculate_shirt_cost(11.00, 20)</code></td><td class="num">220.00</td><td>An ordinary case</td></tr>
+<tr><td><code>get_order_discount(11)</code></td><td class="num">0.0</td><td>Just below the first tier</td></tr>
+<tr><td><code>get_order_discount(12)</code></td><td class="num">0.05</td><td>Exactly at the first tier</td></tr>
+<tr><td><code>get_order_discount(48)</code></td><td class="num">0.10</td><td>Exactly at the top tier</td></tr>
+<tr><td><code>get_order_discount(11, school=True)</code></td><td class="num">0.0</td><td>The extra does not apply below 12 shirts</td></tr>
+<tr><td><code>get_order_discount(48, school=True)</code></td><td class="num">0.13</td><td>The extra on top of the top tier</td></tr>
+<tr><td><code>calculate_order_total(9.00, 8)</code></td><td class="num">92.00</td><td>The artwork fee applies</td></tr>
+<tr><td><code>calculate_order_total(100.00, 1)</code></td><td class="num">100.00</td><td>Exactly at the fee limit: not below $100, so no fee</td></tr>
+<tr><td><code>calculate_order_total(12.00, 80, school=True)</code></td><td class="num">835.20</td><td>A school at the top tier, no fee</td></tr>
+<tr><td><code>needs_approval(750.00)</code></td><td class="num">True</td><td>Exactly at the limit: "$750 or more"</td></tr>
+<tr><td><code>needs_approval(749.99)</code></td><td class="num">False</td><td>One cent below it</td></tr>
+<tr><td><code>total_ordered(orders)</code></td><td class="num">1792.00</td><td>All five orders</td></tr>
+<tr><td><code>total_ordered([])</code></td><td class="num">0</td><td>An empty list must not crash</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Then break it on purpose</h3>
+<p>Do each of these to your finished project, read what happens, and put it back.</p>
+<ol>
+<li>In <code>calculate_order_total</code>, change <code>&lt;</code> to <code>&lt;=</code> and run <code>pytest</code>. Which of your tests fails? If none does, write the test that would.</li>
+<li>In <code>needs_approval</code>, change <code>&gt;=</code> to <code>&gt;</code> and run <code>pytest</code>. Same question.</li>
+<li>Rename <code>tests/__init__.py</code> to <code>tests/init.py</code> and run <code>pytest</code>. Read the last three lines of the error. Rename it back.</li>
+<li>Add <code>import os</code> as the first line of <code>business_rules.py</code>. Run <code>ruff format .</code>, then <code>ruff check .</code>. Which one notices?</li>
+</ol>
 
 <h3>Explain it</h3>
 <p>Answer each in one or two sentences.</p>
 <ol>
-<li>Why must the tiers in an <code>if</code> / <code>elif</code> chain be checked in one direction?</li>
-<li>In the purchase-request loop, why do <code>highest</code> and <code>top_requester</code> have to be updated inside the same <code>if</code>?</li>
-<li>What happens when <code>return</code> is indented inside a <code>for</code> loop?</li>
-<li>Why do boundary tests use the value exactly at a limit and the value just past it?</li>
+<li>Cedar Elementary is a school. Why did it get no discount?</li>
+<li>Why does <code>calculate_order_total</code> call <code>get_order_discount</code>, when it could repeat the same <code>if</code> / <code>elif</code> chain?</li>
+<li>Your <code>main.py</code> output matches, and all your tests pass. Name one mistake in a function that could still be there.</li>
+<li>Why do <code>ruff format</code> and <code>ruff check</code> both have to run before a commit?</li>
 </ol>
 
-<h2 id="notes">Your notes and final check</h2>
-<p>Whatever notes you bring, fill them with patterns and reminders, not finished programs. The exam uses scenarios you have not seen.</p>
+<h2 id="notes">Final check</h2>
+<p>You may use your notes during the exam, so make them useful: patterns and reminders, not finished programs. The exam uses a business you have not seen.</p>
 
-<h3>Patterns worth having in front of you</h3>
+<h3>Worth having in your notes</h3>
 <ul>
+<li>The seven-file structure, and the commands that create it</li>
 <li>A three-tier <code>if</code> / <code>elif</code> / <code>else</code> chain in one direction, with its limits as constants</li>
-<li>A test that joins two conditions with <code>and</code>, and one that mixes <code>and</code> with <code>or</code> in parentheses</li>
-<li>The boundary-word table: up to, more than, at least, under, 1 through 30</li>
-<li>The loop skeleton over a list of dictionaries: set up, update, report after</li>
-<li>The five loop patterns: total, filtered total, collect matches, largest with its label, average</li>
-<li>A function with type hints, a docstring, a default parameter, and <code>return</code></li>
-<li>One function calling another inside a loop, with <code>return</code> lined up with <code>for</code></li>
-<li>Two <code>assert</code> lines that test both sides of a limit</li>
-<li>Your own three most frequent mistakes from the practice problems</li>
-</ul>
-
-<h3>During the exam</h3>
-<ul>
-<li>Mark up the prompt before you write: inputs, rules, limits, and values to return or print.</li>
-<li>Make indentation obvious. On paper, indentation is the only thing that shows what is inside a loop, a branch, or a function.</li>
-<li>Trace your finished answer with the data given in the question, including the value at each limit.</li>
+<li>The three ways a True/False input bends a tiered rule</li>
+<li>The boundary-word table</li>
+<li>A function that calls two others, then makes a second decision</li>
+<li>A loop function with the total set up before the loop and <code>return</code> lined up with <code>for</code></li>
+<li>A pair of tests on both sides of one limit, and a test that builds its own list</li>
+<li>The ritual, in order, and what each <code>ruff</code> command does</li>
+<li>The six README sections</li>
+<li>Your own three most frequent mistakes from the practice project</li>
 </ul>
 
 <h3>Readiness checklist</h3>
 <p class="check-count" id="check-count" aria-live="polite">Tick each item when it is true. Your ticks are saved in this browser.</p>
 <ul class="ready-list">
-<li><label><input type="checkbox" id="chk-unless"><span>I can translate a rule that says "unless" or "only if" into one test with <code>and</code> / <code>or</code></span></label></li>
-<li><label><input type="checkbox" id="chk-chain"><span>I can write a three-tier chain in one direction, with its limits as constants</span></label></li>
-<li><label><input type="checkbox" id="chk-second"><span>I can make a second decision that uses a value I calculated</span></label></li>
-<li><label><input type="checkbox" id="chk-records"><span>I can loop over a list of dictionaries and read fields with their keys</span></label></li>
-<li><label><input type="checkbox" id="chk-onepass"><span>I can total, filter, collect, and find the largest record in one pass, without <code>sum()</code> or <code>max()</code></span></label></li>
-<li><label><input type="checkbox" id="chk-linked"><span>I can keep a value and its label in step</span></label></li>
-<li><label><input type="checkbox" id="chk-def"><span>I can write a function with type hints, a docstring, a default parameter, and a <code>return</code></span></label></li>
-<li><label><input type="checkbox" id="chk-call"><span>I can write one function that calls another inside a loop</span></label></li>
-<li><label><input type="checkbox" id="chk-assert"><span>I can write <code>assert</code> tests for both sides of a limit</span></label></li>
-<li><label><input type="checkbox" id="chk-trace"><span>I can trace a loop and a call chain by hand</span></label></li>
-<li><label><input type="checkbox" id="chk-practice"><span>I solved all three practice problems by hand and traced each answer</span></label></li>
+<li><label><input type="checkbox" id="chk-flag"><span>I can turn "only for", "always at least", and "an extra … but only on" into code</span></label></li>
+<li><label><input type="checkbox" id="chk-bounds"><span>I can translate "fewer than", "or more", "below", and "or less" without looking them up</span></label></li>
+<li><label><input type="checkbox" id="chk-chain"><span>I can write a function that calls two others and then decides a fee from the calculated value</span></label></li>
+<li><label><input type="checkbox" id="chk-loop"><span>I can total a list of dictionaries with my own loop, with <code>return</code> after the loop</span></label></li>
+<li><label><input type="checkbox" id="chk-tests"><span>I can write tests on both sides of a limit and work out the expected values by hand</span></label></li>
+<li><label><input type="checkbox" id="chk-break"><span>I broke my own function on purpose and one of my tests caught it</span></label></li>
+<li><label><input type="checkbox" id="chk-structure"><span>I can build the seven-file structure from an empty folder, including <code>tests/__init__.py</code></span></label></li>
+<li><label><input type="checkbox" id="chk-output"><span>My <code>main.py</code> output matched an expected output line for line</span></label></li>
+<li><label><input type="checkbox" id="chk-ruff"><span>I can read a <code>ruff check</code> message and fix what it points to</span></label></li>
+<li><label><input type="checkbox" id="chk-commits"><span>I made at least five commits with messages that say what changed</span></label></li>
+<li><label><input type="checkbox" id="chk-readme"><span>I wrote a six-section README and checked how it looks on GitHub</span></label></li>
+<li><label><input type="checkbox" id="chk-practice"><span>I built the practice project from an empty folder to a pushed, public repository</span></label></li>
 </ul>
 
 <!-- prev-next -->
@@ -819,7 +1134,7 @@ print(balance)</code></pre>
 <script>
 /* readiness checklist: remember ticks per browser; the page works without storage */
 (function(){
-  var KEY='ism3232-w09-study-checklist';
+  var KEY='ism3232-w09-study-checklist-v2';
   var boxes=document.querySelectorAll('.ready-list input[type=checkbox]');
   var count=document.getElementById('check-count');
   var saved={};
