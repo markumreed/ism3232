@@ -176,5 +176,5 @@ tree2                   # tree -L 2
 mkcd foldername         # mkdir -p foldername && cd foldername
 ```
 
-This is the same list tested on the midterm practical exam, so keep it
+You will lean on this same list during the midterm project, so keep it
 somewhere you'll actually look at again.
