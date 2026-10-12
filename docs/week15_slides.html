@@ -153,7 +153,8 @@ Code label: Essential Streamlit widgets and layout — try each one</aside></sec
 <section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal  →  streamlit run app.py</div><div class="demo-sub">Putting it together — a minimal working app.py skeleton</div></div><aside class="notes">LIVE DEMO
 Open: Terminal  →  streamlit run app.py</aside></section>
 <section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Putting it together — a minimal working app.py skeleton</h3><pre><code class="language-python">import streamlit as st
-from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+from database import add_record, create_table, get_all_records, get_status_report, update_status
 
 create_table()   # idempotent — safe to call on every run
 

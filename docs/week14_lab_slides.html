@@ -636,8 +636,7 @@ Guide, Part 4: <code>tmp_path</code> is auto-supplied; <code>/</code> on a <code
 <!-- 35. PART 4 static test file -->
 <section class="s-code">
 <h3>The five tests as provided — <code>tests/test_database.py</code></h3>
-<pre><code class="language-python">import pytest
-from database import create_table, add_record, get_all_records, update_status, get_status_report
+<pre><code class="language-python">from database import add_record, create_table, get_all_records, get_status_report, update_status
 
 def test_add_and_retrieve(tmp_path):
     db = tmp_path / 'test.db'
@@ -840,14 +839,14 @@ Teaching goal: a standalone script exercising the real <code>database.py</code> 
 Say to the class (verbatim): "One more script, this time against your real database, not a temp one — showing everything working together end to end. And I want you to predict something before we run it."
 Before running it, ask the room explicitly: "Three records added — Taylor, Jordan, Morgan, in that order. <code>update_status(records[0]['id'], 'Approved')</code> approves <em>which one</em>? Predict it, based on Part 2's <code>ORDER BY id DESC</code> detail."
 Confirm explicitly, since this is worth landing deliberately: "$3,500 approved — that's <strong>Morgan</strong>, the <em>last</em> record added, not Taylor, the first. <code>records[0]</code> is the <em>first item in the list returned by <code>get_all_records()</code></em>, and that function orders by <code>id DESC</code> — most recent first. If you assumed <code>records[0]</code> meant 'the first request I added,' this output would look wrong. It isn't wrong — the code did exactly what it says; the assumption about what <code>records[0]</code> means was the actual gap." A real example of code being completely correct while still producing a surprising result, purely because of an unstated assumption about ordering.
-Common student mistakes: running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — <code>add_record</code> always inserts new rows, so running it twice produces six records total, not three; if a student's <code>Records: 3</code> doesn't match, check whether this is a repeat run first. Assuming the <code>Status report</code> line order (<code>Approved</code> before <code>Pending</code>) reflects something meaningful (insertion order, urgency) rather than just whatever order <code>GROUP BY</code> happened to produce — <code>GROUP BY</code>'s result order isn't guaranteed or semantically meaningful unless an explicit <code>ORDER BY</code> is added.
-Check for understanding: "If you wanted <code>test_script.py</code> to approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?" (Either query specifically for the record with the minimum <code>id</code> — e.g., <code>records[-1]</code> if the list stays DESC-ordered, since the oldest record would then be <em>last</em> in the list — or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code> instead of <code>DESC</code>. Getting a student to propose a concrete fix confirms the ordering behavior, and its consequences, genuinely landed.)
+Common student mistakes: running <code>demo_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — <code>add_record</code> always inserts new rows, so running it twice produces six records total, not three; if a student's <code>Records: 3</code> doesn't match, check whether this is a repeat run first. Assuming the <code>Status report</code> line order (<code>Approved</code> before <code>Pending</code>) reflects something meaningful (insertion order, urgency) rather than just whatever order <code>GROUP BY</code> happened to produce — <code>GROUP BY</code>'s result order isn't guaranteed or semantically meaningful unless an explicit <code>ORDER BY</code> is added.
+Check for understanding: "If you wanted <code>demo_script.py</code> to approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?" (Either query specifically for the record with the minimum <code>id</code> — e.g., <code>records[-1]</code> if the list stays DESC-ordered, since the oldest record would then be <em>last</em> in the list — or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code> instead of <code>DESC</code>. Getting a student to propose a concrete fix confirms the ordering behavior, and its consequences, genuinely landed.)
 </aside>
 </section>
 
-<!-- 42. PART 5 runnable test_script -->
+<!-- 42. PART 5 runnable demo_script -->
 <section class="s-code">
-<h3>Run it — <code>test_script.py</code> end to end</h3>
+<h3>Run it — <code>demo_script.py</code> end to end</h3>
 <div class="run" data-lang="python">import sqlite3
 
 conn = sqlite3.connect(':memory:')
@@ -886,7 +885,7 @@ report = conn.execute(
 print('\nStatus report:')
 for row in report:
     print(f'  {row[0]}: {row[1]} records, ${row[2]:,.2f}')</div>
-<p class="expect">The guide's <code>test_script.py</code>, adapted to one <code>:memory:</code> connection with the three <code>add_record</code> calls inlined as a loop. Predict before running: <code>update_status(records[0]['id'], 'Approved')</code> approves <em>which</em> of Taylor, Jordan, Morgan? The output reproduces the guide's "Verified output" exactly.</p>
+<p class="expect">The guide's <code>demo_script.py</code>, adapted to one <code>:memory:</code> connection with the three <code>add_record</code> calls inlined as a loop. Predict before running: <code>update_status(records[0]['id'], 'Approved')</code> approves <em>which</em> of Taylor, Jordan, Morgan? The output reproduces the guide's "Verified output" exactly.</p>
 <aside class="notes">
 Say to the class (verbatim): "One more script, this time against your real database, not a temp one — showing everything working together end to end. And I want you to predict something before we run it."
 Line-by-line: one <code>:memory:</code> connection; three rows inserted in order Taylor, Jordan, Morgan (ids 1, 2, 3); <code>get_all_records()</code>'s body — <code>row_factory</code>, <code>SELECT * ... ORDER BY id DESC</code>, <code>[dict(row) ...]</code> — so <code>records</code> is [Morgan(3), Jordan(2), Taylor(1)]; <code>print(f'Records: {len(records)}')</code> gives <code>3</code>; <code>update_status(records[0]['id'], 'Approved')</code> approves <code>records[0]</code> = Morgan, id 3, amount 3500; <code>get_status_report()</code>'s body groups by status; the loop prints each group with <code>${row[2]:,.2f}</code> (thousands separator, two decimals).
@@ -911,13 +910,13 @@ Status report:
 <!-- 44. PART 5 ritual (readonly shell) -->
 <section class="s-code">
 <h3>The full pre-submission ritual — run on your own machine</h3>
-<div class="run" data-lang="shell" data-readonly>python3 test_script.py
+<div class="run" data-lang="shell" data-readonly>python3 demo_script.py
 ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
 git add . &amp;&amp; git commit -m 'lab 14: Python SQL integration' &amp;&amp; git push</div>
-<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Run <code>test_script.py</code> once (not repeatedly — <code>add_record</code> keeps inserting), then format, lint, test, commit, push. The commit message must include <strong>"lab 14"</strong>.</p>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Run <code>demo_script.py</code> once (not repeatedly — <code>add_record</code> keeps inserting), then format, lint, test, commit, push. The commit message must include <strong>"lab 14"</strong>.</p>
 <aside class="notes">
-Line-by-line: <code>python3 test_script.py</code> runs the end-to-end script against the real <code>data/requests.db</code>; <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all five tests; <code>&amp;&amp;</code> chaining stops on any failure; then stage, commit with a message including "lab 14", push.
-Common mistake: running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> — six records instead of three, because <code>add_record</code> always inserts new rows and never resets the table.
+Line-by-line: <code>python3 demo_script.py</code> runs the end-to-end script against the real <code>data/requests.db</code>; <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all five tests; <code>&amp;&amp;</code> chaining stops on any failure; then stage, commit with a message including "lab 14", push.
+Common mistake: running <code>demo_script.py</code> multiple times without clearing <code>data/requests.db</code> — six records instead of three, because <code>add_record</code> always inserts new rows and never resets the table.
 </aside>
 </section>
 
@@ -925,7 +924,7 @@ Common mistake: running <code>test_script.py</code> multiple times without clear
 <section class="s-quiz">
 <h3>Knowledge check</h3>
 <div class="quiz" data-answer="B">
-<p class="q">To make <code>test_script.py</code> approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?</p>
+<p class="q">To make <code>demo_script.py</code> approve the <em>first-ever</em> added record (Taylor) instead of the most recent one, what would need to change?</p>
 <button data-opt="A">Add a second <code>ORDER BY id DESC</code> to the <code>UPDATE</code> statement so it targets the oldest row</button>
 <button data-opt="B">Use <code>records[-1]</code> instead of <code>records[0]</code> (the oldest row is <em>last</em> in a <code>DESC</code>-ordered list), or change <code>get_all_records()</code>'s <code>ORDER BY</code> to <code>ASC</code></button>
 <button data-opt="C">Nothing in the code — just add the records in the reverse order (Morgan, Jordan, Taylor) so Taylor ends up with the highest <code>id</code></button>
@@ -939,7 +938,7 @@ Common mistake: running <code>test_script.py</code> multiple times without clear
 <h3>Common student mistakes</h3>
 <div class="warn-card">
 <div class="warn-lbl">Watch for</div>
-<p>Running <code>test_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — since <code>add_record</code> always inserts new rows (never resets the table), running it twice produces six records total, not three. If a student's <code>Records: 3</code> doesn't match, checking whether this is a repeat run is the first thing to verify.</p>
+<p>Running <code>demo_script.py</code> multiple times without clearing <code>data/requests.db</code> between runs — since <code>add_record</code> always inserts new rows (never resets the table), running it twice produces six records total, not three. If a student's <code>Records: 3</code> doesn't match, checking whether this is a repeat run is the first thing to verify.</p>
 <p>Assuming the <code>Status report</code> line order (<code>Approved</code> before <code>Pending</code>) reflects something meaningful (like insertion order or urgency) rather than just whatever order <code>GROUP BY</code> happened to produce — <code>GROUP BY</code>'s result order isn't guaranteed or semantically meaningful unless an explicit <code>ORDER BY</code> is added afterward.</p>
 </div>
 <aside class="notes">Both are the guide's Part 5 "Common student mistakes to watch for", verbatim. The <code>records[0]</code>-is-most-recent surprise is the deliberate highlight of this part: correct code, surprising result, an unstated ordering assumption — exactly the kind of subtle bug a quick test or a careful read catches.</aside>
@@ -1010,7 +1009,7 @@ delete_record removed exactly one row</pre>
 <li>Every function uses <code>?</code> placeholders for values, never f-strings/concatenation in SQL (Rule 1)</li>
 <li>Every function accepts an optional <code>db_file</code> parameter defaulting to <code>DB_FILE</code> (Rule 2)</li>
 <li><code>tests/test_database.py</code> contains all five tests, all using <code>tmp_path</code>, all passing</li>
-<li><code>test_script.py</code> runs cleanly and shows the status report</li>
+<li><code>demo_script.py</code> runs cleanly and shows the status report</li>
 <li>Git commit made, with a message including "lab 14"; full ritual run (format, lint, test, commit, push)</li>
 <li>GitHub repository URL pasted into Canvas — no screenshots; the repo is graded directly</li>
 </ul>

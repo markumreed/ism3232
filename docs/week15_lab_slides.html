@@ -265,7 +265,8 @@ Check for understanding: "If a user clicks 'Submit Request' in Tab 1, does anyth
 <section class="s-code">
 <h3>Top of <code>app.py</code> — imports, table, tabs</h3>
 <pre><code class="language-python">import streamlit as st
-from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+from database import add_record, create_table, get_all_records, get_status_report, update_status
 
 create_table()
 
@@ -310,7 +311,7 @@ Line-by-line: <code>from database import ...</code> pulls in all five Week 14 fu
             st.error('Name and amount are required.')</code></pre>
 <p class="expect"><strong>Run this with <code>streamlit run app.py</code> on your own machine — it can't execute here.</strong></p>
 <aside class="notes">
-Line-by-line: <code>with tab1:</code> — Module 12's <code>with</code> pattern, here scoping which widgets belong to <em>this</em> tab. <code>st.text_input('Your name')</code> — a text box; <code>requester</code> holds whatever is currently typed, <strong>re-read fresh on every re-run</strong>. <code>st.selectbox</code>, <code>st.number_input('Amount ($)', min_value=0.0, step=10.0)</code> (<code>min_value=0.0</code> prevents negative amounts; <code>step=10.0</code> is the increment), <code>st.text_area</code> — four widget types, one line each. <code>if st.button('Submit Request'):</code> — <strong>explain most carefully</strong>: <code>st.button(...)</code> returns <code>True</code> only on the exact re-run triggered by clicking it, then reverts to <code>False</code>. The button's <code>True</code> is <strong>not sticky</strong> — so the <code>add_record()</code> call runs once per click, not continuously. <code>if requester and amount &gt; 0:</code> — Week 5 truthiness (a non-empty string is <code>True</code>) plus a comparison, gating whether <code>add_record()</code> runs. <code>add_record(requester, category, amount, notes)</code> — <strong>this is the entire wiring</strong>: four widget values handed straight to Week 14's function, unchanged from <code>test_script.py</code>. <code>st.success</code>/<code>st.error</code> — styled green/red feedback boxes, presentational only.
+Line-by-line: <code>with tab1:</code> — Module 12's <code>with</code> pattern, here scoping which widgets belong to <em>this</em> tab. <code>st.text_input('Your name')</code> — a text box; <code>requester</code> holds whatever is currently typed, <strong>re-read fresh on every re-run</strong>. <code>st.selectbox</code>, <code>st.number_input('Amount ($)', min_value=0.0, step=10.0)</code> (<code>min_value=0.0</code> prevents negative amounts; <code>step=10.0</code> is the increment), <code>st.text_area</code> — four widget types, one line each. <code>if st.button('Submit Request'):</code> — <strong>explain most carefully</strong>: <code>st.button(...)</code> returns <code>True</code> only on the exact re-run triggered by clicking it, then reverts to <code>False</code>. The button's <code>True</code> is <strong>not sticky</strong> — so the <code>add_record()</code> call runs once per click, not continuously. <code>if requester and amount &gt; 0:</code> — Week 5 truthiness (a non-empty string is <code>True</code>) plus a comparison, gating whether <code>add_record()</code> runs. <code>add_record(requester, category, amount, notes)</code> — <strong>this is the entire wiring</strong>: four widget values handed straight to Week 14's function, unchanged from <code>demo_script.py</code>. <code>st.success</code>/<code>st.error</code> — styled green/red feedback boxes, presentational only.
 </aside>
 </section>
 

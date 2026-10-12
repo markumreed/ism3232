@@ -175,8 +175,9 @@ li::marker{color:var(--dim);}
   The <a href="week15_lecture.html" style="color:var(--muted);">Lecture page</a>
   covers the same material with annotated in-class code and timing.</span>
 </div><h2>The Streamlit execution model — the single most important concept</h2><div class="concept"><div class="concept-label">Every interaction reruns the entire script</div><p>When a user clicks a button, Streamlit runs your entire app.py from line 1 to the last line. Not just the button handler. The whole file. Every line. Every time. This explains why create_table() goes at the top outside any tab — it must run on every rerun before any widget reads the database.</p></div><div class="code-label">Correct app.py structure</div><pre><code>import streamlit as st
-from database import create_table, add_record, get_all_records, \
-                     update_status, get_status_report
+
+from database import add_record, create_table, get_all_records, \
+                     get_status_report, update_status
 
 # MUST be at the top — runs before any widget, every rerun
 create_table()

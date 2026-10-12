@@ -535,6 +535,7 @@ No "Check for understanding" parenthetical in the guide's Part 3. The paired qui
 <section class="s-code">
 <h3><code>tests/test_ai_feature.py</code></h3>
 <pre><code class="language-python">from unittest.mock import MagicMock, patch
+
 from ai_feature import summarise_request
 
 def test_summarise_returns_string():
@@ -712,7 +713,7 @@ No "Check for understanding" parenthetical in the guide's Part 4. The paired qui
 <h3>The final push — your own terminal</h3>
 <div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
 git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push</div>
-<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser). The commit message must include "lab 16" (Canvas requirement). Run <code>git status</code> before <code>add</code> to confirm <code>*.db</code> and <code>.env</code> are not tracked. Illustrative terminal output on the next slide.</p>
+<p class="expect">Read-only — <strong>run this on your own machine — it can't execute here</strong> (no <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser). The commit message must include "lab 16" (Canvas requirement). Run <code>git status</code> before <code>add</code> to confirm <code>*.db</code> and <code>.env</code> are not tracked. If <code>ruff check</code> reports <code>SIM102</code> in <code>app.py</code>, the Tab 1 block is still the nested-button version — apply Part 2's <code>st.session_state</code> fix first. Illustrative terminal output on the next slide.</p>
 <aside class="notes">
 Line-by-line (guide, Part 4): <code>ruff format .</code> then <code>ruff check .</code> then <code>pytest -v</code> — this week <code>pytest</code> <em>is</em> in the ritual, because Part 3 added the mocked test suite. <code>git add . &amp;&amp; git commit -m 'lab 16: GenAI feature + final submission' &amp;&amp; git push</code> — the message includes "lab 16". <code>git status</code> before <code>add</code> catches an accidentally-tracked <code>*.db</code> or <code>.env</code>.
 Read-only: no <code>ruff</code>, <code>pytest</code>, or <code>git</code> in the browser emulator.
@@ -859,7 +860,7 @@ Security note: this is the prompt-injection / uncontrolled-input discussion. Pre
         # code-cannot-fully-prevent limitation worth naming in the README.</code></pre>
 <p class="expect"><strong>Run this with <code>pytest -v</code> on your own machine.</strong> It imports <code>ai_feature</code> / <code>anthropic</code> and uses <code>unittest.mock</code>, so it can't run in this deck — but the runnable block on the next slide shows the same fact with plain Python.</p>
 <aside class="notes">
-Line-by-line (guide, Appendix B): <code>mock_client.return_value.messages.create.call_args.kwargs</code> — the keyword arguments the mocked <code>create</code> was actually called with (visible but unused in the lab's own test). <code>call_kwargs['messages'][0]['content']</code> — the real prompt string that would have gone to the API. <code>assert 'Software' in sent_prompt</code> — the category is sent, as designed. <code>assert 'Taylor' in sent_prompt</code> — the name in the user's <em>own description</em> is also sent: the code never added it, the user did. Present as open-ended discussion.
+Line-by-line (guide, Appendix B): <code>mock_client.return_value.messages.create.call_args.kwargs</code> — the keyword arguments the mocked <code>create</code> was actually called with (the lab's own test never inspects them). <code>call_kwargs['messages'][0]['content']</code> — the real prompt string that would have gone to the API. <code>assert 'Software' in sent_prompt</code> — the category is sent, as designed. <code>assert 'Taylor' in sent_prompt</code> — the name in the user's <em>own description</em> is also sent: the code never added it, the user did. Present as open-ended discussion.
 </aside>
 </section>
 

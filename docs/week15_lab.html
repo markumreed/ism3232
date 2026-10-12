@@ -217,7 +217,8 @@ touch app.py
 code app.py</pre></div><p>Add a minimal test to confirm Streamlit works:</p><div class="code-block"><div class="cb-label">app.py &mdash; hello world first</div><pre>import streamlit as st
 st.title('Hello from Streamlit!')
 st.write('Database connected.')</pre></div><div class="code-block"><pre>streamlit run app.py</pre></div><p>A browser tab opens at <code>http://localhost:8501</code>. Confirm you see the title.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Build the Complete app.py</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Replace the hello world with the full five-tab application</div><div class="task-body"><p>Replace the contents of <code>app.py</code> with the complete application. Adapt category names and field labels to your own capstone domain:</p><div class="code-block"><div class="cb-label">app.py &mdash; complete five-tab application</div><pre>import streamlit as st
-from database import create_table, add_record, get_all_records, update_status, get_status_report
+
+from database import add_record, create_table, get_all_records, get_status_report, update_status
 
 create_table()
 

@@ -209,6 +209,7 @@ if &#x27;pending_summary&#x27; in st.session_state:
         del st.session_state[&#x27;pending_summary&#x27;]
         st.success(&#x27;Summary saved.&#x27;)
         st.rerun()</code></pre><div class="code-label">tests/test_ai_feature.py — mocked tests (Control 4)</div><pre><code>from unittest.mock import MagicMock, patch
+
 from ai_feature import summarise_request
 
 def test_summarise_returns_text():
