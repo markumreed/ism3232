@@ -250,7 +250,7 @@ def get_approval_tier(amount: float) -> str:
 def apply_discount(price: float, pct: float) -> float:
     """Return price after discount. pct is 0-100."""
     return price * (1 - pct / 100)</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Import and Call in main.py</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write main.py to call all four functions</div><div class="task-body"><div class="code-block"><div class="cb-label">main.py</div><pre># main.py
-from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review
 
 price, qty = 450.00, 3
 total = calculate_total(price, qty)
@@ -258,7 +258,7 @@ total = calculate_total(price, qty)
 print(f'Total:          ${total:.2f}')
 print(f'Requires review: {requires_review(total)}')
 print(f'Approval tier:   {get_approval_tier(total)}')
-print(f'10% discount:    ${apply_discount(price, 10):.2f}')</pre></div><p>Run: <code>python3 main.py</code></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Write Eight pytest Tests</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write eight tests including at least two boundary cases</div><div class="task-body"><p>Boundary cases test the exact edge of a rule &mdash; where the behaviour changes. For a threshold of 1000, test with exactly 1000 and with 1001.</p><div class="code-block"><div class="cb-label">tests/test_business_rules.py</div><pre>from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+print(f'10% discount:    ${apply_discount(price, 10):.2f}')</pre></div><p>Run: <code>python3 main.py</code></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Write Eight pytest Tests</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write eight tests including at least two boundary cases</div><div class="task-body"><p>Boundary cases test the exact edge of a rule &mdash; where the behaviour changes. For a threshold of 1000, test with exactly 1000 and with 1001.</p><div class="code-block"><div class="cb-label">tests/test_business_rules.py</div><pre>from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review
 
 def test_total_includes_tax():
     assert round(calculate_total(100.00, 2), 2) == 214.00

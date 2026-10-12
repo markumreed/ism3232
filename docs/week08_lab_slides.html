@@ -167,18 +167,18 @@ The three "bugs": record 1's key is misspelled <code>'amout'</code> (Bug 1, a <c
 <section class="s-out">
 <h3>Verified traceback</h3>
 <pre>Traceback (most recent call last):
-  File "week8_buggy.py", line 19, in &lt;module&gt;
+  File "week8_buggy.py", line 21, in &lt;module&gt;
     total = get_total(records)
             ^^^^^^^^^^^^^^^^^^
-  File "week8_buggy.py", line 10, in get_total
+  File "week8_buggy.py", line 12, in get_total
     total += rec['amount']
              ~~~^^^^^^^^^^
 KeyError: 'amount'</pre>
-<p class="expect">The load-bearing content is the last line: <code>KeyError: 'amount'</code>. Pyodide's file path shows <code>&lt;exec&gt;</code> and its line numbers may differ from the guide's <code>week8_buggy.py</code> line 10 / 19 — the guide's numbering is shown here; the error <em>type</em> and <em>message</em> are what matter.</p>
+<p class="expect">The load-bearing content is the last line: <code>KeyError: 'amount'</code>. Pyodide's file path shows <code>&lt;exec&gt;</code> and its line numbers may differ from a real <code>python3 week8_buggy.py</code> run (line 12 / 21) — the numbering from a real run of the script exactly as typed is shown here; the error <em>type</em> and <em>message</em> are what matter.</p>
 <aside class="notes">
 Read it together, from the bottom up, exactly as the three questions ask:
 1. "What is the error type on the last line?" — <code>KeyError</code>, specifically <code>KeyError: 'amount'</code>.
-2. "Which file and line number is highlighted?" — <code>week8_buggy.py</code>, line 10, inside <code>get_total()</code>, at <code>total += rec['amount']</code>. The traceback shows a whole chain — line 19 (where <code>get_total</code> was <em>called</em>) and line 10 (where the actual failure <em>happened</em>) — both matter, but line 10 is where the bug physically lives.
+2. "Which file and line number is highlighted?" — <code>week8_buggy.py</code>, line 12, inside <code>get_total()</code>, at <code>total += rec['amount']</code>. The traceback shows a whole chain — line 21 (where <code>get_total</code> was <em>called</em>) and line 12 (where the actual failure <em>happened</em>) — both matter, but line 12 is where the bug physically lives.
 3. "What does that error type mean?" — <code>KeyError</code> means: code tried to access a dictionary using a key (<code>'amount'</code>) that doesn't exist in that specific dictionary. The error doesn't say the key is <em>always</em> missing — it says the key is missing from <em>this specific</em> dictionary, on <em>this specific</em> pass through the loop. Three records exist; only one is broken; the traceback alone doesn't tell you which — that's what Part 2's <code>print()</code> debugging is for.
 Common mistakes: reading the traceback top-down and getting stuck on the "Traceback (most recent call last):" boilerplate; skipping the rubber-duck step as "silly"; guessing at "what the error means" instead of decomposing <code>KeyError: 'amount'</code> literally.
 </aside>
@@ -197,7 +197,7 @@ Common mistakes: reading the traceback top-down and getting stuck on the "Traceb
 
 ## Bug 1
 Error type: KeyError
-File + line: week8_buggy.py, line 10 (inside get_total)
+File + line: week8_buggy.py, line 12 (inside get_total)
 What the error means: code tried to access a dictionary key
   ('amount') that doesn't exist in one of the records
 What I told the duck: [student's own words]
@@ -210,11 +210,11 @@ How I fixed it: [to be filled in during Part 2]</pre>
 <section class="s-quiz">
 <h3>Knowledge check</h3>
 <div class="quiz" data-answer="C">
-<p class="q">The traceback names line 10, inside <code>get_total()</code>. Does that mean line 10 itself is <em>wrong</em>, or could the bug actually be somewhere else?</p>
-<button data-opt="A">Line 10 is definitely wrong — the traceback points there, so that's the bug</button>
+<p class="q">The traceback names line 12, inside <code>get_total()</code>. Does that mean line 12 itself is <em>wrong</em>, or could the bug actually be somewhere else?</p>
+<button data-opt="A">Line 12 is definitely wrong — the traceback points there, so that's the bug</button>
 <button data-opt="B">The bug is in <code>get_total()</code>'s logic — probably the <code>for</code> loop or the <code>+=</code></button>
-<button data-opt="C">The bug is elsewhere: line 10's code is correct in general; the real problem is the typo'd <code>'amout'</code> key back in the <code>records</code> data</button>
-<p class="why" hidden>The bug could be — and in this case, is — somewhere else. Line 10's code is <em>correct</em> in general; the actual problem is in the <em>data</em> being fed into it, back at the typo'd <code>'amout'</code> key. A traceback shows you where the failure was <em>detected</em>, not necessarily where the mistake was <em>made</em>.</p>
+<button data-opt="C">The bug is elsewhere: line 12's code is correct in general; the real problem is the typo'd <code>'amout'</code> key back in the <code>records</code> data</button>
+<p class="why" hidden>The bug could be — and in this case, is — somewhere else. Line 12's code is <em>correct</em> in general; the actual problem is in the <em>data</em> being fed into it, back at the typo'd <code>'amout'</code> key. A traceback shows you where the failure was <em>detected</em>, not necessarily where the mistake was <em>made</em>.</p>
 </div>
 <aside class="notes">Guide's Part 1 Check for understanding, verbatim answer. The distinction — failure detected vs mistake made — is the genuinely important takeaway.</aside>
 </section>
@@ -313,10 +313,10 @@ Update <code>debug_log.md</code>'s Bug 1 section: "What I tried: added a DEBUG p
 <h3>Verified output — Bug 1 gone, Bug 2 surfaces</h3>
 <pre>Total: $5150.00 across 3 records
 Traceback (most recent call last):
-  File "week8_buggy.py", line 21, in &lt;module&gt;
+  File "week8_buggy.py", line 23, in &lt;module&gt;
     print(is_over_limit(total))
           ^^^^^^^^^^^^^^^^^^^^
-  File "week8_buggy.py", line 14, in is_over_limit
+  File "week8_buggy.py", line 16, in is_over_limit
     return amount > '1000'
            ^^^^^^^^^^^^^^^
 TypeError: '&gt;' not supported between instances of 'int' and 'str'</pre>
@@ -368,7 +368,7 @@ Say to the class: "New error, new type entirely. Same process: read it, explain 
 </div>
 <pre class="tmpl" data-readonly>## Bug 2
 Error type: TypeError
-File + line: week8_buggy.py, line 14 (inside is_over_limit)
+File + line: week8_buggy.py, line 16 (inside is_over_limit)
 What the error means: Python cannot compare an int and a string
   with > -- the two sides of the comparison are different types
 How I fixed it: [to be filled in below]</pre>
@@ -452,7 +452,7 @@ Say to the class: "Now that both bugs are fixed, let's prove it stays fixed — 
 <!-- 27. PART 4 the test file (static, outside .run) -->
 <section class="s-code">
 <h3><code>tests/test_week8.py</code> — five tests</h3>
-<pre class="tmpl" data-readonly>from week8_buggy import get_total, is_over_limit, format_summary
+<pre class="tmpl" data-readonly>from week8_buggy import format_summary, get_total, is_over_limit
 
 def test_get_total_correct():
     recs = [{'amount': 100}, {'amount': 200}]
@@ -517,7 +517,7 @@ tests/test_week8.py::test_is_over_limit_false PASSED
 tests/test_week8.py::test_is_over_limit_boundary PASSED
 tests/test_week8.py::test_format_summary PASSED
 5 passed</pre>
-<p class="expect">Reproduced verbatim from the guide's "Verified output — all five pass." Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those.</p>
+<p class="expect">Reproduced verbatim from the guide's "Verified output — all five pass." Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. If your Lab 7 tests are in the same <code>tests/</code> folder, <code>pytest -v</code> lists those eight too and ends in <code>13 passed</code>; <code>pytest -v tests/test_week8.py</code> runs only these five.</p>
 <aside class="notes">
 <code>week8_buggy.py</code> has module-level code (<code>total = get_total(records)</code>, <code>print(...)</code>) that runs the moment it's imported — a curious student may notice the script's own output when <code>pytest</code> runs. <code>pytest</code> captures output from passing tests by default, so it's hidden unless a test fails or <code>-s</code> is passed. This is a real reason Week 7's "keep business-logic files free of module-level side effects" discipline matters once tests import those files directly.
 </aside>
@@ -587,7 +587,7 @@ Can I explain every fixed line? Yes / No
 <h3>The full ritual — run on your own machine</h3>
 <div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest
 git add . &amp;&amp; git commit -m 'lab 8: debugging ai literacy' &amp;&amp; git push</div>
-<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> run in your terminal, not the browser. Format, lint, test, then commit and push. A quick visual scan of <code>debug_log.md</code> first — no blank sections, no placeholder underscores.</p>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> run in your terminal, not the browser. Format, lint, test, then commit and push. A quick visual scan of <code>debug_log.md</code> first — no blank sections, no placeholder underscores. If <code>ruff check</code> stops on a fixable error such as <code>I001</code> (un-sorted imports), <code>pytest</code> never runs — run <code>ruff check --fix .</code>, then the full first line again.</p>
 <aside class="notes">Same ritual as every prior module. The commit message must include "lab 8".</aside>
 </section>
 

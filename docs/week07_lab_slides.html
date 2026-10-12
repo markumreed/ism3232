@@ -300,7 +300,7 @@ auto
 <aside class="notes">
 Teaching goal: import specific functions from a local module, and confirm all four work together — <code>main.py</code>'s entire, deliberately narrow job.
 Say to the class (verbatim): "This file has exactly one job: call the four functions from <code>business_rules.py</code> and print what they return. No business logic lives here — if you find yourself computing something in <code>main.py</code> beyond formatting a print statement, that computation probably belongs in <code>business_rules.py</code> instead."
-Line-by-line: <code>from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount</code> — <strong>new import style today</strong>. <code>business_rules</code> is not an installed package — it's <code>business_rules.py</code>, sitting right next to <code>main.py</code> in the same folder; Python automatically looks in the current file's directory for a module by that name. <code>from ... import name1, name2</code> pulls in specific functions so they're callable directly (<code>calculate_total(...)</code>) rather than prefixed (<code>business_rules.calculate_total(...)</code>, which a plain <code>import business_rules</code> would give). <code>price, qty = 450.00, 3</code> — tuple unpacking. <code>total = calculate_total(price, qty)</code> — the first concrete payoff of "functions return values": <code>total</code> now holds a real number, usable in every subsequent line, impossible if the function had only <code>print()</code>ed. The four <code>print()</code> calls — exactly and only what <code>main.py</code> is for; every actual calculation is delegated to <code>business_rules.py</code>.
+Line-by-line: <code>from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review</code> — <strong>new import style today</strong>. <code>business_rules</code> is not an installed package — it's <code>business_rules.py</code>, sitting right next to <code>main.py</code> in the same folder; Python automatically looks in the current file's directory for a module by that name. <code>from ... import name1, name2</code> pulls in specific functions so they're callable directly (<code>calculate_total(...)</code>) rather than prefixed (<code>business_rules.calculate_total(...)</code>, which a plain <code>import business_rules</code> would give). <code>price, qty = 450.00, 3</code> — tuple unpacking. <code>total = calculate_total(price, qty)</code> — the first concrete payoff of "functions return values": <code>total</code> now holds a real number, usable in every subsequent line, impossible if the function had only <code>print()</code>ed. The four <code>print()</code> calls — exactly and only what <code>main.py</code> is for; every actual calculation is delegated to <code>business_rules.py</code>.
 Common mistakes: running <code>python3 main.py</code> from the wrong directory — the import fails with <code>ModuleNotFoundError: No module named 'business_rules'</code>. Misspelling an imported name, or omitting one from the <code>from ... import</code> list — <code>ImportError</code> naming the missing function, or <code>NameError</code> at the point of use. Computing something directly in <code>main.py</code> instead of calling a function — not a syntax error, but a violation of the separation the lab is building.
 Check for understanding (asked at the end of this part): "If you wanted to add a fifth business rule tomorrow, which file would you edit first, and would <code>main.py</code> need to change at all?" Answer: <code>business_rules.py</code> first, to define the new function; <code>main.py</code> would only need to change if you also wanted to <em>display</em> that new rule's result — the two concerns are genuinely independent, which is the entire point of today's structure.
 </aside>
@@ -311,7 +311,7 @@ Check for understanding (asked at the end of this part): "If you wanted to add a
 <h3>The idea</h3>
 <div class="concept">
 <div class="concept-lbl">Concept</div>
-<p><code>from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount</code> — <code>business_rules</code> is <strong>not an installed package</strong>; it's <code>business_rules.py</code>, the file right next to <code>main.py</code>. Python looks in the current file's own directory for a module by that name — no installation needed.</p>
+<p><code>from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review</code> — <code>business_rules</code> is <strong>not an installed package</strong>; it's <code>business_rules.py</code>, the file right next to <code>main.py</code>. Python looks in the current file's own directory for a module by that name — no installation needed.</p>
 <p><code>from ... import name1, name2, ...</code> pulls in <strong>specific functions by name</strong>, so they're called directly — <code>calculate_total(...)</code> — instead of prefixed — <code>business_rules.calculate_total(...)</code>, which a plain <code>import business_rules</code> would give.</p>
 <p><code>total = calculate_total(price, qty)</code> — the first concrete payoff of "functions return values": <code>total</code> holds a real number, reusable on every line below. That would be impossible if <code>calculate_total</code> had only <code>print()</code>ed.</p>
 </div>
@@ -346,7 +346,7 @@ def apply_discount(price: float, pct: float) -&gt; float:
     """Return price after discount. pct is 0-100."""
     return price * (1 - pct / 100)
 
-# main.py  -- from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+# main.py  -- from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review
 price, qty = 450.00, 3
 total = calculate_total(price, qty)
 
@@ -432,7 +432,7 @@ Check for understanding (asked at the end of this part): "For <code>get_approval
 <!-- 25. PART 4 provided test file (STATIC — no pytest runner in browser) -->
 <section class="s-code">
 <h3>Type the tests as provided — <code>tests/test_business_rules.py</code></h3>
-<pre><code class="language-python">from business_rules import calculate_total, requires_review, get_approval_tier, apply_discount
+<pre><code class="language-python">from business_rules import apply_discount, calculate_total, get_approval_tier, requires_review
 
 def test_total_includes_tax():
     assert round(calculate_total(100.00, 2), 2) == 214.00
