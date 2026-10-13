@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<title>ISM3232 Week 10 — OOP I — Classes &amp; Objects</title><style>
+<title>ISM3232 Week 10 — OOP for Agents — Classes, Objects &amp; Composition</title><style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
@@ -143,15 +143,16 @@ li::marker{color:var(--dim);}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 10 — OOP I — Classes &amp; Objects — ISM3232 Business Application Development course material.">
+<meta name="description" content="ISM3232 Week 10 — OOP for Agents — Classes, Objects &amp; Composition — ISM3232 Business Application Development course material.">
+<style>html[data-theme="light"] pre code{color:#1f2937;}</style>
 </head><body>
-<div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Object-Oriented Design · Module 10 · Reading</div>
-<h1 class="wk-title">OOP I — Classes &amp; Objects</h1>
-<p class="wk-deck">Build your first business class with __init__, instance attributes, business logic methods, and a full test suite.</p>
+<div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Building AI Agents · Module 10 · Reading</div>
+<h1 class="wk-title">OOP for Agents — Classes, Objects &amp; Composition</h1>
+<p class="wk-deck">The minimum object-oriented programming you need to build a business chatbot: one class for the conversation, one class for a tool, and a way to connect them.</p>
 <div class="meta">
 <span class="chip accent">Module 10</span>
-<span class="chip">Unit 3 · Object-Oriented Design</span>
-<span class="chip">Reading · Classes, __init__ &amp; instance methods</span>
+<span class="chip">Unit 3 · Building AI Agents</span>
+<span class="chip">Reading · Classes, objects, self &amp; composition</span>
 </div>
 <div class="weekjump">
 <span class="weekjump-label">This module:</span>
@@ -159,236 +160,371 @@ li::marker{color:var(--dim);}
 <a href="week10_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week10_lab.html" class="weekjump-link">Lab</a>
 </div>
-<div style="background:var(--blue-dim);border:1px solid var(--border);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will understand the class/instance mental model, be able to write a complete class with <code>__init__</code>, methods, and <code>__repr__</code>, and write all six required test types including the instance independence test.</p>
-</div>
-<div style="background:var(--bg2);border:1px solid var(--border);
-  border-radius:10px;padding:18px 20px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--muted);margin-bottom:8px;">&#x1F517; Coming from Unit 2</div>
-  <p style="margin:0;font-size:14px;line-height:1.75;color:var(--text);">
-    Unit 2 gave you functions — named blocks of logic you can call and test.
-    Unit 3 asks a different question: if a function is a named block of logic,
-    what is the right way to group related functions <em>and the data they operate on</em>?
-    That question is what a class answers.
-    The <code>requires_review()</code> and <code>get_approver()</code> functions you wrote in Unit 2
-    become methods on a class in Unit 3.
-  </p>
-</div>
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
-  The <a href="week10_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>The mental model — blueprint and instance</h2><div class="concept"><div class="concept-label">Class = blank form. Instance = filled-out form.</div><p>A class defines what every object of that type has and can do. An instance is one specific object built from that blueprint. BusinessRequest is the blank purchase form. req_101 is Taylor's filled-out request.</p></div><div class="code-label">Writing the BusinessRequest class — every line explained</div><pre><code>APPROVAL_LIMIT = 1000.00
+<div style="background:var(--blue-dim);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:28px;"><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div><p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will be able to say what a class and an object are, write a class with <code>__init__</code>, attributes and methods, explain what <code>self</code> refers to, create several objects from one class, give a chatbot a separate tool to use, trace one message through the program, and name four things a business chatbot can get wrong.</p></div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:28px;"><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">&#x1F517; Coming from Unit 2</div><p style="margin:0;font-size:14px;line-height:1.75;color:var(--text);">In Unit 2 you kept data in dictionaries and lists, and you wrote functions that worked on that data. The data lived in one place and the functions lived in another. This week you learn one new way to organize a program: a <strong>class</strong> keeps a set of data and the functions that work on it together. Everything else you know still applies. A method is a function. An attribute is a variable. The conversation history is a list of dictionaries, exactly like the records you looped over in Week 6.</p></div>
+<div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4D6;</span><span><strong style="color:var(--text);">Pre-class reading.</strong> Read this before the session. The <a href="week10_lecture.html" style="color:var(--muted);">Lecture page</a> builds the same code one step at a time in class.</span></div><h2>Module at a glance</h2><div class="term"><span class="term-word">Time</span><span class="term-def">One week. Reading about 45 minutes, lecture 75 minutes, lab 75 minutes, mini-project about 2 hours on your own.</span></div><div class="term"><span class="term-word">Prerequisites</span><span class="term-def">Variables, strings, conditionals, loops, functions, lists, dictionaries, and pytest from Weeks 5 to 8. No experience with classes, AI services, or agent tools is assumed.</span></div><div class="term"><span class="term-word">Materials</span><span class="term-def">Python 3.12, your <code>~/ism3232</code> repository, pytest and ruff. No other packages, no API key, and no internet connection are needed.</span></div><div class="term"><span class="term-word">What you build</span><span class="term-def">A support chatbot class, a separate order-lookup tool, and a small assistant of your own design.</span></div><h3>Learning outcomes</h3><ol><li>Explain in plain language what a class and an object are.</li><li>Identify the data and the actions that belong together in a simple chatbot class.</li><li>Write and use a class with an initializer, instance attributes, and methods.</li><li>Explain what <code>self</code> refers to and use it correctly.</li><li>Create several objects from one class and explain how their data can differ.</li><li>Give a chatbot a separate tool to use. This is called composition.</li><li>Trace how a user message moves through a simple chatbot program.</li><li>Identify basic risks in a business agent: unreliable output, failed tools, sensitive data, and actions that should need a person's approval.</li></ol><h2>Why use classes for an AI application?</h2><p>A chatbot has data that belongs together: its name, the instructions it was given, and the conversation so far. It also has actions that work on that data, such as responding to a message. A class is a way to keep that data and those actions in one place.</p><p>That gives you three practical things:</p><ul><li><strong>One place to look.</strong> Everything about the chatbot is in one block of code.</li><li><strong>Many chatbots from one design.</strong> You write the class once and create as many chatbots as you need, each with its own conversation.</li><li><strong>Parts you can plug in.</strong> You can hand the chatbot a tool, such as an order lookup, without mixing the tool's code into the chatbot's code.</li></ul><div class="warn"><div class="concept-label">⚠ A class organizes code. It does not make anything intelligent.</div><p>The chatbot you build this week chooses its replies with <code>if</code> statements. Putting those <code>if</code> statements inside a class makes the program easier to read, extend and test. It does not make the replies any smarter.</p></div><h3>You do not always need a class</h3><p>You could write this week's chatbot with plain functions and one shared dictionary. This version works:</p><div class="code-label">The same idea with functions and one shared dictionary</div><pre><code># The same chatbot, written with functions and one shared dictionary.
 
-class BusinessRequest:
-    &quot;&quot;&quot;Represents a single purchase approval request.&quot;&quot;&quot;
+ORDERS = {"A100": "shipped", "A101": "processing"}
 
-    def __init__(self, req_id: int, requester: str,
-                 category: str, amount: float) -&gt; None:
-        &quot;&quot;&quot;Initialise a new request with Pending status.&quot;&quot;&quot;
-        self.req_id    = req_id
-        self.requester = requester
-        self.category  = category
-        self.amount    = amount
-        self.status    = &#x27;Pending&#x27;   # default — not a parameter
 
-    def approve(self) -&gt; None:
-        &quot;&quot;&quot;Mark this request as Approved.&quot;&quot;&quot;
-        self.status = &#x27;Approved&#x27;
+def find_order_id(orders, text):
+    """Return the first known order ID mentioned in text, or None."""
+    for order_id in orders:
+        if order_id in text.upper():
+            return order_id
+    return None
 
-    def reject(self) -&gt; None:
-        &quot;&quot;&quot;Mark this request as Rejected.&quot;&quot;&quot;
-        self.status = &#x27;Rejected&#x27;
 
-    def requires_review(self) -&gt; bool:
-        &quot;&quot;&quot;Return True if amount exceeds the approval limit.&quot;&quot;&quot;
-        return self.amount &gt; APPROVAL_LIMIT
+def respond(state, user_message):
+    """Record the message, choose a reply, record it, and return it."""
+    state["history"].append({"role": "user", "content": user_message})
+    order_id = find_order_id(state["orders"], user_message)
+    if order_id is None:
+        reply = "Which order? Please send an order ID like A100."
+    else:
+        reply = f"Order {order_id} is {state['orders'][order_id]}."
+    state["history"].append({"role": "assistant", "content": reply})
+    return reply
 
-    def __repr__(self) -&gt; str:
-        return (f&#x27;BusinessRequest(id={self.req_id}, &#x27;
-                f&#x27;requester={self.requester!r}, &#x27;
-                f&#x27;amount=${self.amount:,.2f}, &#x27;
-                f&#x27;status={self.status!r})&#x27;)</code></pre><div class="warn"><div class="concept-label">⚠ self is the instance</div>
-<div style="margin:20px 0;">
-<div style="font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:8px;">⚖ Two mistakes in one method — both silent failures</div>
-<div style="margin-bottom:4px;">
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--red);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✗ Missing self parameter + local variable instead of self.attribute</div>
-  <pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);
-    border-left:3px solid var(--red);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>class BusinessRequest:
-    def approve():            # missing self → TypeError
-        status = &#x27;Approved&#x27;   # local variable — vanishes immediately
 
-req = BusinessRequest(1, &#x27;T&#x27;, &#x27;E&#x27;, 500)
-req.approve()   # TypeError: approve() takes 0 positional arguments</code></pre>
-</div>
-<div>
-  <div style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--green);
-    letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">✓ self as first parameter + self.attribute to persist the change</div>
-  <pre style="background:rgba(110,231,183,.08);border:1px solid rgba(110,231,183,.2);
-    border-left:3px solid var(--green);border-radius:0 6px 6px 0;
-    margin:0;padding:10px 14px;"><code>class BusinessRequest:
-    def approve(self) -&gt; None:
-        self.status = &#x27;Approved&#x27;   # changes THIS instance
+state = {"name": "Sunny", "history": [], "orders": ORDERS}
+print(respond(state, "Where is order A100?"))
+print(len(state["history"]))</code></pre><div class="code-label">Output</div><pre><code>Order A100 is shipped.
+2</code></pre><p>Many real agent programs are written this way, and it is a fine choice for a small script. It gets awkward as the program grows. Every function has to be handed <code>state</code>. Nothing stops code somewhere else from changing <code>state["history"]</code>. If you want two chatbots, you have to keep two dictionaries straight yourself. A class solves those three problems, and most chatbot code you will read uses classes, so this module teaches them. Use whichever style keeps your own code clear.</p><h2>The example: Sunny, a support chatbot</h2><p>Bayside Outfitters is a made-up outdoor shop. Its chatbot is called Sunny. Sunny does three things:</p><ul><li>It answers one kind of question: <em>where is my order?</em></li><li>It passes two kinds of request to a person: changing a shipping address, and anything about payment or card details.</li><li>It says so plainly when it does not know how to help.</li></ul><p>We use this one example for the whole module.</p><div class="concept"><div class="concept-label">The mock and a production agent are different things</div><p>A <strong>mock</strong> is a stand-in that behaves like the real thing in a simple, predictable way. Sunny is a mock in two ways. Its replies come from keyword rules, not from an AI model. Its order data is a small dictionary typed into the file, not a company's order system.</p><p>A <strong>production agent</strong> is one that real customers use. It talks to a real AI model, which can be wrong in ways you cannot predict. It reads from real business systems, which can be slow or unavailable. Its mistakes cost money and trust. The class structure you learn this week is the same in both. Everything around it is harder, and later weeks cover that.</p></div><h2>Seven words, in plain language</h2><p>Read these before you look at any code. Each one comes back in the steps below.</p><div class="term"><span class="term-word">class</span><span class="term-def">A template you write once. It says what data each chatbot will remember and what each chatbot can do. Think of a blank new-customer form.</span></div><div class="term"><span class="term-word">object</span><span class="term-def">One thing made from the template. Sunny is an object. A filled-in form is an object. You can make many objects from one class.</span></div><div class="term"><span class="term-word">attribute</span><span class="term-def">A piece of data that an object remembers, such as its name or its conversation history. An attribute is a variable that belongs to one object.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function that belongs to a class. It is something every object of that class can do, such as respond to a message.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The method Python runs by itself, once, when you create an object. Its job is to give the new object its starting attributes. The name has two underscores on each side.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The object a method is working on right now. Inside the class, <code>self.name</code> means this chatbot's name.</span></div><div class="term"><span class="term-word">composition</span><span class="term-def">Giving one object another object to use. Sunny is given an order-lookup tool. Sunny <em>has a</em> tool.</span></div><h2>Step 1 — A class that stores data</h2><p>Start with the smallest useful class. It only remembers things.</p><div class="code-label">Step 1</div><pre><code>class SupportChatbot:
+    """A support chatbot. Step 1: it only stores data."""
 
-req = BusinessRequest(1, &#x27;T&#x27;, &#x27;E&#x27;, 500)
-req.approve()
-print(req.status)   # &#x27;Approved&#x27;</code></pre>
-</div>
-<p style="font-size:13px;color:var(--muted);margin-top:8px;">Every method needs <code>self</code> as its first parameter. Every attribute change needs <code>self.attribute</code>, not a bare variable name.</p>
-</div><p>When you call <code>req.approve()</code>, Python passes <code>req</code> as <code>self</code> automatically. <code>self.status = 'Approved'</code> changes the status of that specific instance. Forgetting <code>self</code> causes TypeError. Writing <code>status = 'Approved'</code> without <code>self</code> creates a local variable that vanishes immediately.</p></div><h2>Instance independence — the most important demo</h2><div class="code-label">Approving one instance must not affect others</div><pre><code>req1 = BusinessRequest(1, &#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00)
-req2 = BusinessRequest(2, &#x27;Jordan&#x27;, &#x27;Travel&#x27;,     350.00)
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
 
-req1.approve()
 
-print(req1.status)  # Approved
-print(req2.status)  # Pending ← still Pending!
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.name)
+print(bot.instructions)
+print(bot.history)</code></pre><div class="code-label">Output</div><pre><code>Sunny
+You are a friendly support assistant.
+[]</code></pre><ul><li><code>class SupportChatbot:</code> starts the template. By convention a class name is written with a capital letter at the start of each word and no underscores.</li><li><code>def __init__(self, name, instructions):</code> defines the setup method. You never call it by name. Python runs it when you write <code>SupportChatbot(...)</code>.</li><li><code>self.name = name</code> stores the value on the object. The right side is the parameter, which disappears when <code>__init__</code> finishes. The left side is the attribute, which stays for as long as the object exists.</li><li><code>self.history = []</code> gives every new chatbot its own empty list. It is not a parameter because every conversation starts empty.</li><li><code>bot = SupportChatbot("Sunny", "You are a friendly support assistant.")</code> creates one object. You pass two values. Python supplies <code>self</code> for you.</li><li><code>bot.name</code> reads an attribute. The dot means <em>the name that belongs to this object</em>.</li></ul><h2>Step 2 — A method that responds</h2><p>Now give the chatbot something to do. Add two methods below <code>__init__</code>.</p><div class="code-label">Step 2: add these methods inside the class</div><pre><code>    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
 
-# Each instance has its own copy of every attribute.</code></pre>
-<div style="background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:16px 18px;margin:16px 0;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--amber);margin-bottom:8px;">&#x270D; Think before reading on</div>
-  <p style="margin:0 0 8px;font-size:14px;">Before running the independence demo:
-     if you call <code>req1.approve()</code>, what do you predict <code>req2.status</code> will be?
-     What would it be if <code>status</code> were defined at class level instead of inside
-     <code>__init__</code>?</p>
-</div><h2>The six required test types</h2><div class="code-label">tests/test_models.py</div><pre><code>from models import BusinessRequest
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if "hello" in text:
+            return f"Hello! I'm {self.name}."
+        return "I'm not sure how to help with that."</code></pre><div class="code-label">Using it</div><pre><code>bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.respond("Hello there"))
+print(bot.respond("Where is my order?"))
+print(len(bot.history))
+print(bot.history[0])</code></pre><div class="code-label">Output</div><pre><code>Hello! I'm Sunny.
+I'm not sure how to help with that.
+4
+{'role': 'user', 'content': 'Hello there'}</code></pre><ul><li><code>def respond(self, user_message):</code> is a method. Its first parameter is always <code>self</code>. The caller writes <code>bot.respond("Hello there")</code> and passes only the message.</li><li><code>self.history.append({"role": "user", "content": user_message})</code> adds one dictionary to this chatbot's history. <code>role</code> says who spoke. <code>content</code> is what they said.</li><li><code>reply = self.choose_reply(user_message)</code> calls another method on the same object. Inside a class you reach your own methods through <code>self</code>.</li><li><code>text = user_message.lower()</code> makes a lowercase copy, so <code>Hello</code> and <code>hello</code> match the same rule.</li><li><code>return reply</code> hands the reply back to whoever called <code>respond</code>.</li><li>After two messages the history holds four dictionaries: two from the user and two from the chatbot.</li></ul><h2>Step 3 — A separate tool</h2><p>Looking up an order is a different job from holding a conversation. Give that job its own class. In agent programs, a <strong>tool</strong> is a piece of code the chatbot can use to get information or do something.</p><div class="code-label">Step 3</div><pre><code>class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-def test_default_status_is_pending():
-    req = BusinessRequest(1, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
-    assert req.status == &#x27;Pending&#x27;
+    def __init__(self, orders):
+        self.orders = orders
 
-def test_approve_sets_status():
-    req = BusinessRequest(2, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
-    req.approve()
-    assert req.status == &#x27;Approved&#x27;
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
 
-def test_requires_review_true():
-    req = BusinessRequest(3, &#x27;T&#x27;, &#x27;Equipment&#x27;, 1200.00)
-    assert req.requires_review() is True
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
 
-def test_requires_review_false():
-    req = BusinessRequest(4, &#x27;T&#x27;, &#x27;Equipment&#x27;, 500.00)
-    assert req.requires_review() is False
 
-def test_boundary_at_limit():
-    req = BusinessRequest(5, &#x27;T&#x27;, &#x27;Equipment&#x27;, 1000.00)
-    assert req.requires_review() is False   # &gt; not &gt;=
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+print(order_tool.find_order_id("Where is order a100?"))
+print(order_tool.find_status("A100"))
+print(order_tool.find_order_id("Where is my order?"))
+print(order_tool.find_status("A999"))</code></pre><div class="code-label">Output</div><pre><code>A100
+shipped
+None
+None</code></pre><ul><li><code>OrderLookup</code> has one attribute, <code>orders</code>, a dictionary that maps an order ID to a status.</li><li><code>find_order_id(self, text)</code> loops over the order IDs it knows and returns the first one that appears in the text. <code>text.upper()</code> makes an uppercase copy so <code>a100</code> matches <code>A100</code>.</li><li><code>find_status(self, order_id)</code> returns the status, or <code>None</code> when there is no such order. <code>None</code> is how the tool says <em>I have no answer</em>.</li><li>Nothing in this class mentions chatting. You could test it, reuse it, or replace it without touching the chatbot.</li></ul><h2>Step 4 — Give the chatbot the tool</h2><p>This is composition. The chatbot does not contain the order code. It is handed a tool object and keeps it in an attribute.</p><div class="code-label">Step 4: the initializer now accepts a tool</div><pre><code>    def __init__(self, name, instructions, order_tool):
+        """Set up one chatbot with its own name, instructions, tool, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []</code></pre><div class="code-label">Step 4: a method that uses the tool</div><pre><code>    def order_reply(self, user_message):
+        """Use the order tool to answer a question about an order."""
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."</code></pre><div class="code-label">Creating both objects and connecting them</div><pre><code>order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.", order_tool)
 
-def test_instance_independence():
-    req1 = BusinessRequest(6, &#x27;A&#x27;, &#x27;Equipment&#x27;, 500.00)
-    req2 = BusinessRequest(7, &#x27;B&#x27;, &#x27;Travel&#x27;,    500.00)
-    req1.approve()
-    assert req1.status == &#x27;Approved&#x27;
-    assert req2.status == &#x27;Pending&#x27;   # unchanged</code></pre><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">class</span><span class="term-def">A blueprint that defines what objects of that type have (attributes) and can do (methods).</span></div><div class="term"><span class="term-word">instance / object</span><span class="term-def">One specific thing built from a class.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The constructor — runs once when an instance is created.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The specific instance the method is being called on.</span></div><div class="term"><span class="term-word">instance attribute</span><span class="term-def">A variable stored on a specific instance. Accessed with self.name.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Always takes self as the first parameter.</span></div><div class="term"><span class="term-word">__repr__</span><span class="term-def">Returns a readable string representation of the object. Used by print().</span></div><div class="term"><span class="term-word">encapsulation</span><span class="term-def">Bundling data and the methods that operate on it inside one class.</span></div><h2>Before you leave this week</h2><ul class="checklist"><li>Can write a class with __init__, three methods, and __repr__ without notes</li><li>Understand what self refers to and why every method needs it</li><li>Can demonstrate instance independence with a live example</li><li>All six test types present and passing (pytest -v)</li><li>Assignment 10 submitted via GitHub URL</li></ul>
+print(bot.respond("hello"))
+print(bot.respond("Where is order A100?"))
+print(bot.respond("Where is my order?"))
+print(bot.respond("Please change my shipping address"))
+print(bot.respond("What is the weather today?"))</code></pre><div class="code-label">Output</div><pre><code>Hello! I'm Sunny. I can check an order status for you.
+Order A100 is shipped.
+Which order? Please send an order ID like A100.
+I can't help with that here. I'm passing you to a human agent.
+I'm not sure how to help with that. I can check an order status.</code></pre><ul><li><code>self.order_tool = order_tool</code> stores the tool on the chatbot. From now on the chatbot <em>has a</em> tool.</li><li><code>self.order_tool.find_order_id(user_message)</code> reads as: take this chatbot's tool, and call its <code>find_order_id</code> method.</li><li><code>if order_id is None:</code> handles a failed lookup. The chatbot asks for a valid ID. It does not guess.</li><li>The tool is created first, then passed in when the chatbot is created. The chatbot never creates its own tool, so you can hand it a different one, including a small one for testing.</li></ul><p>The full files, including the rule that passes address and payment requests to a person, are in the <a href="week10_lab.html" style="color:var(--blue);">lab</a>.</p><h3>Why two classes and not one?</h3><p>You could put everything in one class. It runs:</p><div class="code-label">One class doing two unrelated jobs</div><pre><code>class SupportChatbot:
+    """One class doing two jobs: chatting AND storing every order."""
+
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+        self.orders = {"A100": "shipped", "A101": "processing"}
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = "I'm not sure how to help with that."
+        for order_id in self.orders:
+            if order_id in user_message.upper():
+                reply = f"Order {order_id} is {self.orders[order_id]}."
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.respond("Where is order A100?"))</code></pre><p>It prints <code>Order A100 is shipped.</code> and it is harder to live with. The order data cannot be tested without building a chatbot. Two chatbots would each carry their own copy of the orders. When you add stock, returns and store hours, the class keeps growing. Giving each job its own class keeps each one short and lets you change one without breaking the other.</p><h2>Trace one message</h2><p>Follow <code>Where is order A100?</code> from the user to the reply.</p><ol><li>The program calls <code>bot.respond("Where is order A100?")</code>. Python runs <code>respond</code> with <code>self</code> set to <code>bot</code>.</li><li><code>respond</code> appends the user's message to <code>self.history</code>.</li><li><code>respond</code> calls <code>self.choose_reply(...)</code>.</li><li><code>choose_reply</code> makes a lowercase copy and checks its rules in order. The message has no handoff word. It does contain <code>order</code>, so it calls <code>self.order_reply(...)</code>.</li><li><code>order_reply</code> asks the tool for an order ID. The tool finds <code>A100</code> in the text and returns it.</li><li><code>order_reply</code> asks the tool for the status of <code>A100</code>. The tool returns <code>shipped</code>.</li><li><code>order_reply</code> builds the sentence and returns it to <code>choose_reply</code>, which returns it to <code>respond</code>.</li><li><code>respond</code> appends the reply to <code>self.history</code> and returns it to the program.</li></ol><div class="code-label">Proof: the history before and after</div><pre><code>history before: []
+reply: Order A100 is shipped.
+history after:
+  {'role': 'user', 'content': 'Where is order A100?'}
+  {'role': 'assistant', 'content': 'Order A100 is shipped.'}</code></pre><h2>Two objects from one class</h2><p>One class can make as many chatbots as you like. Each one keeps its own data.</p><div class="code-label">Two chatbots, one class</div><pre><code>order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+sunny = SupportChatbot("Sunny", "You are cheerful and brief.", order_tool)
+river = SupportChatbot("River", "You are formal and detailed.", order_tool)
+
+sunny.respond("hello")
+sunny.respond("Where is order A100?")
+river.respond("hello")
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[1]["content"])
+print(river.history[1]["content"])</code></pre><div class="code-label">Output</div><pre><code>Sunny 4
+River 2
+Hello! I'm Sunny. I can check an order status for you.
+Hello! I'm River. I can check an order status for you.</code></pre><p>Sunny has four messages in its history and River has two. Sunny's conversation did not leak into River's, because <code>self.history = []</code> ran once for each object. The two chatbots also greet with different names, because <code>self.name</code> is different for each. They share one thing: both were handed the same <code>order_tool</code> object. That is allowed and useful. One tool can serve many chatbots.</p><div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin:16px 0;"><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;">&#x270D; Think before reading on</div><p style="margin:0 0 8px;font-size:14px;">In the code below, <code>history = []</code> is written in the class body and not inside <code>__init__</code>. Only Sunny is sent a message. What do the two <code>print</code> lines show?</p></div><div class="code-label">A list written in the wrong place</div><pre><code>class SupportChatbot:
+    history = []  # BUG: written in the class body, so every chatbot shares one list
+
+    def __init__(self, name):
+        self.name = name
+
+    def respond(self, user_message):
+        self.history.append(user_message)
+        return "ok"
+
+
+sunny = SupportChatbot("Sunny")
+river = SupportChatbot("River")
+sunny.respond("hello")
+print(len(sunny.history))
+print(len(river.history))</code></pre><div class="code-label">Output</div><pre><code>1
+1</code></pre><p>Both lines print <code>1</code>. A value written in the class body belongs to the class, so every object shares the one list. River now holds a message that only Sunny received. In a real chatbot that would show one customer another customer's conversation. Create lists inside <code>__init__</code> with <code>self.</code> in front, and the output becomes <code>1</code> and <code>0</code>.</p><h2>Three mistakes almost everyone makes</h2><h3>1. Forgetting self in the parameter list</h3><div class="code-label">Broken</div><pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-left:3px solid var(--red);border-radius:0 6px 6px 0;"><code>class SupportChatbot:
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+    def greet():  # BUG: no self in the parameter list
+        return f"Hello! I'm {self.name}."
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.greet())</code></pre><div class="code-label">What Python prints</div><pre><code>Traceback (most recent call last):
+  File "missing_self.py", line 12, in &lt;module&gt;
+    print(bot.greet())
+          ^^^^^^^^^^^
+TypeError: SupportChatbot.greet() takes 0 positional arguments but 1 was given</code></pre><p>The class is defined without any error. The failure comes on the call. <code>bot.greet()</code> passes <code>bot</code> in automatically, and <code>greet</code> has no parameter to receive it. Fix: <code>def greet(self):</code>.</p><h3>2. Forgetting self. in front of an attribute</h3><div class="code-label">Broken</div><pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-left:3px solid var(--red);border-radius:0 6px 6px 0;"><code>class SupportChatbot:
+    def __init__(self, name, instructions):
+        name = name  # BUG: no self. in front, so nothing is stored on the object
+        self.instructions = instructions
+        self.history = []
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.instructions)
+print(bot.name)</code></pre><div class="code-label">What Python prints</div><pre><code>You are a friendly support assistant.
+Traceback (most recent call last):
+  File "missing_self_dot.py", line 10, in &lt;module&gt;
+    print(bot.name)
+          ^^^^^^^^
+AttributeError: 'SupportChatbot' object has no attribute 'name'</code></pre><p><code>name = name</code> only sets a local variable, which disappears when <code>__init__</code> ends. Nothing was stored on the object, so <code>bot.name</code> does not exist. Fix: <code>self.name = name</code>.</p><h3>3. Confusing the class with an object</h3><div class="code-label">Broken</div><pre style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-left:3px solid var(--red);border-radius:0 6px 6px 0;"><code>class SupportChatbot:
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+    def greet(self):
+        return f"Hello! I'm {self.name}."
+
+
+print(SupportChatbot.greet())  # BUG: calling the method on the class, not on an object</code></pre><div class="code-label">What Python prints</div><pre><code>Traceback (most recent call last):
+  File "class_vs_object.py", line 11, in &lt;module&gt;
+    print(SupportChatbot.greet())  # BUG: calling the method on the class, not on an object
+          ^^^^^^^^^^^^^^^^^^^^^^
+TypeError: SupportChatbot.greet() missing 1 required positional argument: 'self'</code></pre><p><code>SupportChatbot</code> is the template. It has no name and no history of its own. You call methods on an object you created: <code>bot = SupportChatbot(...)</code>, then <code>bot.greet()</code>.</p><h2>What a business chatbot can get wrong</h2><p>These four risks apply to the mock, and they apply with more force to a chatbot that uses a real AI model and real business systems.</p><h3>1. Unreliable output</h3><div class="code-label">Two messages</div><pre><code>print(bot.respond("Can I pay with a different card?"))
+print(bot.respond("Do you sell cardigans?"))</code></pre><div class="code-label">Output</div><pre><code>I can't help with that here. I'm passing you to a human agent.
+I can't help with that here. I'm passing you to a human agent.</code></pre><p>The first reply is right. The second is wrong: Sunny passes a question about cardigans to a human because the word <code>cardigans</code> contains <code>card</code>. Keyword rules are brittle. An AI model is unreliable in a different way: it can give a confident, well-written answer that is false. Either way, you find out by testing with real messages, and you never assume a reply is correct because it sounds correct.</p><h3>2. Failed tools</h3><p>A tool can fail to give an answer. Here the order may not exist, so <code>find_order_id</code> returns <code>None</code>. In a real system the order database can also be slow or unavailable. A chatbot needs something sensible to say when a tool has no answer. Sunny asks for a valid order ID. It does not invent a status.</p><h3>3. Sensitive data</h3><p><code>self.history</code> stores everything the user types. If a customer types a card number, that number is now in your list, and in any file or service you later send the history to. Sunny never asks for payment details and hands the conversation to a person when they come up. Collect only what you need, and know where it ends up.</p><h3>4. Actions that need a person</h3><p>Looking up a status changes nothing, so a wrong answer can be corrected. Changing a shipping address sends a real parcel somewhere else, and it is a common route for fraud. A good rule for a first agent: the chatbot may look things up, and a person approves anything that changes something. Week 12 builds that approval step properly.</p><h2>What this module leaves out, and why</h2><p>OOP is a large subject. You need a small part of it to build agents. These topics are left out on purpose:</p><ul><li><strong>Inheritance</strong> builds a new class on top of an existing one. A chatbot with a tool needs only <em>has a</em>, which is composition. It does not need <em>is a kind of</em>.</li><li><strong>Abstract classes</strong> force a family of classes to share the same method names. That helps large teams and is more than a first agent needs.</li><li><strong>Decorators</strong> are the lines starting with <code>@</code> above a function. You can use one that a library gives you without knowing how to write your own.</li><li><strong>Metaclasses</strong> are classes that build other classes. Almost no application code needs them.</li><li><strong>Design patterns</strong> are named solutions for problems in large systems. They make sense after you have built a few programs and felt those problems yourself.</li></ul><p>If you can write a class with <code>__init__</code>, attributes and methods, and hand one object to another, you know enough OOP to start building agents.</p><h2>Optional preview — the same class with a real model</h2><div class="ok"><div class="concept-label">Optional. This week's lab does not need it.</div><p>Week 11 sets up Ollama, a free program that runs an AI model on your own laptop. This preview shows how little of the class changes. Read it now and run it next week.</p></div><div class="code-label">real_model_preview.py (optional)</div><pre><code>from ollama import chat
+
+MODEL = "granite4.1:3b"
+
+
+class SupportChatbot:
+    """The same chatbot shape, with a real local model choosing the reply."""
+
+    def __init__(self, name, instructions):
+        """Set up one chatbot with its own name, instructions, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+    def respond(self, user_message):
+        """Record the user's message, get a reply, record it, and return it."""
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply()
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self):
+        """Send the instructions and the whole history to the model."""
+        messages = [{"role": "system", "content": self.instructions}]
+        messages = messages + self.history
+        response = chat(model=MODEL, messages=messages)
+        return response.message.content
+
+
+bot = SupportChatbot(
+    "Sunny",
+    "You are Sunny, a support assistant for Bayside Outfitters. "
+    "Answer in one short sentence.",
+)
+print(bot.respond("Hello, my name is Dana."))
+print(bot.respond("What is my name?"))
+print(len(bot.history))</code></pre><div class="code-label">One run on the course model</div><pre><code>Hello Dana, how may I assist you today?
+Your name is Dana.
+4</code></pre><p>Only <code>choose_reply</code> changed. In place of keyword rules it sends the instructions and the whole history to a model and returns what the model writes. This is where <code>instructions</code> starts to matter: it is sent to the model at the start of every request. The second reply shows why the history matters: the model can answer <em>What is my name?</em> only because the earlier message is sent again.</p><p>A real model does not give the same reply every time, and it can be wrong. If Ollama is not running you will see <code>ConnectionError: Failed to connect to Ollama</code>. If the model has not been downloaded you will see <code>model ... not found (status code: 404)</code>.</p><div class="warn"><div class="concept-label">⚠ API keys stay out of your code</div><p>Ollama runs on your own machine, so it needs no key. Online AI services give you an <strong>API key</strong>, which works like a password that is billed to you. A key never goes in a source file or a GitHub repository. It belongs in an environment variable or in a file listed in <code>.gitignore</code>.</p></div><h2 id="key-terms">Key terms this week</h2><div class="term"><span class="term-word">class</span><span class="term-def">A template that says what data its objects remember and what they can do.</span></div><div class="term"><span class="term-word">object</span><span class="term-def">One specific thing created from a class. Also called an instance.</span></div><div class="term"><span class="term-word">attribute</span><span class="term-def">A variable that belongs to one object, written <code>self.name</code> inside the class.</span></div><div class="term"><span class="term-word">method</span><span class="term-def">A function defined inside a class. Its first parameter is <code>self</code>.</span></div><div class="term"><span class="term-word">__init__</span><span class="term-def">The initializer. Python runs it once when an object is created.</span></div><div class="term"><span class="term-word">self</span><span class="term-def">The object a method is working on.</span></div><div class="term"><span class="term-word">composition</span><span class="term-def">Giving one object another object to use. A <em>has a</em> relationship.</span></div><div class="term"><span class="term-word">tool</span><span class="term-def">Code a chatbot can use to get information or do something, such as an order lookup.</span></div><div class="term"><span class="term-word">conversation history</span><span class="term-def">The list of messages so far, each with a role and its content.</span></div><div class="term"><span class="term-word">mock</span><span class="term-def">A simple, predictable stand-in for something real, used for learning and testing.</span></div><h2>Am I ready to build an agent?</h2><p>You know enough OOP to start building a basic agent when you can do each of these without looking at your notes:</p><ul class="checklist"><li>Write a class with <code>__init__</code>, at least two attributes, and at least two methods</li><li>Say out loud what <code>self</code> refers to in any line of your class</li><li>Create two objects from one class and predict what each one's attributes hold</li><li>Explain why a list must be created inside <code>__init__</code></li><li>Write a second class and hand an object of it to the first one</li><li>Trace one message from <code>respond</code> to the reply, naming every method that runs</li><li>Read a <code>TypeError</code> about positional arguments and know to check for a missing <code>self</code></li><li>Name one request your chatbot should pass to a person, and say why</li></ul>
 <h2 id="quiz">Module Quiz</h2>
 <p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
-
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
-<div class="quiz-question">What is the purpose of __init__ in a Python class?</div>
+<div class="quiz-question">What is a class?</div>
 <ul class="quiz-options">
-<li>a) It runs when the class is deleted</li>
-<li>b) It initialises a new instance&#x27;s attributes when the object is created</li>
-<li>c) It defines class-level constants</li>
-<li>d) It is called every time a method is invoked</li>
+<li>a) One specific chatbot with its own history</li>
+<li>b) A template that describes the data and actions its objects will have</li>
+<li>c) A list of messages in a conversation</li>
+<li>d) A function that runs when the program starts</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It initialises a new instance's attributes when the object is created <span style="color:var(--muted);">— __init__ is called automatically when you write obj = ClassName(…). Its job is to store the starting values for all instance attributes.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A template that describes the data and actions its objects will have <span style="color:var(--muted);">— You write the class once. Each object made from it gets its own copy of the data.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q2 · Multiple Choice</div>
-<div class="quiz-question">What does self refer to inside a method?</div>
+<div class="quiz-question">After this line runs, what is <code>bot</code>?</div>
+<pre><code>bot = SupportChatbot("Sunny", "Be friendly.", order_tool)</code></pre>
 <ul class="quiz-options">
-<li>a) The class itself</li>
-<li>b) The specific instance the method was called on</li>
-<li>c) The parent class</li>
-<li>d) The last argument passed to the method</li>
+<li>a) A class</li>
+<li>b) A method</li>
+<li>c) An object</li>
+<li>d) A parameter</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The specific instance the method was called on <span style="color:var(--muted);">— self.status refers to the status of the particular object, not all objects of that class. Every instance method must have self as its first parameter.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An object <span style="color:var(--muted);">— Calling the class creates one object and Python runs __init__ to set it up.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q3 · Code Trace</div>
-<div class="quiz-question">What is printed?</div>
-<pre><code>class Item:
-    def __init__(self, name, price):
-        self.name = name
-        self.price = price
-
-a = Item(&#x27;Pen&#x27;, 1.50)
-b = Item(&#x27;Notebook&#x27;, 4.99)
-print(a.name)
-print(b.price)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Pen
-4.99 <span style="color:var(--muted);">— a and b are independent instances. a.name is &#x27;Pen&#x27;; b.price is 4.99.</span></div></details>
+<div class="quiz-q">Q3 · Multiple Choice</div>
+<div class="quiz-question">Inside a method, what does <code>self</code> refer to?</div>
+<ul class="quiz-options">
+<li>a) The class the method is written in</li>
+<li>b) The object the method was called on</li>
+<li>c) The first tool the chatbot was given</li>
+<li>d) The message the user typed</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The object the method was called on <span style="color:var(--muted);">— In bot.respond(...), self is bot. In river.respond(...), self is river.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
-<div class="quiz-question">What is encapsulation?</div>
+<div class="quiz-question">In the class, what is <code>self.history</code>?</div>
 <ul class="quiz-options">
-<li>a) Inheriting behaviour from a parent class</li>
-<li>b) Running tests automatically</li>
-<li>c) Bundling data (attributes) and the functions that operate on it (methods) into a single object</li>
-<li>d) Converting one data type to another</li>
+<li>a) A method</li>
+<li>b) An attribute</li>
+<li>c) A class</li>
+<li>d) A parameter</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Bundling data (attributes) and the functions that operate on it (methods) into a single object <span style="color:var(--muted);">— Encapsulation keeps related data and behaviour together and hides implementation details from outside code.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">An attribute <span style="color:var(--muted);">— It is data that belongs to one object. Each chatbot has its own history.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q5 · Multiple Choice</div>
-<div class="quiz-question">What is the purpose of __repr__ in a class?</div>
-<ul class="quiz-options">
-<li>a) It defines how the object is compared with ==</li>
-<li>b) It initialises attributes</li>
-<li>c) It provides a readable string representation for debugging and the REPL</li>
-<li>d) It destroys the object when it goes out of scope</li>
-</ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">It provides a readable string representation for debugging and the REPL <span style="color:var(--muted);">— Without __repr__, printing an object shows &lt;__main__.BusinessRequest object at 0x…&gt;. With it, you see a readable summary.</span></div></details>
+<div class="quiz-q">Q5 · True / False</div>
+<div class="quiz-question"><code>__init__</code> runs automatically when an object is created.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— You never call it by name. Writing SupportChatbot(...) runs it once for the new object.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q6 · Code Trace</div>
 <div class="quiz-question">What is printed?</div>
-<pre><code>class Counter:
-    def __init__(self):
-        self.count = 0
+<pre><code>class Bot:
+    def __init__(self, name):
+        self.name = name
+        self.history = []
 
-    def increment(self):
-        self.count += 1
+    def respond(self, message):
+        self.history.append(message)
+        return "ok"
 
-c = Counter()
-c.increment()
-c.increment()
-print(c.count)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2 <span style="color:var(--muted);">— Each increment() call adds 1 to self.count. Starting at 0, after two calls count is 2.</span></div></details>
+
+a = Bot("A")
+b = Bot("B")
+a.respond("hi")
+a.respond("hello")
+print(len(a.history))
+print(len(b.history))</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">2
+0 <span style="color:var(--muted);">— a and b are separate objects. Each got its own empty list in __init__, so a's two messages do not appear in b's history.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q7 · True / False</div>
-<div class="quiz-question">Two instances of the same class always share the same attribute values.</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— Each instance has its own copy of instance attributes. req1.status and req2.status are independent; changing one has no effect on the other.</span></div></details>
+<div class="quiz-q">Q7 · Multiple Choice</div>
+<div class="quiz-question">Which line is an example of composition?</div>
+<ul class="quiz-options">
+<li>a) self.history = []</li>
+<li>b) self.order_tool = order_tool</li>
+<li>c) text = user_message.lower()</li>
+<li>d) return reply</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">self.order_tool = order_tool <span style="color:var(--muted);">— The chatbot is handed another object and keeps it so it can use it later.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q8 · True / False</div>
-<div class="quiz-question">A class can have multiple methods in addition to __init__.</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Classes can have as many methods as needed. In ISM3232 you write approve(), reject(), __repr__, and others alongside __init__.</span></div></details>
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">A method is written as <code>def greet():</code> inside a class. What happens when you call <code>bot.greet()</code>?</div>
+<ul class="quiz-options">
+<li>a) It works normally</li>
+<li>b) TypeError, because Python passes the object in and there is no parameter to receive it</li>
+<li>c) NameError at the moment the class is defined</li>
+<li>d) Python skips the method</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">TypeError, because Python passes the object in and there is no parameter to receive it <span style="color:var(--muted);">— The message says the method takes 0 positional arguments but 1 was given. The 1 is the object.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q9 · Short Answer</div>
-<div class="quiz-question">What is the difference between a class and an instance?</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A class is the blueprint — it defines the attributes and methods. An instance is a specific object created from that blueprint. BusinessRequest is the class; req1 = BusinessRequest(1, &#x27;Taylor&#x27;, &#x27;Equipment&#x27;, 1200.00) is one instance. Many independent instances can be created from the same class.</div></details>
+<div class="quiz-q">Q9 · True / False</div>
+<div class="quiz-question">Putting a chatbot's code inside a class makes its replies more intelligent.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— A class organizes code. The replies are exactly as good as the rules or the model that produce them.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q10 · Multiple Choice</div>
+<div class="quiz-question">Which request should this week's chatbot pass to a human?</div>
+<ul class="quiz-options">
+<li>a) Where is order A100?</li>
+<li>b) hello</li>
+<li>c) Please change my shipping address</li>
+<li>d) Where is my order?</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Please change my shipping address <span style="color:var(--muted);">— Looking up a status changes nothing. Changing an address changes where a parcel goes, so a person should approve it.</span></div></details>
+</div>
+<div class="quiz-item">
+<div class="quiz-q">Q11 · Short Answer</div>
+<div class="quiz-question">Why is the order lookup a separate class, and not more code inside <code>SupportChatbot</code>?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Looking up orders and holding a conversation are different jobs. Keeping them in separate classes means each class stays short, the tool can be tested on its own, one tool can be shared by several chatbots, and you can replace the tool without changing the chatbot.</div></details>
 </div>
 
 <!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; OOP I — Classes &amp; Objects</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; OOP for Agents — Classes, Objects &amp; Composition</div>
 <script src="../site.js"></script>
 </body></html>

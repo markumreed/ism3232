@@ -6,7 +6,7 @@
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISM3232 Lab Week 10 — OOP I — Classes &amp; Objects</title>
+<title>ISM3232 Lab Week 10 — OOP for Agents — Classes, Objects &amp; Composition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -39,23 +39,23 @@ table.grid td:last-child{white-space:nowrap;text-align:right;color:var(--mu);}
 
 <!-- 1. TITLE -->
 <section class="s-title">
-<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; Module 10 &nbsp;·&nbsp; Unit 3 · Object-Oriented Design</p>
-<h1>OOP I — Classes &amp; Objects</h1>
+<p class="eyebrow">ISM3232 &nbsp;·&nbsp; Week 10 &nbsp;·&nbsp; Module 10 &nbsp;·&nbsp; Unit 3 · Building AI Agents</p>
+<h1>OOP for Agents — Classes, Objects &amp; Composition</h1>
 <div class="t-bar">
-<span class="t-item"><strong>0:00–0:04</strong> Welcome: "bundling data and behavior together"</span>
-<span class="t-item"><strong>0:04–0:20</strong> Part 1 — Write the class</span>
-<span class="t-item"><strong>0:20–0:32</strong> Part 2 — Create instances</span>
-<span class="t-item"><strong>0:32–0:42</strong> Part 3 — Verify instance independence</span>
-<span class="t-item"><strong>0:42–0:58</strong> Part 4 — Seven pytest tests</span>
-<span class="t-item"><strong>0:58–1:06</strong> Part 5 — Ritual and push</span>
-<span class="t-item"><strong>1:06–1:15</strong> Stretch (<code>summary()</code>) + wrap-up</span>
+<span class="t-item"><strong>0:00–0:05</strong> Welcome: one template, many chatbots</span>
+<span class="t-item"><strong>0:05–0:12</strong> Part 1 — Set up the project</span>
+<span class="t-item"><strong>0:12–0:24</strong> Part 2 — Write the tool</span>
+<span class="t-item"><strong>0:24–0:40</strong> Part 3 — Write the chatbot</span>
+<span class="t-item"><strong>0:40–0:52</strong> Part 4 — Run it and test it</span>
+<span class="t-item"><strong>0:52–1:07</strong> Part 5 — Four exercises</span>
+<span class="t-item"><strong>1:07–1:15</strong> Parts 6–7 — Mini-project brief, ritual, wrap-up</span>
 </div>
 <p class="hint">&larr; &rarr; navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes &nbsp;·&nbsp; D draw</p>
 <aside class="notes">
-Full class period, 75 minutes. Live code-along, ending with the full submission ritual. The midterm (Week 9) is behind the class; this is the first lab of Unit 3, and it opens a genuinely new paradigm — object-oriented programming. Everything before this unit used functions operating on plain dictionaries (<code>records = [{...}, {...}]</code>, <code>def get_total(records): ...</code>); today, a <code>class</code> bundles data <em>and</em> the functions that operate on it into a single, reusable blueprint.
-The lab page's own warning deserves emphasis: <strong>no AI-generated classes</strong> — every line must be explainable, and any AI-assisted portion needs to be pasted verbatim with an explanatory comment. This is a stricter standard than prior weeks' general AI-use disclosure, worth stating explicitly at the start, since OOP syntax (especially <code>self</code> and <code>__init__</code>) is genuinely tempting to just paste from an AI tool without understanding.
-Say to the class (Intro, verbatim): "Every function you've written until now took data in as parameters and handed a result back — the data and the logic that worked on it lived in separate places. Today, a <code>class</code> bundles both together: the data (like a request's amount and status) and the functions that work on that specific data (approve it, reject it, check if it needs review) live in one blueprint. Every object you create from that blueprint carries its own independent copy of the data. That independence — not the syntax — is the actual idea to walk away with today."
-NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> blocks run in Pyodide (CPython 3.12, matching local <code>python3</code> 3.12.2). ISM3232 style uses SINGLE quotes in Python throughout, matching the guide. Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> at the top and then the code that instantiates/uses it — the guide splits this across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. <strong><code>pytest</code> has no runner in Pyodide</strong> — Part 4's test file and its <code>pytest</code> output are shown static ("not run here"), with a runnable block beside them running the same seven checks as bare <code>assert</code>s. The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Pyodide tracebacks show <code>&lt;exec&gt;</code> as the file and line numbers may differ from a real <code>python3 file.py</code> run — the error <em>type</em> and <em>message</em> are the load-bearing content.
+Full class period, 75 minutes. Live code-along. The midterm (Week 9) is behind the class. This is the first lab of Unit 3, which builds a business chatbot over three weeks.
+This week is structure only: a chatbot class and a separate tool, with replies chosen by <code>if</code> statements. Say early and plainly: <strong>a class organizes code; it does not make a chatbot intelligent.</strong> No AI model, package, API key or internet is used today.
+The lab page keeps the course rule <strong>no AI-generated classes</strong>: every line must be explainable, and any AI-assisted portion is pasted with an explanatory comment.
+Students finish the exercises and the mini-project on their own after class. Use the last eight minutes to brief the mini-project so nobody leaves unsure what to build.
 </aside>
 </section>
 
@@ -63,13 +63,14 @@ NOTE ON THIS DECK: ISM3232 Python week — <code>data-lang="python"</code> block
 <section class="s-glance">
 <h3>Today at a glance</h3>
 <ul class="kv">
-<div><span class="k">Format</span><span class="v">Live code-along, ending with the full submission ritual</span></div>
-<div><span class="k">Prerequisites</span><span class="v">Weeks 1–8: full Python foundations, functions, <code>pytest</code>, debugging discipline; Week 9 was the midterm</span></div>
-<div><span class="k">Parts covered</span><span class="v">Part 1 (write the class) – Part 5 (ritual + push) + Stretch (<code>summary()</code> method)</span></div>
+<div><span class="k">Format</span><span class="v">Live code-along, then exercises and a mini-project finished on your own</span></div>
+<div><span class="k">Prerequisites</span><span class="v">Weeks 5–8: variables, strings, conditionals, loops, functions, lists, dictionaries, <code>pytest</code>. No classes, AI services or agent tools assumed</span></div>
+<div><span class="k">Parts covered</span><span class="v">Part 1 (set up) – Part 4 (run and test) in class; Part 5 (exercises) started in class; Part 6 (mini-project) and Part 7 (ritual) briefed</span></div>
 <div><span class="k">Submission</span><span class="v">GitHub URL in Canvas (no screenshots), completion credit</span></div>
 </ul>
 <aside class="notes">
-From the Session Snapshot. Students start a fresh <code>~/ism3232/module06_oop/</code> project folder this week. Part 1 and Part 4 receive the most time — Part 1 because the new syntax (<code>class</code>, <code>__init__</code>, <code>self</code>) genuinely needs unhurried explanation, and Part 4 because "instance independence" is both a required test and a concept worth confirming lands solidly before students leave.
+Students rename the empty <code>module06_oop</code> folder from Week 1 to <code>module06_agents</code>. Weeks 10, 11 and 12 all work in that folder.
+<strong>Essential today:</strong> class, object, attribute, method, <code>__init__</code>, <code>self</code>, composition, and tracing one message. <strong>Optional enrichment:</strong> the second tool (Exercise 3), the functions-and-dictionary version and the real-model preview in the reading. <strong>Left out on purpose:</strong> inheritance, abstract classes, decorators, metaclasses, design patterns.
 </aside>
 </section>
 
@@ -78,13 +79,16 @@ From the Session Snapshot. Students start a fresh <code>~/ism3232/module06_oop/<
 <h3>Learning objectives</h3>
 <p>By the end of this class period, students should be able to:</p>
 <ul>
-<li>Define a class with <code>__init__</code>, and explain what <code>self</code> refers to and why every method needs it as its first parameter.</li>
-<li>Create multiple independent instances of a class, and explain concretely why changing one instance's state never affects another's.</li>
-<li>Write instance methods that read and modify an object's own attributes.</li>
-<li>Implement <code>__repr__</code> and explain how it changes what <code>print()</code> shows for an object.</li>
-<li>Write <code>pytest</code> tests for a class, including a boundary case and a dedicated <strong>instance-independence</strong> test.</li>
+<li>Explain in plain language what a class and an object are.</li>
+<li>Write a class with <code>__init__</code>, attributes and methods, and say what <code>self</code> refers to.</li>
+<li>Create several objects from one class and explain why their data differs.</li>
+<li>Give a chatbot a separate tool to use (composition), and say why the tool is its own class.</li>
+<li>Trace one user message from <code>respond</code> to the reply.</li>
+<li>Name four things a business chatbot can get wrong: unreliable output, failed tools, sensitive data, and actions that need a person.</li>
 </ul>
-<aside class="notes">Verbs lifted verbatim from the guide's Learning Objectives. Objective 1 (<code>self</code>) is Part 1's central sticking point; objective 2 is Part 2–3's payoff; objective 3 is Part 1's methods; objective 4 is <code>__repr__</code>; objective 5 is Part 4, including the new independence test.</aside>
+<aside class="notes">
+These are the module's eight outcomes, grouped. Objective 2 (<code>self</code>) is Part 3's sticking point. Objective 4 (composition) is Part 3's payoff. Objective 6 is carried by the cardigan demo in Part 5.
+</aside>
 </section>
 
 <!-- 4. TIMING -->
@@ -93,801 +97,983 @@ From the Session Snapshot. Students start a fresh <code>~/ism3232/module06_oop/<
 <table class="grid">
 <thead><tr><th>Time</th><th>Segment</th><th>Min</th></tr></thead>
 <tbody>
-<tr><td>0:00–0:04</td><td>Welcome: "bundling data and behavior together"</td><td>4</td></tr>
-<tr><td>0:04–0:20</td><td>Part 1 — Write the class</td><td>16</td></tr>
-<tr><td>0:20–0:32</td><td>Part 2 — Create instances</td><td>12</td></tr>
-<tr><td>0:32–0:42</td><td>Part 3 — Verify instance independence</td><td>10</td></tr>
-<tr><td>0:42–0:58</td><td>Part 4 — Seven pytest tests</td><td>16</td></tr>
-<tr><td>0:58–1:06</td><td>Part 5 — Ritual and push</td><td>8</td></tr>
-<tr><td>1:06–1:15</td><td>Stretch (<code>summary()</code> method) + wrap-up</td><td>9</td></tr>
+<tr><td>0:00–0:05</td><td>Welcome: one template, many chatbots</td><td>5</td></tr>
+<tr><td>0:05–0:12</td><td>Part 1 — Set up the project</td><td>7</td></tr>
+<tr><td>0:12–0:24</td><td>Part 2 — Write the tool</td><td>12</td></tr>
+<tr><td>0:24–0:40</td><td>Part 3 — Write the chatbot</td><td>16</td></tr>
+<tr><td>0:40–0:52</td><td>Part 4 — Run it and test it</td><td>12</td></tr>
+<tr><td>0:52–1:07</td><td>Part 5 — Four exercises</td><td>15</td></tr>
+<tr><td>1:07–1:15</td><td>Parts 6–7 — Mini-project brief, ritual, wrap-up</td><td>8</td></tr>
 </tbody>
 </table>
-<aside class="notes">Part 1 and Part 4 receive the most time — Part 1 because the new syntax genuinely needs unhurried explanation, and Part 4 because "instance independence" is both a required test and a concept worth confirming lands solidly before students leave.</aside>
+<aside class="notes">
+Part 3 gets the most time: <code>self</code> and composition both need unhurried explanation. If you run short, drop Exercise 3 from class time and leave it for homework. Do not cut the trace in Part 4 or the mini-project brief.
+</aside>
 </section>
 
 <!-- 5. INTRO divider -->
 <section class="s-sec">
-<span class="chip">Intro · 0:00–0:04</span>
-<h1>class = blueprint, instance = one specific thing built from it</h1>
+<span class="chip">Intro · 0:00–0:05</span>
+<h1>A class is a template. An object is one real thing made from it.</h1>
 <aside class="notes">
-Teaching goal: frame the unit — a <code>class</code> bundles data and the behaviour that works on that data into one reusable blueprint; every object built from it carries its own independent copy of the data.
-Say to the class (verbatim): "Every function you've written until now took data in as parameters and handed a result back — the data and the logic that worked on it lived in separate places. Today, a <code>class</code> bundles both together: the data (like a request's amount and status) and the functions that work on that specific data (approve it, reject it, check if it needs review) live in one blueprint. Every object you create from that blueprint carries its own independent copy of the data. That independence — not the syntax — is the actual idea to walk away with today."
-Do: write on the board <strong>class = blueprint, instance = one specific thing built from it.</strong> Leave it visible through Part 2, where it becomes concrete.
-Also state the "no AI-generated classes" bar explicitly and specifically now: could a student answer a cold-call question about any single line, unprompted? Any AI-assisted portion must be pasted verbatim with an explanatory comment.
+Teaching goal: frame the week. A class keeps a chatbot's data and its actions in one place. Each object made from it carries its own copy of the data.
+Say to the class: "Everything you wrote before the midterm kept data in one place and functions in another. Today one template holds both. We build a support chatbot called Sunny for a made-up shop. Sunny is not AI. Its replies are if statements. What you learn today is how the code is organized, and that organization is the same when a real model is plugged in next week."
+Do: write <strong>class = template, object = one real thing made from it</strong> on the board and leave it up.
+Discussion opener (2 minutes): what data does a support chatbot need to remember, and what does it need to be able to do? Collect answers in two columns. They become attributes and methods.
 </aside>
 </section>
 
 <!-- 6. PART 1 divider -->
 <section class="s-sec">
-<span class="chip">Part 1 · 0:04–0:20</span>
-<h1>Write the Class</h1>
+<span class="chip">Part 1 · 0:05–0:12</span>
+<h1>Set Up the Project</h1>
 <aside class="notes">
-Teaching goal: <code>class</code>, <code>__init__</code>, <code>self</code>, instance methods, and <code>__repr__</code> — five genuinely new pieces of syntax, each deserving individual explanation.
-Say to the class (verbatim): "One class, five new pieces of syntax. I'm going to slow down for every single one, because OOP syntax looks deceptively simple and is very easy to type without actually understanding — which is exactly what today's 'no AI-generated classes' rule is designed to prevent."
-Check for understanding (asked at the end of this part): "If I removed <code>self</code> entirely from <code>requires_review</code>'s parameter list, and called <code>req_101.requires_review()</code>, what would happen?" Answer: <code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it.
+Teaching goal: a clean project folder with a virtual environment, <code>pytest</code>, <code>ruff</code>, and empty files for the tool, the chatbot, the main script and the tests.
 </aside>
 </section>
 
-<!-- 7. PART 1 idea -->
-<section class="s-idea">
-<h3>Five new pieces of syntax — one class</h3>
-<div class="concept">
-<div class="concept-lbl">Concept</div>
-<p><strong><code>class BusinessRequest:</code></strong> — begins a class definition, like <code>def</code> begins a function. This is a <strong>blueprint</strong>, not yet a real object — nothing exists in memory as a "business request" until Part 2 builds one <em>from</em> it.</p>
-<p><strong><code>def __init__(self, ...):</code></strong> — the <strong>constructor</strong>. Never called directly by name; it runs automatically, once, whenever <code>BusinessRequest(...)</code> is called. Double underscores mark it a <strong>special method</strong> Python itself recognises.</p>
-<p><strong><code>self</code></strong> — the single most important word in this lab. It refers to <em>this specific object being created or acted on</em>. Every method takes it first, because that is how Python passes "which object is this method being called on" in automatically. Mechanically: <code>req_101.approve()</code> is secretly <code>BusinessRequest.approve(req_101)</code>.</p>
-<p><strong><code>self.request_id = request_id</code></strong> — stores a plain parameter as an <strong>attribute</strong> of this object. The parameter and the attribute share a name but are not the same thing: the parameter lives only while <code>__init__</code> runs; the attribute persists on the object.</p>
-<p><strong><code>def __repr__(self):</code></strong> — another special method, controlling what <code>print()</code> shows. Without it, printing an object shows <code>&lt;models.BusinessRequest object at 0x...&gt;</code> — a memory address, not useful information.</p>
-</div>
-<aside class="notes">
-Line-by-line (guide, Part 1):
-- <code>class BusinessRequest:</code> — <code>class</code> begins a definition like <code>def</code>; a blueprint, nothing in memory yet.
-- <code>"""Represents a single business purchase or travel request."""</code> — a docstring for the class itself, same convention as Week 7's function docstrings, now at class level.
-- <code>def __init__(self, request_id, requester, category, amount):</code> — the constructor, called automatically the moment a new object is created. Not called directly by name anywhere in this lab. Double underscores = special method Python recognises and calls at a specific moment.
-- <strong><code>self</code></strong> — explain more than once, more than one way. <code>self</code> refers to <em>this specific object</em>; when Part 2 runs <code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code>, inside <code>__init__</code> <code>self</code> <em>is</em> <code>req_101</code>, even though it doesn't have that name yet. Mechanical framing: <code>req_101.approve()</code> == <code>BusinessRequest.approve(req_101)</code> — Python passes <code>req_101</code> in as <code>self</code>; dot-notation just hides that first argument. Write both forms on the board.
-- <code>self.request_id = request_id</code> (and the three below) — stores a parameter as an attribute of this object, later readable as <code>self.request_id</code> inside any method or <code>req_101.request_id</code> from outside. The parameter and the attribute are not the same thing despite the shared name.
-- <code>self.status = 'Pending'  # default</code> — takes no parameter; every new <code>BusinessRequest</code> starts with <code>status</code> = <code>'Pending'</code> unconditionally. This answers Part 3's reflection question 5 — flag that connection now.
-- <code>def approve(self):</code> — an instance method; still takes <code>self</code> first, no other parameters. <code>self.status = 'Approved'</code> modifies this specific object's <code>status</code>, permanently.
-- <code>def requires_review(self):</code> — <code>return self.amount &gt; 1000</code> reads (not modifies) this object's own <code>amount</code>, the same comparison as Week 7's standalone function, now living inside the object.
-- <code>def __repr__(self):</code> — special method controlling what <code>print()</code> shows; without it, a <code>BusinessRequest</code> prints as <code>&lt;models.BusinessRequest object at 0x...&gt;</code>. This <code>__repr__</code> builds a readable string from the object's current attribute values.
-Common mistakes: forgetting <code>self</code> as the first parameter (doesn't error at definition, fails confusingly on the call — <code>TypeError: ... takes 0 positional arguments but 1 was given</code>); confusing <code>self.amount</code> with a bare <code>amount</code>; writing <code>def __init__(self):</code> with no parameters and hardcoding values, producing identical instances.
-Check for understanding: see the Part 1 divider notes — removing <code>self</code> from <code>requires_review</code> then calling it raises <code>TypeError</code> about too many arguments.
-</aside>
-</section>
-
-<!-- 8. PART 1 setup (readonly shell) -->
+<!-- 7. PART 1 setup (readonly shell) -->
 <section class="s-code">
 <h3>Set up the project — run on your own machine</h3>
-<div class="run" data-lang="shell" data-readonly>cd ~/ism3232/module06_oop
+<div class="run" data-lang="shell" data-readonly>cd ~/ism3232
+mv module06_oop module06_agents
+cd module06_agents
 python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
 echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
-touch models.py main.py &amp;&amp; mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_models.py
-code models.py</div>
-<p class="expect">Shown for reference — <code>venv</code>, <code>pip</code>, <code>source</code>, <code>code</code> can't execute in the browser. Run this on your own machine in a <em>fresh</em> <code>~/ism3232/module06_oop/</code> folder. Then write the class (next slide) into <code>models.py</code>.</p>
+touch order_tool.py chatbot.py main.py
+mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_chatbot.py
+code .</div>
+<p class="expect">Shown for reference — <code>mv</code>, <code>venv</code>, <code>pip</code> and <code>code</code> can't run in the browser. The first line renames the empty Week 1 folder. If <code>mv</code> reports no such file, run <code>mkdir module06_agents</code> in its place.</p>
 <aside class="notes">
-Line by line: <code>cd</code> into a fresh project folder; create and activate the venv; install <code>pytest</code> + <code>ruff</code> and pin them; keep <code>.venv/</code> and <code>__pycache__/</code> out of Git; create <code>models.py</code> and <code>main.py</code> at the root plus <code>tests/__init__.py</code> and <code>tests/test_models.py</code> one level deeper; open <code>models.py</code> in the editor. Same setup ritual as every module since Week 7.
+Line by line: move into the course folder; rename the Week 1 placeholder; create and activate the venv; install <code>pytest</code> and <code>ruff</code> and pin them; keep <code>.venv/</code> and <code>__pycache__/</code> out of Git; create the three source files, the <code>tests</code> folder and its two files; open the folder in the editor.
+Walk the room: the most common setup slip is running these from inside another module folder.
 </aside>
 </section>
 
-<!-- 9. PART 1 the class (RUNNABLE) -->
+<!-- 8. PART 2 divider -->
+<section class="s-sec">
+<span class="chip">Part 2 · 0:12–0:24</span>
+<h1>Write the Tool</h1>
+<aside class="notes">
+Teaching goal: a first complete class with <code>__init__</code>, one attribute and two methods, written before the chatbot so students meet the syntax on the simpler class.
+Say to the class: "A tool is a piece of code the chatbot can use. This one knows about orders. Notice what it does not know: anything about chatting."
+</aside>
+</section>
+
+<!-- 9. PART 2 idea -->
+<section class="s-idea">
+<h3>Four new pieces of syntax — one small class</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong><code>class OrderLookup:</code></strong> — begins a class, like <code>def</code> begins a function. This is a <strong>template</strong>. Nothing exists yet.</p>
+<p><strong><code>def __init__(self, orders):</code></strong> — the <strong>initializer</strong>. You never call it by name. It runs once when you write <code>OrderLookup(...)</code>.</p>
+<p><strong><code>self</code></strong> — the object the method is working on. Every method lists it first. You do not pass it; Python does.</p>
+<p><strong><code>self.orders = orders</code></strong> — stores a parameter as an <strong>attribute</strong>. The parameter disappears when <code>__init__</code> ends. The attribute stays on the object.</p>
+</div>
+<aside class="notes">
+Line by line: <code>class OrderLookup:</code> starts the template. The docstring describes the class, the same convention as Week 7's function docstrings. <code>__init__</code> stores the orders dictionary. <code>find_order_id</code> loops over the known IDs and returns the first one found in the text; <code>text.upper()</code> makes an uppercase copy so <code>a100</code> matches. <code>find_status</code> returns the status or <code>None</code>.
+Looping over a dictionary gives its keys: Week 6.
+</aside>
+</section>
+
+<!-- 10. PART 2 the tool (RUNNABLE) -->
 <section class="s-code">
-<h3>Live-code — <code>models.py</code>: the <code>BusinessRequest</code> class</h3>
-<div class="run" data-lang="python"># models.py
-# Author: [Your Name]
+<h3>Live-code — <code>order_tool.py</code>: the <code>OrderLookup</code> class</h3>
+<div class="run" data-lang="python">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-class BusinessRequest:
-    """Represents a single business purchase or travel request."""
+    def __init__(self, orders):
+        self.orders = orders
 
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'  # default
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
 
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
-
-    def reject(self):
-        """Mark this request as rejected."""
-        self.status = 'Rejected'
-
-    def requires_review(self):
-        """Return True if amount exceeds 1000."""
-        return self.amount &gt; 1000
-
-    def __repr__(self):
-        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
 
 
-# quick REPL-style check -- would live in main.py, never in models.py
-req = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-print(req)
-print(req.status)
-print(req.requires_review())</div>
-<p class="expect">Matches the guide's <code>models.py</code> verbatim, docstrings included. The three <code>print()</code> lines are a throwaway check that would live <strong>outside</strong> the module in real life — in <code>models.py</code> itself there is no such code. Run it to see the blueprint produce one real object.</p>
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+print(order_tool.find_order_id("Where is order a100?"))
+print(order_tool.find_status("A100"))
+print(order_tool.find_order_id("Where is my order?"))
+print(order_tool.find_status("A999"))</div>
+<p class="expect">The class matches the lab page's <code>order_tool.py</code>. The five lines at the bottom are a quick check that would not live in the file. Press <strong>Run</strong>.</p>
 <aside class="notes">
-Say to the class (verbatim): "One class, five new pieces of syntax. I'm going to slow down for every single one, because OOP syntax looks deceptively simple and is very easy to type without actually understanding — which is exactly what today's 'no AI-generated classes' rule is designed to prevent."
-Line by line: see the idea slide's notes — <code>class</code> (blueprint), class docstring, <code>__init__</code> (constructor, auto-called), <code>self</code> (this specific object), the four <code>self.x = x</code> attribute assignments, <code>self.status = 'Pending'</code> (no parameter, always the same), <code>approve</code>/<code>reject</code> (instance methods, <code>self</code> first, modify <code>self.status</code>), <code>requires_review</code> (reads <code>self.amount</code>), <code>__repr__</code> (controls <code>print()</code>).
-Common mistakes: forgetting <code>self</code> as the first parameter; confusing <code>self.amount</code> with a bare <code>amount</code>; a no-parameter <code>__init__</code> that hardcodes values so every instance is identical.
-Check for understanding: removing <code>self</code> from <code>requires_review</code>'s parameter list, then calling <code>req_101.requires_review()</code>, raises <code>TypeError</code> about too many arguments — Python still passes the object in; there is just no parameter slot for it.
+Students type the class into <code>order_tool.py</code>, then check it in the Python shell as the lab page shows. Here the check is inline because each block in this deck is a fresh, standalone script.
 </aside>
 </section>
 
-<!-- 10. PART 1 expected output -->
+<!-- 11. PART 2 output -->
 <section class="s-out">
 <h3>Expected output</h3>
-<pre>BusinessRequest(101, Taylor, $1200, Pending)
-Pending
-True</pre>
-<p class="expect"><code>print(req)</code> fires <code>__repr__</code>, which builds the readable string from the object's own attributes. <code>req.status</code> is <code>Pending</code> — the unconditional default from <code>__init__</code>. <code>req.requires_review()</code> is <code>True</code> because <code>1200 &gt; 1000</code>.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2 (== Pyodide 0.26.4's bundled CPython): the block prints exactly these three lines. Because this class defines <code>__repr__</code>, no <code>0x...</code> memory address appears — the readable string replaces it.</aside>
-</section>
-
-<!-- 11. PART 1 BROKEN (missing self) -->
-<section class="s-code">
-<h3>The missing-<code>self</code> bug on purpose — what the CFU asks about</h3>
-<div class="run" data-lang="python">class BusinessRequest:
-    """Represents a single business purchase or travel request."""
-
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'
-
-    def requires_review():   # BUG: no self in the parameter list
-        return self.amount &gt; 1000
-
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-print(req_101.requires_review())</div>
-<p class="expect">This is the guide's Part 1 check-for-understanding, done live: <code>requires_review</code> is defined with <strong>no <code>self</code></strong>. The class still <em>defines</em> fine — the failure only happens on the call. Press <strong>Run</strong> and read the last line of the traceback.</p>
+<pre>A100
+shipped
+None
+None</pre>
+<p class="expect"><code>a100</code> is found as <code>A100</code>. Its status is <code>shipped</code>. A message with no known ID gives <code>None</code>, and so does an unknown order.</p>
 <aside class="notes">
-The definition <code>def requires_review():</code> does not error — Python only checks the argument count when the method is <em>called</em>. <code>req_101.requires_review()</code> is secretly <code>BusinessRequest.requires_review(req_101)</code>, so Python passes one argument (<code>req_101</code>) into a method whose parameter list has zero slots. Make a student say "the call passes <code>self</code> in automatically; there's no parameter to catch it," not just "it broke."
+Verified against <code>python3</code> 3.12. <code>None</code> is the tool saying it has no answer. That is the seed of the failed-tools risk discussed in Part 5.
 </aside>
 </section>
 
-<!-- 12. PART 1 broken traceback -->
+<!-- 12. PART 2 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">What does <code>order_tool.find_status("A999")</code> return when there is no order A999?</p>
+<button data-opt="A"><code>None</code> — the tool has no answer, and says so</button>
+<button data-opt="B">An empty string, <code>""</code></button>
+<button data-opt="C">It raises a <code>KeyError</code> and the program stops</button>
+<p class="why" hidden><code>None</code>. The method checks <code>if order_id in self.orders</code> first and falls through to <code>return None</code>. A tool that returns <code>None</code> lets the chatbot decide what to say. A tool that crashes takes the whole conversation down with it.</p>
+</div>
+<aside class="notes">
+Follow-up: what would <code>self.orders["A999"]</code> do without the <code>if</code>? <code>KeyError</code>, the Week 8 bug.
+</aside>
+</section>
+
+<!-- 13. PART 2 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Leaving <code>self</code> out of a method's parameter list. The class still defines without error; the failure comes later, on the call.</p>
+<p>Writing <code>orders = orders</code> in <code>__init__</code>. Without <code>self.</code> nothing is stored on the object.</p>
+<p>Putting conversation text such as &ldquo;Order A100 is shipped.&rdquo; inside the tool. The tool returns data. The chatbot decides the wording.</p>
+</div>
+<aside class="notes">
+The third one is the first appearance of this week's design idea: one class, one job.
+</aside>
+</section>
+
+<!-- 14. PART 3 divider -->
+<section class="s-sec">
+<span class="chip">Part 3 · 0:24–0:40</span>
+<h1>Write the Chatbot</h1>
+<aside class="notes">
+Teaching goal: build <code>SupportChatbot</code> in three moves. First it stores data. Then it responds and remembers. Then it is handed the tool.
+Say to the class: "Same syntax as the tool, with more to remember and more to do. Watch for the one line that connects the two classes."
+</aside>
+</section>
+
+<!-- 15. PART 3 step 1 (RUNNABLE) -->
+<section class="s-code">
+<h3>Step 1 — a class that only stores data</h3>
+<div class="run" data-lang="python">class SupportChatbot:
+    """A support chatbot. Step 1: it only stores data."""
+
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.name)
+print(bot.instructions)
+print(bot.history)</div>
+<p class="expect">Three attributes. Two are passed in. <code>history</code> always starts as an empty list. Press <strong>Run</strong>.</p>
+<aside class="notes">
+Two values are passed and the method has three parameters. Ask who supplies the third. Python does: it passes the new object as <code>self</code>.
+</aside>
+</section>
+
+<!-- 16. PART 3 step 1 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Sunny
+You are a friendly support assistant.
+[]</pre>
+<p class="expect"><code>bot.name</code> reads the name that belongs to this object. The history is empty because nothing has been said yet.</p>
+<aside class="notes">
+Cold-call: which is the class and which is the object? <code>SupportChatbot</code> is the class. <code>bot</code> is the object.
+</aside>
+</section>
+
+<!-- 17. PART 3 step 2 (RUNNABLE) -->
+<section class="s-code">
+<h3>Step 2 — a method that responds and remembers</h3>
+<div class="run" data-lang="python">class SupportChatbot:
+    """A support chatbot. Step 2: it can respond and remember."""
+
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if "hello" in text:
+            return f"Hello! I'm {self.name}."
+        return "I'm not sure how to help with that."
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.respond("Hello there"))
+print(bot.respond("Where is my order?"))
+print(len(bot.history))
+print(bot.history[0])</div>
+<p class="expect"><code>respond</code> records the message, gets a reply, records the reply, and returns it. <code>choose_reply</code> is the mock: two rules. Press <strong>Run</strong>.</p>
+<aside class="notes">
+<code>self.choose_reply(...)</code> is one method calling another on the same object. Inside a class you reach your own methods through <code>self</code>.
+Each history entry is a dictionary with a <code>role</code> and a <code>content</code>. Real AI services expect this same shape, which is why we use it now.
+</aside>
+</section>
+
+<!-- 18. PART 3 step 2 output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Hello! I'm Sunny.
+I'm not sure how to help with that.
+4
+{'role': 'user', 'content': 'Hello there'}</pre>
+<p class="expect">Two messages in, four history entries: two from the user and two from the chatbot.</p>
+<aside class="notes">
+Ask what <code>bot.history[1]</code> holds: the assistant's greeting.
+</aside>
+</section>
+
+<!-- 19. PART 3 BROKEN (missing self) -->
+<section class="s-code">
+<h3>The missing-<code>self</code> bug on purpose</h3>
+<div class="run" data-lang="python">class SupportChatbot:
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
+
+    def greet():  # BUG: no self in the parameter list
+        return f"Hello! I'm {self.name}."
+
+
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.greet())</div>
+<p class="expect"><code>greet</code> is defined with <strong>no <code>self</code></strong>. The class defines without any error. Press <strong>Run</strong> and read the last line of the traceback.</p>
+<aside class="notes">
+Python checks the number of arguments when the method is <em>called</em>, not when it is defined. <code>bot.greet()</code> passes <code>bot</code> in automatically, and there is no parameter to receive it. Have a student say that in their own words.
+</aside>
+</section>
+
+<!-- 20. PART 3 broken traceback -->
 <section class="s-out">
 <h3>What it raises</h3>
 <pre>Traceback (most recent call last):
   ...
-TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</pre>
-<p class="expect">Load-bearing: <code>TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</code> — this is the guide's CFU answer ("<code>TypeError</code>, complaining about too many arguments"). Pyodide shows <code>&lt;exec&gt;</code> as the file and its line number differs from a real <code>python3 models.py</code> run — neither is load-bearing; the error <em>type</em> and <em>message</em> are.</p>
-<aside class="notes">Verified against CPython 3.12.2: <code>python3</code> raises exactly this <code>TypeError</code> and exits 1. The "1 was given" argument is <code>req_101</code> itself — Python's automatic <code>self</code>-passing, meeting a parameter list with no slot for it. Fixed on the next slide.</aside>
+TypeError: SupportChatbot.greet() takes 0 positional arguments but 1 was given</pre>
+<p class="expect">The load-bearing line is the last one. The &ldquo;1 was given&rdquo; is <code>bot</code> itself. In the browser the file name and line number differ from a real <code>python3</code> run; the error type and message are what matter.</p>
+<aside class="notes">
+Fix: <code>def greet(self):</code>. This is the single most common error in the first week of classes. Students who have seen it once recognize it for the rest of the term.
+</aside>
 </section>
 
-<!-- 13. PART 1 FIXED -->
+<!-- 21. PART 3 idea (composition) -->
+<section class="s-idea">
+<h3>Composition — the chatbot is handed a tool</h3>
+<div class="concept">
+<div class="concept-lbl">Concept</div>
+<p><strong>Composition</strong> means giving one object another object to use. The chatbot <em>has a</em> tool.</p>
+<p><strong><code>self.order_tool = order_tool</code></strong> — the whole idea in one line. The tool is stored on the chatbot like any other attribute.</p>
+<p><strong><code>self.order_tool.find_order_id(...)</code></strong> — read it left to right: this chatbot's tool, its <code>find_order_id</code> method.</p>
+<p>The chatbot never creates its own tool. It is handed one. That is why a test can hand it a small one with two made-up orders.</p>
+</div>
+<aside class="notes">
+Say to the class: "The chatbot does not contain the order code. It holds a tool and asks it questions."
+This is the only relationship between classes that this module teaches. Inheritance is left out on purpose: a chatbot with a tool needs <em>has a</em>, not <em>is a kind of</em>.
+</aside>
+</section>
+
+<!-- 22. PART 3 step 4 (RUNNABLE) -->
 <section class="s-code">
-<h3>Fixed — <code>self</code> restored as the first parameter</h3>
-<div class="run" data-lang="python">class BusinessRequest:
-    """Represents a single business purchase or travel request."""
+<h3>Step 4 — both classes, connected</h3>
+<div class="run" data-lang="python">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'
+    def __init__(self, orders):
+        self.orders = orders
 
-    def requires_review(self):   # fixed: self restored as the first parameter
-        return self.amount &gt; 1000
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
 
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-print(req_101.requires_review())</div>
-<p class="expect">The only change is <code>def requires_review():</code> &rarr; <code>def requires_review(self):</code>. Now there is a parameter slot for the object Python passes in automatically, and the method can read <code>self.amount</code>. Press <strong>Run</strong> — clean output.</p>
-<aside class="notes">The single change from the broken block is adding <code>self</code> back. Takeaway: every method inside a class takes <code>self</code> as its first parameter — not by developer choice, but because that is how Python hands the method "which object am I acting on."</aside>
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
+
+
+HANDOFF_WORDS = ["address", "payment", "card"]
+
+
+class SupportChatbot:
+    """A mock support chatbot. Its replies come from simple rules, not from AI."""
+
+    def __init__(self, name, instructions, order_tool):
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't help with that here. I'm passing you to a human agent."
+        if "order" in text:
+            return self.order_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. I can check an order status for you."
+        return "I'm not sure how to help with that. I can check an order status."
+
+    def needs_human(self, text):
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def order_reply(self, user_message):
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."
+
+
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.", order_tool)
+
+print(bot.respond("hello"))
+print(bot.respond("Where is order A100?"))
+print(bot.respond("Where is my order?"))
+print(bot.respond("Please change my shipping address"))
+print(bot.respond("What is the weather today?"))</div>
+<p class="expect">The full <code>order_tool.py</code> and <code>chatbot.py</code> in one block, followed by five messages. Press <strong>Run</strong>.</p>
+<aside class="notes">
+The lab page keeps the two classes in two files and connects them with <code>from order_tool import OrderLookup</code>. They share one block here because each block in this deck starts fresh.
+Rule order matters: <code>needs_human</code> is checked first, so a message about an address and an order goes to a person.
+</aside>
 </section>
 
-<!-- 14. PART 1 fixed output -->
+<!-- 23. PART 3 step 4 output -->
 <section class="s-out">
 <h3>Expected output</h3>
-<pre>True</pre>
-<p class="expect"><code>req_101.requires_review()</code> now returns <code>True</code> — <code>1200 &gt; 1000</code> — with <code>self</code> bound to <code>req_101</code> so <code>self.amount</code> is <code>1200</code>.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2: the fixed block prints exactly <code>True</code> and exits 0.</aside>
+<pre>Hello! I'm Sunny. I can check an order status for you.
+Order A100 is shipped.
+Which order? Please send an order ID like A100.
+I can't help with that here. I'm passing you to a human agent.
+I'm not sure how to help with that. I can check an order status.</pre>
+<p class="expect">A greeting, a status from the tool, a request for an ID, a handoff to a human, and an honest &ldquo;not sure&rdquo;.</p>
+<aside class="notes">
+Point at line three: a failed lookup gets a question, never a made-up status.
+</aside>
 </section>
 
-<!-- 15. PART 1 quiz (CFU) -->
+<!-- 24. PART 3 quiz (self) -->
 <section class="s-quiz">
 <h3>Knowledge check</h3>
 <div class="quiz" data-answer="A">
-<p class="q">If I removed <code>self</code> entirely from <code>requires_review</code>'s parameter list, and called <code>req_101.requires_review()</code>, what would happen?</p>
-<button data-opt="A"><code>TypeError</code> — Python still passes <code>req_101</code> in automatically, and there's no parameter slot to receive it: "takes 0 positional arguments but 1 was given"</button>
-<button data-opt="B">Nothing unusual — <code>self</code> is optional; the method just wouldn't be able to read <code>self.amount</code></button>
-<button data-opt="C"><code>NameError: name 'self' is not defined</code>, raised the moment the class is defined</button>
-<p class="why" hidden><code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it. The class <em>defines</em> without error; the failure is on the call.</p>
-</div>
-<aside class="notes">Guide's Part 1 Check for understanding, verbatim answer: "<code>TypeError</code>, complaining about too many arguments — Python still automatically passes <code>req_101</code> in as an argument regardless of whether the method's definition expects it; removing <code>self</code> from the definition doesn't stop Python from trying to pass it, it just means there's no parameter slot to receive it." Verified live on the broken slide: <code>TypeError: BusinessRequest.requires_review() takes 0 positional arguments but 1 was given</code>.</aside>
-</section>
-
-<!-- 16. PART 1 pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Forgetting <code>self</code> as the first parameter in a method definition — this doesn't error immediately, but calling the method later fails confusingly (<code>TypeError: approve() takes 0 positional arguments but 1 was given</code>, since Python still passes the object in automatically). Worth demonstrating live once if it comes up naturally.</p>
-<p>Confusing <code>self.amount</code> (an attribute, read inside a method) with a bare <code>amount</code> (a separate, undefined local variable in every method except <code>__init__</code>, which is the only one that receives <code>amount</code> as a parameter). Point at <code>requires_review</code>'s single line and ask "why <code>self.amount</code> and not just <code>amount</code>?"</p>
-<p>Writing <code>def __init__(self):</code> with no other parameters and hardcoding values — avoids the parameter confusion but produces a class where every instance is identical, defeating Part 2's point of three genuinely different requests.</p>
-</div>
-<aside class="notes">Check for understanding: removing <code>self</code> from <code>requires_review</code> and calling it raises <code>TypeError</code> about too many arguments — Python still passes the object in; there is just no parameter slot for it.</aside>
-</section>
-
-<!-- 17. PART 2 divider -->
-<section class="s-sec">
-<span class="chip">Part 2 · 0:20–0:32</span>
-<h1>Create Instances</h1>
-<aside class="notes">
-Teaching goal: create three genuinely independent objects from the same class, call methods on them, and witness — concretely, not just by assertion — that changing one never affects the others.
-Say to the class (verbatim): "Three requests, from the same blueprint, about to become three genuinely separate things in memory. Watch closely when we approve one and reject another — the third stays completely untouched. This is the payoff of everything in Part 1."
-Check for understanding (asked at the end of this part): "If I added a fourth line, <code>req_104 = req_101</code>, and then called <code>req_104.approve()</code>, would <code>req_101.status</code> also become <code>'Approved'</code>?" Answer: Yes — <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable. Contrast with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data.
-</aside>
-</section>
-
-<!-- 18. PART 2 idea -->
-<section class="s-idea">
-<h3>Three calls, three separate objects in memory</h3>
-<div class="concept">
-<div class="concept-lbl">Concept</div>
-<p><code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> is where <code>__init__</code> actually runs — once, right now — with <code>self</code> bound to whatever <code>req_101</code> ends up naming. <strong>Three separate calls create three separate objects</strong>, each with its own independent set of attributes, even though all three come from the same blueprint.</p>
-<p><code>print(req_101)</code> fires <code>__repr__</code> automatically — <code>print()</code> on any object calls <code>__repr__</code> (or the related <code>__str__</code>, not covered today) to decide what to show. This isn't special handling for this class; it's general Python behaviour this class customises.</p>
-<p><code>req_101.approve()</code> and <code>req_102.reject()</code> touch <strong>only</strong> their own object. There is no code anywhere that could make them reach <code>req_103</code> — which is exactly why <code>req_103.status</code> is still <code>'Pending'</code> at the end.</p>
+<p class="q">In <code>bot.respond("hello")</code>, what does <code>self</code> refer to inside <code>respond</code>?</p>
+<button data-opt="A"><code>bot</code> — the object the method was called on</button>
+<button data-opt="B"><code>SupportChatbot</code> — the class the method is written in</button>
+<button data-opt="C"><code>"hello"</code> — the first value passed in</button>
+<p class="why" hidden><code>self</code> is the object on the left of the dot. In <code>bot.respond(...)</code> it is <code>bot</code>. In <code>river.respond(...)</code> it would be <code>river</code>. The same method works on whichever object it is called on.</p>
 </div>
 <aside class="notes">
-Line-by-line (guide, Part 2):
-- <code>from models import BusinessRequest</code> — importing the class itself (not a function) from the local module; same import mechanics as Week 7.
-- <code>req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)</code> — <code>__init__</code> runs here, once; <code>self</code> inside that run <em>is</em> whatever <code>req_101</code> refers to. Three calls, three separate objects with independent attributes.
-- <code>print(req_101)</code> (before any methods) — <code>__repr__</code> fires; a general Python behaviour, not something <code>print()</code> does specially for this class.
-- <code>req_101.requires_review()</code>, <code>req_102.requires_review()</code> — same method, two objects, two results (<code>True</code> for the $1,200 request, <code>False</code> for the $450 one) because each call's <code>self</code> is a different object with its own <code>amount</code>.
-- <code>req_101.approve()</code>, <code>req_102.reject()</code> — <strong>pause here dramatically.</strong> Neither call touches <code>req_103</code>; there is no code that could.
-- the three status prints — concrete proof of independence: <code>'Approved'</code>, <code>'Rejected'</code>, and <code>'Pending'</code> (unaffected).
-Say explicitly, pointing at the final two <code>__repr__</code> lines: "<code>__repr__</code> picks up the <em>current</em> status automatically — <code>req_101</code>'s printed representation now says <code>Approved</code>, not <code>Pending</code>, even though we never touched <code>__repr__</code>. It reads <code>self.status</code> fresh every time it's called."
-Common mistakes: expecting <code>req_103.status</code> to have changed from a vague sense that "something happened"; confusing the variable names (<code>req_101</code>…) with the <code>request_id</code> values (<code>101</code>…) — they correspond numerically here by deliberate readability choice, not a rule.
-Check for understanding: <code>req_104 = req_101</code> then <code>req_104.approve()</code> — yes, <code>req_101.status</code> also becomes <code>'Approved'</code>, because it is a second name for the same object, not a new one.
+If a student answers B, return to the board: the class is the template, <code>bot</code> is the thing made from it.
 </aside>
 </section>
 
-<!-- 19. PART 2 code (RUNNABLE) -->
-<section class="s-code">
-<h3>Live-code — <code>main.py</code>: three instances from one class</h3>
-<div class="run" data-lang="python"># models.py  (guide: a separate file, imported by main.py)
-class BusinessRequest:
-    """Represents a single business purchase or travel request."""
-
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'  # default
-
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
-
-    def reject(self):
-        """Mark this request as rejected."""
-        self.status = 'Rejected'
-
-    def requires_review(self):
-        """Return True if amount exceeds 1000."""
-        return self.amount &gt; 1000
-
-    def __repr__(self):
-        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'
-
-
-# main.py  --  from models import BusinessRequest
-
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-req_102 = BusinessRequest(102, 'Jordan', 'Equipment', 450)
-req_103 = BusinessRequest(103, 'Morgan', 'Software', 3500)
-
-# Check initial state
-print(req_101)
-print(req_102)
-print(req_103)
-
-# Call methods
-print(req_101.requires_review())   # True
-print(req_102.requires_review())   # False
-
-req_101.approve()
-req_102.reject()
-
-# Verify independence
-print(req_101.status)   # Approved
-print(req_102.status)   # Rejected
-print(req_103.status)   # Pending -- unchanged
-
-# Repr
-print(req_101)
-print(req_102)</div>
-<p class="expect">Each Pyodide block is a fresh namespace, so <code>models.py</code>'s class and <code>main.py</code>'s code live in one block here — the guide splits them, with a real <code>from models import BusinessRequest</code> line standing in for the commented one. Run it: three objects, acted on independently.</p>
-<aside class="notes">
-Say to the class (verbatim): "Three requests, from the same blueprint, about to become three genuinely separate things in memory. Watch closely when we approve one and reject another — the third stays completely untouched. This is the payoff of everything in Part 1."
-Line by line: see the idea slide's notes. The load-bearing moment is <code>req_101.approve()</code> / <code>req_102.reject()</code> followed by the three status prints — <code>req_103</code> is never referenced between its creation and the final print.
-Common mistakes: expecting <code>req_103.status</code> to have changed; confusing the <code>req_10x</code> variable names with the <code>request_id</code> attribute values.
-Check for understanding: <code>req_104 = req_101</code>; <code>req_104.approve()</code> — yes, <code>req_101.status</code> becomes <code>'Approved'</code> too; a second name for the same object, not a new one.
-</aside>
-</section>
-
-<!-- 20. PART 2 verified output -->
-<section class="s-out">
-<h3>Verified output</h3>
-<pre>BusinessRequest(101, Taylor, $1200, Pending)
-BusinessRequest(102, Jordan, $450, Pending)
-BusinessRequest(103, Morgan, $3500, Pending)
-True
-False
-Approved
-Rejected
-Pending
-BusinessRequest(101, Taylor, $1200, Approved)
-BusinessRequest(102, Jordan, $450, Rejected)</pre>
-<p class="expect">Reproduces the guide's "Run it. Verified output" for Part 2 exactly. The last two lines are the point: <code>__repr__</code> picks up the <em>current</em> status automatically — <code>req_101</code> now prints <code>Approved</code>, <code>req_102</code> prints <code>Rejected</code> — because <code>__repr__</code> reads <code>self.status</code> fresh every time. <code>req_103</code> stays <code>Pending</code>, completely unaffected.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2: the combined block prints exactly these ten lines. Because <code>BusinessRequest</code> defines <code>__repr__</code>, no <code>&lt;...object at 0x...&gt;</code> address appears — the address would differ per run anyway; only the readable structure is load-bearing.</aside>
-</section>
-
-<!-- 21. PART 2 quiz (CFU) -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="B">
-<p class="q">If I added a fourth line, <code>req_104 = req_101</code>, and then called <code>req_104.approve()</code>, would <code>req_101.status</code> also become <code>'Approved'</code>?</p>
-<button data-opt="A">No — <code>req_104</code> is a copy of <code>req_101</code>, so approving it leaves <code>req_101</code> at <code>'Pending'</code></button>
-<button data-opt="B">Yes — <code>req_104 = req_101</code> doesn't create a new object; it gives a <em>second name</em> to the <em>same</em> object, so the two calls are indistinguishable</button>
-<button data-opt="C">Yes, but only because both were built with <code>request_id</code> <code>101</code></button>
-<p class="why" hidden>Yes — <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable, since they're both acting on the identical object in memory. Contrast this with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data.</p>
-</div>
-<aside class="notes">Guide's Part 2 Check for understanding, verbatim answer: "Yes — … <code>req_104 = req_101</code> doesn't create a new object at all, it just gives a <em>second name</em> to the <em>same</em> existing object; <code>req_104.approve()</code> and <code>req_101.approve()</code> would be indistinguishable … Contrast this explicitly with <code>BusinessRequest(101, ...)</code> called a <em>second</em> time, which <em>would</em> create a genuinely new, independent object even with identical data."</aside>
-</section>
-
-<!-- 22. PART 2 pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Expecting <code>req_103.status</code> to have changed somehow, from a vague sense that "something happened to the requests" — take this seriously as a genuine point of early OOP confusion. Have the student trace the code line by line and identify <em>any</em> line that references <code>req_103</code> between its creation and the final print (there isn't one).</p>
-<p>Confusing the three variable names (<code>req_101</code>, <code>req_102</code>, <code>req_103</code>) with the <code>request_id</code> attribute values (<code>101</code>, <code>102</code>, <code>103</code>) — they correspond numerically here as a deliberate readability choice, not a rule. <code>req_101</code> is just a Python variable name; <code>101</code> is data stored inside the object.</p>
-</div>
-<aside class="notes">Check for understanding: <code>req_104 = req_101</code> then <code>req_104.approve()</code> — yes, <code>req_101.status</code> becomes <code>'Approved'</code> too (a second name for the same object).</aside>
-</section>
-
-<!-- 23. PART 3 divider -->
-<section class="s-sec">
-<span class="chip">Part 3 · 0:32–0:42</span>
-<h1>Verify Instance Independence</h1>
-<aside class="notes">
-Teaching goal: a required, written reflection — five questions, answered as a comment block — confirming Part 2's demonstration genuinely translated into conceptual understanding, not just observed output.
-Say to the class (verbatim): "Five questions, answered in your own words, as a comment block at the top of <code>main.py</code>. I want genuine answers, not restated code — if you can't answer one confidently, that's exactly the thing to ask about right now."
-Check for understanding: this entire part <em>is</em> the check for understanding — treat student answers to these five questions, read individually as you circulate, as your primary signal for whether Part 1–2's concepts landed, and address gaps directly and immediately rather than waiting for Part 4's tests to surface them indirectly.
-</aside>
-</section>
-
-<!-- 24. PART 3 idea -->
-<section class="s-idea">
-<h3>Five questions — answered in your own words</h3>
-<div class="concept">
-<div class="concept-lbl">Answer individually, before any discussion</div>
-<p><strong>1.</strong> After calling <code>req_101.approve()</code>, what is <code>req_102.status</code>? &rarr; <code>'Pending'</code> (unchanged) — a direct, checkable fact from Part 2's run.</p>
-<p><strong>2.</strong> Why doesn't approving <code>req_101</code> affect <code>req_102</code>? &rarr; Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that object's own data.</p>
-<p><strong>3.</strong> What does <code>self</code> refer to inside <code>approve()</code>? &rarr; <code>req_101</code> itself, at the moment <code>req_101.approve()</code> is called; <code>req_102.approve()</code> would have <code>self</code> refer to <code>req_102</code> instead.</p>
-<p><strong>4.</strong> What is the type of <code>req_101</code>? &rarr; <code>&lt;class 'models.BusinessRequest'&gt;</code> — run <code>print(type(req_101))</code> to confirm the exact formatting.</p>
-<p><strong>5.</strong> Where does the default status <code>'Pending'</code> come from? &rarr; <code>__init__</code>'s unconditional <code>self.status = 'Pending'</code> line — every object gets it on creation, regardless of what's passed in.</p>
-</div>
-<aside class="notes">
-The guide has students add this comment block at the top of <code>main.py</code> and answer it individually:
-<code># --- OOP Lab Questions ---</code>
-<code># 1. After calling req_101.approve(), what is req_102.status? ___</code>
-<code># 2. Why doesn't approving req_101 affect req_102? ___</code>
-<code># 3. What does 'self' refer to inside the approve() method? ___</code>
-<code># 4. What is the type of req_101? ___  (hint: use type())</code>
-<code># 5. Where does the default status 'Pending' come from? ___</code>
-Model strong answers (guide, verbatim): (1) <code>'Pending'</code> unchanged; (2) because they are separate objects, each with its own independent copy of every attribute, including <code>status</code>; (3) <code>req_101</code> itself, at the moment <code>req_101.approve()</code> is called; (4) <code>&lt;class 'models.BusinessRequest'&gt;</code> — have students run <code>print(type(req_101))</code>; (5) <code>__init__</code>'s unconditional <code>self.status = 'Pending'</code> line.
-Common mistakes: answering Q2 with <em>what</em> happens ("req_102 stays Pending") rather than <em>why</em> — redirect to the independence concept itself; answering Q3 vaguely ("self refers to the object") without connecting it to <em>which specific call</em> — push for "self refers to req_101, specifically because this line is <code>req_101.approve()</code>".
-</aside>
-</section>
-
-<!-- 25. PART 3 code (RUNNABLE) -->
-<section class="s-code">
-<h3>Run the concrete checks behind questions 1 and 4</h3>
-<div class="run" data-lang="python">class BusinessRequest:
-    """Represents a single business purchase or travel request."""
-
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'
-
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
-
-    def reject(self):
-        """Mark this request as rejected."""
-        self.status = 'Rejected'
-
-    def requires_review(self):
-        """Return True if amount exceeds 1000."""
-        return self.amount &gt; 1000
-
-
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-req_102 = BusinessRequest(102, 'Jordan', 'Equipment', 450)
-
-req_101.approve()
-
-# Q1: after req_101.approve(), what is req_102.status?
-print(req_102.status)
-# Q4: what is the type of req_101?  (hint: use type())
-print(type(req_101))</div>
-<p class="expect">Approving <code>req_101</code> leaves <code>req_102.status</code> at <code>'Pending'</code> — question 1, checked. <code>type(req_101)</code> reports the class the object was built from — question 4. Run it and read the two lines.</p>
-<aside class="notes">
-Say to the class (verbatim): "Five questions, answered in your own words, as a comment block at the top of <code>main.py</code>. I want genuine answers, not restated code — if you can't answer one confidently, that's exactly the thing to ask about right now."
-Line by line: <code>BusinessRequest</code> is re-defined (fresh namespace); two instances are created; only <code>req_101</code> is approved; <code>req_102.status</code> is printed (still <code>Pending</code> — independence); <code>type(req_101)</code> is printed.
-<strong>Module-name note:</strong> the guide's model answer for question 4 is <code>&lt;class 'models.BusinessRequest'&gt;</code>, because the guide defines the class in <code>models.py</code> and imports it. In this standalone block the class is defined in the top-level script, so Python reports <code>&lt;class '__main__.BusinessRequest'&gt;</code> — same class object, different module qualifier (<code>__main__</code> for a script that's run directly, <code>models</code> once it lives in and is imported from <code>models.py</code>). Tell students their own run — from an imported <code>models.py</code> — will show <code>models.BusinessRequest</code>.
-Check for understanding: this whole part is the CFU — circulate and read the five written answers as the primary signal that Parts 1–2 landed.
-</aside>
-</section>
-
-<!-- 26. PART 3 output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>Pending
-&lt;class '__main__.BusinessRequest'&gt;</pre>
-<p class="expect"><code>req_102.status</code> is <code>Pending</code> — approving <code>req_101</code> never touched it (question 1). <code>type(req_101)</code> is <code>&lt;class '__main__.BusinessRequest'&gt;</code> here; when you run it from an imported <code>models.py</code> as the guide does, it reads <code>&lt;class 'models.BusinessRequest'&gt;</code> (question 4) — same class, the module qualifier just changes from <code>__main__</code> to <code>models</code>.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2: this standalone block prints exactly <code>Pending</code> then <code>&lt;class '__main__.BusinessRequest'&gt;</code>. The guide's model answer <code>&lt;class 'models.BusinessRequest'&gt;</code> is what students see because their class lives in <code>models.py</code> and is imported — <code>__main__</code> vs <code>models</code> is the only difference, and it is not a different type. Have students actually run <code>print(type(req_101))</code> rather than guess the formatting.</aside>
-</section>
-
-<!-- 27. PART 3 quiz (CFU — R-conv fallback) -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="C">
-<p class="q">Why doesn't approving <code>req_101</code> affect <code>req_102</code>?</p>
-<button data-opt="A">Because <code>approve()</code> only changes <code>status</code>, and <code>req_102</code>'s <code>status</code> was already <code>'Pending'</code> — a coincidence of starting values</button>
-<button data-opt="B">Because Python re-runs <code>__init__</code> on every other instance whenever a method is called, resetting them</button>
-<button data-opt="C">Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that object's own data</button>
-<p class="why" hidden>Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that specific object's own data. Answering with <em>what</em> happens ("<code>req_102</code> stays <code>Pending</code>") misses the point; the answer is about the independence itself.</p>
-</div>
-<aside class="notes">Guide's Part 3 Check for understanding has no Q&amp;A parenthetical — the guide states "This entire part <em>is</em> the check for understanding." Per the rollout convention for a CFU with no Q&amp;A, this quiz is built on the guide's own reflection question 2 and the keyed option / <code>.why</code> are taken <strong>verbatim</strong> from the guide's "Model strong answers" #2: "Because <code>req_101</code> and <code>req_102</code> are separate objects, each with its own independent copy of every attribute, including <code>status</code> — a method call on one object only ever touches that specific object's own data." Disclosed here as an R-conv fallback.</aside>
-</section>
-
-<!-- 28. PART 3 pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>Answering question 2 with a description of <em>what</em> happens (restating "<code>req_102</code> stays <code>Pending</code>") rather than <em>why</em> — redirect explicitly toward the independence concept itself, not just the observed fact.</p>
-<p>Answering question 3 vaguely ("self refers to the object") without connecting it to <em>which specific call</em> — push for the more precise "self refers to <code>req_101</code>, specifically because this line is <code>req_101.approve()</code>" framing.</p>
-</div>
-<aside class="notes">This entire part is the check for understanding — read student answers individually as you circulate and address gaps immediately, not later via Part 4's tests.</aside>
-</section>
-
-<!-- 29. PART 4 divider -->
-<section class="s-sec">
-<span class="chip">Part 4 · 0:42–0:58</span>
-<h1>Seven <code>pytest</code> Tests — including an independence test</h1>
-<aside class="notes">
-Teaching goal: seven tests, including Week 7's now-familiar boundary case, plus a <strong>new kind of test unique to OOP</strong>: a dedicated independence test, directly encoding Part 2–3's central lesson as executable, permanent verification.
-Say to the class (verbatim): "Seven tests. Six of them check individual behaviors — status changes, review thresholds, the boundary case exactly like Week 7. The seventh is new: a test whose entire job is proving instance independence, in code, so it's never just something we observed once and trusted."
-Check for understanding (asked at the end of this part): "Could you write a test proving <code>req_103</code> from Part 2 was never touched by anything that happened to <code>req_101</code> or <code>req_102</code>, using this same pattern?" Answer: Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood.
-</aside>
-</section>
-
-<!-- 30. PART 4 idea -->
-<section class="s-idea">
-<h3>Six routine tests, one that is genuinely new</h3>
-<div class="concept">
-<div class="concept-lbl">Concept</div>
-<p>The first three tests each build their <strong>own fresh instance</strong> — never share one object across tests, since a shared object's state from one test could leak into and corrupt the next.</p>
-<p><code>test_requires_review_at_boundary</code> — Week 7's exact boundary discipline, now on a method: <code>requires_review(1000)</code> must be <code>False</code>, because the condition is <code>&gt; 1000</code>, strictly greater, not <code>&gt;=</code>.</p>
-<p><code>test_instances_are_independent</code> — <strong>the lab's new, central test.</strong> Two objects are created, only <code>req1</code> is approved, and the assertion checks <code>req2.status</code>. It doesn't just check that <code>approve()</code> works — it checks that <code>approve()</code>'s effect is correctly <em>scoped to exactly one object</em>, a different and arguably more important property than any single method's individual correctness.</p>
-</div>
-<aside class="notes">
-Line-by-line (guide, Part 4):
-- The first three tests (<code>test_default_status_is_pending</code>, <code>test_approve_changes_status</code>, <code>test_reject_changes_status</code>) — each creates its own fresh instance; a shared object's state could leak between tests.
-- <code>test_requires_review_at_boundary</code> — Week 7's boundary discipline applied to a method: confirms <code>&gt; 1000</code>, not <code>&gt;= 1000</code>, at the exact threshold.
-- <code>test_instances_are_independent</code> — the lab's new central test. Two objects, only <code>req1</code> approved, assertion on <code>req2.status</code>. Checks that <code>approve()</code>'s effect is scoped to exactly one object.
-Optional live demo (guide): temporarily break independence by moving <code>self.status = 'Pending'</code> out of <code>__init__</code> to a class-level assignment (a real mutable-class-attribute bug) and watch <code>test_instances_are_independent</code> catch it — skip if it feels like too large a detour.
-Common mistakes: writing <code>test_instances_are_independent</code> with the <em>same</em> object for both actions (creating <code>req1</code> twice), making it tautological; treating all seven tests as equally routine without recognising the independence test as conceptually different — ask a student to categorise the seven into groups (state-changing behaviour, boundary condition, independence).
-Check for understanding: yes — generalise the pattern to three objects: create three, act on two, assert the third is unchanged.
-</aside>
-</section>
-
-<!-- 31. PART 4 provided test file (STATIC — no pytest runner in browser) -->
-<section class="s-code">
-<h3>Type the tests as provided — <code>tests/test_models.py</code></h3>
-<pre><code class="language-python">from models import BusinessRequest
-
-def test_default_status_is_pending():
-    req = BusinessRequest(1, 'Test', 'Travel', 500)
-    assert req.status == 'Pending'
-
-def test_approve_changes_status():
-    req = BusinessRequest(2, 'Test', 'Travel', 500)
-    req.approve()
-    assert req.status == 'Approved'
-
-def test_reject_changes_status():
-    req = BusinessRequest(3, 'Test', 'Travel', 500)
-    req.reject()
-    assert req.status == 'Rejected'
-
-def test_requires_review_over_limit():
-    req = BusinessRequest(4, 'Test', 'Travel', 1500)
-    assert req.requires_review() is True
-
-def test_requires_review_under_limit():
-    req = BusinessRequest(5, 'Test', 'Travel', 500)
-    assert req.requires_review() is False
-
-def test_requires_review_at_boundary():
-    req = BusinessRequest(6, 'Test', 'Travel', 1000)
-    assert req.requires_review() is False  # &gt; not &gt;=
-
-def test_instances_are_independent():
-    req1 = BusinessRequest(7, 'A', 'Travel', 500)
-    req2 = BusinessRequest(8, 'B', 'Travel', 500)
-    req1.approve()
-    assert req2.status == 'Pending'</code></pre>
-<p class="expect">Shown static, <strong>outside</strong> any runnable block — <code>pytest</code> has no runner in Pyodide, so neither this file nor the <code>pytest -v</code> pane can execute in the browser. Type it into <code>tests/test_models.py</code> and run <code>pytest -v</code> on your own machine. Two slides on, the same seven assertions run live.</p>
-<aside class="notes">
-Line by line:
-- <code>from models import BusinessRequest</code> — tests import the class the same way any other code would.
-- the first three tests — each builds a brand-new <code>BusinessRequest</code> rather than sharing one, so state can't leak between tests.
-- <code>test_requires_review_at_boundary</code> — the required boundary case; its own comment states why: the condition is <code>&gt; 1000</code>, strict. A <code>&gt;=</code> bug would pass the over/under tests and fail only here.
-- <code>test_instances_are_independent</code> — the new central test: two objects, only <code>req1</code> approved, assert <code>req2.status == 'Pending'</code>. Verifies <code>approve()</code>'s effect is scoped to one object.
-Common mistakes: creating <code>req1</code> twice instead of <code>req1</code> and <code>req2</code> (tautological test); not recognising the independence test as different in kind from the other six.
-Check for understanding: yes — three instances, act on two, assert the third is unchanged.
-</aside>
-</section>
-
-<!-- 32. PART 4 pytest -v pane (STATIC) -->
-<section class="s-out">
-<h3><code>pytest -v</code> — not run here, run on your own machine</h3>
-<pre>tests/test_models.py::test_default_status_is_pending PASSED
-tests/test_models.py::test_approve_changes_status PASSED
-tests/test_models.py::test_reject_changes_status PASSED
-tests/test_models.py::test_requires_review_over_limit PASSED
-tests/test_models.py::test_requires_review_under_limit PASSED
-tests/test_models.py::test_requires_review_at_boundary PASSED
-tests/test_models.py::test_instances_are_independent PASSED
-7 passed</pre>
-<p class="expect">Static — reproduced verbatim from the guide's "Verified output — all seven pass". <code>pytest</code> cannot run in Pyodide; run <code>pytest -v</code> on your own machine and expect exactly this. Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns; the guide omits those. The next slide runs the same seven checks live.</p>
-<aside class="notes">Reproduced verbatim from the guide's Part 4 "Verified output — all seven pass": the seven <code>PASSED</code> lines and the <code>7 passed</code> summary. This pane is <strong>not executed</strong> in the deck — <code>pytest</code> has no browser runner. Double-checked locally with <code>python3 -m pytest -v</code> on <code>python3</code> 3.12.2 against the provided <code>models.py</code> + test file: <code>7 passed</code>. The provided code is correct as written — no hidden bugs this week.</aside>
-</section>
-
-<!-- 33. PART 4 live-logic (RUNNABLE) -->
-<section class="s-code">
-<h3>The same seven checks, run live</h3>
-<div class="run" data-lang="python">class BusinessRequest:
-    """Represents a single business purchase or travel request."""
-
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'
-
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
-
-    def reject(self):
-        """Mark this request as rejected."""
-        self.status = 'Rejected'
-
-    def requires_review(self):
-        """Return True if amount exceeds 1000."""
-        return self.amount &gt; 1000
-
-
-# the same seven checks tests/test_models.py makes, as bare asserts
-req = BusinessRequest(1, 'Test', 'Travel', 500)
-assert req.status == 'Pending';        print('test_default_status_is_pending PASSED')
-
-req = BusinessRequest(2, 'Test', 'Travel', 500)
-req.approve()
-assert req.status == 'Approved';       print('test_approve_changes_status PASSED')
-
-req = BusinessRequest(3, 'Test', 'Travel', 500)
-req.reject()
-assert req.status == 'Rejected';       print('test_reject_changes_status PASSED')
-
-req = BusinessRequest(4, 'Test', 'Travel', 1500)
-assert req.requires_review() is True;  print('test_requires_review_over_limit PASSED')
-
-req = BusinessRequest(5, 'Test', 'Travel', 500)
-assert req.requires_review() is False; print('test_requires_review_under_limit PASSED')
-
-req = BusinessRequest(6, 'Test', 'Travel', 1000)
-assert req.requires_review() is False; print('test_requires_review_at_boundary PASSED')
-
-req1 = BusinessRequest(7, 'A', 'Travel', 500)
-req2 = BusinessRequest(8, 'B', 'Travel', 500)
-req1.approve()
-assert req2.status == 'Pending';       print('test_instances_are_independent PASSED')
-
-print('7 passed')</div>
-<p class="expect">Where the guide's point is "the tests pass", this runs the same seven assertions with <code>assert</code> so the class logic executes live even though <code>pytest</code> itself is static. Each <code>assert</code> that holds prints its test name; a failing one would raise <code>AssertionError</code> and stop the block.</p>
-<aside class="notes">
-Say to the class (verbatim): "Seven tests. Six of them check individual behaviors — status changes, review thresholds, the boundary case exactly like Week 7. The seventh is new: a test whose entire job is proving instance independence, in code, so it's never just something we observed once and trusted."
-Line by line: <code>BusinessRequest</code> is re-defined (fresh namespace), then the seven assertions from <code>tests/test_models.py</code> run as bare <code>assert</code>s, each with its own fresh instance. The final assertion is the independence check: only <code>req1</code> is approved, <code>req2.status</code> is still <code>'Pending'</code>.
-Check for understanding: yes — generalise to three objects: create three, act on two, assert the third's state is unchanged.
-</aside>
-</section>
-
-<!-- 34. PART 4 live-logic output -->
-<section class="s-out">
-<h3>Expected output</h3>
-<pre>test_default_status_is_pending PASSED
-test_approve_changes_status PASSED
-test_reject_changes_status PASSED
-test_requires_review_over_limit PASSED
-test_requires_review_under_limit PASSED
-test_requires_review_at_boundary PASSED
-test_instances_are_independent PASSED
-7 passed</pre>
-<p class="expect">Every one of the seven assertions holds, so all seven names print followed by <code>7 passed</code> — the live equivalent of the static <code>pytest -v</code> pane. The last line proves the independence property: <code>req1</code> was approved, <code>req2.status</code> is still <code>'Pending'</code>.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly these eight lines and exits 0. Each <code>assert</code> corresponds one-to-one with a test in <code>tests/test_models.py</code>, so a clean run here means all seven <code>pytest</code> tests pass too.</aside>
-</section>
-
-<!-- 35. PART 4 quiz (CFU) -->
+<!-- 25. PART 3 quiz (composition) -->
 <section class="s-quiz">
 <h3>Knowledge check</h3>
 <div class="quiz" data-answer="A">
-<p class="q">Could you write a test proving <code>req_103</code> from Part 2 was never touched by anything that happened to <code>req_101</code> or <code>req_102</code>, using this same pattern?</p>
-<button data-opt="A">Yes — create three instances, act on two of them, assert the third's state is unchanged: a direct generalization of <code>test_instances_are_independent</code> to three objects</button>
-<button data-opt="B">No — <code>pytest</code> can only compare two objects per test; three would need a separate framework</button>
-<button data-opt="C">No — independence can only be observed by printing, never asserted in a test</button>
-<p class="why" hidden>Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood.</p>
+<p class="q">Which line is the composition?</p>
+<button data-opt="A"><code>self.order_tool = order_tool</code></button>
+<button data-opt="B"><code>self.history = []</code></button>
+<button data-opt="C"><code>text = user_message.lower()</code></button>
+<p class="why" hidden>The chatbot is handed another object and keeps it so it can use it later. <code>self.history = []</code> creates a plain list, and <code>text</code> is a local variable.</p>
 </div>
-<aside class="notes">Guide's Part 4 Check for understanding, verbatim answer: "Yes — create three instances, act on two of them, assert the third's state is unchanged — a direct generalization of <code>test_instances_are_independent</code> to three objects instead of two, confirming the pattern, not just this one specific instance of it, is understood." (Appendix B's "Extra — a second independence test, three objects" is exactly this test.)</aside>
+<aside class="notes">
+Extension: why is the tool passed in, and not created inside <code>__init__</code>? So the caller chooses the tool: real data in <code>main.py</code>, two made-up orders in a test.
+</aside>
 </section>
 
-<!-- 36. PART 4 pitfalls -->
+<!-- 26. PART 3 pitfalls -->
 <section class="s-warn">
 <h3>Common student mistakes</h3>
 <div class="warn-card">
 <div class="warn-lbl">Watch for</div>
-<p>Writing <code>test_instances_are_independent</code> using the <strong>same</strong> object for both actions (a copy-paste slip creating <code>req1</code> twice instead of <code>req1</code> and <code>req2</code>) — this makes the test tautological (of course an object's status matches itself) rather than actually testing independence. A good "does this test genuinely test what its name claims" check.</p>
-<p>Treating all seven tests as equally routine, without recognizing <code>test_instances_are_independent</code> as conceptually different from the other six — ask a student to categorize the seven into groups (state-changing behavior, boundary condition, independence) to confirm the distinction registered.</p>
+<p>Calling a method on the class: <code>SupportChatbot.respond("hello")</code>. The class is the template. Call methods on the object you created.</p>
+<p>Writing <code>choose_reply(user_message)</code> inside <code>respond</code> without <code>self.</code>. That fails with <code>NameError</code>, because the method belongs to the object.</p>
+<p>Believing the <code>instructions</code> change the replies. In this mock they are stored and never read. They start to matter next week, when they are sent to a model.</p>
 </div>
-<aside class="notes">Check for understanding: yes — three instances, act on two, assert the third's state is unchanged — a direct generalization of the two-object independence test.</aside>
-</section>
-
-<!-- 37. PART 5 divider -->
-<section class="s-sec">
-<span class="chip">Part 5 · 0:58–1:06</span>
-<h1>Ritual and Push</h1>
 <aside class="notes">
-Teaching goal: the established ritual, on genuinely new (OOP) content — confirming the habit transfers cleanly to a new unit, not just the unit it was originally taught in.
-Say to the class (verbatim): "Same ritual, new kind of code entirely. If this feels routine by now, that's the habit working exactly as intended."
-Common mistakes: none new this week — pure repetition; the main thing worth confirming is that the ritual runs without needing the steps spelled out, four units of new material after it was first introduced.
-Check for understanding (asked at the end of this part): "Commit message must include 'lab 10' — quick, what's yours?" (A fast, low-stakes final check before the push, same pattern as every prior week.)
+Misconceptions to listen for: &ldquo;the class is the chatbot&rdquo;; &ldquo;<code>self</code> is something I pass in&rdquo;; &ldquo;using a class makes it AI&rdquo;.
 </aside>
 </section>
 
-<!-- 38. PART 5 ritual (readonly shell) -->
+<!-- 27. PART 4 divider -->
+<section class="s-sec">
+<span class="chip">Part 4 · 0:40–0:52</span>
+<h1>Run It and Test It</h1>
+<aside class="notes">
+Teaching goal: have a real conversation in the terminal, trace one message through the code, and confirm the behavior with eight tests.
+</aside>
+</section>
+
+<!-- 28. PART 4 main.py (readonly) -->
+<section class="s-code">
+<h3><code>main.py</code> — run on your own machine</h3>
+<div class="run" data-lang="python" data-readonly># main.py
+# Author: [Your Name]
+
+from chatbot import SupportChatbot
+from order_tool import OrderLookup
+
+ORDERS = {
+    "A100": "shipped",
+    "A101": "processing",
+    "A102": "delivered",
+}
+
+order_tool = OrderLookup(ORDERS)
+bot = SupportChatbot(
+    "Sunny",
+    "You are a friendly support assistant for Bayside Outfitters.",
+    order_tool,
+)
+
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{bot.name}: {bot.respond(user_message)}")
+    user_message = input("You: ")
+
+print(f"Messages in this conversation: {len(bot.history)}")</div>
+<p class="expect">Shown for reference — <code>input()</code> needs a terminal. Run <code>python3 main.py</code> and type the six messages on the lab page.</p>
+<aside class="notes">
+The loop is the sentinel pattern from Week 6: read once before the loop, and again at the end of each pass.
+Then type <code>Do you sell cardigans?</code> and let the room react. Keep it for Part 5.
+</aside>
+</section>
+
+<!-- 29. PART 4 trace (RUNNABLE) -->
+<section class="s-code">
+<h3>Trace one message</h3>
+<div class="run" data-lang="python">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
+
+    def __init__(self, orders):
+        self.orders = orders
+
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
+
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
+
+
+HANDOFF_WORDS = ["address", "payment", "card"]
+
+
+class SupportChatbot:
+    """A mock support chatbot. Its replies come from simple rules, not from AI."""
+
+    def __init__(self, name, instructions, order_tool):
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't help with that here. I'm passing you to a human agent."
+        if "order" in text:
+            return self.order_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. I can check an order status for you."
+        return "I'm not sure how to help with that. I can check an order status."
+
+    def needs_human(self, text):
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def order_reply(self, user_message):
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."
+
+
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.", order_tool)
+
+print("history before:", bot.history)
+reply = bot.respond("Where is order A100?")
+print("reply:", reply)
+print("history after:")
+for message in bot.history:
+    print(" ", message)</div>
+<p class="expect">The same two classes. The last lines print the history before and after one call. Press <strong>Run</strong>, then narrate the path.</p>
+<aside class="notes">
+The path, in order: <code>respond</code> records the message; <code>choose_reply</code> reaches the <code>order</code> rule; <code>order_reply</code> asks the tool for an ID, then for a status; the sentence travels back up; <code>respond</code> records it and returns it.
+Have a student narrate while you point. Tracing is learning outcome 7.
+</aside>
+</section>
+
+<!-- 30. PART 4 trace output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>history before: []
+reply: Order A100 is shipped.
+history after:
+  {'role': 'user', 'content': 'Where is order A100?'}
+  {'role': 'assistant', 'content': 'Order A100 is shipped.'}</pre>
+<p class="expect">Empty before. Two dictionaries after: the user's message and the assistant's reply.</p>
+<aside class="notes">
+The history is the chatbot's memory. Next week it is sent to the model with every request.
+</aside>
+</section>
+
+<!-- 31. PART 4 test file (STATIC) -->
+<section class="s-code">
+<h3><code>tests/test_chatbot.py</code> — eight tests</h3>
+<pre class="tmpl" data-readonly>from chatbot import SupportChatbot
+from order_tool import OrderLookup
+
+
+def make_bot():
+    """Build a fresh chatbot with its own tool for each test."""
+    orders = {"A100": "shipped", "A101": "processing"}
+    return SupportChatbot("Sunny", "Be friendly.", OrderLookup(orders))
+
+
+def test_tool_finds_known_status():
+    tool = OrderLookup({"A100": "shipped"})
+    assert tool.find_status("A100") == "shipped"
+
+
+def test_tool_returns_none_for_unknown_order():
+    tool = OrderLookup({"A100": "shipped"})
+    assert tool.find_status("A999") is None
+
+
+def test_respond_records_both_messages():
+    bot = make_bot()
+    bot.respond("hello")
+    assert len(bot.history) == 2
+    assert bot.history[0]["role"] == "user"
+    assert bot.history[1]["role"] == "assistant"
+
+
+def test_order_question_uses_the_tool():
+    bot = make_bot()
+    assert bot.respond("Where is order A100?") == "Order A100 is shipped."
+
+
+def test_order_question_without_an_id_asks_for_one():
+    bot = make_bot()
+    assert "order ID" in bot.respond("Where is my order?")
+
+
+def test_address_change_goes_to_a_human():
+    bot = make_bot()
+    assert "human" in bot.respond("Please change my shipping address")
+
+
+def test_unknown_request_gets_a_safe_reply():
+    bot = make_bot()
+    assert "not sure" in bot.respond("What is the weather today?")
+
+
+def test_two_chatbots_keep_separate_histories():
+    first = make_bot()
+    second = make_bot()
+    first.respond("hello")
+    assert len(first.history) == 2
+    assert len(second.history) == 0</pre>
+<p class="expect">Shown static — <code>pytest</code> has no runner in the browser. Type this into <code>tests/test_chatbot.py</code> and run <code>pytest -v</code> on your own machine.</p>
+<aside class="notes">
+<code>make_bot()</code> builds a fresh chatbot with a two-order tool for each test. That is composition paying off: the test chooses the tool.
+The last test is the independence test: one chatbot's messages never appear in another's history.
+</aside>
+</section>
+
+<!-- 32. PART 4 pytest pane (STATIC) -->
+<section class="s-out">
+<h3>Verified <code>pytest -v</code> output — run on your own machine</h3>
+<pre>tests/test_chatbot.py::test_tool_finds_known_status PASSED
+tests/test_chatbot.py::test_tool_returns_none_for_unknown_order PASSED
+tests/test_chatbot.py::test_respond_records_both_messages PASSED
+tests/test_chatbot.py::test_order_question_uses_the_tool PASSED
+tests/test_chatbot.py::test_order_question_without_an_id_asks_for_one PASSED
+tests/test_chatbot.py::test_address_change_goes_to_a_human PASSED
+tests/test_chatbot.py::test_unknown_request_gets_a_safe_reply PASSED
+tests/test_chatbot.py::test_two_chatbots_keep_separate_histories PASSED
+8 passed</pre>
+<p class="expect">Real <code>pytest</code> also prints a session header and <code>[NN%]</code> progress columns.</p>
+<aside class="notes">
+Verified with pytest 9 on CPython 3.12: eight passed.
+</aside>
+</section>
+
+<!-- 33. PART 4 quiz -->
+<section class="s-quiz">
+<h3>Knowledge check</h3>
+<div class="quiz" data-answer="A">
+<p class="q">Why does <code>make_bot()</code> hand the chatbot a tool with only two made-up orders?</p>
+<button data-opt="A">So each test controls exactly what data the chatbot can see, without touching <code>main.py</code></button>
+<button data-opt="B">Because the chatbot cannot hold more than two orders</button>
+<button data-opt="C">Because tests are not allowed to use real classes</button>
+<p class="why" hidden>The chatbot is handed its tool, so a test can hand it a small one. If the chatbot created its own tool from the real data, every test would depend on that data.</p>
+</div>
+<aside class="notes">
+This is the practical reason for composition, and it comes back in Week 12 with a fake model.
+</aside>
+</section>
+
+<!-- 34. PART 5 divider -->
+<section class="s-sec">
+<span class="chip">Part 5 · 0:52–1:07</span>
+<h1>Four Exercises</h1>
+<aside class="notes">
+Teaching goal: move from recognizing the parts of a class, to changing one, to adding a second tool, to creating two objects.
+The lab page states an expected result for each exercise and hides the answer key until it is clicked. Ask students to attempt each one before opening the key.
+Exercise 1 labels the parts. Exercise 2 adds a method. Exercise 3 adds a second tool. Exercise 4 creates two chatbots. If time is short, do 1, 2 and 4 in class and leave 3 for homework.
+</aside>
+</section>
+
+<!-- 35. PART 5 two objects (RUNNABLE) -->
+<section class="s-code">
+<h3>Exercise 4 preview — two chatbots from one class</h3>
+<div class="run" data-lang="python">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
+
+    def __init__(self, orders):
+        self.orders = orders
+
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
+
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
+
+
+HANDOFF_WORDS = ["address", "payment", "card"]
+
+
+class SupportChatbot:
+    """A mock support chatbot. Its replies come from simple rules, not from AI."""
+
+    def __init__(self, name, instructions, order_tool):
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't help with that here. I'm passing you to a human agent."
+        if "order" in text:
+            return self.order_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. I can check an order status for you."
+        return "I'm not sure how to help with that. I can check an order status."
+
+    def needs_human(self, text):
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def order_reply(self, user_message):
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."
+
+
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+sunny = SupportChatbot("Sunny", "You are cheerful and brief.", order_tool)
+river = SupportChatbot("River", "You are formal and detailed.", order_tool)
+
+sunny.respond("hello")
+sunny.respond("Where is order A100?")
+river.respond("hello")
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[1]["content"])
+print(river.history[1]["content"])</div>
+<p class="expect">Sunny gets two messages. River gets one. Predict the four printed lines, then press <strong>Run</strong>.</p>
+<aside class="notes">
+Both chatbots share one <code>order_tool</code>. That is allowed: one tool can serve many chatbots.
+</aside>
+</section>
+
+<!-- 36. PART 5 two objects output -->
+<section class="s-out">
+<h3>Expected output</h3>
+<pre>Sunny 4
+River 2
+Hello! I'm Sunny. I can check an order status for you.
+Hello! I'm River. I can check an order status for you.</pre>
+<p class="expect">Four messages for Sunny, two for River. Each chatbot greets with its own name.</p>
+<aside class="notes">
+<code>self.history = []</code> ran once for each object, so the histories are separate.
+</aside>
+</section>
+
+<!-- 37. PART 5 shared list bug (RUNNABLE) -->
+<section class="s-code">
+<h3>Predict — a list written in the wrong place</h3>
+<div class="run" data-lang="python">class SupportChatbot:
+    history = []  # BUG: written in the class body, so every chatbot shares one list
+
+    def __init__(self, name):
+        self.name = name
+
+    def respond(self, user_message):
+        self.history.append(user_message)
+        return "ok"
+
+
+sunny = SupportChatbot("Sunny")
+river = SupportChatbot("River")
+sunny.respond("hello")
+print(len(sunny.history))
+print(len(river.history))</div>
+<p class="expect"><code>history = []</code> sits in the class body, outside <code>__init__</code>. Only Sunny is sent a message. What do the two lines print? Decide, then press <strong>Run</strong>.</p>
+<aside class="notes">
+Take a show of hands for &ldquo;1 and 0&rdquo; against &ldquo;1 and 1&rdquo; before running.
+</aside>
+</section>
+
+<!-- 38. PART 5 shared list output -->
+<section class="s-out">
+<h3>What it prints</h3>
+<pre>1
+1</pre>
+<p class="expect">Both print <code>1</code>. A value written in the class body belongs to the class, so every object shares the one list.</p>
+<aside class="notes">
+In a real chatbot this shows one customer another customer's conversation. The fix is <code>self.history = []</code> inside <code>__init__</code>, which prints <code>1</code> and <code>0</code>.
+</aside>
+</section>
+
+<!-- 39. PART 5 cardigan (RUNNABLE) -->
+<section class="s-code">
+<h3>What can go wrong — unreliable output</h3>
+<div class="run" data-lang="python">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
+
+    def __init__(self, orders):
+        self.orders = orders
+
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
+
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
+
+
+HANDOFF_WORDS = ["address", "payment", "card"]
+
+
+class SupportChatbot:
+    """A mock support chatbot. Its replies come from simple rules, not from AI."""
+
+    def __init__(self, name, instructions, order_tool):
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't help with that here. I'm passing you to a human agent."
+        if "order" in text:
+            return self.order_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. I can check an order status for you."
+        return "I'm not sure how to help with that. I can check an order status."
+
+    def needs_human(self, text):
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def order_reply(self, user_message):
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."
+
+
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.", order_tool)
+
+print(bot.respond("Can I pay with a different card?"))
+print(bot.respond("Do you sell cardigans?"))</div>
+<p class="expect">Two messages. One is about a payment card. The other is about knitwear. Press <strong>Run</strong>.</p>
+<aside class="notes">
+Discussion: Sunny passed a cardigan question to a human. How would you find mistakes like that before a customer does? Look for: test with real messages; the rule is brittle and the class is not to blame; a model would fail differently, not never.
+</aside>
+</section>
+
+<!-- 40. PART 5 cardigan output -->
+<section class="s-out">
+<h3>What it prints</h3>
+<pre>I can't help with that here. I'm passing you to a human agent.
+I can't help with that here. I'm passing you to a human agent.</pre>
+<p class="expect">The first handoff is right. The second is wrong: <code>cardigans</code> contains <code>card</code>.</p>
+<aside class="notes">
+Use this to name all four risks. <strong>Unreliable output:</strong> this. <strong>Failed tools:</strong> the order may not exist, so the chatbot asks and never invents. <strong>Sensitive data:</strong> the history keeps everything a user types. <strong>Actions that need a person:</strong> looking up changes nothing; changing an address does.
+Discussion: name three more tools a shop's chatbot could use. Which only look something up, and which change something?
+</aside>
+</section>
+
+<!-- 41. PART 5 pitfalls -->
+<section class="s-warn">
+<h3>Common student mistakes</h3>
+<div class="warn-card">
+<div class="warn-lbl">Watch for</div>
+<p>Exercise 2: returning <code>len(self.history)</code>, which counts the chatbot's replies as well as the user's messages.</p>
+<p>Exercise 3: changing <code>__init__</code> and forgetting a place that creates the chatbot. The error is <code>missing 1 required positional argument: 'stock_tool'</code>.</p>
+<p>Exercise 3: putting the stock dictionary inside <code>SupportChatbot</code>. That mixes two unrelated jobs in one class.</p>
+<p>Exercise 4: expecting River's history to contain Sunny's messages.</p>
+</div>
+<aside class="notes">
+The answer keys on the lab page explain each of these. Encourage students to read the explanation even when their own answer was right.
+</aside>
+</section>
+
+<!-- 42. PART 6 divider -->
+<section class="s-sec">
+<span class="chip">Parts 6–7 · 1:07–1:15</span>
+<h1>Mini-Project, Ritual, Wrap-Up</h1>
+<aside class="notes">
+Teaching goal: every student leaves knowing what the mini-project requires and how it is checked.
+</aside>
+</section>
+
+<!-- 43. PART 6 mini-project brief -->
+<section class="s-idea">
+<h3>Mini-project — an assistant of your own</h3>
+<div class="concept">
+<div class="concept-lbl">What to build</div>
+<p>Choose an FAQ assistant, an appointment helper, an order-status assistant for a different business, or an approved idea of your own.</p>
+<p><strong>Two classes in two files:</strong> a tool that knows the data, and an assistant that is handed the tool and keeps a history.</p>
+<p><strong>It must:</strong> accept typed messages until <code>quit</code>; answer one kind of request with the tool; reply helpfully when a lookup finds nothing; say so when it cannot help; pass one kind of request to a person.</p>
+<p><strong>Also:</strong> at least four tests, and a short README section on what is mock and what could go wrong with real customer data.</p>
+</div>
+<aside class="notes">
+The lab page has the checklist, a sample interaction, a 10-point rubric and a reference solution (an appointment helper) that opens on a click. Tell students to compare with it after they have a working version, and to build for a different business.
+Ask two or three students what business they will pick and what its tool would know.
+</aside>
+</section>
+
+<!-- 44. PART 7 ritual (readonly shell) -->
 <section class="s-code">
 <h3>The full pre-submission ritual — run on your own machine</h3>
 <div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
-git add . &amp;&amp; git commit -m 'lab 10: OOP I BusinessRequest class' &amp;&amp; git push</div>
-<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code>, and <code>git</code> can't run in the browser. Format, lint, test, then commit and push. The commit message must include <strong>"lab 10"</strong>. Same ritual as every prior module, on genuinely new OOP code.</p>
+git add . &amp;&amp; git commit -m 'lab 10: OOP for agents chatbot and tool' &amp;&amp; git push</div>
+<p class="expect">Shown for reference — <code>ruff</code>, <code>pytest</code> and <code>git</code> can't run in the browser. The commit message must include <strong>&ldquo;lab 10&rdquo;</strong>. If <code>ruff check</code> stops on a fixable error, run <code>ruff check --fix .</code> and run the first line again.</p>
 <aside class="notes">
-Say to the class (verbatim): "Same ritual, new kind of code entirely. If this feels routine by now, that's the habit working exactly as intended."
-Line by line: <code>ruff format .</code> reformats; <code>ruff check .</code> lints; <code>pytest -v</code> runs all seven tests named; <code>&amp;&amp;</code> chaining stops the chain on any failure. Then stage everything, commit with a message that includes "lab 10", push.
-Common mistakes: none new this week — pure repetition; forgetting "lab 10" in the commit message is the same graded requirement as every prior week.
-Check for understanding: "Commit message must include 'lab 10' — quick, what's yours?" — a fast, low-stakes final check before the push.
+Same ritual as every prior module. <code>&amp;&amp;</code> stops the chain at the first failure, so a lint error means the tests never ran.
 </aside>
 </section>
 
-<!-- 39. PART 5 quiz (CFU — R-conv fallback) -->
-<section class="s-quiz">
-<h3>Knowledge check</h3>
-<div class="quiz" data-answer="B">
-<p class="q">Per the guide, what must your Part 5 commit message include?</p>
-<button data-opt="A">The full class name, <code>BusinessRequest</code>, and a list of every method</button>
-<button data-opt="B">The text <strong>"lab 10"</strong> — e.g. <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code></button>
-<button data-opt="C">Nothing specific — any message is accepted for completion credit</button>
-<p class="why" hidden>The guide's Part 5 check-for-understanding is "Commit message must include 'lab 10' — quick, what's yours?" and the live-coded ritual is <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code>. Including "lab 10" is the same graded requirement as every prior week.</p>
-</div>
-<aside class="notes">The guide's Part 5 Check for understanding is a quick classroom prompt with no Q&amp;A parenthetical ("Commit message must include 'lab 10' — quick, what's yours?" — described only as "a fast, low-stakes final check before the push"). Per the rollout convention for a CFU with no Q&amp;A, the keyed answer is taken <strong>verbatim</strong> from same-segment lines: the CFU line "Commit message must include 'lab 10'" and the Part 5 "Live-code this" ritual <code>git commit -m 'lab 10: OOP I BusinessRequest class'</code>. Disclosed here as an R-conv fallback.</aside>
-</section>
-
-<!-- 40. PART 5 pitfalls -->
-<section class="s-warn">
-<h3>Common student mistakes</h3>
-<div class="warn-card">
-<div class="warn-lbl">Watch for</div>
-<p>None new this week — pure repetition of an already-established sequence. The main thing worth confirming is that the ritual runs without needing the steps spelled out, four units of new material after it was first introduced.</p>
-<p>Forgetting "lab 10" in the commit message — the same graded requirement pattern as every prior week; a quick final check before <code>git push</code>.</p>
-</div>
-<aside class="notes">Check for understanding: "Commit message must include 'lab 10' — quick, what's yours?" — a fast, low-stakes final check before the push, same pattern as every prior week.</aside>
-</section>
-
-<!-- 41. STRETCH divider -->
-<section class="s-sec">
-<span class="chip">Stretch · 1:06–1:15</span>
-<h1>Add a <code>summary()</code> Method</h1>
-<aside class="notes">
-Frame as a genuinely good closer if the room reaches it — real practice adding a new method to an existing, working class.
-One thing worth naming if you demo this: <code>summary()</code> reads <code>self.request_id</code>, <code>self.requester</code>, <code>self.category</code>, <code>self.amount</code>, and <code>self.status</code> — <strong>all five of the object's attributes at once</strong> — a genuinely natural use for a method: pulling together everything an object knows about itself into one readable output, without needing any information from outside the object (no parameters beyond <code>self</code>).
-A test for it (guide, <code>tests/test_models.py</code>): <code>test_summary_includes_key_fields</code> creates a <code>BusinessRequest(101, 'Taylor', 'Travel', 1200)</code>, calls <code>approve()</code>, then asserts <code>'Taylor'</code>, <code>'Approved'</code>, and <code>'1,200.00'</code> are each <code>in</code> the returned string.
-</aside>
-</section>
-
-<!-- 42. STRETCH code (RUNNABLE) -->
-<section class="s-code">
-<h3>Live-code — add <code>summary()</code> to <code>BusinessRequest</code></h3>
-<div class="run" data-lang="python">class BusinessRequest:
-    """Represents a single business purchase or travel request."""
-
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'
-
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
-
-    def summary(self):
-        """Return a one-line, human-readable summary of this request."""
-        return f'Request {self.request_id} by {self.requester} | {self.category} | ${self.amount:,.2f} | {self.status}'
-
-
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-req_101.approve()
-print(req_101.summary())</div>
-<p class="expect">A new method on an existing, working class. <code>summary()</code> reads <strong>all five</strong> of the object's attributes at once and formats them into one line — <code>${self.amount:,.2f}</code> gives a thousands separator and two decimals. Called after <code>approve()</code>, so the status reads <code>Approved</code>.</p>
-<aside class="notes">
-Line by line: <code>summary(self)</code> takes only <code>self</code> — no outside information needed. <code>f'Request {self.request_id} by {self.requester} | {self.category} | ${self.amount:,.2f} | {self.status}'</code> pulls together <code>request_id</code>, <code>requester</code>, <code>category</code>, <code>amount</code> (formatted <code>1,200.00</code>), and the current <code>status</code>. <code>req_101.approve()</code> runs first, so <code>self.status</code> is <code>'Approved'</code> when <code>summary()</code> reads it.
-This is a natural use for a method: pulling together everything an object knows about itself into one readable output.
-</aside>
-</section>
-
-<!-- 43. STRETCH output -->
-<section class="s-out">
-<h3>Verified output</h3>
-<pre>Request 101 by Taylor | Travel | $1,200.00 | Approved</pre>
-<p class="expect">Matches the guide's Stretch "Verified output" (called on <code>req_101</code>, after <code>approve()</code>) exactly. <code>${self.amount:,.2f}</code> turns <code>1200</code> into <code>$1,200.00</code>; <code>self.status</code> reads <code>Approved</code> because <code>approve()</code> ran first.</p>
-<aside class="notes">Verified against <code>python3</code> 3.12.2: the block prints exactly this one line and exits 0. The guide's <code>test_summary_includes_key_fields</code> asserts <code>'Taylor'</code>, <code>'Approved'</code>, and <code>'1,200.00'</code> are each substrings of this output — all three are present.</aside>
-</section>
-
-<!-- 44. WRAP — submission checklist -->
+<!-- 45. WRAP checklist -->
 <section class="s-wrap">
 <h3>Wrap-up — submission checklist</h3>
 <ul>
-<li>Git commit made, with a message including <strong>"lab 10"</strong></li>
-<li><code>models.py</code> contains <code>BusinessRequest</code> with <code>__init__</code>, four methods, and <code>__repr__</code></li>
-<li><code>main.py</code> creates three instances, calls methods, and answers all five reflection questions in a comment block</li>
-<li><code>tests/test_models.py</code> contains all seven tests, including the boundary case and the independence test, all passing</li>
-<li>Full ritual run (format, lint, test, commit, push)</li>
-<li>GitHub repository URL pasted into Canvas</li>
+<li>Git commit made, with a message including <strong>&ldquo;lab 10&rdquo;</strong></li>
+<li><code>order_tool.py</code> and <code>chatbot.py</code> each contain one class; <code>main.py</code> runs the conversation</li>
+<li><code>tests/test_chatbot.py</code> has the eight provided tests plus the two the exercises add, all passing</li>
+<li><code>exercise1.md</code>, <code>stock_tool.py</code> and <code>two_bots.py</code> are in the repo</li>
+<li>The four mini-project files and the README section are in the repo</li>
+<li>Full ritual run, and the GitHub repository URL pasted into Canvas</li>
 </ul>
-<aside class="notes">Review this checklist together in the last few minutes. Completion credit — the bar is the checklist above, not a graded rubric on the code. The featured idea to reinforce as they leave: <em>class = blueprint, instance = one specific thing built from it</em>, and each instance carries its own independent copy of the data.</aside>
+<aside class="notes">
+Completion credit. The idea to reinforce as they leave: <em>a class is a template, an object is one real thing made from it, and one object can be handed another to use.</em>
+</aside>
 </section>
 
-<!-- 45. WRAP — next-week preview -->
+<!-- 46. WRAP next -->
 <section class="s-wrap">
-<h3>Preview — Week 11</h3>
-<p>"Today, one class stood alone. Next week: composition (one class containing objects of another class) and inheritance (one class building on another) — the two primary ways classes relate to each other in real object-oriented systems."</p>
-<aside class="notes">Preview verbatim from the guide's Wrap-Up. Connect it back: a solid grasp of a single class in isolation — <code>__init__</code>, <code>self</code>, instance methods, independent instances — is exactly what Week 11's composition and inheritance build on.</aside>
+<h3>Where this goes next</h3>
+<p>&ldquo;Today the replies were <code>if</code> statements. Next week a real model, running on your own laptop, takes over <code>choose_reply</code>. The class around it barely changes.&rdquo;</p>
+<aside class="notes">
+How today connects to later topics. <strong>APIs and local models</strong> replace <code>choose_reply</code>. <strong>Tool calling</strong> lets the model decide when to use <code>order_tool</code>. <strong>Conversation state</strong> is <code>self.history</code>. <strong>Error handling</strong> grows from the <code>None</code> check. <strong>Privacy</strong> is about what the history holds. <strong>Evaluation</strong> grows from this week's tests. <strong>Human approval</strong> grows from the handoff rule.
+</aside>
 </section>
 
-<!-- 46. END -->
+<!-- 47. END -->
 <section class="s-end">
 <div class="sec-n">ISM3232 · Week 10</div>
 <h1>End of lab</h1>
-<aside class="notes">Source of truth for this deck: instructor_notes/ism3232/lab_w10.md (Week 10 facilitation guide, "OOP I — Classes &amp; Objects"). All runnable-block output verified against CPython 3.12.2 / Pyodide 0.26.4. The <code>tests/test_models.py</code> file and the <code>pytest -v</code> pane are static (no <code>pytest</code> runner in the browser) — output reproduced verbatim from the guide's "Verified output — all seven pass"; double-checked locally with <code>python3 -m pytest -v</code> (7 passed). The setup and ritual shell blocks are read-only (no <code>venv</code> / <code>git</code> / <code>ruff</code> in the browser). Each Pyodide block is a fresh namespace, so every runnable block re-defines <code>BusinessRequest</code> at the top; the guide splits it across <code>models.py</code>, <code>main.py</code>, and <code>tests/test_models.py</code>. <code>type(req_101)</code> reads <code>&lt;class '__main__.BusinessRequest'&gt;</code> in a standalone block vs the guide's <code>&lt;class 'models.BusinessRequest'&gt;</code> once imported from <code>models.py</code> — same class, different module qualifier. ISM3232 style: single quotes in Python throughout.</aside>
+<aside class="notes">
+Every runnable block in this deck is a complete standalone script, and each expected-output slide was produced by running that script with CPython 3.12. The setup and ritual blocks and <code>main.py</code> are read-only: they need a terminal. The test file and the <code>pytest -v</code> pane are static; the eight tests were run locally and pass. The lab page keeps the classes in separate files; blocks here combine them because each block starts with a fresh namespace.
+</aside>
 </section>
 
 </div></div>

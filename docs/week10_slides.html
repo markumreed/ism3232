@@ -6,7 +6,7 @@
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISM3232 Week 10 — OOP I — Classes & Objects</title>
+<title>ISM3232 Week 10 — OOP for Agents — Classes, Objects &amp; Composition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -100,83 +100,199 @@
 }
 </style>
 </head><body><div class="reveal"><div class="slides">
-<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 10</p><h1>OOP I — Classes &amp; Objects</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> What is a class? Mental model</span><span class="t-item"><strong>15–40 min</strong> Write BusinessRequest live</span><span class="t-item"><strong>40–55 min</strong> Create instances + call methods</span><span class="t-item"><strong>55–70 min</strong> Encapsulation concept</span><span class="t-item"><strong>70–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 10: Week 10 — Module 6 — OOP I: Classes, Objects, Attributes, and Methods
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 10</p><h1>OOP for Agents — Classes, Objects &amp; Composition</h1><div class="t-bar"><span class="t-item"><strong>0–10 min</strong> The problem a class solves</span><span class="t-item"><strong>10–25 min</strong> Step 1: a class that stores data</span><span class="t-item"><strong>25–40 min</strong> Step 2: a method that responds</span><span class="t-item"><strong>40–52 min</strong> Step 3: a separate tool</span><span class="t-item"><strong>52–62 min</strong> Step 4: composition</span><span class="t-item"><strong>62–68 min</strong> Trace one message</span><span class="t-item"><strong>68–75 min</strong> Risks and wrap-up</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 10 — Module 6 — OOP for Agents: Classes, Objects, and Composition
 
-Today&#x27;s plan:
-  0–15 min — What is a class? Mental model
-  15–40 min — Write BusinessRequest live
-  40–55 min — Create instances + call methods
-  55–70 min — Encapsulation concept
-  70–80 min — Assignment</aside></section>
-<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">What Is a Class? What Is an Object?</h1><aside class="notes">A class is a blueprint. An object is a specific thing built from that blueprint. A BusinessRequest class describes what every request has (attributes) and what every request can do (methods). Each individual request — request #101, request #102 — is a separate instance of that class.</aside></section>
-<section class="s-point"><h2>Section 1 — What Is a Class? What Is an Object?</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>A class is a blueprint.</li><li>Think of it this way: &quot;BusinessRequest&quot; is the concept.</li><li>Defines attributes every instance will have.</li><li>Created by calling the class like a function.</li></ul><aside class="notes">A class is a blueprint. An object is a specific thing built from that blueprint. A BusinessRequest class describes what every request has (attributes) and what every request can do (methods). Each individual request — request #101, request #102 — is a separate instance of that class.
+Today's plan:
+  0–10 min — The problem a class solves
+  10–25 min — Step 1: a class that stores data
+  25–40 min — Step 2: a method that responds
+  40–52 min — Step 3: a separate tool
+  52–62 min — Step 4: composition
+  62–68 min — Trace one message
+  68–75 min — Risks and wrap-up
 
-Think of it this way: &quot;BusinessRequest&quot; is the concept. req_101 is an actual request with actual data. The class defines the shape; objects are the data.
+Frame the unit: Unit 3 builds a business chatbot in three weeks. Today is structure only. The chatbot's replies come from if statements. Say that out loud early: a class organizes code, it does not make a chatbot intelligent.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">What Problem Does a Class Solve?</h1><aside class="notes">Until now data and functions lived apart. A chatbot has data that belongs together (name, instructions, history) and actions that work on it (respond). A class keeps both in one place.</aside></section>
+<section class="s-point"><h2>Data in one place, functions in another</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>A chatbot has a name, instructions, and a conversation history.</li><li>It also has actions: respond to a message.</li><li>A <strong>class</strong> keeps that data and those actions together.</li><li>Class = the template. Object = one real chatbot made from it.</li><li>A class organizes code. It does not make anything intelligent.</li></ul><aside class="notes">Ask: where did the data live in Lab 6? In a list of dictionaries. Where did the logic live? In functions. Nothing tied them together.
 
-Defines attributes every instance will have. Defines methods every instance can call. Written once. Used to create as many instances as needed.
+You could build today's chatbot with functions and one shared dictionary. The reading shows that version. It works, and it gets awkward when you want two chatbots or want to plug in a tool.
 
-Created by calling the class like a function. Has its own copies of every attribute. Can call any method defined in the class.</aside></section>
-<section class="s-chalk"><h3 style="color:#b8921e;">✏ Draw: blank form (class) → three filled instances</h3><canvas class="chalk-board"></canvas><div class="chalk-ctrl"><span class="cdot on" style="background:#fff" onclick="CC('#fff',this)"></span><span class="cdot" style="background:#fcd34d" onclick="CC('#fcd34d',this)"></span><span class="cdot" style="background:#4ade80" onclick="CC('#4ade80',this)"></span><span class="cdot" style="background:#38bdf8" onclick="CC('#38bdf8',this)"></span><span class="cdot" style="background:#fb7185" onclick="CC('#fb7185',this)"></span>&nbsp;<button class="chalk-btn on" data-sz onclick="CS(4,this)">S</button><button class="chalk-btn" data-sz onclick="CS(8,this)">M</button><button class="chalk-btn" data-sz onclick="CS(14,this)">L</button>&nbsp;<button class="chalk-btn" onclick="CE(this)">Eraser</button><button class="chalk-btn" onclick="CX()">Clear</button></div><aside class="notes">CHALKBOARD: Draw: blank form (class) → three filled instances
+Misconception to pre-empt: students often think 'class' is the advanced, smart way. It is one way to organize code.</aside></section>
+<section class="s-chalk"><h3 style="color:#b8921e;">✏ Draw: one class (template) → Sunny and River (two objects)</h3><canvas class="chalk-board"></canvas><div class="chalk-ctrl"><span class="cdot on" style="background:#fff" onclick="CC('#fff',this)"></span><span class="cdot" style="background:#fcd34d" onclick="CC('#fcd34d',this)"></span><span class="cdot" style="background:#4ade80" onclick="CC('#4ade80',this)"></span><span class="cdot" style="background:#38bdf8" onclick="CC('#38bdf8',this)"></span><span class="cdot" style="background:#fb7185" onclick="CC('#fb7185',this)"></span>&nbsp;<button class="chalk-btn on" data-sz onclick="CS(4,this)">S</button><button class="chalk-btn" data-sz onclick="CS(8,this)">M</button><button class="chalk-btn" data-sz onclick="CS(14,this)">L</button>&nbsp;<button class="chalk-btn" onclick="CE(this)">Eraser</button><button class="chalk-btn" onclick="CX()">Clear</button></div><aside class="notes">CHALKBOARD: Draw one box labelled SupportChatbot with blank lines for name, instructions, history. Draw two filled-in copies, Sunny and River, each with its own history list. Leave it on the board until Section 7. Take 3–4 minutes.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Step 1 — A Class That Stores Data</h1></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 1 — write together, line by line</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">class SupportChatbot:
+    """A support chatbot. Step 1: it only stores data."""
 
-Draw with class. Take 3–4 minutes.</aside></section>
-<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Writing the BusinessRequest Class</h1></section>
-<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal</div><div class="demo-sub">BusinessRequest — write together line by line</div></div><aside class="notes">LIVE DEMO
-Open: Terminal</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ BusinessRequest — write together line by line</h3><pre><code class="language-python">class BusinessRequest:
-    &quot;&quot;&quot;Represents a single business purchase or travel request.&quot;&quot;&quot;
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
 
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = &quot;Pending&quot;   # default — not passed in
 
-    def approve(self):
-        &quot;&quot;&quot;Mark this request as approved.&quot;&quot;&quot;
-        self.status = &quot;Approved&quot;
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.name)
+print(bot.instructions)
+print(bot.history)
 
-    def reject(self):
-        &quot;&quot;&quot;Mark this request as rejected.&quot;&quot;&quot;
-        self.status = &quot;Rejected&quot;
+# Output:
+# Sunny
+# You are a friendly support assistant.
+# []</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
 
-    def requires_review(self):
-        &quot;&quot;&quot;Return True if the amount exceeds the approval limit.&quot;&quot;&quot;
-        return self.amount &gt; 1000
+class SupportChatbot: starts the template. Nothing exists yet.
+def __init__(self, name, instructions): the setup method. Never called by name.
+self.name = name: right side is a parameter that disappears; left side is an attribute that stays.
+self.history = []: not a parameter, every conversation starts empty.
+bot = SupportChatbot(...): two values passed, three parameters. Python supplies self.</aside></section>
+<section class="s-point"><h2>Four things to notice</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>__init__</code> runs by itself when you write <code>SupportChatbot(...)</code>.</li><li>You pass two values. The method has three parameters. Python fills in <code>self</code>.</li><li><code>self.name</code> is an attribute. It stays on the object.</li><li><code>bot.name</code> reads the name that belongs to this object.</li></ul><aside class="notes">Cold-call check: 'In bot = SupportChatbot("Sunny", "..."), which is the class and which is the object?' Class: SupportChatbot. Object: bot.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Step 2 — A Method That Responds</h1></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 2 — add two methods</h3><pre><code class="language-python" style="max-height:620px;font-size:.74em;line-height:1.3;">class SupportChatbot:
+    """A support chatbot. Step 2: it can respond and remember."""
 
-    def __repr__(self):
-        return f&quot;BusinessRequest({self.request_id}, {self.requester}, ${self.</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+    def __init__(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
 
-Code label: BusinessRequest — write together line by line</aside></section>
-<section class="s-chalk"><h3 style="color:#b8921e;">✏ Draw: blank form (class) → three filled instances</h3><canvas class="chalk-board"></canvas><div class="chalk-ctrl"><span class="cdot on" style="background:#fff" onclick="CC('#fff',this)"></span><span class="cdot" style="background:#fcd34d" onclick="CC('#fcd34d',this)"></span><span class="cdot" style="background:#4ade80" onclick="CC('#4ade80',this)"></span><span class="cdot" style="background:#38bdf8" onclick="CC('#38bdf8',this)"></span><span class="cdot" style="background:#fb7185" onclick="CC('#fb7185',this)"></span>&nbsp;<button class="chalk-btn on" data-sz onclick="CS(4,this)">S</button><button class="chalk-btn" data-sz onclick="CS(8,this)">M</button><button class="chalk-btn" data-sz onclick="CS(14,this)">L</button>&nbsp;<button class="chalk-btn" onclick="CE(this)">Eraser</button><button class="chalk-btn" onclick="CX()">Clear</button></div><aside class="notes">CHALKBOARD: Draw: blank form (class) → three filled instances
+    def respond(self, user_message):
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
 
-Draw with class. Take 3–4 minutes.</aside></section>
-<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Creating and Using Instances</h1></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Creating instances and calling methods</h3><pre><code class="language-python"># Create two separate instances from the same class
-req_101 = BusinessRequest(101, &quot;Taylor&quot;, &quot;Travel&quot;, 1200)
-req_102 = BusinessRequest(102, &quot;Jordan&quot;, &quot;Equipment&quot;, 450)
+    def choose_reply(self, user_message):
+        text = user_message.lower()
+        if "hello" in text:
+            return f"Hello! I'm {self.name}."
+        return "I'm not sure how to help with that."</code></pre><aside class="notes">respond does three things in a fixed order: record the user's message, get a reply, record the reply. Every chatbot this term keeps that shape.
 
-# Access attributes
-print(req_101.requester)          # Taylor
-print(req_101.status)             # Pending
+self.choose_reply(...) is one method calling another on the same object.
 
-# Call methods
-print(req_101.requires_review())  # True (1200 &gt; 1000)
-print(req_102.requires_review())  # False (450 &lt;= 1000)
+choose_reply is the mock. It is two rules. Next week a model replaces it.
 
-req_101.approve()
-print(req_101.status)             # Approved
-print(req_102.status)             # Pending — unchanged
+.lower() makes a lowercase copy so Hello and hello match the same rule.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 2 — use it</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">bot = SupportChatbot("Sunny", "You are a friendly support assistant.")
+print(bot.respond("Hello there"))
+print(bot.respond("Where is my order?"))
+print(len(bot.history))
+print(bot.history[0])
 
-# Instances are independent — changing one does not affect the other
-print(req_101)   # BusinessRequest(101, Taylor, $1200, Approved)
-print(req_102)   # BusinessRequest(102, Jordan, $450, Pending)</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+# Output:
+# Hello! I'm Sunny.
+# I'm not sure how to help with that.
+# 4
+# {'role': 'user', 'content': 'Hello there'}</code></pre><aside class="notes">Two messages produce four history entries: two from the user, two from the chatbot.
 
-Code label: Creating instances and calling methods</aside></section>
-<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Encapsulation</h1><aside class="notes">Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The BusinessRequest class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic — it just calls the method.</aside></section>
-<section class="s-point"><h2>Section 4 — Encapsulation</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single uni…</li><li>This is better design than checking req[&quot;amount&quot;] &gt; 1000 everywhere.</li></ul><aside class="notes">Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The BusinessRequest class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic — it just calls the method.
+Each entry is a dictionary with a role and a content. Real AI services expect this same shape, which is why we use it now.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Step 3 — A Separate Tool</h1><aside class="notes">Looking up an order is a different job from holding a conversation. Give it its own class. In agent programs a tool is code the chatbot can use to get information or do something.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 3 — a class with a different job</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-This is better design than checking req[&quot;amount&quot;] &gt; 1000 everywhere. If the threshold changes, you update it in one place inside the class.</aside></section></div></div>
+    def __init__(self, orders):
+        self.orders = orders
+
+    def find_order_id(self, text):
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
+
+    def find_status(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None</code></pre><aside class="notes">Nothing here mentions chatting. The tool knows orders and that is all.
+
+find_order_id returns None when no known order ID is in the text. None is the tool saying it has no answer.
+
+text.upper() makes an uppercase copy so a100 matches A100.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 3 — try the tool on its own</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+print(order_tool.find_order_id("Where is order a100?"))
+print(order_tool.find_status("A100"))
+print(order_tool.find_order_id("Where is my order?"))
+print(order_tool.find_status("A999"))
+
+# Output:
+# A100
+# shipped
+# None
+# None</code></pre><aside class="notes">The tool runs with no chatbot at all. That is the point of keeping it separate: you can test it, reuse it, or replace it.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">Step 4 — Composition</h1><aside class="notes">Composition means giving one object another object to use. The chatbot has a tool.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 4 — the chatbot is handed the tool</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">    def __init__(self, name, instructions, order_tool):
+        """Set up one chatbot with its own name, instructions, tool, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    def order_reply(self, user_message):
+        """Use the order tool to answer a question about an order."""
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."</code></pre><aside class="notes">self.order_tool = order_tool is the whole idea.
+
+self.order_tool.find_order_id(...) reads left to right: this chatbot's tool, its find_order_id method.
+
+if order_id is None: handles a failed lookup. The chatbot asks for a valid ID. It does not guess.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Step 4 — create the tool first, then hand it over</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+bot = SupportChatbot("Sunny", "You are a friendly support assistant.", order_tool)
+
+print(bot.respond("hello"))
+print(bot.respond("Where is order A100?"))
+print(bot.respond("Where is my order?"))
+print(bot.respond("Please change my shipping address"))
+print(bot.respond("What is the weather today?"))
+
+# Output:
+# Hello! I'm Sunny. I can check an order status for you.
+# Order A100 is shipped.
+# Which order? Please send an order ID like A100.
+# I can't help with that here. I'm passing you to a human agent.
+# I'm not sure how to help with that. I can check an order status.</code></pre><aside class="notes">The chatbot never creates its own tool. That lets a test hand it a small one.
+
+Point at reply four: an address change goes to a human. The handoff rule is checked before the order rule.</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal &nbsp;→&nbsp; python3 main.py</div><div class="demo-sub">Type five messages: a greeting, an order with an ID, an order without one, an address change, and something unrelated</div></div><aside class="notes">LIVE DEMO
+Open: Terminal → python3 main.py
+
+Then type: Do you sell cardigans?
+Sunny passes it to a human, because cardigans contains card. Let the room react. This is the unreliable-output example for Section 8.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 6</div><h1 style="font-size:1.4em;">Trace One Message</h1></section>
+<section class="s-point"><h2>Where is order A100?</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>bot.respond(...)</code> runs with <code>self</code> set to <code>bot</code>.</li><li>The message is appended to <code>self.history</code>.</li><li><code>choose_reply</code> checks its rules and reaches the <code>order</code> rule.</li><li><code>order_reply</code> asks the tool for an ID, then for its status.</li><li>The sentence travels back up, is recorded, and is returned.</li></ul><aside class="notes">Have a student narrate the path while you point at the code. Tracing is learning outcome 7.
+
+Proof to show after: the history is empty before the call and holds two dictionaries after it.</aside></section>
+<section class="s-chalk"><h3 style="color:#b8921e;">✏ Draw: respond → choose_reply → order_reply → tool → back</h3><canvas class="chalk-board"></canvas><div class="chalk-ctrl"><span class="cdot on" style="background:#fff" onclick="CC('#fff',this)"></span><span class="cdot" style="background:#fcd34d" onclick="CC('#fcd34d',this)"></span><span class="cdot" style="background:#4ade80" onclick="CC('#4ade80',this)"></span><span class="cdot" style="background:#38bdf8" onclick="CC('#38bdf8',this)"></span><span class="cdot" style="background:#fb7185" onclick="CC('#fb7185',this)"></span>&nbsp;<button class="chalk-btn on" data-sz onclick="CS(4,this)">S</button><button class="chalk-btn" data-sz onclick="CS(8,this)">M</button><button class="chalk-btn" data-sz onclick="CS(14,this)">L</button>&nbsp;<button class="chalk-btn" onclick="CE(this)">Eraser</button><button class="chalk-btn" onclick="CX()">Clear</button></div><aside class="notes">CHALKBOARD: Draw the four boxes left to right with arrows out and arrows back. Label the two calls into the tool. Take 3 minutes.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 7</div><h1 style="font-size:1.4em;">Two Objects, One Class</h1></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Two chatbots</h3><pre><code class="language-python" style="max-height:620px;font-size:.9em;line-height:1.3;">order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+sunny = SupportChatbot("Sunny", "You are cheerful and brief.", order_tool)
+river = SupportChatbot("River", "You are formal and detailed.", order_tool)
+
+sunny.respond("hello")
+sunny.respond("Where is order A100?")
+river.respond("hello")
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[1]["content"])
+print(river.history[1]["content"])
+
+# Output:
+# Sunny 4
+# River 2
+# Hello! I'm Sunny. I can check an order status for you.
+# Hello! I'm River. I can check an order status for you.</code></pre><aside class="notes">Sunny has four messages and River has two. self.history = [] ran once per object.
+
+Both share one order_tool. That is allowed: one tool can serve many chatbots.
+
+Predict question: move history = [] into the class body, outside __init__. Send a message to Sunny only. How long is River's history? Answer: 1. A value in the class body is shared by every object. In a real chatbot that leaks one customer's conversation to another.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 8</div><h1 style="font-size:1.4em;">What a Business Chatbot Can Get Wrong</h1></section>
+<section class="s-point"><h2>Four risks</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Unreliable output.</strong> Cardigans contains card. Rules are brittle; models are wrong in less predictable ways.</li><li><strong>Failed tools.</strong> The order may not exist. Ask for a valid ID. Never invent a status.</li><li><strong>Sensitive data.</strong> The history keeps everything a user types.</li><li><strong>Actions that need a person.</strong> Looking up changes nothing. Changing an address does.</li></ul><aside class="notes">Discussion 1: How would you find mistakes like the cardigan one before a customer does? Look for: test with real messages.
+Discussion 2: Name three more tools a shop's chatbot could use. Which only look something up, and which change something?
+Discussion 3: If you saved every conversation to a file, what in that file should worry you?</aside></section>
+<section class="s-point"><h2>Essential, optional, left out</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Essential:</strong> class, object, attribute, method, <code>__init__</code>, <code>self</code>, composition, tracing.</li><li><strong>Optional:</strong> the functions version, the real-model preview, the second tool.</li><li><strong>Left out on purpose:</strong> inheritance, abstract classes, decorators, metaclasses, design patterns.</li></ul><aside class="notes">A chatbot with a tool needs 'has a', not 'is a kind of'. That is why inheritance is not in this module.
+
+Where this goes next: a local model replaces choose_reply (Week 11); the model decides when to use order_tool (Week 12); error handling grows from the None check; human approval grows from the handoff rule; evaluation grows from this week's tests.</aside></section>
+<section class="s-point"><h2>Assignment 10</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>order_tool.py</code> and <code>chatbot.py</code>, one class each, plus <code>main.py</code>.</li><li>The provided tests, plus the ones the exercises add.</li><li>A mini-project: a small assistant of your own with one separate tool.</li><li>Submit your GitHub repository URL. Commit message includes <code>lab 10</code>.</li></ul><aside class="notes">Completion credit. The lab page has four exercises with answer keys that open on a click, and a reference solution for the mini-project.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>

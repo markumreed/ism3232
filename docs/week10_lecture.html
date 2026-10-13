@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <script>
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W10</title><style>html{min-height:100vh;}
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W10 — OOP for Agents — Classes, Objects &amp; Composition</title><style>html{min-height:100vh;}
 
     :root {
       --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
@@ -167,22 +167,15 @@ body{min-height:100vh;width:100%;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 W10 — ISM3232 Business Application Development course material.">
+<meta name="description" content="ISM3232 W10 — OOP for Agents — ISM3232 Business Application Development course material.">
 </head><body><div class="wrap">
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4CB;</span>
-  <span><strong style="color:var(--text);">In-class page.</strong>
-  Read the <a href="week10_reading.html" style="color:var(--muted);">Week 10 reading</a>
-  first if you haven't. Follow along during the live session.</span>
-</div><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Object-Oriented Design · Module 10 · Lecture</div>
-<h1 class="wk-title">OOP I — Classes &amp; Objects</h1>
-<p class="wk-deck">Students build their first business class with __init__, instance attributes, business logic methods, and pytest tests.</p>
+<div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4CB;</span><span><strong style="color:var(--text);">In-class page.</strong> Read the <a href="week10_reading.html" style="color:var(--muted);">Week 10 reading</a> first if you haven't. Follow along during the live session.</span></div><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Building AI Agents · Module 10 · Lecture</div>
+<h1 class="wk-title">OOP for Agents — Classes, Objects &amp; Composition</h1>
+<p class="wk-deck">Build a support chatbot one step at a time: a class that stores data, a method that responds, a separate tool, and the line of code that connects them.</p>
 <div class="meta">
 <span class="chip accent">Module 10 · Lecture</span>
-<span class="chip">Unit 3 · Object-Oriented Design</span>
-<span class="chip">~80 min</span>
+<span class="chip">Unit 3 · Building AI Agents</span>
+<span class="chip">~75 min</span>
 </div>
 <div class="weekjump">
 <span class="weekjump-label">This module:</span>
@@ -190,93 +183,153 @@ body{min-height:100vh;width:100%;}
 <a href="week10_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week10_lab.html" class="weekjump-link">Lab</a>
 </div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
-    <iframe
-      style="position:absolute;top:0;left:0;width:100%;height:100%;"
-      src="https://www.youtube.com/embed/zmu0iVoFlg4"
-      title="Python OOP Part 1 — Classes, __init__ & Instance Methods"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-</div>
+<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F3D7;</div><div><div class="callout-label">Unit 3 begins &mdash; Building AI Agents</div><div class="callout-body">Units 1 and 2 gave you Python. Unit 3 uses it to build a business chatbot in three steps. This week is the structure: a chatbot class and a tool, with mock replies and no AI. Week 11 swaps in a real model that runs on your laptop. Week 12 lets the model use the tool, with checks around it.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Session plan &mdash; 75 minutes</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Minutes</th><th>Segment</th><th>What happens</th></tr></thead><tbody><tr><td>0&ndash;10</td><td>The problem</td><td>Data in one place, functions in another</td></tr><tr><td>10&ndash;25</td><td>Step 1</td><td>A class that stores data: class, object, attribute, <code>__init__</code>, <code>self</code></td></tr><tr><td>25&ndash;40</td><td>Step 2</td><td>A method that responds and keeps a history</td></tr><tr><td>40&ndash;52</td><td>Step 3</td><td>A separate tool that knows about orders</td></tr><tr><td>52&ndash;62</td><td>Step 4</td><td>Composition: hand the tool to the chatbot</td></tr><tr><td>62&ndash;68</td><td>Trace</td><td>Follow one message from the user to the reply</td></tr><tr><td>68&ndash;75</td><td>Risks and wrap-up</td><td>What a business chatbot can get wrong; what this module leaves out</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Problem Does a Class Solve?</div><div class="line"></div></div><div class="card"><div class="card-title">The starting point</div><p>So far your data and your functions have lived apart. A chatbot has a name, a set of instructions and a conversation history. It also has things it does, such as responding. A <strong>class</strong> keeps that data and those actions together, so one chatbot is one thing you can create, pass around and test.</p><p>A class organizes code. It does not make a chatbot intelligent. This week's chatbot chooses replies with <code>if</code> statements, and we say so out loud.</p></div><div class="two-col"><div class="card"><div class="card-title">Class = the template</div><p>Written once. Says what every chatbot remembers and what every chatbot can do. Nothing exists yet.</p></div><div class="card"><div class="card-title">Object = one real chatbot</div><p>Created by calling the class. Has its own copy of every attribute. Sunny and River are two objects.</p></div></div><table class="concept-table"><thead><tr><th>Term</th><th>Meaning</th><th>In our example</th></tr></thead><tbody><tr><td>class</td><td>The template</td><td>A blank new-customer form</td></tr><tr><td>object</td><td>One thing made from the template</td><td>One filled-in form</td></tr><tr><td>attribute</td><td>Data an object remembers</td><td>name, instructions, history</td></tr><tr><td>method</td><td>A function that belongs to a class</td><td>respond()</td></tr><tr><td>__init__</td><td>Runs once when an object is created</td><td>Filling in the form's starting fields</td></tr><tr><td>self</td><td>The object the method is working on</td><td>This form, not the template</td></tr><tr><td>composition</td><td>Giving one object another object to use</td><td>Handing the assistant a lookup tool</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Step 1: A Class That Stores Data</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Step 1 &mdash; write together, line by line</div><pre><span class="kw">class</span> <span class="fn">SupportChatbot</span>:
+    <span class="str">"""A support chatbot. Step 1: it only stores data."""</span>
 
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F3D7;</div><div><div class="callout-label">Unit 3 begins &mdash; Object-Oriented System Design</div><div class="callout-body">OOP is the bridge between the Python fundamentals of Units 1&ndash;2 and the full-stack capstone of Unit 4. Students who understand classes and objects will be able to design their capstone data models. Students who do not will struggle with every layer on top of them.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Is a Class? What Is an Object?</div><div class="line"></div></div><div class="card"><div class="card-title">The core mental model</div><p>A <strong>class</strong> is a blueprint. An <strong>object</strong> is a specific thing built from that blueprint. A <code>BusinessRequest</code> class describes what every request has (attributes) and what every request can do (methods). Each individual request &mdash; request #101, request #102 &mdash; is a separate <em>instance</em> of that class.</p><p>Think of it this way: "BusinessRequest" is the concept. <code>req_101</code> is an actual request with actual data. The class defines the shape; objects are the data.</p></div><div class="two-col"><div class="card"><div class="card-title">Class = blueprint</div><p>Defines attributes every instance will have. Defines methods every instance can call. Written once. Used to create as many instances as needed.</p></div><div class="card"><div class="card-title">Object / Instance = a specific thing</div><p>Created by calling the class like a function. Has its own copies of every attribute. Can call any method defined in the class.</p></div></div><table class="concept-table"><thead><tr><th>Term</th><th>Meaning</th><th>Business analogy</th></tr></thead><tbody><tr><td>class</td><td>The blueprint / template</td><td>The Purchase Request form template</td></tr><tr><td>object / instance</td><td>A specific thing made from the blueprint</td><td>A filled-out request form for Laptop, $450</td></tr><tr><td>__init__</td><td>The constructor &mdash; runs when an instance is created</td><td>Filling in the blank fields when you create a new request</td></tr><tr><td>attribute (instance variable)</td><td>Data stored on a specific object</td><td>requester="Taylor", amount=1200, status="Pending"</td></tr><tr><td>method</td><td>A function defined inside a class</td><td>approve(), reject(), requires_review()</td></tr><tr><td>self</td><td>Reference to the specific instance being operated on</td><td>The form itself, not the template</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Writing the BusinessRequest Class</div><div class="line"></div></div><div class="cb"><div class="cb-label">BusinessRequest &mdash; write together line by line</div><pre><span class="kw">class</span> <span class="fn">BusinessRequest</span>:
-    <span class="st">&quot;&quot;&quot;Represents a single business purchase or travel request.&quot;&quot;&quot;</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
 
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = <span class="st">&quot;Pending&quot;</span>   <span class="cm"># default &mdash; not passed in</span>
 
-    <span class="kw">def</span> <span class="fn">approve</span>(self):
-        <span class="st">&quot;&quot;&quot;Mark this request as approved.&quot;&quot;&quot;</span>
-        self.status = <span class="st">&quot;Approved&quot;</span>
+bot = SupportChatbot(<span class="str">"Sunny"</span>, <span class="str">"You are a friendly support assistant."</span>)
+print(bot.name)
+print(bot.instructions)
+print(bot.history)</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Sunny
+You are a friendly support assistant.
+[]</pre></div><div class="card"><div class="card-title">What to notice</div><p><code>__init__</code> is never called by name. Writing <code>SupportChatbot(...)</code> runs it.</p><p>You pass two values and the method has three parameters. Python fills in <code>self</code> with the new object.</p><p><code>self.name = name</code>: the right side is a parameter that disappears when the method ends. The left side is an attribute that stays on the object.</p><p><code>self.history = []</code> is not a parameter, because every conversation starts empty.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Step 2: A Method That Responds</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Step 2 &mdash; add two methods</div><pre><span class="kw">class</span> <span class="fn">SupportChatbot</span>:
+    <span class="str">"""A support chatbot. Step 2: it can respond and remember."""</span>
 
-    <span class="kw">def</span> <span class="fn">reject</span>(self):
-        <span class="st">&quot;&quot;&quot;Mark this request as rejected.&quot;&quot;&quot;</span>
-        self.status = <span class="st">&quot;Rejected&quot;</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, instructions):
+        self.name = name
+        self.instructions = instructions
+        self.history = []
 
-    <span class="kw">def</span> <span class="fn">requires_review</span>(self):
-        <span class="st">&quot;&quot;&quot;Return True if the amount exceeds the approval limit.&quot;&quot;&quot;</span>
-        <span class="kw">return</span> self.amount &gt; <span class="nm">1000</span>
+    <span class="kw">def</span> <span class="fn">respond</span>(self, user_message):
+        self.history.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: reply})
+        <span class="kw">return</span> reply
 
-    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
-        <span class="kw">return</span> <span class="st">f&quot;BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})&quot;</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Creating and Using Instances</div><div class="line"></div></div><div class="cb"><div class="cb-label">Creating instances and calling methods</div><pre><span class="cm"># Create two separate instances from the same class</span>
-req_101 = <span class="fn">BusinessRequest</span>(<span class="nm">101</span>, <span class="st">&quot;Taylor&quot;</span>, <span class="st">&quot;Travel&quot;</span>, <span class="nm">1200</span>)
-req_102 = <span class="fn">BusinessRequest</span>(<span class="nm">102</span>, <span class="st">&quot;Jordan&quot;</span>, <span class="st">&quot;Equipment&quot;</span>, <span class="nm">450</span>)
+    <span class="kw">def</span> <span class="fn">choose_reply</span>(self, user_message):
+        text = user_message.lower()
+        <span class="kw">if</span> <span class="str">"hello"</span> <span class="kw">in</span> text:
+            <span class="kw">return</span> <span class="str">f"Hello! I'm {self.name}."</span>
+        <span class="kw">return</span> <span class="str">"I'm not sure how to help with that."</span>
 
-<span class="cm"># Access attributes</span>
-print(req_101.requester)          <span class="cm"># Taylor</span>
-print(req_101.status)             <span class="cm"># Pending</span>
 
-<span class="cm"># Call methods</span>
-print(req_101.requires_review())  <span class="cm"># True (1200 &gt; 1000)</span>
-print(req_102.requires_review())  <span class="cm"># False (450 &lt;= 1000)</span>
+bot = SupportChatbot(<span class="str">"Sunny"</span>, <span class="str">"You are a friendly support assistant."</span>)
+print(bot.respond(<span class="str">"Hello there"</span>))
+print(bot.respond(<span class="str">"Where is my order?"</span>))
+print(len(bot.history))
+print(bot.history[<span class="num">0</span>])</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Hello! I'm Sunny.
+I'm not sure how to help with that.
+4
+{'role': 'user', 'content': 'Hello there'}</pre></div><div class="card"><div class="card-title">What to notice</div><p><code>respond</code> does three things in a fixed order: record the user's message, get a reply, record the reply. Every chatbot you build this term keeps that shape.</p><p><code>self.choose_reply(...)</code> is one method calling another on the same object.</p><p>Each history entry is a dictionary with a <code>role</code> and a <code>content</code>. Real AI services expect this same shape, which is why we use it now.</p><p><code>choose_reply</code> is the mock. It is two rules. Next week a model replaces it.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Step 3: A Separate Tool</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Step 3 &mdash; a class with a different job</div><pre><span class="kw">class</span> <span class="fn">OrderLookup</span>:
+    <span class="str">"""A tool that knows about orders. It knows nothing about chatting."""</span>
 
-req_101.approve()
-print(req_101.status)             <span class="cm"># Approved</span>
-print(req_102.status)             <span class="cm"># Pending &mdash; unchanged</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, orders):
+        self.orders = orders
 
-<span class="cm"># Instances are independent &mdash; changing one does not affect the other</span>
-print(req_101)   <span class="cm"># BusinessRequest(101, Taylor, $1200, Approved)</span>
-print(req_102)   <span class="cm"># BusinessRequest(102, Jordan, $450, Pending)</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Encapsulation</div><div class="line"></div></div><div class="card"><div class="card-title">Encapsulation: data and behaviour belong together</div><p>Encapsulation means bundling the data (attributes) and the operations on that data (methods) into a single unit. The <code>BusinessRequest</code> class knows how to approve itself, reject itself, and determine whether it needs review. The caller does not need to know the internal logic &mdash; it just calls the method.</p><p>This is better design than checking <code>req["amount"] &gt; 1000</code> everywhere. If the threshold changes, you update it in one place inside the class.</p></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion: what goes inside a class?</div><div class="p-text">What other methods might a BusinessRequest class need? Think about what a business process actually does to requests &mdash; routing, escalation, history tracking, notifications.</div><div class="p-hint">Look for: summary(), escalate(), add_note(), get_age_in_days(). Students start thinking about design, not just syntax.</div></div></div><div class="assignment"><div class="a-header">Assignment 10 &middot; Due end of Week 10 &middot; OOP I</div><h3>BusinessRequest Class</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> containing the <code>BusinessRequest</code> class with <code>__init__</code>, at least 3 methods, and <code>__repr__</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; creates at least 3 instances, calls each method, and prints results showing the methods work correctly.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 4 pytest tests covering the class methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographics &middot; 2</div><div class="line"></div></div>
-<div class="infographic-tabs" style="margin-bottom:24px;">
-  <div class="vpl-tiles" style="margin-bottom:8px;">
-    <div class="vpl-tile vpl-active" onclick="igrSwitch(this,'../assets/img/infographics/27_oop1_classes_infographic.png','OOP Essentials: Blueprint to Business Object')">
-      <span class="vpl-num">01</span>
-      <span class="vpl-title">Blueprint to Business Object</span>
-    </div>
-    <div class="vpl-tile" onclick="igrSwitch(this,'../assets/img/infographics/27_oop1_classes_alt_infographic.png','Python OOP: Blueprint to Object')">
-      <span class="vpl-num">02</span>
-      <span class="vpl-title">Python OOP: Blueprint to Object</span>
-    </div>
-  </div>
-  <div class="igr-stage" style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);">
-    <img src="../assets/img/infographics/27_oop1_classes_infographic.png"
-         alt="OOP Essentials: Blueprint to Business Object"
-         loading="lazy"
-         style="width:100%;height:auto;display:block;min-height:200px;">
-  </div>
-</div>
+    <span class="kw">def</span> <span class="fn">find_order_id</span>(self, text):
+        <span class="kw">for</span> order_id <span class="kw">in</span> self.orders:
+            <span class="kw">if</span> order_id <span class="kw">in</span> text.upper():
+                <span class="kw">return</span> order_id
+        <span class="kw">return</span> <span class="kw">None</span>
 
+    <span class="kw">def</span> <span class="fn">find_status</span>(self, order_id):
+        <span class="kw">if</span> order_id <span class="kw">in</span> self.orders:
+            <span class="kw">return</span> self.orders[order_id]
+        <span class="kw">return</span> <span class="kw">None</span>
+
+
+order_tool = OrderLookup({<span class="str">"A100"</span>: <span class="str">"shipped"</span>, <span class="str">"A101"</span>: <span class="str">"processing"</span>})
+print(order_tool.find_order_id(<span class="str">"Where is order a100?"</span>))
+print(order_tool.find_status(<span class="str">"A100"</span>))
+print(order_tool.find_order_id(<span class="str">"Where is my order?"</span>))
+print(order_tool.find_status(<span class="str">"A999"</span>))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>A100
+shipped
+None
+None</pre></div><div class="card"><div class="card-title">What to notice</div><p>Nothing here mentions chatting. The tool knows orders and that is all.</p><p><code>find_order_id</code> returns <code>None</code> when no known order ID is in the text. <code>None</code> is the tool's way of saying it has no answer.</p><p>You can run and test this class with no chatbot at all.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 5 &mdash; Step 4: Composition</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Step 4 &mdash; the chatbot is handed the tool</div><pre><span class="kw">class</span> <span class="fn">SupportChatbot</span>:
+    <span class="str">"""A mock support chatbot. Its replies come from simple rules, not from AI."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, instructions, order_tool):
+        <span class="str">"""Set up one chatbot with its own name, instructions, tool, and history."""</span>
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
+
+    <span class="kw">def</span> <span class="fn">respond</span>(self, user_message):
+        <span class="str">"""Record the user's message, choose a reply, record it, and return it."""</span>
+        self.history.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: reply})
+        <span class="kw">return</span> reply
+
+    <span class="kw">def</span> <span class="fn">choose_reply</span>(self, user_message):
+        <span class="str">"""Choose a reply with keyword rules. This is the mock part."""</span>
+        text = user_message.lower()
+        <span class="kw">if</span> self.needs_human(text):
+            <span class="kw">return</span> <span class="str">"I can't help with that here. I'm passing you to a human agent."</span>
+        <span class="kw">if</span> <span class="str">"order"</span> <span class="kw">in</span> text:
+            <span class="kw">return</span> self.order_reply(user_message)
+        <span class="kw">if</span> <span class="str">"hello"</span> <span class="kw">in</span> text:
+            <span class="kw">return</span> <span class="str">f"Hello! I'm {self.name}. I can check an order status for you."</span>
+        <span class="kw">return</span> <span class="str">"I'm not sure how to help with that. I can check an order status."</span></pre></div><div class="code-block"><div class="cb-label">Step 4 &mdash; the method that uses it</div><pre>    <span class="kw">def</span> <span class="fn">order_reply</span>(self, user_message):
+        <span class="str">"""Use the order tool to answer a question about an order."""</span>
+        order_id = self.order_tool.find_order_id(user_message)
+        <span class="kw">if</span> order_id <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">return</span> <span class="str">"Which order? Please send an order ID like A100."</span>
+        status = self.order_tool.find_status(order_id)
+        <span class="kw">return</span> <span class="str">f"Order {order_id} is {status}."</span></pre></div><div class="code-block"><div class="cb-label">Create the tool first, then hand it over</div><pre>order_tool = OrderLookup({<span class="str">"A100"</span>: <span class="str">"shipped"</span>, <span class="str">"A101"</span>: <span class="str">"processing"</span>})
+bot = SupportChatbot(<span class="str">"Sunny"</span>, <span class="str">"You are a friendly support assistant."</span>, order_tool)
+
+print(bot.respond(<span class="str">"hello"</span>))
+print(bot.respond(<span class="str">"Where is order A100?"</span>))
+print(bot.respond(<span class="str">"Where is my order?"</span>))
+print(bot.respond(<span class="str">"Please change my shipping address"</span>))
+print(bot.respond(<span class="str">"What is the weather today?"</span>))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Hello! I'm Sunny. I can check an order status for you.
+Order A100 is shipped.
+Which order? Please send an order ID like A100.
+I can't help with that here. I'm passing you to a human agent.
+I'm not sure how to help with that. I can check an order status.</pre></div><div class="card"><div class="card-title">What to notice</div><p><code>self.order_tool = order_tool</code> is the whole idea. The chatbot <em>has a</em> tool.</p><p><code>self.order_tool.find_order_id(...)</code> reads left to right: this chatbot's tool, its <code>find_order_id</code> method.</p><p>The handoff rule is checked first. A message that mentions both an address and an order goes to a person.</p><p>The chatbot never creates its own tool. That lets a test hand it a small one.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 6 &mdash; Trace One Message</div><div class="line"></div></div><div class="card"><div class="card-title">Where is order A100?</div><ol><li><code>bot.respond(...)</code> runs with <code>self</code> set to <code>bot</code>.</li><li>The user's message is appended to <code>self.history</code>.</li><li><code>choose_reply</code> checks its rules in order and reaches the <code>order</code> rule.</li><li><code>order_reply</code> asks the tool for an ID. The tool returns <code>A100</code>.</li><li><code>order_reply</code> asks the tool for the status. The tool returns <code>shipped</code>.</li><li>The sentence travels back up, is appended to the history, and is returned.</li></ol></div><div class="code-block"><div class="cb-label">The history before and after</div><pre>history before: []
+reply: Order A100 is shipped.
+history after:
+  {'role': 'user', 'content': 'Where is order A100?'}
+  {'role': 'assistant', 'content': 'Order A100 is shipped.'}</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 7 &mdash; Two Objects, One Class</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Two chatbots</div><pre>order_tool = OrderLookup({<span class="str">"A100"</span>: <span class="str">"shipped"</span>, <span class="str">"A101"</span>: <span class="str">"processing"</span>})
+sunny = SupportChatbot(<span class="str">"Sunny"</span>, <span class="str">"You are cheerful and brief."</span>, order_tool)
+river = SupportChatbot(<span class="str">"River"</span>, <span class="str">"You are formal and detailed."</span>, order_tool)
+
+sunny.respond(<span class="str">"hello"</span>)
+sunny.respond(<span class="str">"Where is order A100?"</span>)
+river.respond(<span class="str">"hello"</span>)
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[<span class="num">1</span>][<span class="str">"content"</span>])
+print(river.history[<span class="num">1</span>][<span class="str">"content"</span>])</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Sunny 4
+River 2
+Hello! I'm Sunny. I can check an order status for you.
+Hello! I'm River. I can check an order status for you.</pre></div><div class="card"><div class="card-title">Predict first</div><p>Move <code>history = []</code> out of <code>__init__</code> and into the class body. Send a message to Sunny only. How long is River's history?</p></div><div class="code-block"><div class="cb-label">A list in the wrong place</div><pre><span class="kw">class</span> <span class="fn">SupportChatbot</span>:
+    history = []  <span class="comment"># BUG: written in the class body, so every chatbot shares one list</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+    <span class="kw">def</span> <span class="fn">respond</span>(self, user_message):
+        self.history.append(user_message)
+        <span class="kw">return</span> <span class="str">"ok"</span>
+
+
+sunny = SupportChatbot(<span class="str">"Sunny"</span>)
+river = SupportChatbot(<span class="str">"River"</span>)
+sunny.respond(<span class="str">"hello"</span>)
+print(len(sunny.history))
+print(len(river.history))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>1
+1</pre></div><div class="card"><div class="card-title">Why</div><p>A value written in the class body belongs to the class, so every object shares it. In a real chatbot that shows one customer another customer's conversation. Create lists inside <code>__init__</code>.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 8 &mdash; What a Business Chatbot Can Get Wrong</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Unreliable output</div><p><code>Do you sell cardigans?</code> is passed to a human, because <code>cardigans</code> contains <code>card</code>. Rules are brittle. Models are wrong in less predictable ways.</p></div><div class="card"><div class="card-title">Failed tools</div><p>The order may not exist, and a real order system can be down. Sunny asks for a valid ID and never invents a status.</p></div></div><div class="two-col"><div class="card"><div class="card-title">Sensitive data</div><p>The history keeps everything a user types. Sunny never asks for payment details.</p></div><div class="card"><div class="card-title">Actions that need a person</div><p>Looking up changes nothing. Changing an address changes where a parcel goes. A person approves changes.</p></div></div><div class="section-divider"><div class="line"></div><div class="label">What Is Essential, What Is Optional, What Is Left Out</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Essential</div><p>Class, object, attribute, method, <code>__init__</code>, <code>self</code>, composition, and tracing a message. Every student should leave able to do these.</p></div><div class="card"><div class="card-title">Optional enrichment</div><p>The functions-and-dictionary version, the real-model preview in the reading, and the second tool in the lab exercises.</p></div></div><div class="card"><div class="card-title">Left out on purpose</div><p>Inheritance, abstract classes, decorators, metaclasses and design patterns. A chatbot with a tool needs <em>has a</em>, not <em>is a kind of</em>. The reading explains each in one line.</p></div><div class="section-divider"><div class="line"></div><div class="label">Discussion</div><div class="line"></div></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion 1: whose mistake is it?</div><div class="p-text">Sunny passed a cardigan question to a human. How would you find mistakes like that before a customer does?</div><div class="p-hint">Look for: testing with real messages; the rule is brittle, and the class is not to blame; a model would fail differently, not never.</div></div><div class="prompt"><div class="p-num">Discussion 2: what else is a tool?</div><div class="p-text">Name three more tools a shop's chatbot could use. Which only look something up, and which change something?</div><div class="p-hint">Look for: stock, store hours, return policy are lookups. Refunds, cancellations and address changes are actions that need a person.</div></div><div class="prompt"><div class="p-num">Discussion 3: sharing a tool</div><div class="p-text">Sunny and River share one order tool. When would each chatbot need its own?</div><div class="p-hint">Look for: different stores or regions; a small tool with made-up data for testing.</div></div><div class="prompt"><div class="p-num">Discussion 4: what is in the history?</div><div class="p-text">If you saved every conversation to a file, what in that file should worry you?</div><div class="p-hint">Look for: names, addresses, anything typed by accident such as a card number; who can read the file and how long it is kept.</div></div></div><div class="card"><div class="card-title">Misconceptions to listen for</div><ul><li>&ldquo;The class is the chatbot.&rdquo; The class is the template. <code>bot</code> is the chatbot.</li><li>&ldquo;<code>self</code> is a keyword I pass in.&rdquo; Python passes it. You only write it in the definition.</li><li>&ldquo;Both chatbots share the history.&rdquo; Only if the list is created in the wrong place.</li><li>&ldquo;Using a class makes it AI.&rdquo; The replies are <code>if</code> statements.</li><li>&ldquo;More in one class is simpler.&rdquo; It is simpler until the second feature.</li></ul></div><div class="card"><div class="card-title">Where this goes next</div><p>Each later topic attaches to something built today. <strong>APIs and local models</strong> replace <code>choose_reply</code>. <strong>Tool calling</strong> lets the model decide when to use <code>order_tool</code>. <strong>Conversation state</strong> is <code>self.history</code>. <strong>Error handling</strong> grows from the <code>None</code> check. <strong>Privacy</strong> is about what the history holds. <strong>Evaluation</strong> grows from this week's tests. <strong>Human approval</strong> grows from the handoff rule.</p></div><div class="assignment"><div class="a-header">Assignment 10 &middot; Due end of Week 10 &middot; OOP for Agents</div><h3>Support chatbot, tool, and a mini-project</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Files:</strong> <code>order_tool.py</code> and <code>chatbot.py</code>, each with one class, and <code>main.py</code> that runs the conversation.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_chatbot.py</code> with the provided tests plus the ones the exercises add.</div></div><div class="deliverable"><div class="d-icon">&#x1F6E0;</div><div class="d-text"><strong>Mini-project:</strong> a small assistant of your own with one separate tool, a history, and a safe reply for requests it cannot handle.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
 <!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 10 &middot; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</div></div>
-<script>
-function igrSwitch(tile,src,alt){
-  var p=tile.closest(".infographic-tabs");
-  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
-  tile.classList.add("vpl-active");
-  var img=p.querySelector(".igr-stage img");
-  img.src=src;img.alt=alt;
-}
-</script>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week09_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 9</span>Midterm</span></a><span></span><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &middot; Week 10 &middot; Module 6 &mdash; OOP for Agents: Classes, Objects, and Composition</div></div>
 <script src="../site.js"></script>
 </body></html>

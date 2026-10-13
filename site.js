@@ -107,7 +107,7 @@
         <div class="dd-section">Unit 3 · Object-Oriented Design</div>
         <a href="${pg}unit_3_overview.html">Overview</a>
         <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week10_reading.html">Module 10 · OOP I — Classes &amp; Objects</a>
+        <a href="${pg}week10_reading.html">Module 10 · OOP for Agents — Classes, Objects &amp; Composition</a>
         <a href="${pg}week11_reading.html">Module 11 · OOP II — Composition &amp; Inheritance</a>
         <a href="${pg}week12_reading.html">Module 12 · OOP III — Design &amp; Practice</a>
       </div>
@@ -194,7 +194,7 @@
       <div class="mob-section-label">Unit 3 · Object-Oriented Design</div>
       <a href="${pg}unit_3_overview.html">Overview</a>
       <a href="${pg}unit_3_cheatsheet.html">Cheat Sheet</a>
-      <a href="${pg}week10_reading.html">Module 10 · OOP I — Classes &amp; Objects</a>
+      <a href="${pg}week10_reading.html">Module 10 · OOP for Agents — Classes, Objects &amp; Composition</a>
       <a href="${pg}week11_reading.html">Module 11 · OOP II — Composition &amp; Inheritance</a>
       <a href="${pg}week12_reading.html">Module 12 · OOP III — Design &amp; Practice</a>
     </div>

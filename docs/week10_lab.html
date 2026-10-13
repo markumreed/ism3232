@@ -192,14 +192,14 @@ body{min-height:100vh;width:100%;}
 body{min-height:100vh;width:100%;}
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 10 In-Class Lab — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Object-Oriented Design · Module 10 · Lab</div>
-<h1 class="wk-title">OOP I — Classes &amp; Objects</h1>
-<p class="wk-deck">Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods &mdash; build and test the BusinessRequest class &mdash; __init__, methods, and instance independence</p>
+<meta name="description" content="ISM3232 Week 10 lab — OOP for Agents — ISM3232 Business Application Development.">
+</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Building AI Agents · Module 10 · Lab</div>
+<h1 class="wk-title">OOP for Agents — Classes, Objects &amp; Composition</h1>
+<p class="wk-deck">Module 6 &mdash; OOP for Agents &mdash; build a support chatbot class and a separate order-lookup tool, test them, then design a small assistant of your own</p>
 <div class="meta">
 <span class="chip accent">Module 10 · Lab</span>
-<span class="chip">Unit 3 · Object-Oriented Design</span>
-<span class="chip">Full class period</span>
+<span class="chip">Unit 3 · Building AI Agents</span>
+<span class="chip">Full class period + mini-project</span>
 </div>
 <div class="weekjump">
 <span class="weekjump-label">This module:</span>
@@ -208,102 +208,437 @@ body{min-height:100vh;width:100%;}
 <a href="week10_lab.html" class="weekjump-link current">Lab</a>
 <a href="week10_lab_slides.html" class="weekjump-link">Slides</a>
 </div>
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP I</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
-<div class="time-bar"><span class="time-block">Part 1: Write the class</span><span class="time-block">Part 2: Create instances</span><span class="time-block">Part 3: Call methods + verify</span><span class="time-block">Part 4: 7 pytest tests</span><span class="time-block">Part 5: Ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period</div><div class="callout-body">Build the <code>BusinessRequest</code> class from scratch with <code>__init__</code>, four methods, and <code>__repr__</code>. Create three instances, call every method, and verify that instances are independent. Write seven pytest tests including one boundary case and one independence test.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">No AI-generated classes</div><div class="callout-body">You must be able to explain every line of your class. If you use AI to generate any part of the class definition, you must paste the AI output and add a comment explaining what each line does and why.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Write the Class</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Set up the project and write BusinessRequest</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module06_oop
-python3 -m venv .venv && source .venv/bin/activate
-pip install pytest ruff && pip freeze > requirements.txt
-echo '.venv/' > .gitignore && echo '__pycache__/' >> .gitignore
-touch models.py main.py && mkdir -p tests && touch tests/__init__.py tests/test_models.py</pre></div><div class="code-block"><div class="cb-label">models.py</div><pre># models.py
+<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 OOP II</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
+<div class="time-bar"><span class="time-block">Part 1: Set up</span><span class="time-block">Part 2: The tool</span><span class="time-block">Part 3: The chatbot</span><span class="time-block">Part 4: Run + test</span><span class="time-block">Part 5: Four exercises</span><span class="time-block">Part 6: Mini-project</span><span class="time-block">Part 7: Ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period, then finish on your own</div><div class="callout-body">Build two classes from scratch: <code>OrderLookup</code>, a tool that knows about orders, and <code>SupportChatbot</code>, which holds a conversation and is handed the tool. Run a conversation, pass eight tests, complete four exercises, and build a small assistant of your own design.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">This chatbot is a mock</div><div class="callout-body">Its replies come from <code>if</code> statements that look for keywords. There is no AI model, no extra package, no API key and no internet connection in this lab. A real model arrives in Week 11.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">No AI-generated classes</div><div class="callout-body">You must be able to explain every line of your classes. If you use AI to generate any part of a class definition, you must paste the AI output and add a comment explaining what each line does and why.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Set Up the Project</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Rename the module folder and set up the project</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232
+mv module06_oop module06_agents
+cd module06_agents
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore
+touch order_tool.py chatbot.py main.py
+mkdir -p tests &amp;&amp; touch tests/__init__.py tests/test_chatbot.py
+code .</pre></div><div class="hint-box"><strong>No <code>module06_oop</code> folder?</strong> You made it in Week 1, and it should be empty. If <code>mv</code> says there is no such file or directory, run <code>mkdir module06_agents</code> in its place and carry on.</div><p>This folder holds your work for Weeks 10, 11 and 12.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Write the Tool</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Write OrderLookup in order_tool.py</div><div class="task-body"><p>The tool knows about orders. It knows nothing about chatting.</p><div class="code-block"><div class="cb-label">order_tool.py</div><pre># order_tool.py
 # Author: [Your Name]
 
-class BusinessRequest:
-    """Represents a single business purchase or travel request."""
 
-    def __init__(self, request_id, requester, category, amount):
-        self.request_id = request_id
-        self.requester  = requester
-        self.category   = category
-        self.amount     = amount
-        self.status     = 'Pending'  # default
+class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-    def approve(self):
-        """Mark this request as approved."""
-        self.status = 'Approved'
+    def __init__(self, orders):
+        """Store the orders this tool can look up."""
+        self.orders = orders
 
-    def reject(self):
-        """Mark this request as rejected."""
-        self.status = 'Rejected'
+    def find_order_id(self, text):
+        """Return the first known order ID mentioned in text, or None."""
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
 
-    def requires_review(self):
-        """Return True if amount exceeds 1000."""
-        return self.amount > 1000
+    def find_status(self, order_id):
+        """Return the status of one order, or None if there is no such order."""
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None</pre></div><p>Check it in the Python shell before you go on:</p><div class="code-block"><pre>python3
+&gt;&gt;&gt; from order_tool import OrderLookup
+&gt;&gt;&gt; tool = OrderLookup({"A100": "shipped"})
+&gt;&gt;&gt; tool.find_order_id("where is a100?")
+'A100'
+&gt;&gt;&gt; tool.find_status("A100")
+'shipped'
+&gt;&gt;&gt; tool.find_status("A999")
+&gt;&gt;&gt; exit()</pre></div><p>The last call prints nothing. It returned <code>None</code>, and the shell does not display <code>None</code>.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Write the Chatbot</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write SupportChatbot in chatbot.py</div><div class="task-body"><p>The chatbot holds the conversation. It is handed a tool and keeps it in <code>self.order_tool</code>.</p><div class="code-block"><div class="cb-label">chatbot.py</div><pre># chatbot.py
+# Author: [Your Name]
 
-    def __repr__(self):
-        return f'BusinessRequest({self.request_id}, {self.requester}, ${self.amount}, {self.status})'</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Create Instances</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Write main.py and create three instances</div><div class="task-body"><div class="code-block"><div class="cb-label">main.py</div><pre>from models import BusinessRequest
+HANDOFF_WORDS = ["address", "payment", "card"]
 
-req_101 = BusinessRequest(101, 'Taylor', 'Travel', 1200)
-req_102 = BusinessRequest(102, 'Jordan', 'Equipment', 450)
-req_103 = BusinessRequest(103, 'Morgan', 'Software', 3500)
 
-# Check initial state
-print(req_101)
-print(req_102)
-print(req_103)
+class SupportChatbot:
+    """A mock support chatbot. Its replies come from simple rules, not from AI."""
 
-# Call methods
-print(req_101.requires_review())   # True
-print(req_102.requires_review())   # False
+    def __init__(self, name, instructions, order_tool):
+        """Set up one chatbot with its own name, instructions, tool, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.history = []
 
-req_101.approve()
-req_102.reject()
+    def respond(self, user_message):
+        """Record the user's message, choose a reply, record it, and return it."""
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
 
-# Verify independence
-print(req_101.status)   # Approved
-print(req_102.status)   # Rejected
-print(req_103.status)   # Pending -- unchanged
+    def choose_reply(self, user_message):
+        """Choose a reply with keyword rules. This is the mock part."""
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't help with that here. I'm passing you to a human agent."
+        if "order" in text:
+            return self.order_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. I can check an order status for you."
+        return "I'm not sure how to help with that. I can check an order status."
 
-# Repr
-print(req_101)
-print(req_102)</pre></div><p>Run: <code>python3 main.py</code></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Verify Instance Independence</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Answer these questions in a comment block at the top of main.py</div><div class="task-body"><p>Add this comment block and fill in your answers:</p><div class="code-block"><pre># --- OOP Lab Questions ---
-# 1. After calling req_101.approve(), what is req_102.status? ___
-# 2. Why doesn't approving req_101 affect req_102? ___
-# 3. What does 'self' refer to inside the approve() method? ___
-# 4. What is the type of req_101? ___  (hint: use type())
-# 5. Where does the default status 'Pending' come from? ___</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Seven pytest Tests</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write seven tests including boundary and independence tests</div><div class="task-body"><div class="code-block"><div class="cb-label">tests/test_models.py</div><pre>from models import BusinessRequest
+    def needs_human(self, text):
+        """Return True if the message is about something a person must handle."""
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
 
-def test_default_status_is_pending():
-    req = BusinessRequest(1, 'Test', 'Travel', 500)
-    assert req.status == 'Pending'
+    def order_reply(self, user_message):
+        """Use the order tool to answer a question about an order."""
+        order_id = self.order_tool.find_order_id(user_message)
+        if order_id is None:
+            return "Which order? Please send an order ID like A100."
+        status = self.order_tool.find_status(order_id)
+        return f"Order {order_id} is {status}."</pre></div><div class="hint-box"><strong>Read the rules in order.</strong> <code>choose_reply</code> checks for a handoff word first. A message that mentions both an address and an order goes to a person.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Run It and Test It</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write main.py and have a conversation</div><div class="task-body"><div class="code-block"><div class="cb-label">main.py</div><pre># main.py
+# Author: [Your Name]
 
-def test_approve_changes_status():
-    req = BusinessRequest(2, 'Test', 'Travel', 500)
-    req.approve()
-    assert req.status == 'Approved'
+from chatbot import SupportChatbot
+from order_tool import OrderLookup
 
-def test_reject_changes_status():
-    req = BusinessRequest(3, 'Test', 'Travel', 500)
-    req.reject()
-    assert req.status == 'Rejected'
+ORDERS = {
+    "A100": "shipped",
+    "A101": "processing",
+    "A102": "delivered",
+}
 
-def test_requires_review_over_limit():
-    req = BusinessRequest(4, 'Test', 'Travel', 1500)
-    assert req.requires_review() is True
+order_tool = OrderLookup(ORDERS)
+bot = SupportChatbot(
+    "Sunny",
+    "You are a friendly support assistant for Bayside Outfitters.",
+    order_tool,
+)
 
-def test_requires_review_under_limit():
-    req = BusinessRequest(5, 'Test', 'Travel', 500)
-    assert req.requires_review() is False
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{bot.name}: {bot.respond(user_message)}")
+    user_message = input("You: ")
 
-def test_requires_review_at_boundary():
-    req = BusinessRequest(6, 'Test', 'Travel', 1000)
-    assert req.requires_review() is False  # > not >=
+print(f"Messages in this conversation: {len(bot.history)}")</pre></div><p>Run: <code>python3 main.py</code> and type these six messages.</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Sunny: Hello! I'm Sunny. I can check an order status for you.
+You: Where is order A100?
+Sunny: Order A100 is shipped.
+You: where is my order
+Sunny: Which order? Please send an order ID like A100.
+You: Please change my shipping address
+Sunny: I can't help with that here. I'm passing you to a human agent.
+You: What is the weather?
+Sunny: I'm not sure how to help with that. I can check an order status.
+You: quit
+Messages in this conversation: 10</div><p>Five turns add two messages each, so the history holds ten.</p></div></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write eight tests</div><div class="task-body"><p><code>make_bot()</code> builds a fresh chatbot with a small tool for each test. Because the chatbot is handed its tool, a test can hand it one with only two orders.</p><div class="code-block"><div class="cb-label">tests/test_chatbot.py</div><pre>from chatbot import SupportChatbot
+from order_tool import OrderLookup
 
-def test_instances_are_independent():
-    req1 = BusinessRequest(7, 'A', 'Travel', 500)
-    req2 = BusinessRequest(8, 'B', 'Travel', 500)
-    req1.approve()
-    assert req2.status == 'Pending'</pre></div><p>Run: <code>pytest -v</code> &mdash; all seven must pass.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Run the full ritual</div><div class="task-body"><div class="code-block"><pre>ruff format . && ruff check . && pytest -v
-git add . && git commit -m 'lab 10: OOP I BusinessRequest class' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 10 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>OOP I &mdash; Classes, Objects, and Methods</h3><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 10</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week08_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 8</span>Debugging, AI Literacy &amp; Review</span></a><span></span><a href="week11_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 10 In-Class Lab &middot; Module 6 &mdash; OOP I: Classes, Objects, Attributes, and Methods</div></div>
+
+def make_bot():
+    """Build a fresh chatbot with its own tool for each test."""
+    orders = {"A100": "shipped", "A101": "processing"}
+    return SupportChatbot("Sunny", "Be friendly.", OrderLookup(orders))
+
+
+def test_tool_finds_known_status():
+    tool = OrderLookup({"A100": "shipped"})
+    assert tool.find_status("A100") == "shipped"
+
+
+def test_tool_returns_none_for_unknown_order():
+    tool = OrderLookup({"A100": "shipped"})
+    assert tool.find_status("A999") is None
+
+
+def test_respond_records_both_messages():
+    bot = make_bot()
+    bot.respond("hello")
+    assert len(bot.history) == 2
+    assert bot.history[0]["role"] == "user"
+    assert bot.history[1]["role"] == "assistant"
+
+
+def test_order_question_uses_the_tool():
+    bot = make_bot()
+    assert bot.respond("Where is order A100?") == "Order A100 is shipped."
+
+
+def test_order_question_without_an_id_asks_for_one():
+    bot = make_bot()
+    assert "order ID" in bot.respond("Where is my order?")
+
+
+def test_address_change_goes_to_a_human():
+    bot = make_bot()
+    assert "human" in bot.respond("Please change my shipping address")
+
+
+def test_unknown_request_gets_a_safe_reply():
+    bot = make_bot()
+    assert "not sure" in bot.respond("What is the weather today?")
+
+
+def test_two_chatbots_keep_separate_histories():
+    first = make_bot()
+    second = make_bot()
+    first.respond("hello")
+    assert len(first.history) == 2
+    assert len(second.history) == 0</pre></div><p>Run: <code>pytest -v</code> &mdash; all eight must pass.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Four Exercises</div><div class="line"></div></div><div class="callout blue"><div class="callout-icon">&#x270F;</div><div><div class="callout-label">How the exercises work</div><div class="callout-body">Each exercise states the result you should get. Try it first. The answer key under each one opens when you click it, and it explains why the solution works and which mistakes are common.</div></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Exercise 1 &mdash; Label the parts</div><div class="task-body"><p>Create <code>exercise1.md</code> and answer these six questions about the code you just wrote.</p><div class="code-block"><div class="cb-label">exercise1.md</div><pre># Exercise 1
+
+1. The two classes are:
+2. One object of each class in main.py:
+3. Every attribute of SupportChatbot:
+4. Every method of OrderLookup:
+5. The line in chatbot.py that is the composition:
+6. In bot.respond("hello"), self is:</pre></div><p><strong>Expected result:</strong> two class names, two object names, four attributes, three methods, one line of code, and one object name.</p><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 1</summary><div style="margin-top:10px;"><div class="code-block"><pre>1. The two classes are: OrderLookup and SupportChatbot
+2. One object of each class in main.py: order_tool and bot
+3. Every attribute of SupportChatbot: name, instructions, order_tool, history
+4. Every method of OrderLookup: __init__, find_order_id, find_status
+5. The line in chatbot.py that is the composition: self.order_tool = order_tool
+6. In bot.respond("hello"), self is: bot</pre></div><p><strong>Why:</strong> a class is the template you wrote with the word <code>class</code>. An object is what you get back when you call the class. Attributes are the names assigned with <code>self.</code> inside <code>__init__</code>. <code>__init__</code> counts as a method even though you never call it by name.</p><p><strong>Common mistake:</strong> writing <code>SupportChatbot</code> as the answer to question 2 or question 6. That is the class. <code>bot</code> is the object.</p></div></details></div></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Exercise 2 &mdash; Add a method</div><div class="task-body"><p>Add a method named <code>count_user_messages</code> to <code>SupportChatbot</code>. It takes no arguments besides <code>self</code> and returns how many messages in the history have the role <code>user</code>. Then add one test for it.</p><p><strong>Expected result:</strong> after <code>hello</code> and <code>Where is order A100?</code> the method returns <code>2</code>, and <code>pytest -v</code> shows nine tests passing.</p><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 2</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">Add to SupportChatbot in chatbot.py</div><pre>    def count_user_messages(self):
+        """Return how many messages the user has sent so far."""
+        count = 0
+        for message in self.history:
+            if message["role"] == "user":
+                count += 1
+        return count</pre></div><div class="code-block"><div class="cb-label">Add to tests/test_chatbot.py</div><pre>def test_count_user_messages():
+    bot = make_bot()
+    bot.respond("hello")
+    bot.respond("Where is order A100?")
+    assert bot.count_user_messages() == 2</pre></div><p><strong>Why it works:</strong> the method reads <code>self.history</code>, so it counts the messages of whichever chatbot it is called on. The history holds both roles, so the loop keeps only the entries whose role is <code>user</code>.</p><p><strong>Common mistakes:</strong> leaving <code>self</code> out of the parameter list, which fails with <code>takes 0 positional arguments but 1 was given</code>. Writing <code>history</code> without <code>self.</code>, which fails with <code>NameError: name 'history' is not defined</code>. Returning <code>len(self.history)</code>, which counts the chatbot's replies as well.</p></div></details></div></div></div><div class="task"><div class="task-num">8</div><div class="task-content"><div class="task-title">Exercise 3 &mdash; Give the chatbot a second tool</div><div class="task-body"><p>Customers also ask whether a product is in stock. Add that ability without putting stock data inside the chatbot.</p><ul><li>Create <code>stock_tool.py</code> with a class <code>StockLookup</code>. Its <code>__init__</code> takes a dictionary that maps a product name to a count. Give it <code>find_product(text)</code>, which returns the first known product named in the text or <code>None</code>, and <code>count_for(product)</code>, which returns the count or <code>None</code>.</li><li>Change <code>SupportChatbot.__init__</code> to accept a fourth value, <code>stock_tool</code>, and store it.</li><li>Add a rule: when the message contains <code>stock</code>, reply using the stock tool.</li><li>Update <code>main.py</code> and <code>make_bot()</code> so they create a stock tool and pass it in. Add one test.</li></ul><p><strong>Expected result:</strong> with a stock of 12 rain jackets, this conversation, and ten tests passing.</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: Is the rain jacket in stock?
+Sunny: We have 12 of the rain jacket in stock.
+You: Do you have it in stock?
+Sunny: Which product? Please name the item you want me to check.
+You: quit
+Messages in this conversation: 4</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 3</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">stock_tool.py</div><pre># stock_tool.py
+# Author: [Your Name]
+
+
+class StockLookup:
+    """A tool that knows how many of each product are in stock."""
+
+    def __init__(self, stock):
+        """Store the stock counts this tool can look up."""
+        self.stock = stock
+
+    def find_product(self, text):
+        """Return the first known product mentioned in text, or None."""
+        for product in self.stock:
+            if product in text.lower():
+                return product
+        return None
+
+    def count_for(self, product):
+        """Return how many of one product are in stock, or None if unknown."""
+        if product in self.stock:
+            return self.stock[product]
+        return None</pre></div><div class="code-block"><div class="cb-label">chatbot.py &mdash; the initializer accepts and stores the second tool</div><pre>    def __init__(self, name, instructions, order_tool, stock_tool):
+        """Set up one chatbot with its own name, instructions, tools, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.order_tool = order_tool
+        self.stock_tool = stock_tool
+        self.history = []</pre></div><div class="code-block"><div class="cb-label">chatbot.py &mdash; one new rule in choose_reply</div><pre>        if "order" in text:
+            return self.order_reply(user_message)
+        if "stock" in text:
+            return self.stock_reply(user_message)</pre></div><div class="code-block"><div class="cb-label">chatbot.py &mdash; a method that uses the stock tool</div><pre>    def stock_reply(self, user_message):
+        """Use the stock tool to answer a question about a product."""
+        product = self.stock_tool.find_product(user_message)
+        if product is None:
+            return "Which product? Please name the item you want me to check."
+        count = self.stock_tool.count_for(product)
+        return f"We have {count} of the {product} in stock."</pre></div><div class="code-block"><div class="cb-label">main.py &mdash; create the tool and pass it in (also import StockLookup)</div><pre>STOCK = {
+    "rain jacket": 12,
+    "day pack": 0,
+    "trail hat": 5,
+}
+
+order_tool = OrderLookup(ORDERS)
+stock_tool = StockLookup(STOCK)
+bot = SupportChatbot(
+    "Sunny",
+    "You are a friendly support assistant for Bayside Outfitters.",
+    order_tool,
+    stock_tool,
+)</pre></div><div class="code-block"><div class="cb-label">tests/test_chatbot.py &mdash; make_bot now builds both tools</div><pre>def make_bot():
+    """Build a fresh chatbot with its own tool for each test."""
+    order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+    stock_tool = StockLookup({"rain jacket": 12, "day pack": 0})
+    return SupportChatbot("Sunny", "Be friendly.", order_tool, stock_tool)</pre></div><div class="code-block"><div class="cb-label">tests/test_chatbot.py &mdash; one new test</div><pre>def test_stock_question_uses_the_stock_tool():
+    bot = make_bot()
+    assert "12" in bot.respond("Is the rain jacket in stock?")</pre></div><p><strong>Why it works:</strong> the chatbot gained an ability by gaining a part. <code>StockLookup</code> has the same shape as <code>OrderLookup</code>: it finds the thing the message is about, then looks it up. The chatbot's own code grew by one rule and one short method.</p><p><strong>Common mistakes:</strong> changing <code>__init__</code> and forgetting a place that creates the chatbot, which fails with <code>missing 1 required positional argument: 'stock_tool'</code>. Putting the stock dictionary inside <code>SupportChatbot</code>, which mixes two unrelated jobs in one class. Forgetting <code>from stock_tool import StockLookup</code>.</p></div></details></div></div></div><div class="task"><div class="task-num">9</div><div class="task-content"><div class="task-title">Exercise 4 &mdash; Two chatbots from one class</div><div class="task-body"><p>Create <code>two_bots.py</code>. Make one order tool and one stock tool. Create two chatbots that share them: <code>sunny</code> with the instructions <code>You are cheerful and brief.</code> and <code>river</code> with <code>You are formal and detailed.</code> Send Sunny <code>hello</code> and <code>Where is order A100?</code>. Send River only <code>hello</code>. Print each chatbot's name and history length, each chatbot's first reply, and each chatbot's instructions.</p><p><strong>Expected result:</strong></p><div class="expected" style="white-space:pre-wrap;">Sunny 4
+River 2
+Hello! I'm Sunny. I can check an order status for you.
+Hello! I'm River. I can check an order status for you.
+You are cheerful and brief.
+You are formal and detailed.</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 4</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">two_bots.py</div><pre># two_bots.py
+# Author: [Your Name]
+
+from chatbot import SupportChatbot
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+
+order_tool = OrderLookup({"A100": "shipped", "A101": "processing"})
+stock_tool = StockLookup({"rain jacket": 12, "day pack": 0})
+
+sunny = SupportChatbot("Sunny", "You are cheerful and brief.", order_tool, stock_tool)
+river = SupportChatbot("River", "You are formal and detailed.", order_tool, stock_tool)
+
+sunny.respond("hello")
+sunny.respond("Where is order A100?")
+river.respond("hello")
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[1]["content"])
+print(river.history[1]["content"])
+print(sunny.instructions)
+print(river.instructions)</pre></div><p><strong>Why it works:</strong> each call to <code>SupportChatbot(...)</code> runs <code>__init__</code> again, so each chatbot gets its own name, instructions and empty history. Sunny's two turns do not appear in River's history. Both chatbots hold the same two tool objects, and that is fine because the tools only answer questions.</p><p><strong>Common mistakes:</strong> expecting River's history to include Sunny's messages. Calling <code>SupportChatbot.respond(...)</code> on the class instead of on <code>sunny</code> or <code>river</code>. Expecting the two sets of instructions to change the replies: in this mock they are stored and never read. They start to matter in Week 11, when they are sent to a model.</p></div></details></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 6 &mdash; Mini-Project: An Assistant of Your Own</div><div class="line"></div></div><div class="task"><div class="task-num">10</div><div class="task-content"><div class="task-title">Build a small business assistant</div><div class="task-body"><p>Choose one: an FAQ assistant, an appointment helper, an order-status assistant for a different business, or an idea of your own that your instructor approves. Build it in four new files so it does not disturb the chatbot above: <code>my_tool.py</code>, <code>my_assistant.py</code>, <code>my_main.py</code> and <code>tests/test_my_assistant.py</code>.</p><p><strong>Checklist</strong></p><ul class="check-list"><li><span>A tool class in its own file, with <code>__init__</code> and at least one other method</span></li><li><span>An assistant class in its own file that is handed the tool and stores it</span></li><li><span>The assistant keeps a history with a role and content for every message</span></li><li><span><code>my_main.py</code> accepts typed messages until the user types <code>quit</code></span></li><li><span>At least one kind of request is answered by using the tool</span></li><li><span>A lookup that finds nothing gets a helpful reply, not a crash and not a made-up answer</span></li><li><span>A request it cannot handle gets a safe reply that says so</span></li><li><span>At least one kind of request is passed to a person, and you can say why</span></li><li><span>At least four tests, all passing</span></li><li><span>A <code>README.md</code> section of four to six sentences: what the assistant does, what is mock about it, which requests go to a person and why, and one thing that could go wrong if it used real customer data</span></li></ul><p><strong>Sample interaction</strong> from the reference solution, an appointment helper for a made-up tax office:</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Robin: Hello! I'm Robin. Ask me which times are open on a day.
+You: What times are open on Monday?
+Robin: Open times on monday: 9:00 am and 2:30 pm.
+You: What is available?
+Robin: Which day? I can check Monday, Wednesday, or Friday.
+You: Please book me for Monday at 9
+Robin: I can't change the schedule. I'm passing you to the front desk.
+You: Do you validate parking?
+Robin: I'm not sure how to help with that. I can list open times.
+You: quit
+Messages in this conversation: 10</div><p><strong>Rubric &mdash; 10 points</strong></p><table class="concept-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td>2</td><td>The tool is a separate class in its own file and has no conversation code in it</td></tr><tr><td>2</td><td>The assistant class stores its tool and its history as attributes set in <code>__init__</code></td></tr><tr><td>2</td><td>The program runs from <code>my_main.py</code>, answers one kind of request with the tool, and records every turn</td></tr><tr><td>2</td><td>Unknown requests, failed lookups and the human handoff each get a sensible reply</td></tr><tr><td>1</td><td>At least four tests pass, and the full ritual passes</td></tr><tr><td>1</td><td>The README section is specific about what is mock and what could go wrong</td></tr></tbody></table><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Reference solution &mdash; appointment helper</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">appointment_tool.py</div><pre># appointment_tool.py
+# Author: [Your Name]
+
+
+class AppointmentBook:
+    """A tool that knows which appointment times are open on each day."""
+
+    def __init__(self, open_times):
+        """Store the open times this tool can look up."""
+        self.open_times = open_times
+
+    def find_day(self, text):
+        """Return the first known day mentioned in text, or None."""
+        for day in self.open_times:
+            if day in text.lower():
+                return day
+        return None
+
+    def times_for(self, day):
+        """Return the open times for one day, or None if the day is unknown."""
+        if day in self.open_times:
+            return self.open_times[day]
+        return None</pre></div><div class="code-block"><div class="cb-label">appointment_bot.py</div><pre># appointment_bot.py
+# Author: [Your Name]
+
+HANDOFF_WORDS = ["book", "cancel", "reschedule"]
+
+
+class AppointmentHelper:
+    """A mock appointment helper. Its replies come from simple rules, not from AI."""
+
+    def __init__(self, name, instructions, appointment_book):
+        """Set up one helper with its own name, instructions, tool, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.appointment_book = appointment_book
+        self.history = []
+
+    def respond(self, user_message):
+        """Record the user's message, choose a reply, record it, and return it."""
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        """Choose a reply with keyword rules. This is the mock part."""
+        text = user_message.lower()
+        if self.needs_human(text):
+            return "I can't change the schedule. I'm passing you to the front desk."
+        if "open" in text or "available" in text:
+            return self.times_reply(user_message)
+        if "hello" in text:
+            return f"Hello! I'm {self.name}. Ask me which times are open on a day."
+        return "I'm not sure how to help with that. I can list open times."
+
+    def needs_human(self, text):
+        """Return True if the message asks to change the schedule."""
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def times_reply(self, user_message):
+        """Use the appointment book to answer a question about open times."""
+        day = self.appointment_book.find_day(user_message)
+        if day is None:
+            return "Which day? I can check Monday, Wednesday, or Friday."
+        times = self.appointment_book.times_for(day)
+        return f"Open times on {day}: {times}."</pre></div><div class="code-block"><div class="cb-label">appointment_main.py</div><pre># appointment_main.py
+# Author: [Your Name]
+
+from appointment_bot import AppointmentHelper
+from appointment_tool import AppointmentBook
+
+OPEN_TIMES = {
+    "monday": "9:00 am and 2:30 pm",
+    "wednesday": "11:00 am",
+    "friday": "none",
+}
+
+appointment_book = AppointmentBook(OPEN_TIMES)
+helper = AppointmentHelper(
+    "Robin",
+    "You help clients of Bayside Tax Help find an open appointment time.",
+    appointment_book,
+)
+
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{helper.name}: {helper.respond(user_message)}")
+    user_message = input("You: ")
+
+print(f"Messages in this conversation: {len(helper.history)}")</pre></div><div class="code-block"><div class="cb-label">tests/test_appointment_bot.py</div><pre>from appointment_bot import AppointmentHelper
+from appointment_tool import AppointmentBook
+
+
+def make_helper():
+    """Build a fresh helper with its own tool for each test."""
+    book = AppointmentBook({"monday": "9:00 am and 2:30 pm", "friday": "none"})
+    return AppointmentHelper("Robin", "Be clear.", book)
+
+
+def test_open_times_question_uses_the_tool():
+    helper = make_helper()
+    reply = helper.respond("What times are open on Monday?")
+    assert reply == "Open times on monday: 9:00 am and 2:30 pm."
+
+
+def test_question_without_a_known_day_asks_for_one():
+    helper = make_helper()
+    assert "Which day?" in helper.respond("What times are open on Sunday?")
+
+
+def test_booking_request_goes_to_a_human():
+    helper = make_helper()
+    assert "front desk" in helper.respond("Please book me for Monday at 9")
+
+
+def test_unknown_request_gets_a_safe_reply():
+    helper = make_helper()
+    assert "not sure" in helper.respond("What is your favorite color?")
+
+
+def test_history_grows_by_two_each_turn():
+    helper = make_helper()
+    helper.respond("hello")
+    helper.respond("What is open on Friday?")
+    assert len(helper.history) == 4</pre></div><p><strong>Why it is built this way:</strong> it is the same two-class shape as the support chatbot with a different business behind it. The tool knows the schedule. The helper knows the conversation. Booking, cancelling and rescheduling change someone's calendar, so those go to the front desk, and the helper only reads the schedule.</p><p><strong>Use it to compare, not to copy.</strong> Your assistant should serve a different business and have its own rules.</p></div></details></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 7 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">11</div><div class="task-content"><div class="task-title">Run the full ritual</div><div class="task-body"><div class="code-block"><pre>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 10: OOP for agents chatbot and tool' &amp;&amp; git push</pre></div><div class="hint-box"><strong>If <code>ruff check</code> stops on a fixable error,</strong> the <code>&amp;&amp;</code> chain ends there and <code>pytest</code> never runs. Run <code>ruff check --fix .</code>, then run the full first line again.</div></div></div></div><div class="submit-box"><div class="sb-header">Lab 10 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>OOP for Agents &mdash; Chatbot, Tool, and Mini-Project</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>exercise1.md</code>, <code>two_bots.py</code>, your four mini-project files, and the <code>README.md</code> section.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 10</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week08_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 8</span>Debugging, AI Literacy &amp; Review</span></a><span></span><a href="week11_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>OOP II — Composition &amp; Inheritance</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &middot; Week 10 In-Class Lab &middot; Module 6 &mdash; OOP for Agents: Classes, Objects, and Composition</div></div>
 <script src="../site.js"></script>
 </body></html>

@@ -228,8 +228,8 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 </tr>
 <tr>
 <td><span class="mod-num" style="color:var(--u3);">W10</span></td>
-<td><span class="mod-title">OOP I — Classes &amp; Objects</span></td>
-<td class="mod-topics">Classes and instances. __init__, self, attributes. Methods. Model a business entity (Product, Order, Customer) as a Python class.</td>
+<td><span class="mod-title">OOP for Agents — Classes, Objects &amp; Composition</span></td>
+<td class="mod-topics">Classes, objects, __init__, self, attributes, methods. Composition: a support chatbot class is handed a separate order-lookup tool. Mock replies; no AI model yet.</td>
 <td><span class="tag req">W07</span></td>
 <td>4–6 hr</td>
 </tr>
@@ -332,6 +332,14 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>Yes. In compressed formats, you can begin W10 (Classes) immediately after W07 (Functions), skipping W08's debugging review and replacing W09's formal midterm with an informal progress check. OOP only requires that students can write and call functions — the debugging and AI literacy material in W08 can follow OOP rather than precede it.</p>
 </div>
 
+<div class="callout teal">
+<div class="callout-title">Week 10 was rebuilt in Fall 2026: OOP for Agents</div>
+<p>Week 10 now teaches the minimum object-oriented programming needed to build a business chatbot: class, object, attribute, method, <code>__init__</code>, <code>self</code>, and composition. Students build a support chatbot class that is handed a separate order-lookup tool. Replies come from keyword rules. There is no AI model, extra package, API key or internet connection in the week.</p>
+<p><strong>Essential:</strong> the seven terms above and tracing one message through the program. <strong>Optional enrichment:</strong> the functions-and-dictionary version, the real-model preview, and the second tool in the lab exercises. <strong>Left out on purpose:</strong> inheritance, abstract classes, decorators, metaclasses and design patterns. A chatbot with a tool needs <em>has a</em>, not <em>is a kind of</em>.</p>
+<p><strong>Misconceptions to listen for:</strong> the class is the chatbot; <code>self</code> is something the caller passes; two chatbots share one history; using a class makes the chatbot intelligent. <strong>Teaching material:</strong> timing, discussion questions and speaker notes are on the Week 10 lecture page and in the lab slides.</p>
+<p>Weeks 11 to 16 are being rebuilt in the same direction (a local model with Ollama, tools and guardrails, then an agent capstone). Until each one is released, the rows and dependency chains in this guide that mention OOP II, OOP III and the Request Tracker capstone describe the earlier version.</p>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════════════════════
      6-WEEK COURSE
 ═══════════════════════════════════════════════════════════════════════════ -->
@@ -371,7 +379,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u3);">Block 4 — Object-Oriented Design (W10 + W11 + W12)</div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">Morning — __init__, self, attributes, methods; model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP for Agents — Classes, Objects &amp; Composition</span><span class="ms">Morning — class, object, __init__, self; a chatbot class handed a separate tool</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Afternoon — compose objects, extend base classes, __str__/__repr__</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice</span><span class="ms">Evening or next morning — end-to-end mini-project, capstone schema design</span></div>
 </div>
@@ -446,7 +454,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u3);">Week 5 — OOP I (W10 + W11)</div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">Sessions 1–2 — __init__, self, methods, model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP for Agents — Classes, Objects &amp; Composition</span><span class="ms">Sessions 1–2 — class, object, self, methods; a chatbot class handed a tool</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Session 3 — compose objects, inheritance, __str__</span></div>
 </div>
 
@@ -510,7 +518,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u3);">Unit 3 · Object-Oriented Design (W10–W12)</div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP I — Classes &amp; Objects</span><span class="ms">__init__, self, attributes, methods; model a business entity</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP for Agents — Classes, Objects &amp; Composition</span><span class="ms">Class, object, __init__, self, methods; composition with a chatbot and a tool</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">OOP II — Composition &amp; Inheritance</span><span class="ms">Compose objects; inherit from base class; __str__, __repr__</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice &amp; Design</span><span class="ms">End-to-end OOP mini-project; code review; capstone planning</span></div>
 </div>
