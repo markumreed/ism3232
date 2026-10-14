@@ -81,6 +81,8 @@
     .callout-label{font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
     .callout-body{font-size:12px;color:var(--text-body);line-height:1.6;}
     .callout-body strong{color:var(--text-primary);}
+    .dl-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.04em;padding:7px 14px;border-radius:20px;background:var(--accent);color:#fff !important;text-decoration:none;}
+    .dl-btn:hover{opacity:.88;}
 
     /* ── Step blocks ── */
     .step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
@@ -234,7 +236,7 @@ def format_summary(total, count):
 
 total = get_total(records)
 print(format_summary(total, len(records)))
-print(is_over_limit(total))</pre></div><p>Run: <code>python3 week8_buggy.py</code></p><p><strong>Read the traceback bottom-up:</strong></p><p>1. What is the error type on the last line?</p><p>2. Which file and line number is highlighted?</p><p>3. What does that error type mean?</p><p><strong>Then explain <code>get_total()</code> to the duck</strong> &mdash; out loud, one line at a time, to a rubber duck or any inanimate object (<em>rubber duck debugging</em>, from <em>The Pragmatic Programmer</em>, Hunt &amp; Thomas, 1999 &mdash; see the <a href="week08_reading.html">Week 8 reading</a>). Say what each line literally does, not what it should do. What you catch yourself saying becomes the next two lines of the log.</p><p>Open <code>debug_log.md</code> and fill in the Bug 1 section before touching any code.</p><div class="code-block"><div class="cb-label">debug_log.md template</div><pre># debug_log.md
+print(is_over_limit(total))</pre></div><div class="callout ok"><div class="callout-icon">&#x2B07;&#xFE0F;</div><div><div class="callout-label">Prefer a file over copy-paste?</div><div class="callout-body">Download the same script, bugs included, and save it in <code>~/ism3232/module05_functions</code> as <code>week8_buggy.py</code> (replacing the empty file you just created).<br><a class="dl-btn" href="../handouts/week08/week8_buggy.py" download="week8_buggy.py">&#x2B07; Download week8_buggy.py</a></div></div></div><p>Run: <code>python3 week8_buggy.py</code></p><p><strong>Read the traceback bottom-up:</strong></p><p>1. What is the error type on the last line?</p><p>2. Which file and line number is highlighted?</p><p>3. What does that error type mean?</p><p><strong>Then explain <code>get_total()</code> to the duck</strong> &mdash; out loud, one line at a time, to a rubber duck or any inanimate object (<em>rubber duck debugging</em>, from <em>The Pragmatic Programmer</em>, Hunt &amp; Thomas, 1999 &mdash; see the <a href="week08_reading.html">Week 8 reading</a>). Say what each line literally does, not what it should do. What you catch yourself saying becomes the next two lines of the log.</p><p>Open <code>debug_log.md</code> and fill in the Bug 1 section before touching any code.</p><div class="code-block"><div class="cb-label">debug_log.md template</div><pre># debug_log.md
 # Author: [Your Name]
 
 ## Bug 1
