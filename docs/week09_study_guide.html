@@ -225,8 +225,8 @@ a.bug-card:hover{border-color:var(--red);transform:translateY(-2px);}
 <p>The exam hands you a business's rules in plain English and asks for a repository that someone else can clone, run, and trust. Each line of the rubric has its own way of going wrong. Start with the bugs:</p>
 <div class="bug-grid">
 <a class="bug-card" href="#functions"><div class="topic-num">Bug 1 · Functions</div><div class="topic-text">A company retreat was billed at the school-group rate.</div></a>
-<a class="bug-card" href="#bug-loop"><div class="topic-num">Bug 2 · Functions</div><div class="topic-text">Four bookings went in. Revenue came back as one.</div></a>
-<a class="bug-card" href="#bug-two"><div class="topic-num">Bug 3 · Functions</div><div class="topic-text">Twenty-four seventh graders launched without a support boat.</div></a>
+<a class="bug-card" href="#bug-two"><div class="topic-num">Bug 2 · Functions</div><div class="topic-text">Twenty-four seventh graders launched without a support boat.</div></a>
+<a class="bug-card" href="#bug-loop"><div class="topic-num">Bug 3 · Functions</div><div class="topic-text">Four bookings went in. Revenue came back as one.</div></a>
 <a class="bug-card" href="#bug-largest"><div class="topic-num">Bug 4 · Functions</div><div class="topic-text">The report named the $201.60 booking as the week's largest.</div></a>
 <a class="bug-card" href="#tests"><div class="topic-num">Bug 5 · Tests</div><div class="topic-text">Two green tests, and a tour that left one guide short.</div></a>
 <a class="bug-card" href="#project"><div class="topic-num">Bug 6 · Project</div><div class="topic-text">It ran on my laptop. The grader's pytest never started.</div></a>
@@ -397,7 +397,7 @@ def calculate_booking_total(
 <p>Rule 6 decides one True/False answer from two separate facts: the number of seats and the booking total. The word between them, <em>and</em> or <em>or</em>, decides who gets the boat.</p>
 
 <div class="bug">
-<div class="bug-tag">Bug report 3</div>
+<div class="bug-tag">Bug report 2</div>
 <div class="bug-title">Twenty-four seventh graders launched without a support boat</div>
 <p>Pinecrest Middle booked 24 seats. With the school discount its total was $396.00. The launch report said no support boat was needed.</p>
 <pre><code>SUPPORT_BOAT_SEATS = 12
@@ -435,7 +435,7 @@ print(needs_support_boat(24, 396.00))    # prints False</code></pre>
 <p>The two words only disagree when exactly one of the facts is true. Those are the cases your tests need.</p>
 
 <div class="bug" id="bug-loop">
-<div class="bug-tag">Bug report 2</div>
+<div class="bug-tag">Bug report 3</div>
 <div class="bug-title">Four bookings went in. Revenue came back as one</div>
 <p>The week's four bookings were totalled for the owner. The report said $130.00, which is exactly what the first booking came to.</p>
 <pre><code>bookings = [
@@ -876,7 +876,7 @@ ERROR tests/test_business_rules.py
     total_revenue,
 )
 
-# the bookings list from Bug report 2 goes here
+# the bookings list from Bug report 3 goes here
 
 print("Lakeshore Kayak Tours - Booking Report")
 count = 0
