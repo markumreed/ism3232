@@ -102,45 +102,49 @@
 </head><body><div class="reveal"><div class="slides">
 <section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 9</p>
 <h1>Midterm</h1>
-<div class="t-bar"><span class="t-item"><strong>At home</strong> Midterm project</span><span class="t-item"><strong>About a week</strong> Dates in Canvas</span><span class="t-item"><strong>2–3 hours</strong> Of work</span><span class="t-item"><strong>100 points</strong> Six rubric lines</span><span class="t-item"><strong>Submit</strong> A GitHub URL</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 9: Midterm Exam — Structure, Coverage, and Prep
+<div class="t-bar"><span class="t-item"><strong>At home</strong> Midterm project</span><span class="t-item"><strong>About a week</strong> Dates in Canvas</span><span class="t-item"><strong>4–5 hours</strong> Of work</span><span class="t-item"><strong>100 points</strong> Seven rubric lines</span><span class="t-item"><strong>Submit</strong> A GitHub URL</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 9: Midterm Exam — Structure, Coverage, and Prep
 
 The midterm is a project built at home, in the shape of Lab 7.
   Window — about a week; the dates are in Canvas
-  Work — 2 to 3 hours
-  Points — 100, across six rubric lines
+  Work — 4 to 5 hours, over two or three sittings
+  Points — 100, across seven rubric lines
   Submission — the URL of a public GitHub repository
 
 Go through this deck the week before the exam opens.</aside></section>
 <section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Midterm Structure and Weighting</h1></section>
-<section class="s-point"><h2>The Midterm Is a Project</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>At home, on your own computer</li><li>A project brief in Canvas: one business and its pricing rules</li><li>Turn the rules into a tested repository, the shape of Lab 7</li><li>Submit the GitHub URL, and nothing else</li><li>Open about a week · plan for 2 to 3 hours of work</li></ul><aside class="notes">The midterm is one at-home project worth 100 points.
+<section class="s-point"><h2>The Midterm Is a Project</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>At home, on your own computer</li><li>A project brief in Canvas: one business and its pricing rules</li><li>Turn the rules into a tested repository, the shape of Lab 7</li><li>Submit the GitHub URL, and nothing else</li><li>Open about a week · plan for 4 to 5 hours of work</li></ul><aside class="notes">The midterm is one at-home project worth 100 points.
 
 Each student gets a project brief in Canvas: one business and its pricing rules in plain English.
 
-They turn those rules into a small, tested Python project, the same shape as Lab 7, and submit the link to a public GitHub repository.
+They turn those rules into a tested Python project, the same shape as Lab 7, and submit the link to a public GitHub repository.
 
-The window is open about a week. The work itself is 2 to 3 hours and does not have to be done in one sitting.
+The window is open about a week. The work itself is 4 to 5 hours, best spread over two or three sittings, and the commit history should show that.
 
-The project goes further than Lab 7: the rules have more parts, one function works through a list of records, and students write the tests themselves.</aside></section>
-<section class="s-point"><h2>What You Build</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>business_rules.py</code> — five functions</li><li><code>main.py</code> — a report that matches the brief</li><li><code>tests/test_business_rules.py</code> — 10+ tests you write</li><li><code>README.md</code> — six sections</li><li><code>requirements.txt</code> · <code>.gitignore</code> · <code>tests/__init__.py</code></li><li>At least five commits, made as each part works</li></ul><aside class="notes">business_rules.py: five functions that carry out the brief&#x27;s rules. Type hints, docstrings, named constants, return. No print().
+The project goes well beyond Lab 7: six rules, one of them with two conditions; eight functions, two of them loops over a list of records; a 15-line report; at least 20 tests the student writes; and a terminal record in commands.md.</aside></section>
+<section class="s-point"><h2>What You Build</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>business_rules.py</code> — eight functions</li><li><code>main.py</code> — a 15-line report that matches the brief</li><li><code>tests/test_business_rules.py</code> — 20+ tests you write</li><li><code>commands.md</code> — your terminal record</li><li><code>README.md</code> — seven sections</li><li><code>requirements.txt</code> · <code>.gitignore</code> · <code>tests/__init__.py</code></li><li>At least eight commits, made as each part works</li></ul><aside class="notes">business_rules.py: eight functions: one for each of the six rules (one rule has two conditions), a loop that totals a list of records, a loop that finds the largest, and a function that formats a report line. Type hints, docstrings, named constants, return. No print().
 
-main.py: imports the functions, loops over a list of records given in the brief, and prints a report that matches the brief line for line.
+main.py: imports the functions, loops over eight records given in the brief, and prints a 15-line report (a title, one line per record, six summary lines) that matches the brief line for line.
 
-tests/test_business_rules.py: at least 10 pytest tests the student writes, including the value on each side of a limit.
+tests/test_business_rules.py: at least 20 pytest tests the student writes, on both sides of every limit, plus a tie and an empty list for the largest.
 
-README.md: six sections: title block, what the program does, the business rules, how to run, how to test, AI use statement.
+commands.md: the setup commands, then which python3, tree -L 2, rg &#x27;def &#x27;, rg -l &#x27;print&#x27;, and git log --oneline, each with its real output and a one-sentence answer.
 
-Suggested pace: set-up 15 minutes, functions 50, main.py 15, tests 40, README 15, with the ritual and commits throughout. These are not separately timed sections.</aside></section>
-<section class="s-point"><h2>How the 100 Points Are Earned</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Functions correct · 30 points</li><li>Tests you wrote · 20 points</li><li>Complete submission · 15 points</li><li>Commit history · 15 points</li><li>ruff · 10 points</li><li>README.md · 10 points</li></ul><aside class="notes">Functions correct · 30: the instructor&#x27;s tests run against the student&#x27;s functions, at ordinary values and at every limit. Functions are tested by name, so the names and parameter order must match the brief exactly.
+README.md: seven sections: title block, what the program does, the business rules, how to run, how to test, the files in the repository, AI use statement.
 
-Tests you wrote · 20: at least 10 passing tests, every function covered, both sides of at least two limits.
+Suggested pace: set-up 20 minutes, functions 90, main.py 40, tests 75, commands.md 30, README 20, with the ritual and commits throughout. These are not separately timed sections.</aside></section>
+<section class="s-point"><h2>How the 100 Points Are Earned</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Functions correct · 30 points</li><li>Tests you wrote · 20 points</li><li>Complete submission · 15 points</li><li>commands.md · 10 points</li><li>Commit history · 10 points</li><li>README.md · 10 points</li><li>ruff · 5 points</li></ul><aside class="notes">Functions correct · 30: the instructor&#x27;s 30 tests run against the student&#x27;s eight functions, at ordinary values and at every limit. Functions are tested by name, so the names and parameter order must match the brief exactly.
+
+Tests you wrote · 20: at least 20 passing tests, every function covered, both sides of every limit.
 
 Complete submission · 15: every required file, a main.py whose output matches, and well-formed functions.
 
-Commit history · 15: at least five commits with descriptive messages, built in stages.
+commands.md · 10: real commands and real output that match the repository, each with a correct answer.
 
-ruff · 10: ruff format --check . and ruff check . both clean.
+Commit history · 10: at least eight commits with descriptive messages, built in stages over more than one sitting.
 
-README.md · 10: all six sections, correct commands, clean Markdown.</aside></section>
+README.md · 10: all seven sections, correct commands, clean Markdown.
+
+ruff · 5: ruff format --check . and ruff check . both clean.</aside></section>
 <section class="s-point"><h2>What You May Use</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Your own notes</strong></li><li>Your own labs and assignments</li><li>The course site: readings, lectures, labs, Study Guide</li><li>No AI tools of any kind, including code completion</li><li>No help from another person</li><li>No other student's code or repository</li></ul><aside class="notes">This is an individual exam.
 
 Allowed: your own notes, your own labs and assignments, and the course site.
@@ -148,13 +152,15 @@ Allowed: your own notes, your own labs and assignments, and the course site.
 Not allowed: AI tools of any kind, including chat assistants and AI code completion in the editor. No help from another person. No other student&#x27;s code or repository.
 
 The README ends with a one-sentence AI use statement.</aside></section>
-<section class="s-warn"><h3>The function that totals the list</h3><div class="warn-card"><div class="warn-lbl">Loop only</div><p>The total must come from your own <code>for</code> loop.</p><p>Not accepted: <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or comprehensions.</p></div><aside class="notes">One of the five functions adds up a list of records. Its total must come from the student&#x27;s own for loop. Do not use sum(), max(), min(), sorted(), or comprehensions.
+<section class="s-warn"><h3>The functions that loop over the list</h3><div class="warn-card"><div class="warn-lbl">Loop only</div><p>The total and the largest must come from your own <code>for</code> loop.</p><p>Not accepted: <code>sum()</code>, <code>max()</code>, <code>min()</code>, <code>sorted()</code>, or comprehensions.</p></div><aside class="notes">Two of the eight functions loop over a list of records: one adds up the totals, and one finds the largest. Both answers must come from the student&#x27;s own for loop. Do not use sum(), max(), min(), sorted(), or comprehensions.
 
 Say this out loud the week before the exam opens.</aside></section>
 <section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">What Is and Is Not Tested</h1><aside class="notes">The exam covers all course material from Week 1 through Week 8.</aside></section>
-<section class="s-point"><h2>What Is and Is Not Tested</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Covered: all course material from Week 1 through Week 8</li><li>Weeks 1–4: terminal, venv + pip, .gitignore, the ritual, Git</li><li>Weeks 5–8: constants, conditionals, loops, lists of dicts, functions, modules, pytest, tracebacks</li><li>The project puts all of it to work in <strong>one repository</strong></li><li>Not tested: OOP, SQL, Streamlit, FastAPI, GenAI</li></ul><aside class="notes">The exam covers all course material from Week 1 through Week 8.
+<section class="s-point"><h2>What Is and Is Not Tested</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Covered: all course material from Week 1 through Week 8</li><li>Weeks 1–4: terminal, venv + pip, .gitignore, rg, the ritual, Git</li><li>Weeks 5–8: constants, conditionals, loops, lists of dicts, functions, modules, pytest, tracebacks</li><li>The project puts all of it to work in <strong>one repository</strong></li><li>Not tested: OOP, SQL, Streamlit, FastAPI, GenAI</li></ul><aside class="notes">The exam covers all course material from Week 1 through Week 8.
 
-Terminal: pwd, ls, cd, mkdir, touch, tree, code .
+Terminal: pwd, ls, cd, mkdir, touch, echo, tree, which, code .
+
+Search: rg &#x27;pattern&#x27;, rg -l
 
 venv + pip: create, activate, install, freeze
 
@@ -162,19 +168,21 @@ Project files: requirements.txt, .gitignore, README.md
 
 The ritual: ruff format, ruff check, pytest, then commit and push
 
-Git: init, add, commit, push, log, status
+Git: init, add, commit, push, log --oneline, status
 
 Python: constants, operators, conditionals, loops, lists of dictionaries, functions, modules, pytest, tracebacks
 
 NOT tested: OOP, SQL and SQLite, Streamlit, FastAPI, GenAI feature implementation. These are covered in Units 3 and 4 after the midterm.</aside></section>
-<section class="s-point"><h2>What Each Part Leans On</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Functions:</strong> every parameter read · exact boundaries · tiers in one order · <code>return</code>, not <code>print</code></li><li><strong>Tests:</strong> the value at each limit and its neighbour · expected values worked out by hand</li><li><strong>Project:</strong> exact file names · <code>tests/__init__.py</code> · output that matches line for line</li><li><strong>Workflow:</strong> format, check, test · a commit each time a part works</li></ul><aside class="notes">Functions: every parameter the rule mentions is read. Boundary words are translated exactly: &quot;or more&quot; is &gt;=, &quot;below&quot; is &lt;. Tiers are checked in one order. return, not print. return after the loop, not inside it.
+<section class="s-point"><h2>What Each Part Leans On</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Functions:</strong> every parameter read · exact boundaries · the rule&#x27;s own <code>and</code> / <code>or</code> · <code>return</code>, not <code>print</code></li><li><strong>Tests:</strong> the value at every limit and its neighbour · the other condition held still</li><li><strong>Project:</strong> exact file names · <code>tests/__init__.py</code> · output that matches line for line</li><li><strong>Terminal record:</strong> real output, copied after the code is finished</li><li><strong>Workflow:</strong> format, check, test · a commit each time a part works</li></ul><aside class="notes">Functions: every parameter the rule mentions is read. Boundary words are translated exactly: &quot;or more&quot; is &gt;=, &quot;below&quot; is &lt;. Tiers are checked in one order. Two conditions are joined with the rule&#x27;s own and / or. return, not print. return after the loop, not inside it. In the largest loop, the setup lines go before the loop, and &gt; keeps the first record in a tie.
 
-Tests: the value exactly at each limit and the value next to it. Expected values worked out by hand from the rules. A list built inside the test. Names that say what is checked.
+Tests: the value exactly at every limit and the value next to it. When testing one side of a two-condition rule, the other condition is held still. Expected values worked out by hand from the rules. Lists built inside the tests, including a tie and an empty list. Names that say what is checked.
 
 Project: exact file names, tests/__init__.py, no .venv/ in the repository, output that matches line for line.
 
+Terminal record: commands run on the finished project, output copied and never typed, a virtual environment that is actually active.
+
 Workflow: format, then check, then test. A commit each time a part works. A README whose commands actually run.</aside></section>
-<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Samples — Format Only</h1><aside class="notes">These show the format, not the difficulty. Each sample comes from the purchase-approval rules students know from Lab 7. The exam uses a business they have not seen, and its rules have more parts. The Study Guide works a full example, with seven bugs to find and a practice project at exam size.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Samples — Format Only</h1><aside class="notes">These show the format, not the difficulty. Each sample comes from the purchase-approval rules students know from Lab 7. The exam uses a business they have not seen, and its rules have more parts. The Study Guide works a full example, with ten bugs to find and a practice project at exam size.</aside></section>
 <section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Part 2 format — a business rule turned into a function</h3><pre><code class="language-python" style="max-height:none;"># Rule: a request of $1,000 or more goes to a director.
 # A request of at least $500 goes to a manager, and so does
 # any request from a department that is over budget.
@@ -214,7 +222,7 @@ The third test shows the True/False input changing the answer.
 Ask the class what the fourth test should be: the $500 limit has two sides as well.
 
 Code label: Part 4 format — tests on both sides of a limit</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Part 6 format — the ritual, then a commit that says what changed</h3><pre><code class="language-bash" style="max-height:none;"># The ritual: all three must come back clean
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Part 7 format — the ritual, then a commit that says what changed</h3><pre><code class="language-bash" style="max-height:none;"># The ritual: all three must come back clean
 ruff format .
 ruff check .
 pytest -v
@@ -228,9 +236,9 @@ ruff format changes layout only. ruff check finds mistakes such as unused import
 
 The commit message is a verb and a thing. Messages such as final, update, or done earn nothing.
 
-Code label: Part 6 format — the ritual, then a commit that says what changed</aside></section>
+Code label: Part 7 format — the ritual, then a commit that says what changed</aside></section>
 <section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Midterm Logistics — Instructor Checklist</h1></section>
-<section class="s-point"><h2>Midterm Logistics — Instructor Checklist</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>☐ Post the Canvas assignment with the project brief · text-entry submission</li><li>☐ Set the opening and due dates in Canvas</li><li>☐ The week before: remind students of the rules · have everyone test a push to GitHub</li><li>☐ Grade from a fresh clone: ruff, pytest, main.py, the instructor's tests</li><li>☐ Read the Git log and the total function by eye</li></ul><aside class="notes">☐ Post the Canvas assignment with the project brief. The submission is a text entry: the repository URL.
+<section class="s-point"><h2>Midterm Logistics — Instructor Checklist</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>☐ Post the Canvas assignment with the project brief · text-entry submission</li><li>☐ Set the opening and due dates in Canvas</li><li>☐ The week before: remind students of the rules · have everyone test a push to GitHub</li><li>☐ Grade from a fresh clone: ruff, pytest, main.py, the instructor's tests</li><li>☐ Read the Git log, the two loop functions, and commands.md by eye</li></ul><aside class="notes">☐ Post the Canvas assignment with the project brief. The submission is a text entry: the repository URL.
 
 ☐ Set the opening and due dates in Canvas. The window runs about a week.
 
@@ -240,7 +248,7 @@ Code label: Part 6 format — the ritual, then a commit that says what changed</
 
 ☐ Grade from a fresh clone. Run ruff format --check ., ruff check ., pytest -v, and python3 main.py on the clone, then the instructor&#x27;s tests.
 
-☐ Read the function that totals the list. Work done with sum(), max(), min(), sorted(), or a comprehension is not accepted. Read the Git log for the number of commits, the messages, and the stages. Only what was pushed by the deadline is graded.
+☐ Read the functions that total the list and find the largest. Work done with sum(), max(), min(), sorted(), or a comprehension is not accepted. Compare commands.md with rg &#x27;def &#x27;, rg -l &#x27;print&#x27;, and git log --oneline run on the clone. Read the Git log for the number of commits, the messages, and the stages. Only what was pushed by the deadline is graded.
 
 Week 10 begins OOP. Students who struggled on the midterm with functions and scope will face additional difficulty with classes and methods. Offer office hours before Week 10 for students who want to consolidate function fundamentals before OOP begins.</aside></section>
 </div></div>
