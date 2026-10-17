@@ -6,7 +6,7 @@
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISM3232 Week 12 — OOP III — Design & Practice</title>
+<title>ISM3232 Week 12 — Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -100,105 +100,182 @@
 }
 </style>
 </head><body><div class="reveal"><div class="slides">
-<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 12</p><h1>OOP III — Design &amp; Practice</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> Design-first approach</span><span class="t-item"><strong>15–40 min</strong> Build own multi-class system</span><span class="t-item"><strong>40–60 min</strong> Write 5+ pytest tests</span><span class="t-item"><strong>60–70 min</strong> Common mistakes review</span><span class="t-item"><strong>70–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 12: Week 12 — Module 6 — OOP III: Applied Practice and pytest Checkpoint
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 12</p><h1>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</h1><div class="t-bar"><span class="t-item"><strong>0–10 min</strong> Where Week 11 left off</span><span class="t-item"><strong>10–20 min</strong> Tool calls</span><span class="t-item"><strong>20–35 min</strong> The tool loop</span><span class="t-item"><strong>35–50 min</strong> One door</span><span class="t-item"><strong>50–60 min</strong> Changes wait for a person</span><span class="t-item"><strong>60–70 min</strong> Stand-ins and tests</span><span class="t-item"><strong>70–75 min</strong> What tools did not fix</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 12 — Module 6 — Tools and Guardrails
 
-Today&#x27;s plan:
-  0–15 min — Design-first approach
-  15–40 min — Build own multi-class system
-  40–60 min — Write 5+ pytest tests
-  60–70 min — Common mistakes review
-  70–80 min — Assignment</aside></section>
-<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">What Applied OOP Practice Means</h1><aside class="notes">Weeks 10 and 11 introduced the concepts with guided examples. This week students design and build their own multi-class system from a prompt — choosing their own class names, attributes, and methods — and test every piece of business logic with pytest.</aside></section>
-<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal  →  streamlit run app.py</div></div><aside class="notes">LIVE DEMO
-Open: Terminal  →  streamlit run app.py</aside></section>
-<section class="s-point"><h2>Section 1 — What Applied OOP Practice Means</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Weeks 10 and 11 introduced the concepts with guided examples.</li><li>The deliverable is a Python project with at least two entity classes, one manager class, and five or more pyte…</li></ul><aside class="notes">Weeks 10 and 11 introduced the concepts with guided examples. This week students design and build their own multi-class system from a prompt — choosing their own class names, attributes, and methods — and test every piece of business logic with pytest.
+Today's plan:
+  0–10 min — Where Week 11 left off
+  10–20 min — Tool calls
+  20–35 min — The tool loop
+  35–50 min — One door
+  50–60 min — Changes wait for a person
+  60–70 min — Stand-ins and tests
+  70–75 min — What tools did not fix
 
-The deliverable is a Python project with at least two entity classes, one manager class, and five or more pytest tests. No database. No Streamlit. Pure OOP.</aside></section>
-<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Design-First Approach</h1><aside class="notes">Before writing any code this week, students should write down: What are my two entity classes? What attributes does each one have? What methods does each one need? What does the manager class hold and what can it do?</aside></section>
-<section class="s-point"><h2>Section 2 — Design-First Approach</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Before writing any code this week, students should write down: What are my two entity classes?</li><li>A class design written in comments or a README takes five minutes and saves an hour of refactoring.</li></ul><aside class="notes">Before writing any code this week, students should write down: What are my two entity classes? What attributes does each one have? What methods does each one need? What does the manager class hold and what can it do?
+Frame it: last week the rules decided when to use a tool, and they missed things. Today the model decides, code checks every request, and every change waits for a person. Every model output on these slides is a real run of the course model; say that students' wording will differ.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Where Week 11 Left Off</h1><aside class="notes">Three problems from last week. Ask the class to recall them before the next slide.</aside></section>
+<section class="s-point"><h2>Three problems</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><em>Has my package A101 shipped?</em> missed the order rule. The model once said it had shipped. It had not.</li><li><em>Do you sell gift cards?</em> tripped the payment rule because of <em>card</em>.</li><li>Every reply had the role <code>assistant</code>, whoever wrote it.</li><li>Today fixes the first and third. The second stays, on purpose.</li></ul><aside class="notes">Promise an answer to 'why keep the gift-card problem?' by the end of the hour.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Tool Calls</h1><aside class="notes">The model asks; your code decides.</aside></section>
+<section class="s-point"><h2>The model asks; your code decides</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>The chatbot sends a list of <strong>tools</strong> with the conversation.</li><li>The model writes a reply, or sends a <strong>tool call</strong>: a name and values.</li><li>It never runs anything. Your code decides whether to run the tool.</li><li>A decision is a dictionary: <code>{"text": ...}</code> or <code>{"tool": ..., "arguments": {...}}</code>.</li></ul><aside class="notes">Stress that the model cannot run code. Everything that happens is done by your program.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ decision.py — read it together</h3><pre><code class="language-python" style="max-height:620px;font-size:.74em;line-height:1.3;">decision = {"tool": "look_up_order", "arguments": {"order_id": "A101"}}
+print("text" in decision)
+print(decision["tool"], decision["arguments"]["order_id"])
 
-A class design written in comments or a README takes five minutes and saves an hour of refactoring. This is the habit that separates developers who ship from developers who spin.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Design template — fill this in before writing any class code</h3><pre><code class="language-python"># CLASS DESIGN — Week 12 Applied Practice
-#
-# Entity class 1: [ClassName]
-#   Attributes: [list all attributes and their types]
-#   Methods:    [list all methods with brief description]
-#
-# Entity class 2: [ClassName]
-#   Attributes: [list all attributes and their types]
-#   Methods:    [list all methods with brief description]
-#
-# Manager class: [ClassName]
-#   Holds: list of [entity class 1]
-#   Methods: add, list_by_status, total, summary_report
-#
-# Business rules (will become methods and test cases):
-#   [rule 1]
-#   [rule 2]
-#   [rule 3]</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+# Output:
+# False
+# look_up_order A101</code></pre><aside class="notes">Point out that "text" in decision is how the chatbot tells the two shapes apart.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ order_tool.py — a method the model may ask for</h3><pre><code class="language-python" style="max-height:620px;font-size:.74em;line-height:1.3;">    def look_up_order(self, order_id):
+        """Look up the status of one order.
 
-Code label: Design template — fill this in before writing any class code</aside></section>
-<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Reference: The Complete Pattern</h1><aside class="notes">Use this as a model if students are stuck on what to build. They should NOT copy it — they must design their own domain — but they can reference the structure.</aside></section>
-<section class="s-point"><h2>Section 3 — Reference: The Complete Pattern</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Use this as a model if students are stuck on what to build.</li></ul><aside class="notes">Use this as a model if students are stuck on what to build. They should NOT copy it — they must design their own domain — but they can reference the structure.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ models.py — two entity classes + one manager</h3><pre><code class="language-python">class Employee:
-    def __init__(self, emp_id, name, department, salary):
-        self.emp_id     = emp_id
-        self.name       = name
-        self.department = department
-        self.salary     = salary
-        self.active     = True
+        Args:
+            order_id: The order ID, like A100.
+        """
+        found = self.find_order_id(order_id)
+        if found is None:
+            return "No order with that ID was found. Order IDs look like A100."
+        return f"Order {found} is {self.find_status(found)}."</code></pre><aside class="notes">The docstring's first line says what the tool does. Args says what each value looks like. The ollama package reads both. Until today a docstring was for people; now a program reads it.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">The Tool Loop</h1><aside class="notes">One message can take two trips to the model: ask for a tool, then answer.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ ollama_model.py — the new method, decide</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">    def decide(self, instructions, history, tools):
+        """Send the conversation and the tools. Return a reply or a tool request."""
+        messages = [{"role": "system", "content": instructions}]
+        for message in history:
+            if message["role"] == "tool":
+                messages = messages + self.tool_messages(message)
+            else:
+                messages.append(message)
+        try:
+            response = chat(model=self.model_name, messages=messages, tools=tools)
+        except ConnectionError:
+            return None
+        except ResponseError:
+            return None
+        if response.message.tool_calls:
+            call = response.message.tool_calls[0]
+            return {"tool": call.function.name, "arguments": call.function.arguments}
+        return {"text": response.message.content}</code></pre><aside class="notes">decide sits beside reply. reply stays because the Week 11 mini-project still uses it. tool_calls[0]: this chatbot runs the first request and lets the model ask again.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ chatbot.py — model_reply, write together</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">    def model_reply(self):
+        """Ask the model. Run each tool it asks for, then ask again, up to a limit."""
+        rounds = 0
+        while rounds &lt; MAX_TOOL_ROUNDS:
+            tool_list = self.tools.tool_list()
+            decision = self.model.decide(self.instructions, self.history, tool_list)
+            if decision is None:
+                return "Sorry, I can't answer that right now. Please try again in a moment."
+            if "text" in decision:
+                return decision["text"]
+            name = decision["tool"]
+            arguments = decision["arguments"]
+            result = self.tools.run(name, arguments, self.history)
+            self.history.append(
+                {
+                    "role": "tool",
+                    "tool_name": name,
+                    "arguments": arguments,
+                    "content": result,
+                }
+            )
+            rounds += 1
+        return "Sorry, I couldn't finish that. I'm passing you to a human agent."</code></pre><aside class="notes">Write it live. Ask what happens if the model never answers: rounds reaches MAX_TOOL_ROUNDS and the customer goes to a person.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Run it with a fake model</h3><pre><code class="language-python" style="max-height:620px;font-size:.52em;line-height:1.3;">from change_queue import ChangeQueue
+from chatbot import SupportChatbot
+from fake_model import FakeModel
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
 
-    def give_raise(self, percent):
-        self.salary *= (1 + percent / 100)
+orders = {"A101": {"status": "processing", "address": "3 Gull Lane"}}
+order_tool = OrderLookup(orders)
+tools = Toolbox(order_tool, StockLookup({}), ChangeQueue(order_tool))
+model = FakeModel(
+    [
+        {"tool": "look_up_order", "arguments": {"order_id": "A101"}},
+        {"text": "Order A101 is still processing."},
+    ]
+)
+bot = SupportChatbot("Sunny", "Be brief.", tools, model)
+print(bot.respond("Has my package A101 shipped?"))
+for entry in bot.history:
+    print(entry["role"], "|", entry["content"])
 
-    def deactivate(self):
-        self.active = False
+# Output:
+# Order A101 is still processing.
+# user | Has my package A101 shipped?
+# tool | Order A101 is processing.
+# assistant | Order A101 is still processing.</code></pre><aside class="notes">Two decisions played back: a tool request, then a reply. The middle line of the history is the new tool entry.</aside></section>
+<section class="s-chalk"><h3 style="color:#b8921e;">✏ Draw: the loop</h3><canvas class="chalk-board"></canvas><div class="chalk-ctrl"><span class="cdot on" style="background:#fff" onclick="CC('#fff',this)"></span><span class="cdot" style="background:#fcd34d" onclick="CC('#fcd34d',this)"></span><span class="cdot" style="background:#4ade80" onclick="CC('#4ade80',this)"></span><span class="cdot" style="background:#38bdf8" onclick="CC('#38bdf8',this)"></span><span class="cdot" style="background:#fb7185" onclick="CC('#fb7185',this)"></span>&nbsp;<button class="chalk-btn on" data-sz onclick="CS(4,this)">S</button><button class="chalk-btn" data-sz onclick="CS(8,this)">M</button><button class="chalk-btn" data-sz onclick="CS(14,this)">L</button>&nbsp;<button class="chalk-btn" onclick="CE(this)">Eraser</button><button class="chalk-btn" onclick="CX()">Clear</button></div><aside class="notes">CHALKBOARD: Draw customer → chatbot → model. Arrow back: 'tool call'. Chatbot → Toolbox → tool → result into the history. Arrow to the model again → reply. Mark the counter on the loop. Take 3 minutes.</aside></section>
+<section class="s-point"><h2>Ollama needs to see its own request</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>The history keeps one <code>tool</code> entry per tool use.</li><li><code>tool_messages</code> turns it into the two messages Ollama expects.</li><li>Without the request, the model asked for the same lookup twice in five out of five runs.</li></ul><aside class="notes">Optional depth. Show tool_messages on the reading page if anyone asks how.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">One Door</h1><aside class="notes">Every tool request goes through Toolbox.run.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ toolbox.py — run</h3><pre><code class="language-python" style="max-height:620px;font-size:.5em;line-height:1.3;">    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "look_up_order":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.order_tool.look_up_order(order_id)
+        if name == "check_stock":
+            item = self.clean(arguments, "item")
+            if item == "":
+                return "The product is missing. Ask the customer which product."
+            return self.stock_tool.check_stock(item)
+        if name == "request_address_change":
+            order_id = self.clean(arguments, "order_id")
+            new_address = self.clean(arguments, "new_address")
+            if order_id == "" or new_address == "":
+                return "The order ID and the new address are both needed."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            if not self.customer_said(history, new_address):
+                return "The customer has not given that address. Ask them for it."
+            return self.change_queue.request_address_change(order_id, new_address)
+        return f"There is no tool named {name}."</code></pre><aside class="notes">Walk the order: name known? value present? did the customer actually say it? Each refusal is a sentence for the model.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Try the door</h3><pre><code class="language-python" style="max-height:620px;font-size:.55em;line-height:1.3;">from change_queue import ChangeQueue
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
 
-    def is_senior(self):
-        return self.salary &gt; 80000
+orders = {"A100": {"status": "shipped", "address": "14 Bay Road"}}
+order_tool = OrderLookup(orders)
+tools = Toolbox(order_tool, StockLookup({}), ChangeQueue(order_tool))
+history = [{"role": "user", "content": "I want to change my shipping address"}]
 
-class Department:
-    def __init__(self, name, budget):
-        self.name       = name
-        self.budget     = budget
-        self.employees  = []
+print(tools.run("delete_order", {"order_id": "A100"}, history))
+print(tools.run("look_up_order", {"order_id": " "}, history))
+made_up = {"order_id": "A100", "new_address": "123 Main St"}
+print(tools.run("request_address_change", made_up, history))
 
-    def hire(self, employee):
-        self.employees.append(employee)
+# Output:
+# There is no tool named delete_order.
+# The order ID is missing. Ask the customer for it.
+# The customer has not given that order ID. Ask them for it.</code></pre><aside class="notes">Three refusals: unknown tool, empty value after .strip(), and a made-up order ID.</aside></section>
+<section class="s-point"><h2>The made-up address</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Asked <em>I want to change my shipping address</em> with no details, the model made up order A100 and an address and filed it in five out of five runs with the check off.</li><li>With the check on, it was refused in five out of five runs, and the model asked the customer.</li><li><code>"" in "any text"</code> is <code>True</code>: the empty check comes first.</li></ul><aside class="notes">Read one real run aloud from the lecture page. The empty-string bug really happened while this week was being built.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">Changes Wait for a Person</h1><aside class="notes">A change tool files a request. Only approve changes an order.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Try the queue</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">from change_queue import ChangeQueue
+from order_tool import OrderLookup
 
-# ...</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+orders = {"A100": {"status": "shipped", "address": "14 Bay Road"}}
+queue = ChangeQueue(OrderLookup(orders))
 
-Code label: models.py — two entity classes + one manager</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ tests/test_models.py — five required test minimum</h3><pre><code class="language-python">from models import Employee, Department
+print(queue.request_address_change("A100", "9 Pine Street"))
+print(orders["A100"]["address"])
+print(queue.approve(1))
+print(orders["A100"]["address"])
+print(queue.approve(1))
 
-def test_give_raise_increases_salary():
-    e = Employee(1, &quot;Alex&quot;, &quot;Eng&quot;, 70000)
-    e.give_raise(10)
-    assert e.salary == 77000
-
-def test_deactivate_removes_from_headcount():
-    dept = Department(&quot;Eng&quot;, 300000)
-    e = Employee(2, &quot;Sam&quot;, &quot;Eng&quot;, 60000)
-    dept.hire(e)
-    e.deactivate()
-    assert dept.headcount() == 0
-
-def test_payroll_excludes_inactive():
-    dept = Department(&quot;Eng&quot;, 300000)
-    e1 = Employee(3, &quot;Jo&quot;, &quot;Eng&quot;, 50000)
-    e2 = Employee(4, &quot;Pat&quot;, &quot;Eng&quot;, 55000)
-    dept.hire(e1); dept.hire(e2)
-    e2.deactivate()
-    assert dept.payroll_total() == 50000
-
-def test_over_budget_true():
-    dept = Department(&quot;Mktg&quot;, 100000)
-    dept.hire(Employee(5, &quot;Lee&quot;, &quot;Mktg&quot;, 120000))
-    assert dept.over_budget() is True
-# ...</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: tests/test_models.py — five required test minimum</aside></section>
-<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Common OOP Mistakes to Catch This Week</h1></section></div></div>
+# Output:
+# Request 1 was sent to staff. The address has not changed yet.
+# 14 Bay Road
+# Request 1 approved.
+# 9 Pine Street
+# Request 1 is already approved.</code></pre><aside class="notes">The address stays 14 Bay Road until approve. A second approve changes nothing.</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal &nbsp;→&nbsp; python3 main.py</div><div class="demo-sub">Type: hello · Has my package A101 shipped? · I want to change my shipping address · then the order ID and an address · quit · yes</div></div><aside class="notes">LIVE DEMO
+Run main.py with Ollama running. Follow the lab's message list. The model should ask for the order ID and address, file the change, and tell the customer it will be reviewed. At the staff review type yes and show the address changed. If the model is slow, switch to KeywordModel and show that it cannot collect an address: that is the point of a real model.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 6</div><h1 style="font-size:1.4em;">Stand-ins and Tests</h1><aside class="notes">KeywordModel runs the chatbot without Ollama. FakeModel makes tests exact.</aside></section>
+<section class="s-point"><h2>Two stand-ins</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>KeywordModel</code>: last week's keyword rules, now inside a model with <code>decide</code>.</li><li><code>FakeModel</code>: plays back the exact decisions a test gives it.</li><li>Tests can make the model ask for a missing tool, send an empty address, or ask forever.</li><li>Trade-off: with Ollama off, a lookup now needs the model too. Exercise 4 fixes that.</li></ul><aside class="notes">Show one test from tests/test_chatbot.py, test_made_up_address_is_refused, on the lecture page.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 7</div><h1 style="font-size:1.4em;">What Tools Did Not Fix</h1><aside class="notes">Close the loop on the three problems.</aside></section>
+<section class="s-point"><h2>Fixed, not fixed, kept on purpose</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Fixed: A101 answered from a lookup in five out of five runs.</li><li>Not fixed: the false closing time, repeated in five out of five runs. No tool knows the hours.</li><li>Kept: gift cards still go to a person. A protective rule should prefer false alarms.</li></ul><aside class="notes">Answer the opening promise: matching only the whole word would miss 'Can I pay by card?'. A wait is cheap; a missed payment question is not.</aside></section>
+<section class="s-point"><h2>Essential, optional, left out</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><strong>Essential:</strong> tool calls and docstrings, <code>decide</code>, the loop and its limit, the Toolbox checks, the change queue, <code>FakeModel</code> tests.</li><li><strong>Optional:</strong> <code>tool_messages</code>, the fallback model, turning a guardrail off to watch.</li><li><strong>Left out:</strong> several tool calls at once, streaming, online services, signing customers in, lasting data.</li></ul><aside class="notes">Point students to the lab: Parts 2 to 5 and the tests are graded and need no Ollama.</aside></section>
+<section class="s-point"><h2>Next week</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Approved changes live in a list. Stop the program and they are gone.</li><li>Week 13: choose your own business and design its data in SQLite.</li><li>Week 14: database functions become the tools. Today's chatbot is copied over unchanged.</li></ul><aside class="notes">End on the problem: a business needs data that lasts.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <script>
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W12</title><style>html{min-height:100vh;}
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 12 — Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</title><style>html{min-height:100vh;}
 
     :root {
       --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
@@ -145,6 +145,15 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* video/infographic playlist */
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary)}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -158,129 +167,225 @@ body{min-height:100vh;width:100%;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 W12 — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap">
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4CB;</span>
-  <span><strong style="color:var(--text);">In-class page.</strong>
-  Read the <a href="week12_reading.html" style="color:var(--muted);">Week 12 reading</a>
-  first if you haven't. Follow along during the live session.</span>
-</div><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Object-Oriented Design · Module 12 · Lecture</div>
-<h1 class="wk-title">OOP III — Applied Practice &amp; Design</h1>
-<p class="wk-deck">Students design and build a standalone multi-class business simulation from scratch and write comprehensive pytest tests before beginning the capstone.</p>
-<div class="meta">
+<meta name="description" content="ISM3232 W11 — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><div class="wrap"><div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4CB;</span><span><strong style="color:var(--text);">In-class page.</strong> Read the <a href="week12_reading.html" style="color:var(--muted);">Week 12 reading</a> first if you haven't. Follow along during the live session.</span></div><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Building AI Agents · Module 12 · Lecture</div><h1 class="wk-title">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</h1><p class="wk-deck">Let the model choose when to use a tool, check every request it makes, and make every change wait for a person.</p><div class="meta">
 <span class="chip accent">Module 12 · Lecture</span>
-<span class="chip">Unit 3 · Object-Oriented Design</span>
-<span class="chip">~80 min</span>
-</div>
-<div class="weekjump">
+<span class="chip">Unit 3 · Building AI Agents</span>
+<span class="chip">~75 min</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week12_reading.html" class="weekjump-link">Reading</a>
 <a href="week12_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week12_lab.html" class="weekjump-link">Lab</a>
-</div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" data-embed-src="https://www.youtube.com/embed/PLACEHOLDER_V29" data-embed-title="Python OOP Part 3 — Design-First Multi-Class Systems" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px dashed var(--border,rgba(255,255,255,.15));background:var(--bg2,rgba(255,255,255,.03));">
-    <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box;gap:6px;">
-      <span style="font-family:var(--mono,monospace);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim,#888);">Video coming soon</span>
-      <span style="font-size:13px;color:var(--dim,#888);max-width:85%;">Python OOP Part 3 — Design-First Multi-Class Systems</span>
-    </div>
-  </div>
-</div>
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F9E0;</div><div><div class="callout-label">This week &mdash; the model gets to ask for tools</div><div class="callout-body">Last week the rules decided when to use a tool, and they missed things. This week the model decides, your code checks every request, and anything that changes an order waits for a person. Every model output on this page is a real run of the course model; yours will be worded differently.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Session plan &mdash; 75 minutes</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Minutes</th><th>Segment</th><th>What happens</th></tr></thead><tbody><tr><td>0&ndash;10</td><td>Where Week 11 left off</td><td>A101, gift cards, and a history that hides who said what</td></tr><tr><td>10&ndash;20</td><td>Tool calls</td><td>The model asks; your code decides. Docstrings become tool descriptions</td></tr><tr><td>20&ndash;35</td><td>The tool loop</td><td><code>decide</code>, <code>model_reply</code>, and a <code>tool</code> entry in the history</td></tr><tr><td>35&ndash;50</td><td>One door</td><td><code>Toolbox.run</code> and the made-up address</td></tr><tr><td>50&ndash;60</td><td>Changes wait</td><td><code>ChangeQueue</code>, staff review, one real conversation</td></tr><tr><td>60&ndash;70</td><td>Stand-ins and tests</td><td><code>KeywordModel</code>, <code>FakeModel</code>, tests that need no Ollama</td></tr><tr><td>70&ndash;75</td><td>Wrap-up</td><td>What tools did not fix, and next week's problem</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Where Week 11 Left Off</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">The rules missed things</div><p><em>Has my package A101 shipped?</em> has no word <em>order</em>, so the order rule never ran and the model answered from memory. It once said A101 had shipped. It had not.</p></div><div class="card"><div class="card-title">The rules caught too much</div><p><em>Do you sell gift cards?</em> contains <em>card</em>, so it went to a person without the model ever seeing it.</p></div></div><div class="card"><div class="card-title">And nobody could tell who said what</div><p>Every reply in the history had the role <code>assistant</code>, whether a rule, a tool or the model wrote it. Today fixes the first and third problems, and keeps the second on purpose. By the end of the hour you will be able to say why.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Tool Calls</div><div class="line"></div></div><div class="card"><div class="card-title">The model asks; your code decides</div><p>Along with the conversation, the chatbot now sends a list of <strong>tools</strong>. The model either writes a reply or sends back a <strong>tool call</strong>: a tool's name and the values to use. It never runs anything. Your code decides whether to run the tool.</p></div><div class="code-block"><div class="cb-label">A decision is a dictionary</div><pre>decision = {<span class="str">"tool"</span>: <span class="str">"look_up_order"</span>, <span class="str">"arguments"</span>: {<span class="str">"order_id"</span>: <span class="str">"A101"</span>}}
+print(<span class="str">"text"</span> <span class="kw">in</span> decision)
+print(decision[<span class="str">"tool"</span>], decision[<span class="str">"arguments"</span>][<span class="str">"order_id"</span>])</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>False
+look_up_order A101</pre></div><div class="code-block"><div class="cb-label">order_tool.py &mdash; a method the model may ask for</div><pre>    <span class="kw">def</span> <span class="fn">look_up_order</span>(self, order_id):
+        <span class="str">"""Look up the status of one order.
 
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x2705;</div><div><div class="callout-label">OOP Checkpoint before the capstone</div><div class="callout-body">Week 12 is the OOP applied practice week. Students build a standalone multi-class simulation &mdash; no database, no Streamlit &mdash; and write comprehensive pytest tests. This is the last chance to confirm OOP fluency before SQL and Streamlit are introduced on top of it in Unit 4.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; What Applied OOP Practice Means</div><div class="line"></div></div><div class="card"><div class="card-title">The goal this week: build without a net</div><p>Weeks 10 and 11 introduced the concepts with guided examples. This week students design and build their own multi-class system from a prompt &mdash; choosing their own class names, attributes, and methods &mdash; and test every piece of business logic with pytest.</p><p>The deliverable is a Python project with at least two entity classes, one manager class, and five or more pytest tests. No database. No Streamlit. Pure OOP.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Design-First Approach</div><div class="line"></div></div><div class="card"><div class="card-title">Always design before you type</div><p>Before writing any code this week, students should write down: What are my two entity classes? What attributes does each one have? What methods does each one need? What does the manager class hold and what can it do?</p><p>A class design written in comments or a README takes five minutes and saves an hour of refactoring. This is the habit that separates developers who ship from developers who spin.</p></div><div class="cb"><div class="cb-label">Design template &mdash; fill this in before writing any class code</div><pre><span class="cm"># CLASS DESIGN &mdash; Week 12 Applied Practice
-#
-# Entity class 1: [ClassName]
-#   Attributes: [list all attributes and their types]
-#   Methods:    [list all methods with brief description]
-#
-# Entity class 2: [ClassName]
-#   Attributes: [list all attributes and their types]
-#   Methods:    [list all methods with brief description]
-#
-# Manager class: [ClassName]
-#   Holds: list of [entity class 1]
-#   Methods: add, list_by_status, total, summary_report
-#
-# Business rules (will become methods and test cases):
-#   [rule 1]
-#   [rule 2]
-#   [rule 3]</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Reference: The Complete Pattern</div><div class="line"></div></div><div class="card"><div class="card-title">Full example: Employee + Department + DepartmentManager</div><p>Use this as a model if students are stuck on what to build. They should NOT copy it &mdash; they must design their own domain &mdash; but they can reference the structure.</p></div><div class="cb"><div class="cb-label">models.py &mdash; two entity classes + one manager</div><pre><span class="kw">class</span> <span class="fn">Employee</span>:
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, emp_id, name, department, salary):
-        self.emp_id     = emp_id
-        self.name       = name
-        self.department = department
-        self.salary     = salary
-        self.active     = <span class="nm">True</span>
+        Args:
+            order_id: The order ID, like A100.
+        """</span>
+        found = self.find_order_id(order_id)
+        <span class="kw">if</span> found <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">return</span> <span class="str">"No order with that ID was found. Order IDs look like A100."</span>
+        <span class="kw">return</span> <span class="str">f"Order {found} is {self.find_status(found)}."</span></pre></div><div class="card"><div class="card-title">What to notice</div><p>The first line of the docstring says what the tool does. The <code>Args:</code> section says what each value should look like. The <code>ollama</code> package reads both and builds the description the model sees.</p><p>Until today a docstring was for people. Now a program reads it too.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; The Tool Loop</div><div class="line"></div></div><div class="code-block"><div class="cb-label">ollama_model.py &mdash; the new method, decide</div><pre>    <span class="kw">def</span> <span class="fn">decide</span>(self, instructions, history, tools):
+        <span class="str">"""Send the conversation and the tools. Return a reply or a tool request."""</span>
+        messages = [{<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: instructions}]
+        <span class="kw">for</span> message <span class="kw">in</span> history:
+            <span class="kw">if</span> message[<span class="str">"role"</span>] == <span class="str">"tool"</span>:
+                messages = messages + self.tool_messages(message)
+            <span class="kw">else</span>:
+                messages.append(message)
+        <span class="kw">try</span>:
+            response = chat(model=self.model_name, messages=messages, tools=tools)
+        <span class="kw">except</span> ConnectionError:
+            <span class="kw">return</span> <span class="kw">None</span>
+        <span class="kw">except</span> ResponseError:
+            <span class="kw">return</span> <span class="kw">None</span>
+        <span class="kw">if</span> response.message.tool_calls:
+            call = response.message.tool_calls[<span class="num">0</span>]
+            <span class="kw">return</span> {<span class="str">"tool"</span>: call.function.name, <span class="str">"arguments"</span>: call.function.arguments}
+        <span class="kw">return</span> {<span class="str">"text"</span>: response.message.content}</pre></div><div class="card"><div class="card-title">Why a new method?</div><p><code>reply</code> returns text, and the Week 11 mini-project still calls it. A model that can ask for tools returns a decision, so it gets a second method and <code>reply</code> stays as it was.</p></div><div class="code-block"><div class="cb-label">chatbot.py &mdash; model_reply, write together</div><pre>    <span class="kw">def</span> <span class="fn">model_reply</span>(self):
+        <span class="str">"""Ask the model. Run each tool it asks for, then ask again, up to a limit."""</span>
+        rounds = <span class="num">0</span>
+        <span class="kw">while</span> rounds &lt; MAX_TOOL_ROUNDS:
+            tool_list = self.tools.tool_list()
+            decision = self.model.decide(self.instructions, self.history, tool_list)
+            <span class="kw">if</span> decision <span class="kw">is</span> <span class="kw">None</span>:
+                <span class="kw">return</span> <span class="str">"Sorry, I can't answer that right now. Please try again in a moment."</span>
+            <span class="kw">if</span> <span class="str">"text"</span> <span class="kw">in</span> decision:
+                <span class="kw">return</span> decision[<span class="str">"text"</span>]
+            name = decision[<span class="str">"tool"</span>]
+            arguments = decision[<span class="str">"arguments"</span>]
+            result = self.tools.run(name, arguments, self.history)
+            self.history.append(
+                {
+                    <span class="str">"role"</span>: <span class="str">"tool"</span>,
+                    <span class="str">"tool_name"</span>: name,
+                    <span class="str">"arguments"</span>: arguments,
+                    <span class="str">"content"</span>: result,
+                }
+            )
+            rounds += <span class="num">1</span>
+        <span class="kw">return</span> <span class="str">"Sorry, I couldn't finish that. I'm passing you to a human agent."</span></pre></div><div class="code-block"><div class="cb-label">Run it with a fake model that asks for the lookup</div><pre><span class="kw">from</span> change_queue <span class="kw">import</span> ChangeQueue
+<span class="kw">from</span> chatbot <span class="kw">import</span> SupportChatbot
+<span class="kw">from</span> fake_model <span class="kw">import</span> FakeModel
+<span class="kw">from</span> order_tool <span class="kw">import</span> OrderLookup
+<span class="kw">from</span> stock_tool <span class="kw">import</span> StockLookup
+<span class="kw">from</span> toolbox <span class="kw">import</span> Toolbox
 
-    <span class="kw">def</span> <span class="fn">give_raise</span>(self, percent):
-        self.salary *= (<span class="nm">1</span> + percent / <span class="nm">100</span>)
+orders = {<span class="str">"A101"</span>: {<span class="str">"status"</span>: <span class="str">"processing"</span>, <span class="str">"address"</span>: <span class="str">"3 Gull Lane"</span>}}
+order_tool = OrderLookup(orders)
+tools = Toolbox(order_tool, StockLookup({}), ChangeQueue(order_tool))
+model = FakeModel(
+    [
+        {<span class="str">"tool"</span>: <span class="str">"look_up_order"</span>, <span class="str">"arguments"</span>: {<span class="str">"order_id"</span>: <span class="str">"A101"</span>}},
+        {<span class="str">"text"</span>: <span class="str">"Order A101 is still processing."</span>},
+    ]
+)
+bot = SupportChatbot(<span class="str">"Sunny"</span>, <span class="str">"Be brief."</span>, tools, model)
+print(bot.respond(<span class="str">"Has my package A101 shipped?"</span>))
+<span class="kw">for</span> entry <span class="kw">in</span> bot.history:
+    print(entry[<span class="str">"role"</span>], <span class="str">"|"</span>, entry[<span class="str">"content"</span>])</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Order A101 is still processing.
+user | Has my package A101 shipped?
+tool | Order A101 is processing.
+assistant | Order A101 is still processing.</pre></div><div class="card"><div class="card-title">What to notice</div><p>Two trips to the model for one customer message: one to ask for the tool, one to answer. The middle line is the new <code>tool</code> entry. The model's reply and the tool's result are no longer mixed up.</p><p><code>rounds</code> stops a model that never answers. After three trips the customer goes to a person.</p></div><div class="code-block"><div class="cb-label">ollama_model.py &mdash; tool_messages</div><pre>    <span class="kw">def</span> <span class="fn">tool_messages</span>(self, message):
+        <span class="str">"""Turn one tool entry into the two messages Ollama expects."""</span>
+        name = message[<span class="str">"tool_name"</span>]
+        request = {<span class="str">"function"</span>: {<span class="str">"name"</span>: name, <span class="str">"arguments"</span>: message[<span class="str">"arguments"</span>]}}
+        <span class="kw">return</span> [
+            {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">""</span>, <span class="str">"tool_calls"</span>: [request]},
+            {<span class="str">"role"</span>: <span class="str">"tool"</span>, <span class="str">"tool_name"</span>: name, <span class="str">"content"</span>: message[<span class="str">"content"</span>]},
+        ]</pre></div><div class="card"><div class="card-title">Ollama needs to see its own request</div><p>Store only the result and the model cannot tell it already asked. It asked for the same lookup twice in five out of five runs of <em>Where is order A100?</em> <code>tool_messages</code> turns one history entry into the two messages Ollama expects.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; One Door</div><div class="line"></div></div><div class="code-block"><div class="cb-label">toolbox.py &mdash; run, the one door</div><pre>    <span class="kw">def</span> <span class="fn">run</span>(self, name, arguments, history):
+        <span class="str">"""Check one tool request. Run the tool only if every check passes."""</span>
+        <span class="kw">if</span> name == <span class="str">"look_up_order"</span>:
+            order_id = self.clean(arguments, <span class="str">"order_id"</span>)
+            <span class="kw">if</span> order_id == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The order ID is missing. Ask the customer for it."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, order_id):
+                <span class="kw">return</span> <span class="str">"The customer has not given that order ID. Ask them for it."</span>
+            <span class="kw">return</span> self.order_tool.look_up_order(order_id)
+        <span class="kw">if</span> name == <span class="str">"check_stock"</span>:
+            item = self.clean(arguments, <span class="str">"item"</span>)
+            <span class="kw">if</span> item == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The product is missing. Ask the customer which product."</span>
+            <span class="kw">return</span> self.stock_tool.check_stock(item)
+        <span class="kw">if</span> name == <span class="str">"request_address_change"</span>:
+            order_id = self.clean(arguments, <span class="str">"order_id"</span>)
+            new_address = self.clean(arguments, <span class="str">"new_address"</span>)
+            <span class="kw">if</span> order_id == <span class="str">""</span> <span class="kw">or</span> new_address == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The order ID and the new address are both needed."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, order_id):
+                <span class="kw">return</span> <span class="str">"The customer has not given that order ID. Ask them for it."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, new_address):
+                <span class="kw">return</span> <span class="str">"The customer has not given that address. Ask them for it."</span>
+            <span class="kw">return</span> self.change_queue.request_address_change(order_id, new_address)
+        <span class="kw">return</span> <span class="str">f"There is no tool named {name}."</span></pre></div><div class="code-block"><div class="cb-label">toolbox.py &mdash; clean and customer_said</div><pre>    <span class="kw">def</span> <span class="fn">clean</span>(self, arguments, key):
+        <span class="str">"""Return one argument as text without extra spaces, or "" if it is missing."""</span>
+        <span class="kw">return</span> str(arguments.get(key, <span class="str">""</span>)).strip()
 
-    <span class="kw">def</span> <span class="fn">deactivate</span>(self):
-        self.active = <span class="nm">False</span>
+    <span class="kw">def</span> <span class="fn">customer_said</span>(self, history, text):
+        <span class="str">"""Return True if text appears in a message the customer typed."""</span>
+        <span class="kw">for</span> message <span class="kw">in</span> history:
+            <span class="kw">if</span> message[<span class="str">"role"</span>] == <span class="str">"user"</span> <span class="kw">and</span> text.lower() <span class="kw">in</span> message[<span class="str">"content"</span>].lower():
+                <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">return</span> <span class="kw">False</span></pre></div><div class="code-block"><div class="cb-label">Try the door</div><pre><span class="kw">from</span> change_queue <span class="kw">import</span> ChangeQueue
+<span class="kw">from</span> order_tool <span class="kw">import</span> OrderLookup
+<span class="kw">from</span> stock_tool <span class="kw">import</span> StockLookup
+<span class="kw">from</span> toolbox <span class="kw">import</span> Toolbox
 
-    <span class="kw">def</span> <span class="fn">is_senior</span>(self):
-        <span class="kw">return</span> self.salary &gt; <span class="nm">80000</span>
+orders = {<span class="str">"A100"</span>: {<span class="str">"status"</span>: <span class="str">"shipped"</span>, <span class="str">"address"</span>: <span class="str">"14 Bay Road"</span>}}
+order_tool = OrderLookup(orders)
+tools = Toolbox(order_tool, StockLookup({}), ChangeQueue(order_tool))
+history = [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"I want to change my shipping address"</span>}]
 
-<span class="kw">class</span> <span class="fn">Department</span>:
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, budget):
-        self.name       = name
-        self.budget     = budget
-        self.employees  = []
+print(tools.run(<span class="str">"delete_order"</span>, {<span class="str">"order_id"</span>: <span class="str">"A100"</span>}, history))
+print(tools.run(<span class="str">"look_up_order"</span>, {<span class="str">"order_id"</span>: <span class="str">" "</span>}, history))
+made_up = {<span class="str">"order_id"</span>: <span class="str">"A100"</span>, <span class="str">"new_address"</span>: <span class="str">"123 Main St"</span>}
+print(tools.run(<span class="str">"request_address_change"</span>, made_up, history))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>There is no tool named delete_order.
+The order ID is missing. Ask the customer for it.
+The customer has not given that order ID. Ask them for it.</pre></div><div class="code-block"><div class="cb-label">With the check turned off &mdash; filed in five out of five runs</div><pre>You: I want to change my shipping address
+Sunny: Your request to change the shipping address for order A100 has been submitted and is awaiting staff approval.
+  tool request_address_change {'order_id': 'A100', 'new_address': '123 Main St, Anytown, AN 12345'} -&gt; Request 1 was sent to staff. The address has not changed yet.
+  queued {'number': 1, 'order_id': 'A100', 'new_address': '123 Main St, Anytown, AN 12345', 'status': 'waiting'}</pre></div><div class="code-block"><div class="cb-label">With the check on &mdash; refused in five out of five runs</div><pre>You: I want to change my shipping address
+Sunny: Could you please provide the order ID for the address change request?
+  tool request_address_change {'order_id': 'A100', 'new_address': '123 Main St, Anytown, AN 12345'} -&gt; The customer has not given that order ID. Ask them for it.</pre></div><div class="card"><div class="card-title">What to notice</div><p>Asked to change an address with no details, the model made up an order and an address. The check refused both, and the refusal told the model what to do next: ask the customer.</p><p><code>.strip()</code> is new: it removes spaces from both ends. The empty check comes first because <code>"" in "any text"</code> is <code>True</code>; an empty address once got through an earlier version of this check.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 5 &mdash; Changes Wait for a Person</div><div class="line"></div></div><div class="code-block"><div class="cb-label">change_queue.py &mdash; the change tool only files a request</div><pre>    <span class="kw">def</span> <span class="fn">request_address_change</span>(self, order_id, new_address):
+        <span class="str">"""Ask staff to change the shipping address on one order. Staff must approve it.
 
-    <span class="kw">def</span> <span class="fn">hire</span>(self, employee):
-        self.employees.append(employee)
+        Args:
+            order_id: The order ID, like A100.
+            new_address: The full new shipping address.
+        """</span>
+        order_id = order_id.upper()
+        <span class="kw">if</span> self.order_tool.find_status(order_id) <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">return</span> <span class="str">"No order with that ID was found. Order IDs look like A100."</span>
+        number = len(self.requests) + <span class="num">1</span>
+        request = {
+            <span class="str">"number"</span>: number,
+            <span class="str">"order_id"</span>: order_id,
+            <span class="str">"new_address"</span>: new_address,
+            <span class="str">"status"</span>: <span class="str">"waiting"</span>,
+        }
+        self.requests.append(request)
+        <span class="kw">return</span> <span class="str">f"Request {number} was sent to staff. The address has not changed yet."</span></pre></div><div class="code-block"><div class="cb-label">change_queue.py &mdash; approve is the only code that changes an order</div><pre>    <span class="kw">def</span> <span class="fn">approve</span>(self, number):
+        <span class="str">"""Approve one waiting request and make the change."""</span>
+        request = self.find(number)
+        <span class="kw">if</span> request <span class="kw">is</span> <span class="kw">None</span>:
+            <span class="kw">return</span> <span class="str">f"There is no request {number}."</span>
+        <span class="kw">if</span> request[<span class="str">"status"</span>] != <span class="str">"waiting"</span>:
+            <span class="kw">return</span> <span class="str">f"Request {number} is already {request['status']}."</span>
+        request[<span class="str">"status"</span>] = <span class="str">"approved"</span>
+        self.order_tool.change_address(request[<span class="str">"order_id"</span>], request[<span class="str">"new_address"</span>])
+        <span class="kw">return</span> <span class="str">f"Request {number} approved."</span></pre></div><div class="code-block"><div class="cb-label">Try the queue</div><pre><span class="kw">from</span> change_queue <span class="kw">import</span> ChangeQueue
+<span class="kw">from</span> order_tool <span class="kw">import</span> OrderLookup
 
-    <span class="kw">def</span> <span class="fn">headcount</span>(self):
-        <span class="kw">return</span> len([e <span class="kw">for</span> e <span class="kw">in</span> self.employees <span class="kw">if</span> e.active])
+orders = {<span class="str">"A100"</span>: {<span class="str">"status"</span>: <span class="str">"shipped"</span>, <span class="str">"address"</span>: <span class="str">"14 Bay Road"</span>}}
+queue = ChangeQueue(OrderLookup(orders))
 
-    <span class="kw">def</span> <span class="fn">payroll_total</span>(self):
-        <span class="kw">return</span> sum(e.salary <span class="kw">for</span> e <span class="kw">in</span> self.employees <span class="kw">if</span> e.active)
-
-    <span class="kw">def</span> <span class="fn">over_budget</span>(self):
-        <span class="kw">return</span> self.payroll_total() &gt; self.budget</pre></div><div class="cb"><div class="cb-label">tests/test_models.py &mdash; five required test minimum</div><pre><span class="kw">from</span> models <span class="kw">import</span> Employee, Department
-
-<span class="kw">def</span> <span class="fn">test_give_raise_increases_salary</span>():
-    e = <span class="fn">Employee</span>(<span class="nm">1</span>, <span class="st">&quot;Alex&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">70000</span>)
-    e.give_raise(<span class="nm">10</span>)
-    assert e.salary == <span class="nm">77000</span>
-
-<span class="kw">def</span> <span class="fn">test_deactivate_removes_from_headcount</span>():
-    dept = <span class="fn">Department</span>(<span class="st">&quot;Eng&quot;</span>, <span class="nm">300000</span>)
-    e = <span class="fn">Employee</span>(<span class="nm">2</span>, <span class="st">&quot;Sam&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">60000</span>)
-    dept.hire(e)
-    e.deactivate()
-    assert dept.headcount() == <span class="nm">0</span>
-
-<span class="kw">def</span> <span class="fn">test_payroll_excludes_inactive</span>():
-    dept = <span class="fn">Department</span>(<span class="st">&quot;Eng&quot;</span>, <span class="nm">300000</span>)
-    e1 = <span class="fn">Employee</span>(<span class="nm">3</span>, <span class="st">&quot;Jo&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">50000</span>)
-    e2 = <span class="fn">Employee</span>(<span class="nm">4</span>, <span class="st">&quot;Pat&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">55000</span>)
-    dept.hire(e1); dept.hire(e2)
-    e2.deactivate()
-    assert dept.payroll_total() == <span class="nm">50000</span>
-
-<span class="kw">def</span> <span class="fn">test_over_budget_true</span>():
-    dept = <span class="fn">Department</span>(<span class="st">&quot;Mktg&quot;</span>, <span class="nm">100000</span>)
-    dept.hire(<span class="fn">Employee</span>(<span class="nm">5</span>, <span class="st">&quot;Lee&quot;</span>, <span class="st">&quot;Mktg&quot;</span>, <span class="nm">120000</span>))
-    assert dept.over_budget() is <span class="nm">True</span>
-
-<span class="kw">def</span> <span class="fn">test_is_senior_boundary</span>():
-    assert <span class="fn">Employee</span>(<span class="nm">6</span>, <span class="st">&quot;Kim&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">80000</span>).is_senior() is <span class="nm">False</span>
-    assert <span class="fn">Employee</span>(<span class="nm">7</span>, <span class="st">&quot;Kim&quot;</span>, <span class="st">&quot;Eng&quot;</span>, <span class="nm">80001</span>).is_senior() is <span class="nm">True</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Common OOP Mistakes to Catch This Week</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Mistake</th><th>What it looks like</th><th>Fix</th></tr></thead><tbody><tr><td>Forgetting self in method signature</td><td>def approve(): instead of def approve(self):</td><td>Every method must have self as first parameter</td></tr><tr><td>Forgetting self when accessing attributes</td><td>status = "Approved" instead of self.status = "Approved"</td><td>Always use self.attribute_name inside methods</td></tr><tr><td>Putting print() in methods</td><td>methods that print instead of return</td><td>Methods should return data; main.py prints it</td></tr><tr><td>Not calling super().__init__() in subclass</td><td>Inherited attributes missing in subclass</td><td>Always call super().__init__() in the child constructor</td></tr><tr><td>Testing print output instead of return values</td><td>No return in method, tests assert nothing</td><td>Every business logic method should return a value</td></tr></tbody></table><div class="assignment"><div class="a-header">Assignment 12 &middot; Due end of Week 12 &middot; OOP Checkpoint</div><h3>Multi-Class Business Simulation</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>models.py</code> &mdash; at least 2 entity classes and 1 manager class, each with docstrings and meaningful business logic methods.</div></div><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>main.py</code> &mdash; a simulation that creates instances, calls methods, and prints a formatted report demonstrating all class capabilities.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_models.py</code> &mdash; at least 5 pytest tests covering business logic. Must include at least one boundary/edge-case test.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File:</strong> <code>README.md</code> &mdash; class design written out before coding: class names, attributes, methods, and business rules.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/29_oop3_design_infographic.png"
-       alt="OOP III: Design-First Systems — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
-</div>
-
-<!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>Talking to a Local Model — Ollama, Instructions &amp; History</span></a><span></span><a href="week13_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 12 &middot; Module 6 &mdash; OOP III: Applied Practice and pytest Checkpoint</div></div>
+print(queue.request_address_change(<span class="str">"A100"</span>, <span class="str">"9 Pine Street"</span>))
+print(orders[<span class="str">"A100"</span>][<span class="str">"address"</span>])
+print(queue.approve(<span class="num">1</span>))
+print(orders[<span class="str">"A100"</span>][<span class="str">"address"</span>])
+print(queue.approve(<span class="num">1</span>))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>Request 1 was sent to staff. The address has not changed yet.
+14 Bay Road
+Request 1 approved.
+9 Pine Street
+Request 1 is already approved.</pre></div><div class="code-block"><div class="cb-label">One real conversation with the real model</div><pre>Type a message, or type quit to stop.
+You: hello
+Sunny: Hello! How may I assist you today?
+You: Has my package A101 shipped?
+Sunny: Your package A101 is still processing.
+You: Is the day pack in stock?
+Sunny: The day pack is currently out of stock.
+You: I want to change my shipping address
+Sunny: Could you please provide the full new shipping address?
+You: It's order A102
+Sunny: Could you please provide the full new shipping address for order A102?
+You: 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and will be reviewed by staff. Please wait for confirmation.
+You: Do you sell gift cards?
+Sunny: I can't help with that here. I'm passing you to a human agent.
+You: quit
+Messages in this conversation: 19
+Staff review
+Request 1: A102 to 9 Pine Street, Tampa
+Approve? yes or no: yes
+Request 1 approved.
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 9 Pine Street, Tampa</pre></div><div class="card"><div class="card-title">What to notice</div><p>The model asked for the missing details, filed the change, and told the customer it would be reviewed. The address only changed when staff typed <code>yes</code>. <code>request_address_change</code> checks the order ID exactly: a lookup may find A100 inside A1000, a change may not. <em>Do you sell gift cards?</em> still went to a person.</p><p>Last week an address request ended the conversation. Now the chatbot collects the details and a person still decides.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 6 &mdash; Stand-ins and Tests</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">KeywordModel</div><p>Last week's keyword rules, moved out of the chatbot into a model with <code>decide</code>. It runs the chatbot without Ollama, and it still misses <em>Has my package A101 shipped?</em></p></div><div class="card"><div class="card-title">FakeModel</div><p>Plays back the exact decisions a test gives it. A test can make the model ask for a tool that does not exist, send an empty address, or ask forever.</p></div></div><div class="code-block"><div class="cb-label">The same chatbot with Ollama switched off</div><pre>Type a message, or type quit to stop.
+You: hello
+Sunny: Sorry, I can't answer that right now. Please try again in a moment.
+You: Where is order A100?
+Sunny: Sorry, I can't answer that right now. Please try again in a moment.
+You: quit
+Messages in this conversation: 4
+Staff review
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street</pre></div><div class="card"><div class="card-title">A trade-off to name</div><p>Last week the order rule kept working when Ollama was down. Now that the model decides, a lookup needs the model too. Exercise 4 in the lab builds a model that falls back to the keyword rules when the real one has no answer.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 7 &mdash; What Tools Did Not Fix</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Fixed</div><p>A101 was answered from a lookup in five out of five runs.</p></div><div class="card"><div class="card-title">Not fixed</div><p>Told the store now closes at 11 pm, the model repeated it in five out of five runs. No tool knows the hours, so no tool is called.</p></div></div><div class="card"><div class="card-title">Kept on purpose: gift cards</div><p>The payment rule still looks for <code>card</code> anywhere. Matching only the whole word would miss <em>Can I pay by card?</em> A gift-card question sent to a person costs a short wait; a missed payment question could put card details in front of the model. When a rule protects something, prefer false alarms.</p></div><div class="section-divider"><div class="line"></div><div class="label">What Is Essential, What Is Optional, What Is Left Out</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Essential</div><p>Tool calls and docstrings, <code>decide</code>, the tool loop and its limit, the <code>tool</code> entry, the Toolbox checks, the change queue, <code>FakeModel</code> tests.</p></div><div class="card"><div class="card-title">Optional enrichment</div><p>Why Ollama needs the model's own request (<code>tool_messages</code>), the fallback model (Exercise 4), turning a guardrail off to watch what happens (Exercise 3).</p></div></div><div class="card"><div class="card-title">Left out on purpose</div><p>Several tool calls in one decision, streaming, online AI services, signing customers in, and data that lasts after the program stops (next week).</p></div><div class="section-divider"><div class="line"></div><div class="label">Discussion</div><div class="line"></div></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion 1: who decides?</div><div class="p-text">The model asked for <code>request_address_change</code> with an address nobody typed. Whose job was it to stop that: the model's, the instructions', or the code's?</div><div class="p-hint">Look for: the model cannot check itself; instructions help but do not guarantee; the Toolbox check and the staff approval are code and people.</div></div><div class="prompt"><div class="p-num">Discussion 2: which tools need a person?</div><div class="p-text">Bayside wants three more tools: show a product's price, cancel an order, and issue a refund. Which ones may run straight away, and which must wait in the queue?</div><div class="p-hint">Look for: looking something up changes nothing; anything that moves money or changes an order waits for a person.</div></div><div class="prompt"><div class="p-num">Discussion 3: false alarms</div><div class="p-text">Is it acceptable that <em>Do you sell gift cards?</em> goes to a person?</div><div class="p-hint">Look for: the cost of each kind of mistake; a protective rule should prefer the cheap mistake.</div></div></div><div class="card"><div class="card-title">Misconceptions to listen for</div><p>“The model runs the tool.” It only asks; <code>run</code> does the work.</p><p>“A good docstring makes the model safe.” It makes requests better. The checks make them safe.</p><p>“If the tool exists, any request for it is fine.” A request can carry made-up values; that is what <code>customer_said</code> is for.</p></div><div class="card"><div class="card-title">Where this goes next</div><p>Approved changes live in a Python list. Stop the program and they are gone. Next week you choose a business of your own, design its data, and keep it in a SQLite database. In Week 14 the database functions become the tools, and the chatbot you wrote today is copied over unchanged.</p></div><div class="assignment"><div class="a-header">Assignment 12 &middot; Due end of Week 12 &middot; Tools and Guardrails</div><h3>A chatbot that asks for tools</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Files:</strong> <code>toolbox.py</code>, <code>change_queue.py</code>, <code>keyword_model.py</code>, <code>fake_model.py</code>, and the updated chatbot, tools and <code>ollama_model.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>Tests:</strong> <code>tests/test_tools.py</code> and the new <code>tests/test_chatbot.py</code>, all passing with Ollama switched off.</div></div><div class="deliverable"><div class="d-icon">&#x1F4DD;</div><div class="d-text"><strong>File:</strong> <code>week12_answers.md</code> with your answers to Exercises 1 and 3.</div></div><div class="deliverable"><div class="d-icon">&#x1F6E0;</div><div class="d-text"><strong>Mini-project:</strong> your assistant, now choosing its own tool, with a request that waits for approval.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week11_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>Talking to a Local Model — Ollama, Instructions &amp; History</span></a><span></span><a href="week13_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 12 &middot; Module 6 &mdash; Tools and Guardrails: Model-Chosen Tools, Checks, and Approval</div></div>
 <script src="../site.js"></script>
 </body></html>

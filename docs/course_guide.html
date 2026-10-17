@@ -242,8 +242,8 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 </tr>
 <tr>
 <td><span class="mod-num" style="color:var(--u3);">W12</span></td>
-<td><span class="mod-title">OOP III — Applied Practice &amp; Design</span></td>
-<td class="mod-topics">Design patterns in practice. A complete OOP mini-project: model a business domain end-to-end. Code review and capstone planning.</td>
+<td><span class="mod-title">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span></td>
+<td class="mod-topics">The model chooses tools. One checked door for every request, made-up details refused, and an approval queue for changes. Tests with a fake model.</td>
 <td><span class="tag req">W11</span></td>
 <td>4–6 hr</td>
 </tr>
@@ -337,7 +337,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>Week 10 now teaches the minimum object-oriented programming needed to build a business chatbot: class, object, attribute, method, <code>__init__</code>, <code>self</code>, and composition. Students build a support chatbot class that is handed a separate order-lookup tool. Replies come from keyword rules. There is no AI model, extra package, API key or internet connection in the week.</p>
 <p><strong>Essential:</strong> the seven terms above and tracing one message through the program. <strong>Optional enrichment:</strong> the functions-and-dictionary version, the real-model preview, and the second tool in the lab exercises. <strong>Left out on purpose:</strong> inheritance, abstract classes, decorators, metaclasses and design patterns. A chatbot with a tool needs <em>has a</em>, not <em>is a kind of</em>.</p>
 <p><strong>Misconceptions to listen for:</strong> the class is the chatbot; <code>self</code> is something the caller passes; two chatbots share one history; using a class makes the chatbot intelligent. <strong>Teaching material:</strong> timing, discussion questions and speaker notes are on the Week 10 lecture page and in the lab slides.</p>
-<p>Weeks 12 to 16 are being rebuilt in the same direction (tools and guardrails, then an agent capstone). Until each one is released, the rows and dependency chains in this guide that mention OOP III and the Request Tracker capstone describe the earlier version.</p>
+<p>Week 12 has been rebuilt as well (see below). Weeks 13 to 16 are being rebuilt in the same direction, toward an agent capstone with a chat page and a staff dashboard. Until each one is released, the rows and dependency chains in this guide that mention the Request Tracker capstone describe the earlier version.</p>
 </div>
 
 <div class="callout teal">
@@ -346,6 +346,14 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p><strong>Essential:</strong> messages and roles, sending the whole history, the model as a part (<code>MockModel</code> and <code>OllamaModel</code>), <code>try</code>/<code>except</code>, instructions that carry facts, and rules first. <strong>Optional enrichment:</strong> the context window, and writing a third model class. <strong>Left out on purpose:</strong> the model choosing tools (Week 12), online services and API keys, streaming, training, and temperature.</p>
 <p><strong>Before class:</strong> ask students to install Ollama and download the model ahead of time. The download will not finish on a crowded classroom network. Windows students install Ollama inside their Ubuntu (WSL) terminal. <strong>Laptops that cannot run the model:</strong> every graded part works with the mock model, and the tests must pass with Ollama switched off. Those students pair up for the real-model parts and say so in their README. No one is penalized for hardware.</p>
 <p><strong>Misconceptions to listen for:</strong> the model knows our store; it remembers me; good instructions make it safe; a mock is cheating; <code>try</code> fixes the error. <strong>Teaching material:</strong> timing, discussion questions and speaker notes are on the Week 11 lecture page and in the lab slides. Every model output shown on the Week 11 pages is one real run, and wording on student screens will differ.</p>
+</div>
+
+<div class="callout teal">
+<div class="callout-title">Week 12 was rebuilt in Fall 2026: Tools and Guardrails</div>
+<p>Week 12 lets the model choose when to use a tool. Tools are methods on the Week 10 tool objects, described by their docstrings; the model returns either a reply or a tool request, and the chatbot runs a loop of at most three rounds. Every request passes one <code>Toolbox</code>, which refuses unknown tools, empty values, and order IDs or addresses the customer never typed. An address change no longer ends in a handoff: the chatbot files a request in a <code>ChangeQueue</code>, and only a staff approval changes the order. The payment handoff stays a keyword rule, so <em>gift cards</em> still go to a person on purpose.</p>
+<p><strong>Essential:</strong> tool calls and docstrings, the new <code>decide</code> method beside <code>reply</code>, the tool loop and its limit, the <code>tool</code> history entry, the Toolbox checks, the change queue, and tests with <code>FakeModel</code>. <strong>Optional enrichment:</strong> why Ollama needs the model's own request (<code>tool_messages</code>), turning a guardrail off to watch (Exercise 3), and a fallback model for when Ollama is down (Exercise 4). <strong>Left out on purpose:</strong> several tool calls at once, streaming, online services, signing customers in, and data that lasts (Week 13).</p>
+<p><strong>What the real runs showed:</strong> with the customer-said check off, the model invented an order and an address and filed the change in five out of five runs; with it on, every one was refused and the model asked the customer. The false closing time from Week 11 is still repeated: no tool knows the hours. <strong>Laptops that cannot run the model:</strong> Parts 2 to 5, the tests and Exercises 1, 2 and 4 need nothing but Python and are what is graded.</p>
+<p><strong>Misconceptions to listen for:</strong> the model runs the tool; a good docstring makes the model safe; any request for an existing tool is fine. <strong>Teaching material:</strong> timing, discussion questions and speaker notes are on the Week 12 lecture page and in the lab slides. Every model output on the Week 12 pages is a saved real run, and wording on student screens will differ.</p>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
@@ -389,7 +397,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div class="unit-label" style="color:var(--u3);">Block 4 — Object-Oriented Design (W10 + W11 + W12)</div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP for Agents — Classes, Objects &amp; Composition</span><span class="ms">Morning — class, object, __init__, self; a chatbot class handed a separate tool</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">Talking to a Local Model — Ollama, Instructions &amp; History</span><span class="ms">Afternoon — Ollama, messages and history; the chatbot is handed a model; try/except</span></div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice</span><span class="ms">Evening or next morning — end-to-end mini-project, capstone schema design</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span><span class="ms">Evening or next morning — tool calls, the Toolbox checks, the approval queue</span></div>
 </div>
 
 <div class="unit-block">
@@ -467,8 +475,8 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 </div>
 
 <div class="unit-block">
-<div class="unit-label" style="color:var(--u3);">Week 6 — OOP Applied (W12)</div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice &amp; Design</span><span class="ms">Full week — end-to-end OOP mini-project + capstone database schema planning</span></div>
+<div class="unit-label" style="color:var(--u3);">Week 6 — Tools and Guardrails (W12)</div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span><span class="ms">Full week — tool calls, guardrails, an approval queue, and tests with a fake model</span></div>
 </div>
 
 <div class="unit-block">
@@ -528,7 +536,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div class="unit-label" style="color:var(--u3);">Unit 3 · Object-Oriented Design (W10–W12)</div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W10</span><span class="mt">OOP for Agents — Classes, Objects &amp; Composition</span><span class="ms">Class, object, __init__, self, methods; composition with a chatbot and a tool</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u3);">W11</span><span class="mt">Talking to a Local Model — Ollama, Instructions &amp; History</span><span class="ms">Ollama, messages, history; the model as a part; try/except; rules first</span></div>
-<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">OOP III — Applied Practice &amp; Design</span><span class="ms">End-to-end OOP mini-project; code review; capstone planning</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u3);">W12</span><span class="mt">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span><span class="ms">Model-chosen tools; the Toolbox checks; the approval queue; FakeModel tests</span></div>
 </div>
 
 <div class="unit-block">

@@ -192,63 +192,1211 @@ body{min-height:100vh;width:100%;}
 body{min-height:100vh;width:100%;}
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 12 In-Class Lab — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Object-Oriented Design · Module 12 · Lab</div>
-<h1 class="wk-title">OOP III — Applied Practice &amp; Design</h1>
-<p class="wk-deck">Module 6 &mdash; OOP III: Applied Practice and Design &mdash; design and build your own multi-class business system from scratch</p>
-<div class="meta">
+<meta name="description" content="ISM3232 Week 11 lab — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><div class="wrap"><div class="page-eyebrow" style="color:#fb7185;">Unit 3 · Building AI Agents · Module 12 · Lab</div><h1 class="wk-title">Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</h1><p class="wk-deck">Module 6 &mdash; Tools and Guardrails &mdash; let the model choose when to use a tool, check every request in one place, and make address changes wait for staff approval</p><div class="meta">
 <span class="chip accent">Module 12 · Lab</span>
-<span class="chip">Unit 3 · Object-Oriented Design</span>
-<span class="chip">Full class period</span>
-</div>
-<div class="weekjump">
+<span class="chip">Unit 3 · Building AI Agents</span>
+<span class="chip">Full class period + exercises</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week12_reading.html" class="weekjump-link">Reading</a>
 <a href="week12_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week12_lab.html" class="weekjump-link current">Lab</a>
 <a href="week12_lab_slides.html" class="weekjump-link">Slides</a>
-</div>
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 OOP III</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
-<div class="time-bar"><span class="time-block">Part 1: Design document</span><span class="time-block">Part 2: Build entity class 1</span><span class="time-block">Part 3: Build entity class 2 + manager</span><span class="time-block">Part 4: 6+ pytest tests</span><span class="time-block">Part 5: Simulation + ritual</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period</div><div class="callout-body">Design and build your own multi-class system from scratch. Two entity classes, one manager class, and six or more pytest tests. <strong>You must write the design document before writing any code.</strong></div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Design before code &mdash; enforced</div><div class="callout-body">You may not open VS Code to write class code until your design document is reviewed by the instructor. Write the design in <code>design.md</code> first. Raise your hand when it is done.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Write Your Design Document First</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Complete design.md before writing any code</div><div class="task-body"><p>Create <code>design.md</code> in <code>module06_oop/</code>:</p><div class="code-block"><pre>cd ~/ism3232/module06_oop && touch design.md && code design.md</pre></div><p>Fill in every field:</p><div class="code-block"><div class="cb-label">design.md &mdash; complete all fields</div><pre># OOP Lab 12 Design
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: Where you start</span><span class="time-block">Part 2: Tools describe themselves</span><span class="time-block">Part 3: Changes wait</span><span class="time-block">Part 4: One door</span><span class="time-block">Part 5: The loop</span><span class="time-block">Part 6: The real model</span><span class="time-block">Part 7: Four exercises</span><span class="time-block">Part 8: Mini-project</span><span class="time-block">Part 9: Ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period, then finish on your own</div><div class="callout-body">Give the model a list of tools it may ask for, check every request it makes in one place, and make an address change wait until a person approves it. Then test all of it with a fake model that needs nothing installed.</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F4CD;</div><div><div class="callout-label">Where you start</div><div class="callout-body">Your <code>module06_agents</code> folder from Week 11, with <code>MockModel</code>, <code>OllamaModel</code>, a chatbot that is handed a model, your mini-project, and all tests passing. If anything is missing, finish the <a href="week11_lab.html">Week 11 lab</a> first.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">If your laptop cannot run the model</div><div class="callout-body">Parts 2 to 5, Exercises 1, 2 and 4, and every test need nothing but Python, and they are what is graded. For Part 6, Exercise 3 and the real-model part of the mini-project, work beside a classmate whose laptop runs the model, and write one line in your <code>README.md</code> saying who you worked with.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">No AI-generated classes</div><div class="callout-body">You must be able to explain every line of your classes. If you use AI to generate any part of a class definition, you must paste the AI output and add a comment explaining what each line does and why.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Where You Start</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Check that last week's work passes</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/module06_agents
+source .venv/bin/activate
+pytest -q</pre></div><p>The last line should say:</p><div class="expected" style="white-space:pre-wrap;">21 passed</div><p>That is fifteen chatbot tests and six mini-project tests. Your count can be higher if you wrote extra tests.</p><div class="hint-box"><strong>Run the whole test suite again only at the end of Part 5.</strong> Part 2 changes the shape of the order data, so your old chatbot tests fail until Part 5 replaces them. That is expected. Each part below has its own check.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; The Tools Describe Themselves</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Give every order an address, and add a tool method to OrderLookup</div><div class="task-body"><p>Each order becomes a dictionary with a status and an address, the shape of a database row in Week 14. <code>look_up_order</code> is the method the model may ask for. Its docstring is now read by a program, so write it exactly.</p><div class="code-block"><div class="cb-label">order_tool.py</div><pre># order_tool.py
 # Author: [Your Name]
 
-## Business Domain
-[Describe the system you are building in 1-2 sentences]
 
-## Entity Class 1
-Class name: ___
-Attributes (name + type):
-  - ___: ___
-  - ___: ___
-Methods (name + what it does + return type):
-  - ___: ___ -> ___
-  - ___: ___ -> ___
+class OrderLookup:
+    """A tool that knows about orders. It knows nothing about chatting."""
 
-## Entity Class 2
-Class name: ___
-Attributes:
-  - ___: ___
-Methods:
-  - ___: ___ -> ___
+    def __init__(self, orders):
+        """Store the orders this tool can look up."""
+        self.orders = orders
 
-## Manager Class
-Class name: ___
-Holds: list of [entity class 1]
-Methods:
-  - add(item): adds to the list
-  - list_by_status(status): filters by status
-  - total(): returns sum of a numeric attribute
-  - report(): prints formatted summary
+    def find_order_id(self, text):
+        """Return the first known order ID mentioned in text, or None."""
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
 
-## Business Rules (will become methods and test cases)
-1. ___
-2. ___
-3. ___
+    def find_status(self, order_id):
+        """Return the status of one order, or None if there is no such order."""
+        if order_id in self.orders:
+            return self.orders[order_id]["status"]
+        return None
 
-## Out of Scope
-[What you are NOT building]</pre></div><p><strong>Raise your hand when design.md is complete. Instructor will review before you continue.</strong></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Build Entity Class 1</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Write your first entity class in models.py</div><div class="task-body"><p>Once your design is approved: open <code>models.py</code> and write Entity Class 1. Requirements:</p><p>&bull; <code>__init__</code> with at least 4 attributes (including a status field that defaults to a pending-like value)</p><p>&bull; At least 2 business logic methods that return values (not print)</p><p>&bull; <code>__repr__</code> showing key attributes</p><p>&bull; Docstrings on every method</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Build Entity Class 2 and the Manager</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write Entity Class 2 and your Manager class</div><div class="task-body"><p>Entity Class 2 should be a different type of business object that relates to Entity Class 1 in your domain.</p><p>Manager class requirements:</p><p>&bull; <code>__init__</code> with an empty list</p><p>&bull; <code>add(item)</code> method</p><p>&bull; <code>list_by_status(status)</code> that filters and returns a list</p><p>&bull; <code>total()</code> that sums a numeric attribute</p><p>&bull; <code>report()</code> that prints a formatted summary</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Write At Least Six Tests</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write tests in tests/test_models.py</div><div class="task-body"><p>Required test coverage:</p><p>&bull; Default status / initial state of a new instance</p><p>&bull; Each business logic method (at least 2 methods tested)</p><p>&bull; At least one boundary/edge case</p><p>&bull; Manager: add increases count</p><p>&bull; Manager: filter returns correct subset</p><p>&bull; Manager: two manager instances are independent</p><p>Run: <code>pytest -v</code> &mdash; all tests must pass before continuing.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Main Simulation and Ritual</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write main.py and run the full ritual</div><div class="task-body"><p>Write a <code>main.py</code> that:</p><p>&bull; Creates a manager instance</p><p>&bull; Adds at least 4 entity instances</p><p>&bull; Calls at least one status-changing method</p><p>&bull; Calls <code>report()</code> to print the summary</p><p>Run: <code>python3 main.py</code></p><div class="code-block"><div class="cb-label">Ritual</div><pre>ruff format . && ruff check . && pytest -v
-git add . && git commit -m 'lab 12: OOP III applied practice' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 12 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>OOP III &mdash; Applied Practice</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> design.md &mdash; completed before any code was written.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 12</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week11_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>Talking to a Local Model — Ollama, Instructions &amp; History</span></a><span></span><a href="week13_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 12 In-Class Lab &middot; Module 6 &mdash; OOP III: Applied Practice and Design</div></div>
+    def look_up_order(self, order_id):
+        """Look up the status of one order.
+
+        Args:
+            order_id: The order ID, like A100.
+        """
+        found = self.find_order_id(order_id)
+        if found is None:
+            return "No order with that ID was found. Order IDs look like A100."
+        return f"Order {found} is {self.find_status(found)}."
+
+    def change_address(self, order_id, new_address):
+        """Change the shipping address on one order. Only an approval calls this."""
+        self.orders[order_id]["address"] = new_address</pre></div><p>Check it in the Python shell:</p><div class="code-block"><div class="cb-label">Python shell</div><pre>python3
+&gt;&gt;&gt; from order_tool import OrderLookup
+&gt;&gt;&gt; tool = OrderLookup({"A100": {"status": "shipped", "address": "14 Bay Road"}})
+&gt;&gt;&gt; tool.look_up_order("a100")
+'Order A100 is shipped.'
+&gt;&gt;&gt; tool.look_up_order("A999")
+'No order with that ID was found. Order IDs look like A100.'
+&gt;&gt;&gt; exit()</pre></div><p><code>look_up_order</code> uses last week's <code>find_order_id</code>, so <code>a100</code> works as well as <code>A100</code>. <code>change_address</code> is only ever called by an approval, in Part 3.</p></div></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Add a tool method to StockLookup</div><div class="task-body"><div class="code-block"><div class="cb-label">stock_tool.py &mdash; add this method to the class</div><pre>    def check_stock(self, item):
+        """Check how many of one product are in stock.
+
+        Args:
+            item: The product name, like rain jacket.
+        """
+        product = self.find_product(item)
+        if product is None:
+            return "That product was not found."
+        return f"We have {self.count_for(product)} of the {product} in stock."</pre></div><div class="code-block"><div class="cb-label">Python shell</div><pre>python3
+&gt;&gt;&gt; from stock_tool import StockLookup
+&gt;&gt;&gt; tool = StockLookup({"rain jacket": 12, "day pack": 0})
+&gt;&gt;&gt; tool.check_stock("Rain Jacket")
+'We have 12 of the rain jacket in stock.'
+&gt;&gt;&gt; tool.check_stock("tent")
+'That product was not found.'
+&gt;&gt;&gt; exit()</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Changes Wait for a Person</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write ChangeQueue in change_queue.py</div><div class="task-body"><p>A change tool never makes the change. It files a request with the status <code>"waiting"</code>. Only <code>approve</code> changes an order, and only once. It checks the order ID exactly, so a typo such as <code>A1000</code> is refused instead of being filed against <code>A100</code>.</p><div class="code-block"><div class="cb-label">change_queue.py</div><pre># change_queue.py
+# Author: [Your Name]
+
+
+class ChangeQueue:
+    """Changes waiting for a person to approve. Nothing changes until they do."""
+
+    def __init__(self, order_tool):
+        """Start with no requests. Approved changes go through the order tool."""
+        self.order_tool = order_tool
+        self.requests = []
+
+    def request_address_change(self, order_id, new_address):
+        """Ask staff to change the shipping address on one order. Staff must approve it.
+
+        Args:
+            order_id: The order ID, like A100.
+            new_address: The full new shipping address.
+        """
+        order_id = order_id.upper()
+        if self.order_tool.find_status(order_id) is None:
+            return "No order with that ID was found. Order IDs look like A100."
+        number = len(self.requests) + 1
+        request = {
+            "number": number,
+            "order_id": order_id,
+            "new_address": new_address,
+            "status": "waiting",
+        }
+        self.requests.append(request)
+        return f"Request {number} was sent to staff. The address has not changed yet."
+
+    def waiting(self):
+        """Return the requests that are still waiting for a decision."""
+        result = []
+        for request in self.requests:
+            if request["status"] == "waiting":
+                result.append(request)
+        return result
+
+    def find(self, number):
+        """Return the request with this number, or None."""
+        for request in self.requests:
+            if request["number"] == number:
+                return request
+        return None
+
+    def approve(self, number):
+        """Approve one waiting request and make the change."""
+        request = self.find(number)
+        if request is None:
+            return f"There is no request {number}."
+        if request["status"] != "waiting":
+            return f"Request {number} is already {request['status']}."
+        request["status"] = "approved"
+        self.order_tool.change_address(request["order_id"], request["new_address"])
+        return f"Request {number} approved."
+
+    def reject(self, number):
+        """Reject one waiting request. Nothing changes."""
+        request = self.find(number)
+        if request is None:
+            return f"There is no request {number}."
+        if request["status"] != "waiting":
+            return f"Request {number} is already {request['status']}."
+        request["status"] = "rejected"
+        return f"Request {number} rejected."</pre></div><div class="code-block"><div class="cb-label">Python shell</div><pre>python3
+&gt;&gt;&gt; from change_queue import ChangeQueue
+&gt;&gt;&gt; from order_tool import OrderLookup
+&gt;&gt;&gt; orders = {"A100": {"status": "shipped", "address": "14 Bay Road"}}
+&gt;&gt;&gt; queue = ChangeQueue(OrderLookup(orders))
+&gt;&gt;&gt; queue.request_address_change("A100", "9 Pine Street")
+'Request 1 was sent to staff. The address has not changed yet.'
+&gt;&gt;&gt; orders["A100"]["address"]
+'14 Bay Road'
+&gt;&gt;&gt; queue.approve(1)
+'Request 1 approved.'
+&gt;&gt;&gt; orders["A100"]["address"]
+'9 Pine Street'
+&gt;&gt;&gt; queue.approve(1)
+'Request 1 is already approved.'
+&gt;&gt;&gt; exit()</pre></div><p>The address stayed <code>14 Bay Road</code> until the approval, and the second approval changed nothing.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; One Door for Every Tool</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write Toolbox in toolbox.py</div><div class="task-body"><p>Every tool request from the model comes through <code>run</code>. It refuses a tool it does not know, an empty value, and an order ID or address the customer never typed. <code>.strip()</code> is new: it removes spaces from both ends of a string.</p><div class="code-block"><div class="cb-label">toolbox.py</div><pre># toolbox.py
+# Author: [Your Name]
+
+
+class Toolbox:
+    """Every tool request from the model comes through here and is checked."""
+
+    def __init__(self, order_tool, stock_tool, change_queue):
+        """Hold the tools the model is allowed to ask for."""
+        self.order_tool = order_tool
+        self.stock_tool = stock_tool
+        self.change_queue = change_queue
+
+    def tool_list(self):
+        """Return the tools the model may ask for. They are not called here."""
+        return [
+            self.order_tool.look_up_order,
+            self.stock_tool.check_stock,
+            self.change_queue.request_address_change,
+        ]
+
+    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "look_up_order":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.order_tool.look_up_order(order_id)
+        if name == "check_stock":
+            item = self.clean(arguments, "item")
+            if item == "":
+                return "The product is missing. Ask the customer which product."
+            return self.stock_tool.check_stock(item)
+        if name == "request_address_change":
+            order_id = self.clean(arguments, "order_id")
+            new_address = self.clean(arguments, "new_address")
+            if order_id == "" or new_address == "":
+                return "The order ID and the new address are both needed."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            if not self.customer_said(history, new_address):
+                return "The customer has not given that address. Ask them for it."
+            return self.change_queue.request_address_change(order_id, new_address)
+        return f"There is no tool named {name}."
+
+    def clean(self, arguments, key):
+        """Return one argument as text without extra spaces, or "" if it is missing."""
+        return str(arguments.get(key, "")).strip()
+
+    def customer_said(self, history, text):
+        """Return True if text appears in a message the customer typed."""
+        for message in history:
+            if message["role"] == "user" and text.lower() in message["content"].lower():
+                return True
+        return False</pre></div><div class="hint-box"><strong>No parentheses in <code>tool_list</code>.</strong> <code>self.order_tool.look_up_order</code> passes the method along without calling it. Ollama reads its name, parameters and docstring.</div></div></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Test the tools and the door</div><div class="task-body"><div class="code-block"><div class="cb-label">tests/test_tools.py</div><pre>from change_queue import ChangeQueue
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
+
+
+def make_tools():
+    """Build fresh tools with two orders for each test."""
+    orders = {
+        "A100": {"status": "shipped", "address": "14 Bay Road"},
+        "A101": {"status": "processing", "address": "3 Gull Lane"},
+    }
+    order_tool = OrderLookup(orders)
+    stock_tool = StockLookup({"rain jacket": 12, "day pack": 0})
+    return Toolbox(order_tool, stock_tool, ChangeQueue(order_tool))
+
+
+def customer(text):
+    """Build a history that holds one customer message."""
+    return [{"role": "user", "content": text}]
+
+
+def test_look_up_known_order():
+    tools = make_tools()
+    assert tools.order_tool.look_up_order("A100") == "Order A100 is shipped."
+
+
+def test_look_up_unknown_order():
+    tools = make_tools()
+    assert "No order" in tools.order_tool.look_up_order("A999")
+
+
+def test_check_stock_for_known_and_unknown_products():
+    tools = make_tools()
+    assert (
+        tools.stock_tool.check_stock("day pack")
+        == "We have 0 of the day pack in stock."
+    )
+    assert tools.stock_tool.check_stock("tent") == "That product was not found."
+
+
+def test_request_waits_and_changes_nothing():
+    tools = make_tools()
+    tools.change_queue.request_address_change("A100", "9 Pine Street")
+    assert tools.change_queue.waiting()[0]["status"] == "waiting"
+    assert tools.order_tool.orders["A100"]["address"] == "14 Bay Road"
+
+
+def test_approve_makes_the_change_once():
+    tools = make_tools()
+    tools.change_queue.request_address_change("A100", "9 Pine Street")
+    assert tools.change_queue.approve(1) == "Request 1 approved."
+    assert tools.order_tool.orders["A100"]["address"] == "9 Pine Street"
+    assert tools.change_queue.approve(1) == "Request 1 is already approved."
+
+
+def test_reject_changes_nothing_and_cannot_be_approved_later():
+    tools = make_tools()
+    tools.change_queue.request_address_change("A100", "9 Pine Street")
+    tools.change_queue.reject(1)
+    assert tools.change_queue.approve(1) == "Request 1 is already rejected."
+    assert tools.order_tool.orders["A100"]["address"] == "14 Bay Road"
+
+
+def test_approve_unknown_request():
+    tools = make_tools()
+    assert tools.change_queue.approve(7) == "There is no request 7."
+
+
+def test_missing_argument_is_refused():
+    tools = make_tools()
+    reply = tools.run("look_up_order", {}, customer("Where is my order?"))
+    assert "missing" in reply
+
+
+def test_order_id_must_come_from_the_customer():
+    tools = make_tools()
+    reply = tools.run("look_up_order", {"order_id": "A101"}, customer("Where is A100?"))
+    assert "has not given that order ID" in reply
+
+
+def test_customer_said_ignores_capitals():
+    tools = make_tools()
+    assert tools.customer_said(customer("Ship it to 9 PINE STREET"), "9 Pine Street")
+
+
+def test_unknown_order_containing_a_known_id_is_not_queued():
+    tools = make_tools()
+    reply = tools.change_queue.request_address_change("A1000", "9 Pine Street")
+    assert "No order" in reply
+    assert tools.change_queue.waiting() == []</pre></div><p>Run: <code>pytest -v tests/test_tools.py</code></p><div class="expected" style="white-space:pre-wrap;">11 passed</div><div class="hint-box"><strong><code>ruff check</code> says <code>I001 Import block is un-sorted</code> for a test file?</strong> ruff sorts imports of files it can find in your folder separately from ones it cannot. If <code>toolbox.py</code> or <code>change_queue.py</code> does not exist yet, or is misspelled, ruff treats it as a package from the internet. Check the file names first.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; The Tool Loop</div><div class="line"></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Write the two stand-in models</div><div class="task-body"><p><code>KeywordModel</code> carries last week's keyword rules, moved out of the chatbot, so the chatbot runs without Ollama. <code>FakeModel</code> is for tests: it plays back exactly the decisions you give it.</p><div class="code-block"><div class="cb-label">keyword_model.py</div><pre># keyword_model.py
+# Author: [Your Name]
+
+
+class KeywordModel:
+    """A stand-in model that decides with keyword rules. It needs no AI."""
+
+    def decide(self, instructions, history, tools):
+        """Return a reply or a tool request, based on the last message."""
+        last = history[-1]
+        if last["role"] == "tool":
+            return {"text": last["content"]}
+        text = last["content"].lower()
+        if "order" in text:
+            return {"tool": "look_up_order", "arguments": {"order_id": last["content"]}}
+        if "stock" in text:
+            return {"tool": "check_stock", "arguments": {"item": last["content"]}}
+        if "hello" in text:
+            return {"text": "Hello! How can I help you today?"}
+        return {
+            "text": "I'm not sure how to help with that. I can check an order or stock."
+        }</pre></div><div class="code-block"><div class="cb-label">fake_model.py</div><pre># fake_model.py
+# Author: [Your Name]
+
+
+class FakeModel:
+    """A model for tests. It plays back a list of decisions, one per call."""
+
+    def __init__(self, decisions):
+        """Store the decisions to play back, in order."""
+        self.decisions = decisions
+        self.calls = 0
+
+    def decide(self, instructions, history, tools):
+        """Return the next decision in the list."""
+        decision = self.decisions[self.calls]
+        self.calls += 1
+        return decision</pre></div></div></div></div><div class="task"><div class="task-num">8</div><div class="task-content"><div class="task-title">Replace chatbot.py</div><div class="task-body"><p>The chatbot is now handed a toolbox and a model. The order and stock rules are gone; the model decides. The payment rule stays, and <code>address</code> is no longer a handoff word, because an address change now waits for approval.</p><div class="code-block"><div class="cb-label">chatbot.py</div><pre># chatbot.py
+# Author: [Your Name]
+
+HANDOFF_WORDS = ["payment", "card"]
+MAX_TOOL_ROUNDS = 3
+
+
+class SupportChatbot:
+    """A support chatbot. The model decides. The toolbox checks every tool request."""
+
+    def __init__(self, name, instructions, tools, model):
+        """Set up one chatbot with its own name, instructions, tools, model, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.tools = tools
+        self.model = model
+        self.history = []
+
+    def respond(self, user_message):
+        """Record the user's message, choose a reply, record it, and return it."""
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        """Pass payment questions to a person. Send everything else to the model."""
+        if self.needs_human(user_message.lower()):
+            return "I can't help with that here. I'm passing you to a human agent."
+        return self.model_reply()
+
+    def needs_human(self, text):
+        """Return True if the message is about something a person must handle."""
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def model_reply(self):
+        """Ask the model. Run each tool it asks for, then ask again, up to a limit."""
+        rounds = 0
+        while rounds &lt; MAX_TOOL_ROUNDS:
+            tool_list = self.tools.tool_list()
+            decision = self.model.decide(self.instructions, self.history, tool_list)
+            if decision is None:
+                return "Sorry, I can't answer that right now. Please try again in a moment."
+            if "text" in decision:
+                return decision["text"]
+            name = decision["tool"]
+            arguments = decision["arguments"]
+            result = self.tools.run(name, arguments, self.history)
+            self.history.append(
+                {
+                    "role": "tool",
+                    "tool_name": name,
+                    "arguments": arguments,
+                    "content": result,
+                }
+            )
+            rounds += 1
+        return "Sorry, I couldn't finish that. I'm passing you to a human agent."
+
+    def count_user_messages(self):
+        """Return how many messages the user has sent so far."""
+        count = 0
+        for message in self.history:
+            if message["role"] == "user":
+                count += 1
+        return count</pre></div><p>Read <code>model_reply</code> slowly: ask, check, run, record, ask again, at most three times.</p></div></div></div><div class="task"><div class="task-num">9</div><div class="task-content"><div class="task-title">Replace the chatbot tests, and update two_bots.py</div><div class="task-body"><div class="code-block"><div class="cb-label">tests/test_chatbot.py</div><pre>from change_queue import ChangeQueue
+from chatbot import SupportChatbot
+from fake_model import FakeModel
+from keyword_model import KeywordModel
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
+
+
+class SilentModel:
+    """A model that never has an answer. It stands in for Ollama being switched off."""
+
+    def decide(self, instructions, history, tools):
+        return None
+
+
+def make_bot(model):
+    """Build a fresh chatbot with its own tools and the model it is given."""
+    orders = {
+        "A100": {"status": "shipped", "address": "14 Bay Road"},
+        "A101": {"status": "processing", "address": "3 Gull Lane"},
+    }
+    order_tool = OrderLookup(orders)
+    stock_tool = StockLookup({"rain jacket": 12, "day pack": 0})
+    tools = Toolbox(order_tool, stock_tool, ChangeQueue(order_tool))
+    return SupportChatbot("Sunny", "Be friendly.", tools, model)
+
+
+def ask_for_tool(name, arguments):
+    """Build the decision a model returns when it wants a tool."""
+    return {"tool": name, "arguments": arguments}
+
+
+def test_respond_records_both_messages():
+    bot = make_bot(KeywordModel())
+    bot.respond("hello")
+    assert len(bot.history) == 2
+    assert bot.history[0]["role"] == "user"
+    assert bot.history[1]["role"] == "assistant"
+
+
+def test_order_question_uses_the_tool():
+    bot = make_bot(KeywordModel())
+    assert bot.respond("Where is order A100?") == "Order A100 is shipped."
+
+
+def test_tool_use_is_recorded_in_the_history():
+    bot = make_bot(KeywordModel())
+    bot.respond("Where is order A100?")
+    assert len(bot.history) == 3
+    assert bot.history[1]["role"] == "tool"
+    assert bot.history[1]["tool_name"] == "look_up_order"
+
+
+def test_model_can_ask_for_a_tool_without_keywords():
+    model = FakeModel(
+        [
+            ask_for_tool("look_up_order", {"order_id": "A101"}),
+            {"text": "Your package A101 is still processing."},
+        ]
+    )
+    bot = make_bot(model)
+    bot.respond("Has my package A101 shipped?")
+    assert bot.history[1]["content"] == "Order A101 is processing."
+
+
+def test_payment_question_never_reaches_the_model():
+    bot = make_bot(FakeModel([]))
+    assert "human" in bot.respond("Can I pay with a different card?")
+
+
+def test_safe_reply_when_the_model_has_no_answer():
+    bot = make_bot(SilentModel())
+    assert "try again" in bot.respond("hello")
+
+
+def test_unknown_tool_is_refused():
+    model = FakeModel(
+        [ask_for_tool("delete_order", {"order_id": "A100"}), {"text": "Sorry."}]
+    )
+    bot = make_bot(model)
+    bot.respond("Delete order A100")
+    assert bot.history[1]["content"] == "There is no tool named delete_order."
+
+
+def test_loop_stops_after_three_tool_rounds():
+    request = ask_for_tool("look_up_order", {"order_id": "A100"})
+    bot = make_bot(FakeModel([request, request, request]))
+    reply = bot.respond("Where is order A100?")
+    assert "human" in reply
+    assert len(bot.history) == 5
+
+
+def test_made_up_address_is_refused():
+    model = FakeModel(
+        [
+            ask_for_tool(
+                "request_address_change",
+                {"order_id": "A100", "new_address": "123 Main St"},
+            ),
+            {"text": "What is the new address?"},
+        ]
+    )
+    bot = make_bot(model)
+    bot.respond("Please change the address on order A100")
+    assert "has not given that address" in bot.history[1]["content"]
+    assert bot.tools.change_queue.waiting() == []
+
+
+def test_blank_address_is_refused():
+    model = FakeModel(
+        [
+            ask_for_tool(
+                "request_address_change", {"order_id": "A100", "new_address": ""}
+            ),
+            {"text": "What is the new address?"},
+        ]
+    )
+    bot = make_bot(model)
+    bot.respond("Please change the address on order A100")
+    assert bot.tools.change_queue.waiting() == []
+
+
+def test_address_change_waits_for_staff():
+    model = FakeModel(
+        [
+            ask_for_tool(
+                "request_address_change",
+                {"order_id": "A100", "new_address": "9 Pine Street"},
+            ),
+            {"text": "Sent to staff."},
+        ]
+    )
+    bot = make_bot(model)
+    bot.respond("Change the address on order A100 to 9 Pine Street")
+    assert len(bot.tools.change_queue.waiting()) == 1
+    assert bot.tools.order_tool.orders["A100"]["address"] == "14 Bay Road"
+
+
+def test_number_argument_does_not_crash():
+    model = FakeModel(
+        [ask_for_tool("look_up_order", {"order_id": 100}), {"text": "Not found."}]
+    )
+    bot = make_bot(model)
+    assert bot.respond("Where is order 100?") == "Not found."
+
+
+def test_two_chatbots_keep_separate_histories():
+    first = make_bot(KeywordModel())
+    second = make_bot(KeywordModel())
+    first.respond("hello")
+    assert len(first.history) == 2
+    assert len(second.history) == 0
+
+
+def test_count_user_messages_skips_tool_entries():
+    bot = make_bot(KeywordModel())
+    bot.respond("hello")
+    bot.respond("Where is order A100?")
+    assert bot.count_user_messages() == 2</pre></div><div class="code-block"><div class="cb-label">two_bots.py</div><pre># two_bots.py
+# Author: [Your Name]
+
+from change_queue import ChangeQueue
+from chatbot import SupportChatbot
+from keyword_model import KeywordModel
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
+
+order_tool = OrderLookup({"A100": {"status": "shipped", "address": "14 Bay Road"}})
+stock_tool = StockLookup({"rain jacket": 12, "day pack": 0})
+tools = Toolbox(order_tool, stock_tool, ChangeQueue(order_tool))
+
+model = KeywordModel()
+
+sunny = SupportChatbot("Sunny", "You are cheerful and brief.", tools, model)
+river = SupportChatbot("River", "You are formal and detailed.", tools, model)
+
+sunny.respond("hello")
+sunny.respond("Where is order A100?")
+river.respond("hello")
+
+print(sunny.name, len(sunny.history))
+print(river.name, len(river.history))
+print(sunny.history[1]["content"])
+print(river.history[1]["content"])
+print(sunny.instructions)
+print(river.instructions)</pre></div><p>Run: <code>pytest -v</code>. Now the whole suite runs.</p><div class="expected" style="white-space:pre-wrap;">31 passed</div><p>Fourteen chatbot tests, eleven tool tests, and your six mini-project tests, which still use <code>MockModel</code> and <code>reply</code>.</p><div class="hint-box"><strong><code>missing 1 required positional argument: 'model'</code>?</strong> <code>chatbot.py</code> is still the Week 11 version, which takes five values. Replace it with the listing in step 8 and save it. <strong><code>takes 5 positional arguments but 6 were given</code>?</strong> A line somewhere still creates a chatbot with the old five values. The chatbot now takes four: name, instructions, tools, model.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 6 &mdash; The Real Model and Staff Review</div><div class="line"></div></div><div class="task"><div class="task-num">10</div><div class="task-content"><div class="task-title">Give OllamaModel a decide method, and replace main.py</div><div class="task-body"><p><code>reply</code> stays exactly as it was, because your mini-project still uses it. <code>decide</code> sends the tools along, and <code>tool_messages</code> turns each <code>tool</code> entry into the two messages Ollama expects.</p><div class="code-block"><div class="cb-label">ollama_model.py</div><pre># ollama_model.py
+# Author: [Your Name]
+
+from ollama import ResponseError, chat
+
+
+class OllamaModel:
+    """A real AI model that runs on this computer through Ollama."""
+
+    def __init__(self, model_name):
+        """Remember which model to ask."""
+        self.model_name = model_name
+
+    def reply(self, instructions, history):
+        """Send the instructions and the conversation to the model. Return its reply."""
+        messages = [{"role": "system", "content": instructions}]
+        messages = messages + history
+        try:
+            response = chat(model=self.model_name, messages=messages)
+        except ConnectionError:
+            return None
+        except ResponseError:
+            return None
+        return response.message.content
+
+    def decide(self, instructions, history, tools):
+        """Send the conversation and the tools. Return a reply or a tool request."""
+        messages = [{"role": "system", "content": instructions}]
+        for message in history:
+            if message["role"] == "tool":
+                messages = messages + self.tool_messages(message)
+            else:
+                messages.append(message)
+        try:
+            response = chat(model=self.model_name, messages=messages, tools=tools)
+        except ConnectionError:
+            return None
+        except ResponseError:
+            return None
+        if response.message.tool_calls:
+            call = response.message.tool_calls[0]
+            return {"tool": call.function.name, "arguments": call.function.arguments}
+        return {"text": response.message.content}
+
+    def tool_messages(self, message):
+        """Turn one tool entry into the two messages Ollama expects."""
+        name = message["tool_name"]
+        request = {"function": {"name": name, "arguments": message["arguments"]}}
+        return [
+            {"role": "assistant", "content": "", "tool_calls": [request]},
+            {"role": "tool", "tool_name": name, "content": message["content"]},
+        ]</pre></div><div class="code-block"><div class="cb-label">main.py</div><pre># main.py
+# Author: [Your Name]
+
+from change_queue import ChangeQueue
+from chatbot import SupportChatbot
+from ollama_model import OllamaModel
+from order_tool import OrderLookup
+from stock_tool import StockLookup
+from toolbox import Toolbox
+
+MODEL_NAME = "granite4.1:3b"
+
+INSTRUCTIONS = """You are Sunny, a support assistant for Bayside Outfitters.
+Answer in one short sentence.
+Store hours are 10 am to 7 pm every day.
+Returns are accepted within 30 days with a receipt.
+Only state facts that appear in these instructions or in tool results.
+If you do not know, say you do not know and offer to pass the customer to a human agent."""
+
+ORDERS = {
+    "A100": {"status": "shipped", "address": "14 Bay Road"},
+    "A101": {"status": "processing", "address": "3 Gull Lane"},
+    "A102": {"status": "delivered", "address": "88 Pier Street"},
+}
+
+STOCK = {
+    "rain jacket": 12,
+    "day pack": 0,
+    "trail hat": 5,
+}
+
+order_tool = OrderLookup(ORDERS)
+stock_tool = StockLookup(STOCK)
+change_queue = ChangeQueue(order_tool)
+tools = Toolbox(order_tool, stock_tool, change_queue)
+model = OllamaModel(MODEL_NAME)
+bot = SupportChatbot("Sunny", INSTRUCTIONS, tools, model)
+
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{bot.name}: {bot.respond(user_message)}")
+    user_message = input("You: ")
+
+print(f"Messages in this conversation: {len(bot.history)}")
+
+print("Staff review")
+for request in change_queue.waiting():
+    number = request["number"]
+    print(f"Request {number}: {request['order_id']} to {request['new_address']}")
+    answer = input("Approve? yes or no: ")
+    if answer == "yes":
+        print(change_queue.approve(number))
+    else:
+        print(change_queue.reject(number))
+
+for order_id in ORDERS:
+    print(order_id, ORDERS[order_id]["address"])</pre></div></div></div></div><div class="task"><div class="task-num">11</div><div class="task-content"><div class="task-title">Have a conversation, then approve the change</div><div class="task-body"><p>Run: <code>python3 main.py</code> and type: <code>hello</code>, <code>Has my package A101 shipped?</code>, <code>Is the day pack in stock?</code>, <code>I want to change my shipping address</code>, <code>It's order A102</code>, <code>9 Pine Street, Tampa</code>, <code>Do you sell gift cards?</code>, then <code>quit</code>, and <code>yes</code> at the staff review.</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Sunny: Hello! How may I assist you today?
+You: Has my package A101 shipped?
+Sunny: Your package A101 is still processing.
+You: Is the day pack in stock?
+Sunny: The day pack is currently out of stock.
+You: I want to change my shipping address
+Sunny: Could you please provide the full new shipping address?
+You: It's order A102
+Sunny: Could you please provide the full new shipping address for order A102?
+You: 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and will be reviewed by staff. Please wait for confirmation.
+You: Do you sell gift cards?
+Sunny: I can't help with that here. I'm passing you to a human agent.
+You: quit
+Messages in this conversation: 19
+Staff review
+Request 1: A102 to 9 Pine Street, Tampa
+Approve? yes or no: yes
+Request 1 approved.
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 9 Pine Street, Tampa</div><p>This is one real run. The model's wording will differ. The staff review and the final addresses should match exactly.</p></div></div></div><div class="task"><div class="task-num">12</div><div class="task-content"><div class="task-title">Switch Ollama off and try again</div><div class="task-body"><p>On a Mac, quit the Ollama app. On Windows, press Ctrl+C in the terminal running <code>ollama serve</code>. Then run <code>python3 main.py</code>, type <code>hello</code>, <code>Where is order A100?</code> and <code>quit</code>.</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Sunny: Sorry, I can't answer that right now. Please try again in a moment.
+You: Where is order A100?
+Sunny: Sorry, I can't answer that right now. Please try again in a moment.
+You: quit
+Messages in this conversation: 4
+Staff review
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street</div><p>Last week the order question still worked with Ollama off, because a rule answered it. Now the model decides, so a lookup needs the model too. Exercise 4 fixes that. Turn Ollama back on before the exercises.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 7 &mdash; Four Exercises</div><div class="line"></div></div><div class="callout blue"><div class="callout-icon">&#x270F;</div><div><div class="callout-label">How the exercises work</div><div class="callout-body">Each exercise states the result you should get. Try it first, then open the answer key. Written answers go in a new file, <code>week12_answers.md</code>.</div></div></div><div class="task"><div class="task-num">13</div><div class="task-content"><div class="task-title">Exercise 1 — Read a history</div><div class="task-body"><p>This is a chatbot's history after a three-message conversation. The model's decisions are the ones the real model made.</p><div class="code-block"><div class="cb-label">The history</div><pre>user      | I want to change my shipping address
+tool      | request_address_change {'order_id': 'A100', 'new_address': '123 Main St, Anytown, AN 12345'} -&gt; The customer has not given that order ID. Ask them for it.
+assistant | Could you please provide the order ID for the order you’d like to update?
+user      | It's order A102
+tool      | request_address_change {'new_address': '123 Main St, Anytown, AN 12345', 'order_id': 'A102'} -&gt; The customer has not given that address. Ask them for it.
+assistant | Could you please provide the new shipping address you’d like to update to?
+user      | 9 Pine Street, Tampa
+tool      | request_address_change {'order_id': 'A102', 'new_address': '9 Pine Street, Tampa'} -&gt; Request 1 was sent to staff. The address has not changed yet.
+assistant | Your request to change the shipping address for order A102 has been submitted to staff for approval. It will be processed once approved.</pre></div><div class="code-block"><div class="cb-label">week12_answers.md</div><pre># Week 12 answers
+
+## Exercise 1
+1. The messages the customer typed:
+2. How many tool requests were refused, and why:
+3. If the customer now types "thanks", how many messages does Ollama receive on the next call?
+4. Why does "Do you sell gift cards?" still go to a person, and why is that acceptable?</pre></div><p><strong>Expected result:</strong> three messages, a number with a reason, a number, and two sentences.</p><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 1</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">Answers</div><pre>1. The customer typed: I want to change my shipping address, It's order A102, 9 Pine Street, Tampa
+2. Refused: 2. The first used order A100 and the second used the address 123 Main St, Anytown, AN 12345; the customer had typed neither.
+3. 14 messages: the system message, the 6 user and assistant entries, two for each of the 3 tool entries, and the new message.
+4. Because the payment rule looks for card anywhere in the message. A wait is a cheap mistake;
+   a missed payment question could put card details in front of the model.</pre></div><p><strong>Why it matters:</strong> the model's first two requests used details nobody typed. The Toolbox refused them, and each refusal told the model to ask. The change was filed only with the customer's real details.</p><p><strong>Common mistake:</strong> counting each tool entry as one message for question 3. <code>tool_messages</code> sends two for each.</p></div></details></div></div></div><div class="task"><div class="task-num">14</div><div class="task-content"><div class="task-title">Exercise 2 — Add a tool</div><div class="task-body"><p>Customers ask whether they can return an order. Add a tool <code>check_return(order_id)</code> to <code>OrderLookup</code>: a delivered order can be returned within 30 days, anything else cannot be returned yet. A tool lives in three places: the method with its <code>Args:</code> docstring, <code>tool_list</code>, and a branch in <code>run</code> that checks the order ID. Add one test for the tool and one chatbot test that uses <code>FakeModel</code>.</p><p><strong>Expected result:</strong> <code>pytest -v</code> shows 33 tests passing.</p><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 2</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">order_tool.py &mdash; add this method to the class</div><pre>    def check_return(self, order_id):
+        """Say whether one order can be returned yet.
+
+        Args:
+            order_id: The order ID, like A100.
+        """
+        found = self.find_order_id(order_id)
+        if found is None:
+            return "No order with that ID was found. Order IDs look like A100."
+        if self.find_status(found) == "delivered":
+            return f"Order {found} was delivered, so it can be returned within 30 days."
+        return f"Order {found} has not been delivered, so it cannot be returned yet."</pre></div><div class="code-block"><div class="cb-label">toolbox.py &mdash; replace tool_list</div><pre>    def tool_list(self):
+        """Return the tools the model may ask for. They are not called here."""
+        return [
+            self.order_tool.look_up_order,
+            self.order_tool.check_return,
+            self.stock_tool.check_stock,
+            self.change_queue.request_address_change,
+        ]</pre></div><div class="code-block"><div class="cb-label">toolbox.py &mdash; replace run</div><pre>    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "look_up_order":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.order_tool.look_up_order(order_id)
+        if name == "check_return":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.order_tool.check_return(order_id)
+        if name == "check_stock":
+            item = self.clean(arguments, "item")
+            if item == "":
+                return "The product is missing. Ask the customer which product."
+            return self.stock_tool.check_stock(item)
+        if name == "request_address_change":
+            order_id = self.clean(arguments, "order_id")
+            new_address = self.clean(arguments, "new_address")
+            if order_id == "" or new_address == "":
+                return "The order ID and the new address are both needed."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            if not self.customer_said(history, new_address):
+                return "The customer has not given that address. Ask them for it."
+            return self.change_queue.request_address_change(order_id, new_address)
+        return f"There is no tool named {name}."</pre></div><div class="code-block"><div class="cb-label">tests/test_tools.py &mdash; add at the bottom</div><pre>def test_only_delivered_orders_can_be_returned():
+    tools = make_tools()
+    tools.order_tool.orders["A101"]["status"] = "delivered"
+    assert "can be returned" in tools.order_tool.check_return("A101")
+    assert "cannot be returned yet" in tools.order_tool.check_return("A100")</pre></div><div class="code-block"><div class="cb-label">tests/test_chatbot.py &mdash; add at the bottom</div><pre>def test_model_can_ask_about_a_return():
+    model = FakeModel(
+        [
+            ask_for_tool("check_return", {"order_id": "A100"}),
+            {"text": "Not yet."},
+        ]
+    )
+    bot = make_bot(model)
+    bot.respond("Can I return order A100?")
+    assert "cannot be returned yet" in bot.history[1]["content"]</pre></div><p><strong>Why it works:</strong> the model can only ask for tools in <code>tool_list</code>, and <code>run</code> refuses any name without a branch. A new tool needs both, plus the same order-ID checks as the other order tool.</p><p><strong>Common mistakes:</strong> adding the method but not the branch, which gives <em>There is no tool named check_return.</em> Calling the method in <code>tool_list</code> (<code>check_return()</code>), which fails with a missing argument. Leaving out the <code>Args:</code> section, so the model guesses what to send.</p></div></details></div></div></div><div class="task"><div class="task-num">15</div><div class="task-content"><div class="task-title">Exercise 3 — Turn a guardrail off and watch</div><div class="task-body"><p>In <code>toolbox.py</code>, add <code>return True</code> as the first line of <code>customer_said</code>'s body, under its docstring. That turns the check off. Run <code>python3 main.py</code>, type <code>I want to change my shipping address</code>, then <code>quit</code>, and answer <code>no</code> at the staff review. Copy what you see into <code>week12_answers.md</code>, then <strong>remove the line</strong>.</p><p><strong>Expected result:</strong> a request for an order and an address you never gave. One real run:</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: I want to change my shipping address
+Sunny: Your request to change the shipping address for order A100 has been submitted and is awaiting staff approval.
+You: quit
+Messages in this conversation: 3
+Staff review
+Request 1: A100 to 123 Main St, Anytown, AN 12345
+Approve? yes or no: no
+Request 1 rejected.
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street</div><p>With the check off, the model filed made-up details in 3 of 3 runs while this lab was being written.</p><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 3</summary><div style="margin-top:10px;"><p><strong>What happened:</strong> asked to change an address with no details, the model filled in an order and an address that look like examples, and nothing stopped them. Staff saw a request that no customer made.</p><p><strong>A good answer says:</strong> a busy staff member could approve it and send someone's parcel to a made-up address. The check costs one extra question to the customer. The approval queue is a second line of defence, not a reason to drop the first.</p><p><strong>Common mistake:</strong> leaving <code>return True</code> in the file. Run <code>pytest -v</code>: <code>test_made_up_address_is_refused</code> fails until you remove it.</p></div></details></div></div></div><div class="task"><div class="task-num">16</div><div class="task-content"><div class="task-title">Exercise 4 — Keep lookups working when Ollama is down</div><div class="task-body"><p>Write <code>FallbackModel</code> in <code>fallback_model.py</code>. It is handed two models. Its <code>decide</code> asks the first; if that returns <code>None</code>, it asks the second. Add a test that hands the chatbot <code>FallbackModel(SilentModel(), KeywordModel())</code>, then try it in <code>main.py</code> with Ollama switched off.</p><p><strong>Expected result:</strong> 34 tests passing, and with Ollama off:</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Sunny: Hello! How can I help you today?
+You: Where is order A100?
+Sunny: Order A100 is shipped.
+You: quit
+Messages in this conversation: 5
+Staff review
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 4</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">fallback_model.py</div><pre># fallback_model.py
+# Author: [Your Name]
+
+
+class FallbackModel:
+    """Ask the first model. If it has no answer, ask the second one."""
+
+    def __init__(self, first, second):
+        """Store the two models, in the order they are asked."""
+        self.first = first
+        self.second = second
+
+    def decide(self, instructions, history, tools):
+        """Return the first model's decision, or the second's if the first has none."""
+        decision = self.first.decide(instructions, history, tools)
+        if decision is None:
+            return self.second.decide(instructions, history, tools)
+        return decision</pre></div><div class="code-block"><div class="cb-label">tests/test_chatbot.py &mdash; add this import below the fake_model import</div><pre>from fallback_model import FallbackModel</pre></div><div class="code-block"><div class="cb-label">tests/test_chatbot.py &mdash; add at the bottom</div><pre>def test_lookups_keep_working_when_the_model_is_down():
+    bot = make_bot(FallbackModel(SilentModel(), KeywordModel()))
+    assert bot.respond("Where is order A100?") == "Order A100 is shipped."</pre></div><div class="code-block"><div class="cb-label">main.py &mdash; try this: two imports and one changed line</div><pre>from fallback_model import FallbackModel
+from keyword_model import KeywordModel
+
+model = FallbackModel(OllamaModel(MODEL_NAME), KeywordModel())</pre></div><p><strong>Why it works:</strong> <code>FallbackModel</code> has a <code>decide</code> method, so the chatbot cannot tell it apart from any other model. It is composition again: a model made of two models.</p><p><strong>Common mistake:</strong> returning the second model's decision every time. Only ask it when the first returned <code>None</code>.</p></div></details></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 8 &mdash; Mini-Project: Let Your Assistant Choose Its Tool</div><div class="line"></div></div><div class="task"><div class="task-num">17</div><div class="task-content"><div class="task-title">Upgrade the assistant you built in Weeks 10 and 11</div><div class="task-body"><p>Your assistant gets the same three upgrades as Sunny: the model chooses when to use the tool, every request passes one checked door, and one kind of change waits for a person.</p><ul class="check-list"><li><span>The model is asked with <code>decide</code>, in a loop with a limit</span></li><li><span>At least one tool method the model may ask for, with an <code>Args:</code> docstring</span></li><li><span>A toolbox <code>run</code> that refuses unknown tools, empty values, and details the user never typed</span></li><li><span>One change that waits in a queue; <code>approve</code> is the only code that makes it, and a second approval changes nothing</span></li><li><span>At least one rule still passes something to a person before the model sees it</span></li><li><span>Tests use <code>FakeModel</code>: a made-up detail is refused, a request waits, and the handoff happens</span></li><li><span>Your main file runs with the real model and ends with a review step</span></li><li><span><code>README.md</code> gains four to six sentences: one request the model handled well, one the door refused, and one thing you had to add to the instructions</span></li></ul><p>Sample interaction from the reference solution, one real run:</p><div class="expected" style="white-space:pre-wrap;">Type a message, or type quit to stop.
+You: hello
+Robin: Hello! How may I assist you today?
+You: What times are open on Monday?
+Robin: The office is open on Monday at 9:00 am and 2:30 pm.
+You: Please book Monday at 9:00 am
+Robin: Could you please provide the full name of the client you’d like to book the appointment for?
+You: My name is Dana Cruz
+Robin: Your request to book Monday at 9:00 am has been sent to the front desk for approval. They will confirm or reject the booking shortly.
+You: Please cancel my appointment
+Robin: I can't change a booking. I'm passing you to the front desk.
+You: quit
+Messages in this conversation: 13
+Front desk review
+Request 1: Dana Cruz, monday 9:00 am
+Approve? yes or no: yes
+Request 1 approved.
+Bookings: 1</div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Instructions can tell a model when not to use a tool</div><div class="callout-body"><p>Without one sentence about greetings, the reference helper answered <em>hello</em> with Monday's open times in 2 of 5 runs: the model asked for the open-times tool on a greeting. Adding <em>Use a tool only when the client asks about open times or wants to book</em> made it worse, 5 of 5. What worked was saying what to do instead: <em>If the client only says hello, greet them and ask how you can help</em>, 0 of 5. The lookup only reads, so the mistake was harmless; a change tool would have gone to the queue.</p></div></div></div><p><strong>Rubric &mdash; 10 points</strong></p><table class="concept-table"><thead><tr><th>Points</th><th>Requirement</th></tr></thead><tbody><tr><td>3</td><td>The model chooses the tool through <code>decide</code> in a limited loop, and the toolbox checks every request</td></tr><tr><td>2</td><td>One change waits for approval and can only be applied once</td></tr><tr><td>2</td><td>Tests use <code>FakeModel</code>, cover a refused detail and a waiting request, and pass without Ollama</td></tr><tr><td>2</td><td>The README section is specific about one good request, one refusal, and one instruction you added</td></tr><tr><td>1</td><td>The full ritual passes</td></tr></tbody></table><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Reference solution &mdash; appointment helper with a tool and a booking queue</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">appointment_tool.py</div><pre># appointment_tool.py
+# Author: [Your Name]
+
+
+class AppointmentBook:
+    """A tool that knows which appointment times are open on each day."""
+
+    def __init__(self, open_times):
+        """Store the open times this tool can look up, and start with no bookings."""
+        self.open_times = open_times
+        self.bookings = []
+
+    def find_day(self, text):
+        """Return the first known day mentioned in text, or None."""
+        for day in self.open_times:
+            if day in text.lower():
+                return day
+        return None
+
+    def times_for(self, day):
+        """Return the open times for one day, or None if the day is unknown."""
+        if day in self.open_times:
+            return self.open_times[day]
+        return None
+
+    def check_open_times(self, day):
+        """Look up the open appointment times on one day.
+
+        Args:
+            day: The day of the week, like Monday.
+        """
+        found = self.find_day(day)
+        if found is None:
+            return "That day was not found. I can check Monday, Wednesday, or Friday."
+        return f"Open times on {found}: {self.times_for(found)}."
+
+    def add_booking(self, day, time, client):
+        """Record one booking. Only an approval calls this."""
+        self.bookings.append({"day": day, "time": time, "client": client})</pre></div><div class="code-block"><div class="cb-label">booking_queue.py</div><pre># booking_queue.py
+# Author: [Your Name]
+
+
+class BookingQueue:
+    """Bookings waiting for the front desk to approve. Nothing is booked until then."""
+
+    def __init__(self, appointment_book):
+        """Start with no requests. Approved bookings go into the appointment book."""
+        self.appointment_book = appointment_book
+        self.requests = []
+
+    def request_booking(self, day, time, client):
+        """Ask the front desk to book an appointment. The front desk must approve it.
+
+        Args:
+            day: The day of the week, like Monday.
+            time: The time, like 9:00 am.
+            client: The client's full name.
+        """
+        found = self.appointment_book.find_day(day)
+        if found is None:
+            return "That day was not found. I can check Monday, Wednesday, or Friday."
+        number = len(self.requests) + 1
+        request = {
+            "number": number,
+            "day": found,
+            "time": time,
+            "client": client,
+            "status": "waiting",
+        }
+        self.requests.append(request)
+        return f"Request {number} was sent to the front desk. Nothing is booked yet."
+
+    def waiting(self):
+        """Return the requests that are still waiting for a decision."""
+        result = []
+        for request in self.requests:
+            if request["status"] == "waiting":
+                result.append(request)
+        return result
+
+    def find(self, number):
+        """Return the request with this number, or None."""
+        for request in self.requests:
+            if request["number"] == number:
+                return request
+        return None
+
+    def approve(self, number):
+        """Approve one waiting request and record the booking."""
+        request = self.find(number)
+        if request is None:
+            return f"There is no request {number}."
+        if request["status"] != "waiting":
+            return f"Request {number} is already {request['status']}."
+        request["status"] = "approved"
+        self.appointment_book.add_booking(
+            request["day"], request["time"], request["client"]
+        )
+        return f"Request {number} approved."
+
+    def reject(self, number):
+        """Reject one waiting request. Nothing is booked."""
+        request = self.find(number)
+        if request is None:
+            return f"There is no request {number}."
+        if request["status"] != "waiting":
+            return f"Request {number} is already {request['status']}."
+        request["status"] = "rejected"
+        return f"Request {number} rejected."</pre></div><div class="code-block"><div class="cb-label">appointment_toolbox.py</div><pre># appointment_toolbox.py
+# Author: [Your Name]
+
+
+class AppointmentToolbox:
+    """Every tool request from the model comes through here and is checked."""
+
+    def __init__(self, appointment_book, booking_queue):
+        """Hold the tools the model is allowed to ask for."""
+        self.appointment_book = appointment_book
+        self.booking_queue = booking_queue
+
+    def tool_list(self):
+        """Return the tools the model may ask for. They are not called here."""
+        return [
+            self.appointment_book.check_open_times,
+            self.booking_queue.request_booking,
+        ]
+
+    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "check_open_times":
+            day = self.clean(arguments, "day")
+            if day == "":
+                return "The day is missing. Ask the client which day."
+            return self.appointment_book.check_open_times(day)
+        if name == "request_booking":
+            day = self.clean(arguments, "day")
+            time = self.clean(arguments, "time")
+            client = self.clean(arguments, "client")
+            if day == "" or time == "" or client == "":
+                return "The day, the time, and the client's name are all needed."
+            if not self.client_said(history, time):
+                return "The client has not given that time. Ask them for it."
+            if not self.client_said(history, client):
+                return "The client has not given that name. Ask them for it."
+            return self.booking_queue.request_booking(day, time, client)
+        return f"There is no tool named {name}."
+
+    def clean(self, arguments, key):
+        """Return one argument as text without extra spaces, or "" if it is missing."""
+        return str(arguments.get(key, "")).strip()
+
+    def client_said(self, history, text):
+        """Return True if text appears in a message the client typed."""
+        for message in history:
+            if message["role"] == "user" and text.lower() in message["content"].lower():
+                return True
+        return False</pre></div><div class="code-block"><div class="cb-label">appointment_bot.py</div><pre># appointment_bot.py
+# Author: [Your Name]
+
+HANDOFF_WORDS = ["cancel", "reschedule"]
+MAX_TOOL_ROUNDS = 3
+
+
+class AppointmentHelper:
+    """An appointment helper. The model decides. The toolbox checks every request."""
+
+    def __init__(self, name, instructions, tools, model):
+        """Set up one helper with its own name, instructions, tools, model, and history."""
+        self.name = name
+        self.instructions = instructions
+        self.tools = tools
+        self.model = model
+        self.history = []
+
+    def respond(self, user_message):
+        """Record the user's message, choose a reply, record it, and return it."""
+        self.history.append({"role": "user", "content": user_message})
+        reply = self.choose_reply(user_message)
+        self.history.append({"role": "assistant", "content": reply})
+        return reply
+
+    def choose_reply(self, user_message):
+        """Pass cancellations and changes to the front desk. Send the rest to the model."""
+        if self.needs_human(user_message.lower()):
+            return "I can't change a booking. I'm passing you to the front desk."
+        return self.model_reply()
+
+    def needs_human(self, text):
+        """Return True if the message asks to cancel or move a booking."""
+        for word in HANDOFF_WORDS:
+            if word in text:
+                return True
+        return False
+
+    def model_reply(self):
+        """Ask the model. Run each tool it asks for, then ask again, up to a limit."""
+        rounds = 0
+        while rounds &lt; MAX_TOOL_ROUNDS:
+            tool_list = self.tools.tool_list()
+            decision = self.model.decide(self.instructions, self.history, tool_list)
+            if decision is None:
+                return "Sorry, I can't answer that right now. Please try again in a moment."
+            if "text" in decision:
+                return decision["text"]
+            name = decision["tool"]
+            arguments = decision["arguments"]
+            result = self.tools.run(name, arguments, self.history)
+            self.history.append(
+                {
+                    "role": "tool",
+                    "tool_name": name,
+                    "arguments": arguments,
+                    "content": result,
+                }
+            )
+            rounds += 1
+        return "Sorry, I couldn't finish that. I'm passing you to the front desk."</pre></div><div class="code-block"><div class="cb-label">appointment_main.py</div><pre># appointment_main.py
+# Author: [Your Name]
+
+from appointment_bot import AppointmentHelper
+from appointment_tool import AppointmentBook
+from appointment_toolbox import AppointmentToolbox
+from booking_queue import BookingQueue
+from ollama_model import OllamaModel
+
+OPEN_TIMES = {
+    "monday": "9:00 am and 2:30 pm",
+    "wednesday": "11:00 am",
+    "friday": "none",
+}
+
+INSTRUCTIONS = """You are Robin, an assistant for Bayside Tax Help.
+Answer in one short sentence.
+If the client only says hello, greet them and ask how you can help.
+The office is at 40 Harbor Street, on the second floor.
+Bring a photo ID and last year's tax return to your appointment.
+To request a booking you need the day, the time, and the client's full name.
+Only state facts that appear in these instructions or in tool results.
+If you do not know, say you do not know and offer to pass the client to the front desk."""
+
+appointment_book = AppointmentBook(OPEN_TIMES)
+booking_queue = BookingQueue(appointment_book)
+tools = AppointmentToolbox(appointment_book, booking_queue)
+model = OllamaModel("granite4.1:3b")
+helper = AppointmentHelper("Robin", INSTRUCTIONS, tools, model)
+
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{helper.name}: {helper.respond(user_message)}")
+    user_message = input("You: ")
+
+print(f"Messages in this conversation: {len(helper.history)}")
+
+print("Front desk review")
+for request in booking_queue.waiting():
+    number = request["number"]
+    print(f"Request {number}: {request['client']}, {request['day']} {request['time']}")
+    answer = input("Approve? yes or no: ")
+    if answer == "yes":
+        print(booking_queue.approve(number))
+    else:
+        print(booking_queue.reject(number))
+
+print(f"Bookings: {len(appointment_book.bookings)}")</pre></div><div class="code-block"><div class="cb-label">tests/test_appointment_bot.py</div><pre>from appointment_bot import AppointmentHelper
+from appointment_tool import AppointmentBook
+from appointment_toolbox import AppointmentToolbox
+from booking_queue import BookingQueue
+from fake_model import FakeModel
+from keyword_model import KeywordModel
+
+
+def make_helper(model):
+    """Build a fresh helper with its own tools and the model it is given."""
+    book = AppointmentBook({"monday": "9:00 am and 2:30 pm", "friday": "none"})
+    tools = AppointmentToolbox(book, BookingQueue(book))
+    return AppointmentHelper("Robin", "Be clear.", tools, model)
+
+
+def booking(day, time, client):
+    """Build the decision a model returns when it wants to request a booking."""
+    arguments = {"day": day, "time": time, "client": client}
+    return {"tool": "request_booking", "arguments": arguments}
+
+
+def test_model_can_ask_for_open_times():
+    model = FakeModel(
+        [
+            {"tool": "check_open_times", "arguments": {"day": "Monday"}},
+            {"text": "Monday has 9:00 am and 2:30 pm."},
+        ]
+    )
+    helper = make_helper(model)
+    helper.respond("When can I come in on Monday?")
+    assert helper.history[1]["content"] == "Open times on monday: 9:00 am and 2:30 pm."
+
+
+def test_booking_waits_for_the_front_desk():
+    model = FakeModel([booking("monday", "9:00 am", "Dana Cruz"), {"text": "Sent."}])
+    helper = make_helper(model)
+    helper.respond("Please book Monday at 9:00 am for Dana Cruz")
+    assert len(helper.tools.booking_queue.waiting()) == 1
+    assert helper.tools.appointment_book.bookings == []
+
+
+def test_made_up_name_is_refused():
+    model = FakeModel([booking("monday", "9:00 am", "Jane Doe"), {"text": "Name?"}])
+    helper = make_helper(model)
+    helper.respond("Please book Monday at 9:00 am")
+    assert "has not given that name" in helper.history[1]["content"]
+    assert helper.tools.booking_queue.waiting() == []
+
+
+def test_approval_records_the_booking_once():
+    book = AppointmentBook({"monday": "9:00 am and 2:30 pm"})
+    queue = BookingQueue(book)
+    queue.request_booking("monday", "9:00 am", "Dana Cruz")
+    queue.approve(1)
+    queue.approve(1)
+    assert len(book.bookings) == 1
+
+
+def test_cancellation_goes_to_the_front_desk():
+    helper = make_helper(FakeModel([]))
+    assert "front desk" in helper.respond("Please cancel my appointment")
+
+
+def test_keyword_model_still_greets():
+    helper = make_helper(KeywordModel())
+    assert helper.respond("hello") == "Hello! How can I help you today?"</pre></div><p><strong>Why it is built this way:</strong> booking moved from a handoff to a request that waits for the front desk; cancelling and rescheduling still go to a person by rule. The name and time must come from the client, so the model cannot book a made-up person. It reuses <code>FakeModel</code>, <code>KeywordModel</code> and <code>OllamaModel</code> unchanged.</p><p>Use it to compare, not to copy. Your assistant serves a different business and has its own tool and its own change.</p></div></details></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 9 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">18</div><div class="task-content"><div class="task-title">Run the full ritual with Ollama switched off</div><div class="task-body"><p>Quit Ollama first. If your tests pass now, they pass when your repository is graded on a computer that has never had Ollama.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 12: tools, guardrails, and approval' &amp;&amp; git push</pre></div><div class="hint-box">If <code>ruff check</code> stops on a fixable error, the <code>&amp;&amp;</code> chain ends there and <code>pytest</code> never runs. Run <code>ruff check --fix .</code>, then run the full first line again.</div></div></div></div><div class="submit-box"><div class="sb-header">Lab 12 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Tools and Guardrails</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>toolbox.py</code>, <code>change_queue.py</code>, <code>keyword_model.py</code>, <code>fake_model.py</code>, <code>fallback_model.py</code>, <code>tests/test_tools.py</code>, <code>week12_answers.md</code>, and your upgraded mini-project with its README section.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 12</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week11_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 11</span>Talking to a Local Model — Ollama, Instructions &amp; History</span></a><span></span><a href="week13_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Capstone Design &amp; SQL</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 12 In-Class Lab &middot; Module 6 &mdash; Tools and Guardrails: Model-Chosen Tools, Checks, and Approval</div></div>
 <script src="../site.js"></script>
 </body></html>
