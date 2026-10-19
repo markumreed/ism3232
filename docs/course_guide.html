@@ -256,8 +256,8 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 </tr>
 <tr>
 <td><span class="mod-num" style="color:var(--u4);">W14</span></td>
-<td><span class="mod-title">Python + SQL Integration</span></td>
-<td class="mod-topics">sqlite3 module. Parameterized queries. SELECT with JOINs. CRUD operations wrapped in Python functions.</td>
+<td><span class="mod-title">Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></td>
+<td class="mod-topics">Bayside's database.py and tools.py: sqlite3 from Python, ? placeholders, rows as dicts, tmp_path tests, and tools over database functions; the Week 12 agent copied over unchanged.</td>
 <td><span class="tag req">W13</span></td>
 <td>5–7 hr</td>
 </tr>
@@ -337,7 +337,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <p>Week 10 now teaches the minimum object-oriented programming needed to build a business chatbot: class, object, attribute, method, <code>__init__</code>, <code>self</code>, and composition. Students build a support chatbot class that is handed a separate order-lookup tool. Replies come from keyword rules. There is no AI model, extra package, API key or internet connection in the week.</p>
 <p><strong>Essential:</strong> the seven terms above and tracing one message through the program. <strong>Optional enrichment:</strong> the functions-and-dictionary version, the real-model preview, and the second tool in the lab exercises. <strong>Left out on purpose:</strong> inheritance, abstract classes, decorators, metaclasses and design patterns. A chatbot with a tool needs <em>has a</em>, not <em>is a kind of</em>.</p>
 <p><strong>Misconceptions to listen for:</strong> the class is the chatbot; <code>self</code> is something the caller passes; two chatbots share one history; using a class makes the chatbot intelligent. <strong>Teaching material:</strong> timing, discussion questions and speaker notes are on the Week 10 lecture page and in the lab slides.</p>
-<p>Weeks 12 and 13 have been rebuilt as well (see below). Week 13 starts the agent capstone with a proposal, a starter business, and the new capstone rubric; Weeks 14 to 16 are being rebuilt in the same direction, toward a chat page and a staff dashboard. Until each one is released, the rows and dependency chains in this guide that mention the Request Tracker capstone describe the earlier version.</p>
+<p>Weeks 12 to 14 have been rebuilt as well (see below). Week 13 starts the agent capstone with a proposal, a starter business, and the new capstone rubric; Week 14 turns its database into the agent's tools; Weeks 15 and 16 are being rebuilt in the same direction, toward a chat page and a staff dashboard. Until each one is released, the rows and dependency chains in this guide that mention the Request Tracker capstone describe the earlier version.</p>
 </div>
 
 <div class="callout teal">
@@ -403,7 +403,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u4);">Block 5 — Database Layer (W13 + W14)</div>
 <div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span><span class="ms">Morning — the proposal, tables from questions, the sqlite3 shell</span></div>
-<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Afternoon — parameterized queries, JOINs, CRUD Python functions</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Database Tools — sqlite3, Placeholders &amp; Tested Tools</span><span class="ms">Afternoon — sqlite3 from Python, ? placeholders, database tools</span></div>
 </div>
 
 <div class="unit-block">
@@ -482,7 +482,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u4);">Week 7 — Database Layer (W13 + W14)</div>
 <div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span><span class="ms">Sessions 1–2 — the proposal, tables from questions, the sqlite3 shell, sign-off</span></div>
-<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Session 3 — parameterized queries, JOINs, CRUD functions</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Database Tools — sqlite3, Placeholders &amp; Tested Tools</span><span class="ms">Session 3 — database.py, placeholders, tools over the database, tmp_path tests</span></div>
 </div>
 
 <div class="unit-block">
@@ -542,7 +542,7 @@ footer { border-top: 1px solid var(--border); padding: 28px; text-align: center;
 <div class="unit-block">
 <div class="unit-label" style="color:var(--u4);">Unit 4 · Capstone Build (W13–W16)</div>
 <div class="mod-row"><span class="mn" style="color:var(--u4);">W13</span><span class="mt">Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span><span class="ms">Proposal and sign-off; CREATE TABLE, INSERT, SELECT, UPDATE, GROUP BY in the sqlite3 shell</span></div>
-<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Python + SQL Integration</span><span class="ms">Parameterized queries; JOINs; CRUD wrapped in Python functions</span></div>
+<div class="mod-row"><span class="mn" style="color:var(--u4);">W14</span><span class="mt">Database Tools — sqlite3, Placeholders &amp; Tested Tools</span><span class="ms">sqlite3 and ? placeholders; database.py and tools.py; tmp_path tests</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u4);">W15</span><span class="mt">Streamlit Business Interface</span><span class="ms">Widgets, layout, session state; connect SQLite to Streamlit</span></div>
 <div class="mod-row"><span class="mn" style="color:var(--u4);">W16</span><span class="mt">GenAI Feature &amp; Final Demo</span><span class="ms">Anthropic API; controlled AI feature; 5-min presentations; course retrospective</span></div>
 </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <script>
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W14</title><style>html{min-height:100vh;}
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 14 — Database Tools — sqlite3, Placeholders &amp; Tested Tools</title><style>html{min-height:100vh;}
 
     :root {
       --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
@@ -145,6 +145,15 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* video/infographic playlist */
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary)}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -158,144 +167,120 @@ body{min-height:100vh;width:100%;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 W14 — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap">
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4CB;</span>
-  <span><strong style="color:var(--text);">In-class page.</strong>
-  Read the <a href="week14_reading.html" style="color:var(--muted);">Week 14 reading</a>
-  first if you haven't. Follow along during the live session.</span>
-</div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 14 · Lecture</div>
-<h1 class="wk-title">Python + SQL Integration</h1>
-<p class="wk-deck">Students connect their OOP models to SQLite using the sqlite3 module, implement all five required database functions, and test with pytest using tmp_path.</p>
-<div class="meta">
+<meta name="description" content="ISM3232 W11 — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><div class="wrap"><div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4CB;</span><span><strong style="color:var(--text);">In-class page.</strong> Read the <a href="week14_reading.html" style="color:var(--muted);">Week 14 reading</a> first if you haven't. Follow along during the live session.</span></div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 14 · Lecture</div><h1 class="wk-title">Database Tools — sqlite3, Placeholders &amp; Tested Tools</h1><p class="wk-deck">Give the agent its database: query it from Python safely, test every function, and watch the Week 12 agent work unchanged.</p><div class="meta">
 <span class="chip accent">Module 14 · Lecture</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">~80 min</span>
-</div>
-<div class="weekjump">
+<span class="chip">~75 min</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week14_reading.html" class="weekjump-link">Reading</a>
 <a href="week14_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week14_lab.html" class="weekjump-link">Lab</a>
-</div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" data-embed-src="https://www.youtube.com/embed/PLACEHOLDER_V31" data-embed-title="Python + SQLite Integration — sqlite3, database.py & pytest" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px dashed var(--border,rgba(255,255,255,.15));background:var(--bg2,rgba(255,255,255,.03));">
-    <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box;gap:6px;">
-      <span style="font-family:var(--mono,monospace);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim,#888);">Video coming soon</span>
-      <span style="font-size:13px;color:var(--dim,#888);max-width:85%;">Python + SQLite Integration — sqlite3, database.py & pytest</span>
-    </div>
-  </div>
-</div>
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F9E0;</div><div><div class="callout-label">This week &mdash; the agent gets its database</div><div class="callout-body">Week 13 built the tables. Today Python reads and writes them, the tools sit on top, and the agent from Week 12 runs against them without a single change. Every output on this page is a real run of the code it shows; the two chats are real runs of the course model.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Session plan &mdash; 75 minutes</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Minutes</th><th>Segment</th><th>What happens</th></tr></thead><tbody><tr><td>0&ndash;8</td><td>Where Week 13 left off</td><td>The Week 12&rarr;14 map</td></tr><tr><td>8&ndash;25</td><td>The connection pattern, live</td><td><code>query_all</code> in a Python shell; rows as dictionaries</td></tr><tr><td>25&ndash;35</td><td>Placeholders, live</td><td>The f-string and the <code>?</code>; the model writes the arguments</td></tr><tr><td>35&ndash;50</td><td>Same door, whole words</td><td><code>run</code>, <code>customer_said</code>, the A1000 test</td></tr><tr><td>50&ndash;65</td><td>The agent doesn&rsquo;t notice</td><td><code>main.py</code> with Ollama, run twice; the data lasts</td></tr><tr><td>65&ndash;75</td><td>Your project</td><td>What to copy, what to write, 12 tests; next week</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Where Week 13 Left Off</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">The database exists</div><p>Every student has a <code>schema.sql</code> that reads twice cleanly. The sqlite3 shell can query it.</p></div><div class="card"><div class="card-title">The agent cannot reach it</div><p>Week 12&rsquo;s tools read a dictionary and a list. Today each one is replaced, and the agent is not touched.</p></div></div><table class="concept-table"><thead><tr><th>Week 12</th><th>Week 14</th></tr></thead><tbody><tr><td><code>OrderLookup</code>, <code>StockLookup</code></td><td><code>database.py</code></td></tr><tr><td><code>ChangeQueue.requests</code></td><td><code>change_requests</code></td></tr><tr><td><code>Toolbox</code></td><td><code>BaysideTools(db_file)</code></td></tr><tr><td><code>chatbot.py</code></td><td><code>agent.py</code>, first line only</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; The Connection Pattern, Live</div><div class="line"></div></div><div class="code-block"><div class="cb-label">database.py</div><pre><span class="kw">def</span> <span class="fn">query_all</span>(db_file, sql, values=()):
+    <span class="str">"""Run a SELECT and return every row as a dictionary."""</span>
+    conn = sqlite3.connect(db_file)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(sql, values).fetchall()
+    conn.close()
+    <span class="kw">return</span> [dict(row) <span class="kw">for</span> row <span class="kw">in</span> rows]</pre></div><div class="code-block"><div class="cb-label">Python shell</div><pre>python3
+&gt;&gt;&gt; from database import create_tables, find_order, query_all
+&gt;&gt;&gt; create_tables("bayside.db")
+&gt;&gt;&gt; find_order("bayside.db", "A100")
+{'order_id': 'A100', 'customer': 'Dana Cruz', 'item': 'rain jacket', 'status': 'shipped', 'address': '14 Bay Road'}
+&gt;&gt;&gt; query_all("bayside.db", "SELECT name, stock FROM products WHERE stock = ?", (0,))
+[{'name': 'day pack', 'stock': 0}, {'name': 'hiking socks', 'stock': 0}]
+&gt;&gt;&gt; find_order("bayside.db", "A999") is None
+True
+&gt;&gt;&gt; exit()</pre></div><div class="card"><div class="card-title">Say this</div><p>Open, run, close. The <code>?</code> is filled from a tuple, and a one-item tuple needs its comma: <code>(0,)</code>. <code>dict(row)</code> turns each row into the dictionaries students have used since Week 6. In <code>change</code>, nothing is saved until <code>commit</code>.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Placeholders, Live</div><div class="line"></div></div><div class="code-block"><div class="cb-label">placeholders.py</div><pre><span class="kw">import</span> sqlite3
 
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Connecting Python to SQLite</div><div class="line"></div></div><div class="card"><div class="card-title">Why Python drives the database</div><p>SQL is powerful for querying and storing data, but a business application needs Python to provide the logic layer: validate inputs, apply business rules, call the right SQL at the right time, and format output for users. The <code>sqlite3</code> module is Python's built-in SQLite driver &mdash; no installation required.</p><p>The pattern: Python opens a connection, creates a cursor, executes SQL, fetches results, closes the connection. Every database function in your capstone follows this exact pattern.</p></div><div class="cb"><div class="cb-label">The sqlite3 connection pattern &mdash; memorise this</div><pre><span class="kw">import</span> sqlite3
+<span class="kw">from</span> database <span class="kw">import</span> create_tables, find_order
 
-<span class="cm"># Always use a context manager (with) &mdash; auto-commits and closes</span>
-<span class="kw">def</span> <span class="fn">get_connection</span>():
-    <span class="kw">return</span> sqlite3.<span class="fn">connect</span>(<span class="st">&quot;requests.db&quot;</span>)
+create_tables(<span class="str">"bayside.db"</span>)
+order_id = <span class="str">"A100' OR '1'='1"</span>
+conn = sqlite3.connect(<span class="str">"bayside.db"</span>)
+sql = <span class="str">f"SELECT * FROM orders WHERE order_id = '{order_id}'"</span>
+rows = conn.execute(sql).fetchall()
+conn.close()
+print(len(rows), <span class="str">"orders from the f-string query"</span>)
+print(find_order(<span class="str">"bayside.db"</span>, order_id), <span class="str">"from find_order"</span>)</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>6 orders from the f-string query
+None from find_order</pre></div><div class="card"><div class="card-title">Say this</div><p>The f-string returned every order; the placeholder found none. In an agent the model writes the arguments, and a customer can steer the model, so the database must treat whatever arrives as plain text.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Same Door, Whole Words</div><div class="line"></div></div><div class="code-block"><div class="cb-label">tools.py</div><pre>    <span class="kw">def</span> <span class="fn">run</span>(self, name, arguments, history):
+        <span class="str">"""Check one tool request. Run the tool only if every check passes."""</span>
+        <span class="kw">if</span> name == <span class="str">"look_up_order"</span>:
+            order_id = self.clean(arguments, <span class="str">"order_id"</span>)
+            <span class="kw">if</span> order_id == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The order ID is missing. Ask the customer for it."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, order_id):
+                <span class="kw">return</span> <span class="str">"The customer has not given that order ID. Ask them for it."</span>
+            <span class="kw">return</span> self.look_up_order(order_id)
+        <span class="kw">if</span> name == <span class="str">"check_stock"</span>:
+            item = self.clean(arguments, <span class="str">"item"</span>)
+            <span class="kw">if</span> item == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The product is missing. Ask the customer which product."</span>
+            <span class="kw">return</span> self.check_stock(item)
+        <span class="kw">if</span> name == <span class="str">"request_address_change"</span>:
+            order_id = self.clean(arguments, <span class="str">"order_id"</span>)
+            new_address = self.clean(arguments, <span class="str">"new_address"</span>)
+            <span class="kw">if</span> order_id == <span class="str">""</span> <span class="kw">or</span> new_address == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The order ID and the new address are both needed."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, order_id):
+                <span class="kw">return</span> <span class="str">"The customer has not given that order ID. Ask them for it."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, new_address):
+                <span class="kw">return</span> <span class="str">"The customer has not given that address. Ask them for it."</span>
+            <span class="kw">return</span> self.request_address_change(order_id, new_address)
+        <span class="kw">if</span> name == <span class="str">"check_request"</span>:
+            number = self.clean(arguments, <span class="str">"number"</span>)
+            <span class="kw">if</span> number == <span class="str">""</span>:
+                <span class="kw">return</span> <span class="str">"The request number is missing. Ask the customer for it."</span>
+            <span class="kw">if</span> <span class="kw">not</span> self.customer_said(history, number):
+                <span class="kw">return</span> (
+                    <span class="str">"The customer has not given that request number. Ask them for it."</span>
+                )
+            <span class="kw">return</span> self.check_request(number)
+        <span class="kw">return</span> <span class="str">f"There is no tool named {name}."</span></pre></div><div class="code-block"><div class="cb-label">door.py</div><pre><span class="kw">from</span> database <span class="kw">import</span> create_tables
+<span class="kw">from</span> tools <span class="kw">import</span> BaysideTools
 
-<span class="cm"># Reading data</span>
-<span class="kw">with</span> <span class="fn">get_connection</span>() <span class="kw">as</span> conn:
-    cursor = conn.cursor()
-    cursor.<span class="fn">execute</span>(<span class="st">&quot;SELECT * FROM requests WHERE status = ?&quot;</span>, (<span class="st">&quot;Pending&quot;</span>,))
-    rows = cursor.<span class="fn">fetchall</span>()
-    <span class="kw">for</span> row <span class="kw">in</span> rows:
-        print(row)
+create_tables(<span class="str">"bayside.db"</span>)
+tools = BaysideTools(<span class="str">"bayside.db"</span>)
+typed = [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Where is order A1000?"</span>}]
+print(tools.run(<span class="str">"look_up_order"</span>, {<span class="str">"order_id"</span>: <span class="str">"A100"</span>}, typed))
+print(repr(tools.words(<span class="str">"Where is order A1000?"</span>)))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>The customer has not given that order ID. Ask them for it.
+' where is order a1000 '</pre></div><div class="card"><div class="card-title">Say this</div><p>The customer typed A1000 and the model asked for A100. Week 12&rsquo;s substring check would have let it through; <code>words</code> compares whole words, so it is refused. Then run the tests: <code>pytest -q tests/test_tools.py</code>.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 5 &mdash; The Agent Doesn&rsquo;t Notice</div><div class="line"></div></div><div class="code-block"><div class="cb-label">First run</div><pre>Type a message, or type quit to stop.
+You: Sunny: Hello! How may I assist you today?
+You: Sunny: Your order A104 has been shipped.
+You: Sunny: We have 8 fleece vests in stock, priced at $60.00 each.
+You: Sunny: Your address change request for order A102 has been submitted and is pending staff approval.
+You: Sunny: Request 1 for order A102 is currently being reviewed by staff.
+You: Messages in this conversation: 14
+Staff review
+Request 1: A102 to 9 Pine Street, Tampa
+Approve? yes or no: Request 1 rejected.
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street
+A103 21 Harbor Way
+A104 7 Dune Court
+A105 40 Tide Street</pre></div><div class="code-block"><div class="cb-label">Second run</div><pre>Type a message, or type quit to stop.
+You: Sunny: Request 1 for order A102 was rejected.
+You: Messages in this conversation: 3
+Staff review
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street
+A103 21 Harbor Way
+A104 7 Dune Court
+A105 40 Tide Street</pre></div><div class="code-block"><div class="cb-label">approve.py</div><pre><span class="kw">from</span> database <span class="kw">import</span> add_change_request, approve_request, create_tables, find_order
 
-<span class="cm"># Writing data &mdash; conn auto-commits when the with block exits</span>
-<span class="kw">with</span> <span class="fn">get_connection</span>() <span class="kw">as</span> conn:
-    conn.<span class="fn">execute</span>(
-        <span class="st">&quot;INSERT INTO requests (requester, category, amount) VALUES (?, ?, ?)&quot;</span>,
-        (<span class="st">&quot;Taylor&quot;</span>, <span class="st">&quot;Travel&quot;</span>, <span class="nm">1200.0</span>)
-    )</pre></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Always use parameterised queries &mdash; never f-strings in SQL</div><div class="callout-body">Never build SQL strings by concatenating user input: <code>f"WHERE name = '{name}'"</code> is a SQL injection vulnerability. Always use <code>?</code> placeholders and pass values as a tuple. This applies to every SQL statement in the capstone.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Required database.py Functions</div><div class="line"></div></div><div class="card"><div class="card-title">All five functions are required in the capstone</div><p>Every capstone submission must have a <code>database.py</code> module containing these five functions. Each function is self-contained: it opens its own connection, does one job, and closes. Functions that need each other pass data by return value, not by sharing connections.</p></div><div class="cb"><div class="cb-label">database.py &mdash; all five required functions</div><pre><span class="kw">import</span> sqlite3
-
-DB_FILE = <span class="st">&quot;data/requests.db&quot;</span>
-
-<span class="kw">def</span> <span class="fn">create_table</span>():
-    <span class="st">&quot;&quot;&quot;Create the requests table if it does not already exist.&quot;&quot;&quot;</span>
-    <span class="kw">with</span> sqlite3.<span class="fn">connect</span>(DB_FILE) <span class="kw">as</span> conn:
-        conn.<span class="fn">execute</span>(<span class="st">&quot;&quot;&quot;
-            CREATE TABLE IF NOT EXISTS requests (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                requester TEXT    NOT NULL,
-                category  TEXT    NOT NULL,
-                amount    REAL,
-                status    TEXT    DEFAULT 'Pending',
-                notes     TEXT
-            )
-        &quot;&quot;&quot;</span>)
-
-<span class="kw">def</span> <span class="fn">add_record</span>(requester, category, amount, notes=<span class="st">&quot;&quot;</span>):
-    <span class="st">&quot;&quot;&quot;Insert a new request record.&quot;&quot;&quot;</span>
-    <span class="kw">with</span> sqlite3.<span class="fn">connect</span>(DB_FILE) <span class="kw">as</span> conn:
-        conn.<span class="fn">execute</span>(
-            <span class="st">&quot;INSERT INTO requests (requester,category,amount,notes) VALUES(?,?,?,?)&quot;</span>,
-            (requester, category, amount, notes)
-        )
-
-<span class="kw">def</span> <span class="fn">get_all_records</span>():
-    <span class="st">&quot;&quot;&quot;Return all records as a list of dicts.&quot;&quot;&quot;</span>
-    <span class="kw">with</span> sqlite3.<span class="fn">connect</span>(DB_FILE) <span class="kw">as</span> conn:
-        conn.row_factory = sqlite3.Row
-        cursor = conn.<span class="fn">execute</span>(<span class="st">&quot;SELECT * FROM requests ORDER BY id DESC&quot;</span>)
-        <span class="kw">return</span> [dict(row) <span class="kw">for</span> row <span class="kw">in</span> cursor.<span class="fn">fetchall</span>()]
-
-<span class="kw">def</span> <span class="fn">update_status</span>(record_id, new_status):
-    <span class="st">&quot;&quot;&quot;Update the status of a request by ID.&quot;&quot;&quot;</span>
-    <span class="kw">with</span> sqlite3.<span class="fn">connect</span>(DB_FILE) <span class="kw">as</span> conn:
-        conn.<span class="fn">execute</span>(
-            <span class="st">&quot;UPDATE requests SET status = ? WHERE id = ?&quot;</span>,
-            (new_status, record_id)
-        )
-
-<span class="kw">def</span> <span class="fn">get_status_report</span>():
-    <span class="st">&quot;&quot;&quot;Return count and total amount grouped by status.&quot;&quot;&quot;</span>
-    <span class="kw">with</span> sqlite3.<span class="fn">connect</span>(DB_FILE) <span class="kw">as</span> conn:
-        cursor = conn.<span class="fn">execute</span>(
-            <span class="st">&quot;SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status&quot;</span>
-        )
-        <span class="kw">return</span> cursor.<span class="fn">fetchall</span>()</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; row_factory and Working with Results</div><div class="line"></div></div><div class="card"><div class="card-title">sqlite3.Row makes results easier to work with</div><p>By default, <code>fetchall()</code> returns plain tuples: <code>(1, "Taylor", "Travel", 1200.0, "Pending", "")</code>. Setting <code>conn.row_factory = sqlite3.Row</code> makes each row behave like a dictionary &mdash; you access fields by name instead of index. Wrapping in <code>dict(row)</code> gives you a plain Python dict, which Streamlit and your OOP layer can consume directly.</p></div><div class="cb"><div class="cb-label">Converting rows to dicts &mdash; use in get_all_records()</div><pre><span class="cm"># Without row_factory &mdash; tuple access, fragile</span>
-row = (1, <span class="st">&quot;Taylor&quot;</span>, <span class="st">&quot;Travel&quot;</span>, <span class="nm">1200.0</span>, <span class="st">&quot;Pending&quot;</span>, <span class="st">&quot;&quot;</span>)
-print(row[<span class="nm">1</span>])   <span class="cm"># Taylor &mdash; breaks if columns reorder</span>
-
-<span class="cm"># With row_factory &mdash; dict access, robust</span>
-conn.row_factory = sqlite3.Row
-row = conn.<span class="fn">execute</span>(<span class="st">&quot;SELECT * FROM requests WHERE id=1&quot;</span>).<span class="fn">fetchone</span>()
-record = dict(row)
-print(record[<span class="st">&quot;requester&quot;</span>])   <span class="cm"># Taylor</span>
-print(record[<span class="st">&quot;amount&quot;</span>])      <span class="cm"># 1200.0</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Testing Database Functions</div><div class="line"></div></div><div class="card"><div class="card-title">Use a test database, not your development database</div><p>Never run pytest against <code>data/requests.db</code> &mdash; tests will insert garbage data or delete real records. Use a separate test database (e.g. <code>data/test_requests.db</code>) and configure your database module to accept a file path parameter, or use an in-memory SQLite database for tests.</p></div><div class="cb"><div class="cb-label">Testing with an in-memory database</div><pre><span class="kw">import</span> sqlite3, pytest
-<span class="kw">from</span> database <span class="kw">import</span> create_table, add_record, get_all_records, update_status
-
-<span class="kw">def</span> <span class="fn">test_add_and_retrieve</span>(tmp_path):
-    <span class="cm"># tmp_path is a pytest fixture &mdash; creates a temp folder per test</span>
-    db = tmp_path / <span class="st">&quot;test.db&quot;</span>
-    create_table(db)
-    add_record(<span class="st">&quot;Taylor&quot;</span>, <span class="st">&quot;Travel&quot;</span>, <span class="nm">1200</span>, db_file=db)
-    records = get_all_records(db_file=db)
-    assert len(records) == <span class="nm">1</span>
-    assert records[<span class="nm">0</span>][<span class="st">&quot;requester&quot;</span>] == <span class="st">&quot;Taylor&quot;</span>
-
-<span class="kw">def</span> <span class="fn">test_update_status</span>(tmp_path):
-    db = tmp_path / <span class="st">&quot;test.db&quot;</span>
-    create_table(db)
-    add_record(<span class="st">&quot;Jordan&quot;</span>, <span class="st">&quot;Equipment&quot;</span>, <span class="nm">450</span>, db_file=db)
-    records = get_all_records(db_file=db)
-    update_status(records[<span class="nm">0</span>][<span class="st">&quot;id&quot;</span>], <span class="st">&quot;Approved&quot;</span>, db_file=db)
-    updated = get_all_records(db_file=db)
-    assert updated[<span class="nm">0</span>][<span class="st">&quot;status&quot;</span>] == <span class="st">&quot;Approved&quot;</span></pre></div><div class="assignment"><div class="a-header">Assignment 14 &middot; Due end of Week 14 &middot; Capstone milestone</div><h3>Python + SQL Integration Layer</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>database.py</code> &mdash; all 5 required functions implemented with parameterised queries and row_factory.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>File:</strong> <code>tests/test_database.py</code> &mdash; at least 3 tests using tmp_path to avoid polluting the development database.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/31_python_sql_infographic.png"
-       alt="Python + SQL Integration — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
-</div>
-
-<!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week13_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span></a><span></span><a href="week15_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 14 &middot; Module 7C &mdash; Python + SQL Integration</div></div>
+create_tables(<span class="str">"bayside.db"</span>)
+number = add_change_request(<span class="str">"bayside.db"</span>, <span class="str">"A102"</span>, <span class="str">"9 Pine Street, Tampa"</span>)
+print(number)
+print(approve_request(<span class="str">"bayside.db"</span>, number))
+print(find_order(<span class="str">"bayside.db"</span>, <span class="str">"A102"</span>)[<span class="str">"address"</span>])
+print(approve_request(<span class="str">"bayside.db"</span>, number))</pre></div><div class="code-block"><div class="cb-label">Output</div><pre>1
+Request 1 approved.
+9 Pine Street, Tampa
+Request 1 is already approved.</pre></div><div class="card"><div class="card-title">Say this</div><p>Run <code>main.py</code> twice. The request decided in the first run is still decided in the second, because it lives in <code>bayside.db</code>. And approving twice changes the address once: <code>approve_request</code> checks that the request is still waiting.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 6 &mdash; Your Project</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Copy</div><p>The three helpers and <code>create_tables</code>; <code>clean</code>, <code>words</code> and <code>customer_said</code>; your Week 12 <code>chatbot.py</code> as <code>agent.py</code>, <code>fake_model.py</code>, <code>fallback_model.py</code>, <code>ollama_model.py</code> plus <code>MAX_MESSAGES</code>.</p></div><div class="card"><div class="card-title">Write</div><p>Your database functions, your tools class, an adapted <code>keyword_model.py</code>, <code>settings.py</code> and <code>main.py</code>, and at least 12 tests: 5 database, 5 tools, 2 agent.</p></div></div><div class="section-divider"><div class="line"></div><div class="label">Discussion and misconceptions</div><div class="line"></div></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion 1: steering</div><div class="p-text">Which of your tools could a customer try to steer with odd text?</div><div class="p-hint">Look for: any tool whose argument comes from what the customer typed.</div></div><div class="prompt"><div class="p-num">Discussion 2: approval</div><div class="p-text">What should your approve function check before it changes anything?</div><div class="p-hint">Look for: that the request exists and is still waiting.</div></div><div class="prompt"><div class="p-num">Discussion 3: keeping tests</div><div class="p-text">Which Week 12 test would you keep for your own agent?</div><div class="p-hint">Look for: the made-up value refused, and the payment handoff.</div></div></div><div class="card"><div class="card-title">Misconceptions to listen for</div><p>&ldquo;The database saves on its own.&rdquo; Nothing is kept until <code>commit</code>.</p><p>&ldquo;An f-string is fine if the value looks safe.&rdquo; The model writes the value, and a customer can steer the model.</p><p>&ldquo;<code>(order_id)</code> is a tuple.&rdquo; Without a comma it is just <code>order_id</code>.</p><p>&ldquo;<code>tmp_path</code> tests touch my real database.&rdquo; Each test gets a new empty folder.</p></div><div class="assignment"><div class="a-header">Lab 14 &middot; Due end of Week 14 &middot; Database Tools</div><h3>Your agent on your own database</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Files:</strong> <code>database.py</code>, <code>tools.py</code>, <code>agent.py</code>, the four model files, <code>settings.py</code>, <code>main.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>Tests:</strong> at least 12 across <code>tests/test_database.py</code>, <code>tests/test_tools.py</code> and <code>tests/test_agent.py</code>, passing with Ollama switched off.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week13_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span></a><span></span><a href="week15_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 14 &middot; Database Tools — sqlite3, Placeholders &amp; Tested Tools</div></div>
 <script src="../site.js"></script>
 </body></html>

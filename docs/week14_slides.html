@@ -6,7 +6,7 @@
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISM3232 Week 14 — Python + SQL Integration</title>
+<title>ISM3232 Week 14 — Database Tools — sqlite3, Placeholders &amp; Tested Tools</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -100,110 +100,147 @@
 }
 </style>
 </head><body><div class="reveal"><div class="slides">
-<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 14</p><h1>Python + SQL Integration</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> sqlite3 connection pattern</span><span class="t-item"><strong>15–40 min</strong> Build database.py together</span><span class="t-item"><strong>40–55 min</strong> row_factory + dict conversion</span><span class="t-item"><strong>55–70 min</strong> Testing with tmp_path</span><span class="t-item"><strong>70–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 14: Week 14 — Module 7C — Python + SQL Integration
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 14</p><h1>Database Tools — sqlite3, Placeholders &amp; Tested Tools</h1><div class="t-bar"><span class="t-item"><strong>0–8 min</strong> Where Week 13 left off</span><span class="t-item"><strong>8–25 min</strong> The connection pattern</span><span class="t-item"><strong>25–35 min</strong> Placeholders</span><span class="t-item"><strong>35–50 min</strong> Same door, whole words</span><span class="t-item"><strong>50–65 min</strong> The agent doesn't notice</span><span class="t-item"><strong>65–75 min</strong> Your project</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 14 — Database Tools
 
-Today&#x27;s plan:
-  0–15 min — sqlite3 connection pattern
-  15–40 min — Build database.py together
-  40–55 min — row_factory + dict conversion
-  55–70 min — Testing with tmp_path
-  70–80 min — Assignment</aside></section>
-<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Connecting Python to SQLite</h1><aside class="notes">Never build SQL strings by concatenating user input: f&quot;WHERE name = &#x27;{name}&#x27;&quot; is a SQL injection vulnerability. Always use ? placeholders and pass values as a tuple. This applies to every SQL statement in the capstone.</aside></section>
-<section class="s-point"><h2>Section 1 — Connecting Python to SQLite</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>SQL is powerful for querying and storing data, but a business application needs Python to provide the logic la…</li><li>The pattern: Python opens a connection, creates a cursor, executes SQL, fetches results, closes the connection…</li></ul><aside class="notes">SQL is powerful for querying and storing data, but a business application needs Python to provide the logic layer: validate inputs, apply business rules, call the right SQL at the right time, and format output for users. The sqlite3 module is Python&#x27;s built-in SQLite driver — no installation required.
+Today's plan:
+  0–8 min — Where Week 13 left off
+  8–25 min — The connection pattern
+  25–35 min — Placeholders
+  35–50 min — Same door, whole words
+  50–65 min — The agent doesn't notice
+  65–75 min — Your project
 
-The pattern: Python opens a connection, creates a cursor, executes SQL, fetches results, closes the connection. Every database function in your capstone follows this exact pattern.</aside></section>
-<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">VS Code + Terminal</div><div class="demo-sub">The sqlite3 connection pattern — memorise this</div></div><aside class="notes">LIVE CODE-ALONG: The sqlite3 connection pattern — memorise this</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The sqlite3 connection pattern — memorise this</h3><pre><code class="language-python">import sqlite3
+Frame it: Week 13 built the tables; today Python reads and writes them, the tools sit on top, and the Week 12 agent runs against them unchanged. Every output on these slides is a real run of the code it shows.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Where Week 13 Left Off</h1><aside class="notes">The database exists; the agent cannot reach it.</aside></section>
+<section class="s-point"><h2>From a list to a table</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>OrderLookup</code>, <code>StockLookup</code> &rarr; <code>database.py</code></li><li><code>ChangeQueue.requests</code> &rarr; the <code>change_requests</code> table</li><li><code>Toolbox</code> &rarr; <code>BaysideTools(db_file)</code>, same two methods</li><li><code>chatbot.py</code> &rarr; <code>agent.py</code>, first line only</li></ul><aside class="notes">The last row is the point of the week: the agent never notices.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">The Connection Pattern</h1><aside class="notes">Open, run, close.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ query_all</h3><pre><code class="language-python" style="max-height:620px;font-size:.74em;line-height:1.3;">def query_all(db_file, sql, values=()):
+    """Run a SELECT and return every row as a dictionary."""
+    conn = sqlite3.connect(db_file)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(sql, values).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]</code></pre><aside class="notes">Line by line: connect, row_factory, execute with a tuple of values, fetchall, close, then dict(row) for each row.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Rows come back as dictionaries</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">from database import create_tables, query_all
 
-# Always use a context manager (with) — auto-commits and closes
-def get_connection():
-    return sqlite3.connect(&quot;requests.db&quot;)
+create_tables("bayside.db")
+rows = query_all("bayside.db", "SELECT order_id, status FROM orders WHERE status = ?", ("shipped",))
+print(rows)
+print(rows[0]["status"])
 
-# Reading data
-with get_connection() as conn:
-    cursor = conn.cursor()
-    cursor.execute(&quot;SELECT * FROM requests WHERE status = ?&quot;, (&quot;Pending&quot;,))
-    rows = cursor.fetchall()
-    for row in rows:
-        print(row)
+# Output:
+# [{'order_id': 'A100', 'status': 'shipped'}, {'order_id': 'A104', 'status': 'shipped'}]
+# shipped</code></pre><aside class="notes">The ? is filled from a one-item tuple, so it needs its comma: ("shipped",).</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">python3 in the Bayside folder</div><div class="demo-sub">query_all, find_order</div></div><aside class="notes">Type the reading's shell session live.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Placeholders</h1><aside class="notes">The model writes the arguments.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ An f-string versus ?</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">import sqlite3
 
-# Writing data — conn auto-commits when the with block exits
-with get_connection() as conn:
-    conn.execute(
-        &quot;INSERT INTO requests (requester, category, amount) VALUES (?, ?, ?)&quot;,
-        (&quot;Taylor&quot;, &quot;Travel&quot;, 1200.0)
-    )</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+from database import create_tables, find_order
 
-Code label: The sqlite3 connection pattern — memorise this</aside></section>
-<section class="s-warn"><div class="warn-card" style="max-width:800px;margin:0 auto;"><div class="warn-lbl">⚠ Always use parameterised queries — never f-strings in SQL</div><p style="font-size:.84em;line-height:1.8;">Never build SQL strings by concatenating user input: f&quot;WHERE name = &#x27;{name}&#x27;&quot; is a SQL injection vulnerability. Always use ? placeholders and pass values as a tuple. This applies to every SQL statemen</p></div><aside class="notes">EMPHASISE: Always use parameterised queries — never f-strings in SQL
+create_tables("bayside.db")
+order_id = "A100' OR '1'='1"
+conn = sqlite3.connect("bayside.db")
+sql = f"SELECT * FROM orders WHERE order_id = '{order_id}'"
+rows = conn.execute(sql).fetchall()
+conn.close()
+print(len(rows), "orders from the f-string query")
+print(find_order("bayside.db", order_id), "from find_order")
 
-Never build SQL strings by concatenating user input: f&quot;WHERE name = &#x27;{name}&#x27;&quot; is a SQL injection vulnerability. Always use ? placeholders and pass values as a tuple. This applies to every SQL statement in the capstone.</aside></section>
-<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Required database.py Functions</h1><aside class="notes">Every capstone submission must have a database.py module containing these five functions. Each function is self-contained: it opens its own connection, does one job, and closes. Functions that need each other pass data by return value, not by sharing connections.</aside></section>
-<section class="s-point"><h2>Section 2 — Required database.py Functions</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Every capstone submission must have a database.</li></ul><aside class="notes">Every capstone submission must have a database.py module containing these five functions. Each function is self-contained: it opens its own connection, does one job, and closes. Functions that need each other pass data by return value, not by sharing connections.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ database.py — all five required functions</h3><pre><code class="language-python">import sqlite3
+# Output:
+# 6 orders from the f-string query
+# None from find_order</code></pre><aside class="notes">The f-string returned every order; the placeholder found none. A customer can steer the model, so whatever arrives must stay plain text.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Same Door, Whole Words</h1><aside class="notes">Week 12's door, one fix.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The run door</h3><pre><code class="language-python" style="max-height:620px;font-size:.5em;line-height:1.3;">    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "look_up_order":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.look_up_order(order_id)
+        if name == "check_stock":
+            item = self.clean(arguments, "item")
+            if item == "":
+                return "The product is missing. Ask the customer which product."
+            return self.check_stock(item)
+        if name == "request_address_change":
+            order_id = self.clean(arguments, "order_id")
+            new_address = self.clean(arguments, "new_address")
+            if order_id == "" or new_address == "":
+                return "The order ID and the new address are both needed."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            if not self.customer_said(history, new_address):
+                return "The customer has not given that address. Ask them for it."
+            return self.request_address_change(order_id, new_address)
+        if name == "check_request":
+            number = self.clean(arguments, "number")
+            if number == "":
+                return "The request number is missing. Ask the customer for it."
+            if not self.customer_said(history, number):
+                return (
+                    "The customer has not given that request number. Ask them for it."
+                )
+            return self.check_request(number)
+        return f"There is no tool named {name}."</code></pre><aside class="notes">Unknown tool, missing value, and a value the customer never typed are all refused before any tool runs.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ A100 is not A1000</h3><pre><code class="language-python" style="max-height:620px;font-size:.62em;line-height:1.3;">from database import create_tables
+from tools import BaysideTools
 
-DB_FILE = &quot;data/requests.db&quot;
+create_tables("bayside.db")
+tools = BaysideTools("bayside.db")
+typed = [{"role": "user", "content": "Where is order A1000?"}]
+print(tools.run("look_up_order", {"order_id": "A100"}, typed))
+print(repr(tools.words("Where is order A1000?")))
 
-def create_table():
-    &quot;&quot;&quot;Create the requests table if it does not already exist.&quot;&quot;&quot;
-    with sqlite3.connect(DB_FILE) as conn:
-        conn.execute(&quot;&quot;&quot;
-            CREATE TABLE IF NOT EXISTS requests (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                requester TEXT    NOT NULL,
-                category  TEXT    NOT NULL,
-                amount    REAL,
-                status    TEXT    DEFAULT &#x27;Pending&#x27;,
-                notes     TEXT
-            )
-        &quot;&quot;&quot;)
+# Output:
+# The customer has not given that order ID. Ask them for it.
+# ' where is order a1000 '</code></pre><aside class="notes">Week 12's substring check let A100 match inside A1000. words compares whole words, so the request is refused. Then run pytest -q tests/test_tools.py.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">The Agent Doesn't Notice</h1><aside class="notes">Run main.py twice.</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">python3 main.py</div><div class="demo-sub">Twice, with Ollama</div></div><aside class="notes">Run it, reject the request, run it again and ask about request 1.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ First run</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.5em;line-height:1.3;">Type a message, or type quit to stop.
+You: Sunny: Hello! How may I assist you today?
+You: Sunny: Your order A104 has been shipped.
+You: Sunny: We have 8 fleece vests in stock, priced at $60.00 each.
+You: Sunny: Your address change request for order A102 has been submitted and is pending staff approval.
+You: Sunny: Request 1 for order A102 is currently being reviewed by staff.
+You: Messages in this conversation: 14
+Staff review
+Request 1: A102 to 9 Pine Street, Tampa
+Approve? yes or no: Request 1 rejected.
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street
+A103 21 Harbor Way
+A104 7 Dune Court
+A105 40 Tide Street</code></pre><aside class="notes">A real run of the course model: the change is filed, then rejected at the staff review.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Second run</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.62em;line-height:1.3;">Type a message, or type quit to stop.
+You: Sunny: Request 1 for order A102 was rejected.
+You: Messages in this conversation: 3
+Staff review
+A100 14 Bay Road
+A101 3 Gull Lane
+A102 88 Pier Street
+A103 21 Harbor Way
+A104 7 Dune Court
+A105 40 Tide Street</code></pre><aside class="notes">A new program, the same database: the decision is still there.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Approving twice changes it once</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">from database import add_change_request, approve_request, create_tables, find_order
 
-def add_record(requester, category, amount, notes=&quot;&quot;):
-    &quot;&quot;&quot;Insert a new request record.&quot;&quot;&quot;
-    with sqlite3.connect(DB_FILE) as conn:
-        conn.execute(
-            &quot;INSERT INTO requests (requester,category,amount,notes) VALUES(?,?,?,?)&quot;,
-            </code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+create_tables("bayside.db")
+number = add_change_request("bayside.db", "A102", "9 Pine Street, Tampa")
+print(number)
+print(approve_request("bayside.db", number))
+print(find_order("bayside.db", "A102")["address"])
+print(approve_request("bayside.db", number))
 
-Code label: database.py — all five required functions</aside></section>
-<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">row_factory and Working with Results</h1><aside class="notes">By default, fetchall() returns plain tuples: (1, &quot;Taylor&quot;, &quot;Travel&quot;, 1200.0, &quot;Pending&quot;, &quot;&quot;) . Setting conn.row_factory = sqlite3.Row makes each row behave like a dictionary — you access fields by name instead of index. Wrapping in dict(row) gives you a plain Python dict, which Streamlit and your OOP layer can consume directly.</aside></section>
-<section class="s-point"><h2>Section 3 — row_factory and Working with Results</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>By default, fetchall() returns plain tuples: (1, &quot;Taylor&quot;, &quot;Travel&quot;, 1200.</li></ul><aside class="notes">By default, fetchall() returns plain tuples: (1, &quot;Taylor&quot;, &quot;Travel&quot;, 1200.0, &quot;Pending&quot;, &quot;&quot;) . Setting conn.row_factory = sqlite3.Row makes each row behave like a dictionary — you access fields by name instead of index. Wrapping in dict(row) gives you a plain Python dict, which Streamlit and your OOP layer can consume directly.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Converting rows to dicts — use in get_all_records()</h3><pre><code class="language-bash"># Without row_factory — tuple access, fragile
-row = (1, &quot;Taylor&quot;, &quot;Travel&quot;, 1200.0, &quot;Pending&quot;, &quot;&quot;)
-print(row[1])   # Taylor — breaks if columns reorder
-
-# With row_factory — dict access, robust
-conn.row_factory = sqlite3.Row
-row = conn.execute(&quot;SELECT * FROM requests WHERE id=1&quot;).fetchone()
-record = dict(row)
-print(record[&quot;requester&quot;])   # Taylor
-print(record[&quot;amount&quot;])      # 1200.0</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: Converting rows to dicts — use in get_all_records()</aside></section>
-<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">Testing Database Functions</h1><aside class="notes">Never run pytest against data/requests.db — tests will insert garbage data or delete real records. Use a separate test database (e.g. data/test_requests.db ) and configure your database module to accept a file path parameter, or use an in-memory SQLite database for tests.</aside></section>
-<section class="s-point"><h2>Section 4 — Testing Database Functions</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Never run pytest against data/requests.</li></ul><aside class="notes">Never run pytest against data/requests.db — tests will insert garbage data or delete real records. Use a separate test database (e.g. data/test_requests.db ) and configure your database module to accept a file path parameter, or use an in-memory SQLite database for tests.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Testing with an in-memory database</h3><pre><code class="language-python">import sqlite3, pytest
-from database import create_table, add_record, get_all_records, update_status
-
-def test_add_and_retrieve(tmp_path):
-    # tmp_path is a pytest fixture — creates a temp folder per test
-    db = tmp_path / &quot;test.db&quot;
-    create_table(db)
-    add_record(&quot;Taylor&quot;, &quot;Travel&quot;, 1200, db_file=db)
-    records = get_all_records(db_file=db)
-    assert len(records) == 1
-    assert records[0][&quot;requester&quot;] == &quot;Taylor&quot;
-
-def test_update_status(tmp_path):
-    db = tmp_path / &quot;test.db&quot;
-    create_table(db)
-    add_record(&quot;Jordan&quot;, &quot;Equipment&quot;, 450, db_file=db)
-    records = get_all_records(db_file=db)
-    update_status(records[0][&quot;id&quot;], &quot;Approved&quot;, db_file=db)
-    updated = get_all_records(db_file=db)
-    assert updated[0][&quot;status&quot;] == &quot;Approved&quot;</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: Testing with an in-memory database</aside></section></div></div>
+# Output:
+# 1
+# Request 1 approved.
+# 9 Pine Street, Tampa
+# Request 1 is already approved.</code></pre><aside class="notes">approve_request checks that the request is still waiting before it changes anything.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 6</div><h1 style="font-size:1.4em;">Your Project</h1><aside class="notes">Copy, then write.</aside></section>
+<section class="s-point"><h2>Copy, then write</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Copy: the helpers and <code>create_tables</code>; <code>clean</code>, <code>words</code>, <code>customer_said</code>; your Week 12 agent and models</li><li>Write: your database functions, your tools class, <code>keyword_model.py</code>, <code>settings.py</code>, <code>main.py</code></li><li>At least 12 tests: 5 database, 5 tools, 2 agent</li></ul><aside class="notes">Point to the lab's mapping table: each Bayside function and its counterpart.</aside></section>
+<section class="s-point"><h2>Next week</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Staff still can't approve anything without running Python.</li><li>Week 15: a Staff tab of their own, in a web app.</li></ul><aside class="notes">End on the problem the next week solves.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>

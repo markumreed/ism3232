@@ -192,177 +192,424 @@ body{min-height:100vh;width:100%;}
 body{min-height:100vh;width:100%;}
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 14 In-Class Lab — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 14 · Lab</div>
-<h1 class="wk-title">Python + SQL Integration</h1>
-<p class="wk-deck">Module 7C &mdash; Python + SQL Integration &mdash; build all five database.py functions with parameterised queries, row_factory, and tmp_path tests</p>
-<div class="meta">
+<meta name="description" content="ISM3232 Week 11 lab — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><style>.task-content{min-width:0;flex:1;}.expected{white-space:pre !important;overflow-x:auto;}</style><style>.starter-table{border-collapse:collapse;margin:8px 0 6px;font-size:14px;}.starter-table th,.starter-table td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;}.starter-table th{background:var(--bg2);font-weight:600;}</style><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 14 · Lab</div><h1 class="wk-title">Database Tools — sqlite3, Placeholders &amp; Tested Tools</h1><p class="wk-deck">Module 7 &mdash; Capstone &mdash; a short warm-up on Bayside, then your own database functions, tools, agent and tests, ending in a chat with your own database</p><div class="meta">
 <span class="chip accent">Module 14 · Lab</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">Full class period</span>
-</div>
-<div class="weekjump">
+<span class="chip">About 3 hours + finishing at home</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week14_reading.html" class="weekjump-link">Reading</a>
 <a href="week14_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week14_lab.html" class="weekjump-link current">Lab</a>
 <a href="week14_lab_slides.html" class="weekjump-link">Slides</a>
-</div>
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
-<div class="time-bar"><span class="time-block">Part 1: Create database.py</span><span class="time-block">Part 2: add_record + get_all</span><span class="time-block">Part 3: update_status + report</span><span class="time-block">Part 4: 5 pytest tests</span><span class="time-block">Part 5: Test script + ritual</span></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Two rules that apply to every line in database.py</div><div class="callout-body"><strong>Rule 1:</strong> Always use <code>?</code> placeholders &mdash; never f-strings or string concatenation in SQL. <strong>Rule 2:</strong> Every function accepts an optional <code>db_file</code> parameter (defaults to <code>DB_FILE</code>) so tests can use an isolated temp database.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Set Up database.py</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Create database.py and set up the module</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module07_final_project
-source .venv/bin/activate
-mkdir -p data tests
-touch database.py tests/__init__.py tests/test_database.py
-code database.py</pre></div><p>Start by writing the imports, the DB_FILE constant, and the <code>create_table()</code> function:</p><div class="code-block"><div class="cb-label">database.py &mdash; Part 1: create_table</div><pre>import sqlite3
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: Start</span><span class="time-block">Part 2: Bayside warm-up (30 min)</span><span class="time-block">Part 3: database.py</span><span class="time-block">Part 4: database tests</span><span class="time-block">Part 5: tools.py</span><span class="time-block">Part 6: agent and models</span><span class="time-block">Part 7: main.py</span><span class="time-block">Part 8: ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; your agent on your own database</div><div class="callout-body">Practise the database layer on Bayside for half an hour, then build the same layer for your business: database functions, tools, the agent from Week 12, at least 12 tests, and a terminal chat that reads and writes your database.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">If your laptop cannot run the model</div><div class="callout-body">Parts 2 to 6 and every test need no Ollama, and they are what is graded. In Part 7, run <code>main.py</code> on your keyword model instead (one line changes).</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Start</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Open your capstone folder and check last week</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/module07_final_project
+source .venv/bin/activate</pre></div><p>Your proposal must be approved, and <code>schema.sql</code> must read twice with nothing printed the second time (<a href="week13_lab.html">Week 13</a>, Part 6). Check that your Week 12 folder still passes, then come back:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/module06_agents
+pytest -q
+cd ~/ism3232/module07_final_project</pre></div><div class="hint-box">Every Week 12 test should pass. You copy four of its files in Part 6.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Bayside Warm-up</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Set up the warm-up in your practice folder</div><div class="task-body"><p>Work in the practice folder from Week 13, outside your capstone repository. Your capstone venv stays active.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/sql_practice
+mkdir -p tests &amp;&amp; touch tests/__init__.py</pre></div><p>Create <code>database.py</code> with this block:</p><div class="code-block"><div class="cb-label">database.py — first block</div><pre># database.py
+# Author: [Your Name]
 
-DB_FILE = 'data/requests.db'
+import sqlite3
 
-def create_table(db_file=DB_FILE):
-    """Create the main table if it does not already exist."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS requests (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                requester TEXT    NOT NULL,
-                category  TEXT    NOT NULL,
-                amount    REAL,
-                status    TEXT    DEFAULT 'Pending',
-                notes     TEXT
-            )
-        ''')</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; add_record and get_all_records</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Add the two read/write functions</div><div class="task-body"><div class="code-block"><div class="cb-label">Add to database.py</div><pre>def add_record(requester, category, amount, notes='', db_file=DB_FILE):
-    """Insert a new record. Uses ? placeholders -- never f-strings."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute(
-            'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
-            (requester, category, amount, notes)
-        )
 
-def get_all_records(db_file=DB_FILE):
-    """Return all records as a list of dicts."""
-    with sqlite3.connect(db_file) as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
-        return [dict(row) for row in cur.fetchall()]</pre></div><p>Test manually in a Python shell:</p><div class="code-block"><pre>python3
->>> from database import create_table, add_record, get_all_records
->>> create_table()
->>> add_record('Taylor', 'Travel', 1200)
->>> records = get_all_records()
->>> print(records[0])
->>> exit()</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; update_status and get_status_report</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Add the remaining two functions</div><div class="task-body"><div class="code-block"><div class="cb-label">Add to database.py</div><pre>def update_status(record_id, new_status, db_file=DB_FILE):
-    """Update status of a record by ID."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute('UPDATE requests SET status=? WHERE id=?', (new_status, record_id))
+def query_all(db_file, sql, values=()):
+    """Run a SELECT and return every row as a dictionary."""
+    conn = sqlite3.connect(db_file)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(sql, values).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
-def get_status_report(db_file=DB_FILE):
-    """Return count and total grouped by status."""
-    with sqlite3.connect(db_file) as conn:
-        cur = conn.execute('SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status')
-        return cur.fetchall()</pre></div><p>You now have all five required functions. Verify the complete file matches the reference:</p><div class="code-block"><div class="cb-label">Complete database.py &mdash; verify all five functions are present</div><pre>import sqlite3
 
-DB_FILE = 'data/requests.db'
+def query_one(db_file, sql, values=()):
+    """Run a SELECT and return the first row as a dictionary, or None."""
+    rows = query_all(db_file, sql, values)
+    if rows == []:
+        return None
+    return rows[0]
 
-def create_table(db_file=DB_FILE):
-    """Create the main table if it does not already exist."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute('''
-            CREATE TABLE IF NOT EXISTS requests (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                requester TEXT    NOT NULL,
-                category  TEXT    NOT NULL,
-                amount    REAL,
-                status    TEXT    DEFAULT 'Pending',
-                notes     TEXT
-            )
-        ''')
 
-def add_record(requester, category, amount, notes='', db_file=DB_FILE):
-    """Insert a new record into the table."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute(
-            'INSERT INTO requests (requester, category, amount, notes) VALUES (?,?,?,?)',
-            (requester, category, amount, notes)
-        )
+def change(db_file, sql, values=()):
+    """Run an INSERT or UPDATE, save it, and return the ID of the last row inserted."""
+    conn = sqlite3.connect(db_file)
+    cursor = conn.execute(sql, values)
+    conn.commit()
+    row_id = cursor.lastrowid
+    conn.close()
+    return row_id
 
-def get_all_records(db_file=DB_FILE):
-    """Return all records as a list of dicts."""
-    with sqlite3.connect(db_file) as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.execute('SELECT * FROM requests ORDER BY id DESC')
-        return [dict(row) for row in cur.fetchall()]
 
-def update_status(record_id, new_status, db_file=DB_FILE):
-    """Update the status of a record by ID."""
-    with sqlite3.connect(db_file) as conn:
-        conn.execute('UPDATE requests SET status=? WHERE id=?', (new_status, record_id))
+def create_tables(db_file):
+    """Create the tables and the sample rows, unless they are already there."""
+    with open("schema.sql") as f:
+        script = f.read()
+    conn = sqlite3.connect(db_file)
+    conn.executescript(script)
+    conn.commit()
+    conn.close()</pre></div><p>Add this function below it:</p><div class="code-block"><div class="cb-label">database.py — add below</div><pre>def find_order(db_file, order_id):
+    """Return one order, or None if there is no order with exactly this ID."""
+    return query_one(db_file, "SELECT * FROM orders WHERE order_id = ?", (order_id,))</pre></div><p>Create <code>tools.py</code> with Bayside&rsquo;s whole tools file:</p><div class="code-block"><div class="cb-label">tools.py</div><pre># tools.py
+# Author: [Your Name]
 
-def get_status_report(db_file=DB_FILE):
-    """Return count and total grouped by status."""
-    with sqlite3.connect(db_file) as conn:
-        cur = conn.execute('SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status')
-        return cur.fetchall()</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Five pytest Tests with tmp_path</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write five tests using the tmp_path fixture</div><div class="task-body"><p>The <code>tmp_path</code> pytest fixture creates a fresh temporary folder for each test. Pass <code>tmp_path / 'test.db'</code> as <code>db_file</code> to every function &mdash; this keeps each test isolated from the development database.</p><div class="code-block"><div class="cb-label">tests/test_database.py</div><pre>from database import add_record, create_table, get_all_records, get_status_report, update_status
+import database
 
-def test_add_and_retrieve(tmp_path):
-    db = tmp_path / 'test.db'
-    create_table(db)
-    add_record('Taylor', 'Travel', 1200, db_file=db)
-    records = get_all_records(db_file=db)
-    assert len(records) == 1
-    assert records[0]['requester'] == 'Taylor'
-    assert records[0]['amount'] == 1200
 
-def test_default_status_is_pending(tmp_path):
-    db = tmp_path / 'test.db'
-    create_table(db)
-    add_record('Jordan', 'Equipment', 450, db_file=db)
-    records = get_all_records(db_file=db)
-    assert records[0]['status'] == 'Pending'
+class BaysideTools:
+    """The tools the model may ask for. Every request is checked in run first."""
 
-def test_update_status(tmp_path):
-    db = tmp_path / 'test.db'
-    create_table(db)
-    add_record('Morgan', 'Software', 3500, db_file=db)
-    records = get_all_records(db_file=db)
-    update_status(records[0]['id'], 'Approved', db_file=db)
-    updated = get_all_records(db_file=db)
-    assert updated[0]['status'] == 'Approved'
+    def __init__(self, db_file):
+        """Remember which database the tools read and write."""
+        self.db_file = db_file
 
-def test_multiple_records(tmp_path):
-    db = tmp_path / 'test.db'
-    create_table(db)
-    add_record('A', 'T', 500, db_file=db)
-    add_record('B', 'T', 750, db_file=db)
-    records = get_all_records(db_file=db)
-    assert len(records) == 2
+    def tool_list(self):
+        """Return the tools the model may ask for. They are not called here."""
+        return [
+            self.look_up_order,
+            self.check_stock,
+            self.request_address_change,
+            self.check_request,
+        ]
 
-def test_status_report_groups_correctly(tmp_path):
-    db = tmp_path / 'test.db'
-    create_table(db)
-    add_record('A', 'T', 500, db_file=db)
-    add_record('B', 'T', 750, db_file=db)
-    records = get_all_records(db_file=db)
-    update_status(records[0]['id'], 'Approved', db_file=db)
-    report = get_status_report(db_file=db)
-    statuses = [row[0] for row in report]
-    assert 'Pending' in statuses
-    assert 'Approved' in statuses</pre></div><p>Run: <code>pytest -v</code> &mdash; all five must pass.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Test Script and Ritual</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write a quick test script and run the ritual</div><div class="task-body"><div class="code-block"><div class="cb-label">demo_script.py &mdash; run this to see everything working end to end</div><pre>from database import add_record, create_table, get_all_records, get_status_report, update_status
+    def look_up_order(self, order_id):
+        """Look up the status of one order.
 
-create_table()
-add_record('Taylor', 'Travel', 1200)
-add_record('Jordan', 'Equipment', 450)
-add_record('Morgan', 'Software', 3500)
+        Args:
+            order_id: The order ID, like A100.
+        """
+        for word in order_id.upper().split():
+            order = database.find_order(self.db_file, word.strip("?.!,"))
+            if order is not None:
+                return f"Order {order['order_id']} is {order['status']}."
+        return "No order with that ID was found. Order IDs look like A100."
 
-records = get_all_records()
-print(f'Records: {len(records)}')
+    def check_stock(self, item):
+        """Check how many of one product are in stock, and its price.
 
-update_status(records[0]['id'], 'Approved')
+        Args:
+            item: The product name, like rain jacket.
+        """
+        for name in database.product_names(self.db_file):
+            if name in item.lower():
+                product = database.find_product(self.db_file, name)
+                stock = product["stock"]
+                return f"We have {stock} of the {name} in stock, at ${product['price']:.2f}."
+        return "That product was not found."
 
-report = get_status_report()
-print('\nStatus report:')
-for row in report:
-    print(f'  {row[0]}: {row[1]} records, ${row[2]:,.2f}')</pre></div><div class="hint-box" style="margin-bottom:10px;"><strong>Why it is not named <code>test_script.py</code>:</strong> <code>pytest</code> imports every file whose name starts with <code>test_</code>. A script with that name would run on every <code>pytest</code> and add three more rows to your real database each time.</div><div class="code-block"><pre>python3 demo_script.py
-ruff format . && ruff check . && pytest -v
-git add . && git commit -m 'lab 14: Python SQL integration' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 14 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Python + SQL Integration</h3><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 14</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week13_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span></a><span></span><a href="week15_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 14 In-Class Lab &middot; Module 7C &mdash; Python + SQL Integration</div></div>
+    def request_address_change(self, order_id, new_address):
+        """Ask staff to change the shipping address on one order. Staff must approve it.
+
+        Args:
+            order_id: The order ID, like A100.
+            new_address: The full new shipping address.
+        """
+        order_id = order_id.upper()
+        if database.find_order(self.db_file, order_id) is None:
+            return "No order with that ID was found. Order IDs look like A100."
+        number = database.add_change_request(self.db_file, order_id, new_address)
+        return f"Request {number} was sent to staff. The address has not changed yet."
+
+    def check_request(self, number):
+        """Check what staff decided about one address change request.
+
+        Args:
+            number: The request number, like 3.
+        """
+        try:
+            request = database.find_request(self.db_file, int(number))
+        except ValueError:
+            return "Request numbers look like 3."
+        except OverflowError:
+            return f"There is no request {number}."
+        if request is None:
+            return f"There is no request {number}."
+        order_id = request["order_id"]
+        if request["status"] == "waiting":
+            return f"Request {number} for order {order_id} is waiting for staff."
+        return f"Request {number} for order {order_id} was {request['status']}."
+
+    def run(self, name, arguments, history):
+        """Check one tool request. Run the tool only if every check passes."""
+        if name == "look_up_order":
+            order_id = self.clean(arguments, "order_id")
+            if order_id == "":
+                return "The order ID is missing. Ask the customer for it."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            return self.look_up_order(order_id)
+        if name == "check_stock":
+            item = self.clean(arguments, "item")
+            if item == "":
+                return "The product is missing. Ask the customer which product."
+            return self.check_stock(item)
+        if name == "request_address_change":
+            order_id = self.clean(arguments, "order_id")
+            new_address = self.clean(arguments, "new_address")
+            if order_id == "" or new_address == "":
+                return "The order ID and the new address are both needed."
+            if not self.customer_said(history, order_id):
+                return "The customer has not given that order ID. Ask them for it."
+            if not self.customer_said(history, new_address):
+                return "The customer has not given that address. Ask them for it."
+            return self.request_address_change(order_id, new_address)
+        if name == "check_request":
+            number = self.clean(arguments, "number")
+            if number == "":
+                return "The request number is missing. Ask the customer for it."
+            if not self.customer_said(history, number):
+                return (
+                    "The customer has not given that request number. Ask them for it."
+                )
+            return self.check_request(number)
+        return f"There is no tool named {name}."
+
+    def clean(self, arguments, key):
+        """Return one argument as text without extra spaces, or "" if it is missing."""
+        return str(arguments.get(key, "")).strip()
+
+    def words(self, text):
+        """Return text in lower case as whole words, without ?.!,# around each word."""
+        cleaned = []
+        for word in text.lower().split():
+            cleaned.append(word.strip("?.!,#"))
+        return " " + " ".join(cleaned) + " "
+
+    def customer_said(self, history, text):
+        """Return True if the customer typed text as whole words."""
+        wanted = self.words(text)
+        for message in history:
+            if message["role"] == "user" and wanted in self.words(message["content"]):
+                return True
+        return False</pre></div><p>Create <code>tests/test_database.py</code> with this block, then add the test below it:</p><div class="code-block"><div class="cb-label">tests/test_database.py — first block</div><pre>import database
+
+
+def make_db(tmp_path):
+    """Create a fresh database with the sample rows, in a folder only this test uses."""
+    db_file = tmp_path / "test.db"
+    database.create_tables(db_file)
+    return db_file</pre></div><div class="code-block"><div class="cb-label">tests/test_database.py — add below</div><pre>def test_find_order_returns_a_dictionary(tmp_path):
+    db_file = make_db(tmp_path)
+    order = database.find_order(db_file, "A100")
+    assert order["status"] == "shipped"
+    assert order["address"] == "14 Bay Road"</pre></div></div></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Try it in a Python shell, then run the test</div><div class="task-body"><p>Start <code>python3</code> in the practice folder and type each line:</p><div class="code-block"><div class="cb-label">Python shell — type each line</div><pre>from database import create_tables, find_order
+from tools import BaysideTools
+create_tables("warmup.db")
+find_order("warmup.db", "A100")
+print(find_order("warmup.db", "A100' OR '1'='1"))
+tools = BaysideTools("warmup.db")
+said = [{"role": "user", "content": "Where is order A100?"}]
+tools.run("look_up_order", {"order_id": "A100"}, said)
+other = [{"role": "user", "content": "Where is my order?"}]
+tools.run("look_up_order", {"order_id": "A100"}, other)</pre></div><p>You should see:</p><div class="expected" style="white-space:pre-wrap;">python3
+&gt;&gt;&gt; from database import create_tables, find_order
+&gt;&gt;&gt; from tools import BaysideTools
+&gt;&gt;&gt; create_tables("warmup.db")
+&gt;&gt;&gt; find_order("warmup.db", "A100")
+{'order_id': 'A100', 'customer': 'Dana Cruz', 'item': 'rain jacket', 'status': 'shipped', 'address': '14 Bay Road'}
+&gt;&gt;&gt; print(find_order("warmup.db", "A100' OR '1'='1"))
+None
+&gt;&gt;&gt; tools = BaysideTools("warmup.db")
+&gt;&gt;&gt; said = [{"role": "user", "content": "Where is order A100?"}]
+&gt;&gt;&gt; tools.run("look_up_order", {"order_id": "A100"}, said)
+'Order A100 is shipped.'
+&gt;&gt;&gt; other = [{"role": "user", "content": "Where is my order?"}]
+&gt;&gt;&gt; tools.run("look_up_order", {"order_id": "A100"}, other)
+'The customer has not given that order ID. Ask them for it.'
+&gt;&gt;&gt; exit()</div><div class="hint-box">Same tool, same value, two answers: only the first history has the customer typing A100. And the text with <code>OR '1'='1</code> in it found nothing, because the placeholder kept it as plain text.</div><p>Leave the shell with <code>exit()</code> and run the test:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>pytest -q</pre></div><p>The last line should say:</p><div class="expected" style="white-space:pre-wrap;">1 passed</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Your database.py</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Write your database functions</div><div class="task-body"><p>Back in <code>module07_final_project</code>, create <code>database.py</code>. Copy the first warm-up block as it is: the three helpers and <code>create_tables</code> work for any tables. Then write one function for each thing your tools and your staff review need, following Bayside&rsquo;s:</p><div style="overflow-x:auto;"><table class="starter-table"><thead><tr><th>Bayside</th><th>Yours</th><th>Spokewell example</th></tr></thead><tbody><tr><td><code>query_all</code>, <code>query_one</code>, <code>change</code>, <code>create_tables</code></td><td>copy as they are</td><td>the same</td></tr><tr><td><code>find_order(db_file, order_id)</code></td><td>a lookup by key for each business table</td><td><code>find_repair(db_file, ticket_id)</code>, <code>find_part(db_file, name)</code></td></tr><tr><td><code>product_names(db_file)</code></td><td>only if a tool searches for a name inside a sentence</td><td><code>part_names(db_file)</code></td></tr><tr><td><code>add_change_request(db_file, order_id, new_address)</code></td><td>files your change</td><td><code>add_change_request(db_file, ticket_id, new_value)</code></td></tr><tr><td><code>find_request</code>, <code>waiting_requests</code></td><td>the same, with your columns</td><td>the same</td></tr><tr><td><code>approve_request(db_file, number)</code></td><td>changes your record&rsquo;s column, then marks the request approved (Week 13&rsquo;s Exercise 4)</td><td><code>UPDATE repairs SET pickup_date = ? WHERE ticket_id = ?</code></td></tr><tr><td><code>reject_request(db_file, number)</code></td><td>the same</td><td>the same</td></tr><tr><td><code>all_orders(db_file)</code></td><td>lists your records, for <code>main.py</code></td><td><code>all_repairs(db_file)</code></td></tr></tbody></table></div><p>Check one lookup in <code>python3</code>: import <code>create_tables</code> and your lookup from <code>database</code>, run <code>create_tables</code> on a database named for your business, then look up an ID from your <code>schema.sql</code>. You should get a dictionary holding that row.</p><div class="hint-box">Every query uses <code>?</code> and a tuple of values. A one-item tuple needs its comma: <code>(ticket_id,)</code>.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Database Tests</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Write at least 5 database tests</div><div class="task-body"><p>Create <code>tests/__init__.py</code> (empty) and <code>tests/test_database.py</code> with a <code>make_db(tmp_path)</code> like the warm-up&rsquo;s. Write at least five tests, one for each behaviour, using Bayside&rsquo;s as models:</p><ul><li>Creating the tables twice adds no duplicate rows (<code>test_create_tables_twice_adds_no_duplicate_rows</code>).</li><li>A lookup needs the exact ID (<code>test_find_order_needs_the_exact_id</code>).</li><li>SQL text in an ID is just text (<code>test_sql_in_an_order_id_is_just_text</code>).</li><li>A filed change gets a number and waits (<code>test_change_requests_get_numbers_and_wait</code>).</li><li>Approving changes the record once, and rejecting leaves it alone (<code>test_approve_changes_the_address_once</code>, <code>test_reject_changes_nothing_and_cannot_be_approved_later</code>).</li></ul><div class="code-block"><div class="cb-label">tests/test_database.py — Bayside's approve test</div><pre>def test_approve_changes_the_address_once(tmp_path):
+    db_file = make_db(tmp_path)
+    database.add_change_request(db_file, "A100", "9 Pine Street")
+    assert database.approve_request(db_file, 1) == "Request 1 approved."
+    assert database.find_order(db_file, "A100")["address"] == "9 Pine Street"
+    assert database.approve_request(db_file, 1) == "Request 1 is already approved."
+    assert database.waiting_requests(db_file) == []</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>pytest -q tests/test_database.py</pre></div><div class="hint-box">Run <code>pytest</code> from the project folder: <code>create_tables</code> opens <code>schema.sql</code> in the folder you run from, as the autograder does.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; tools.py</div><div class="line"></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Write your tools class and its tests</div><div class="task-body"><p>Create <code>tools.py</code> with a class named for your business that takes <code>db_file</code>, like <code>BaysideTools</code>. Give it <code>tool_list</code>, your lookup tools, your change tool and <code>check_request</code>, each with an <code>Args:</code> docstring, and the <code>run</code> door. Copy <code>check_request</code> from the warm-up&rsquo;s <code>tools.py</code> and change its column and record names to yours. Like Bayside&rsquo;s <code>look_up_order</code>, each lookup tool looks for the ID among the words it is given, because the keyword model passes the customer&rsquo;s whole sentence. Copy these three methods as they are:</p><div class="code-block"><div class="cb-label">tools.py — copy as they are</div><pre>    def clean(self, arguments, key):
+        """Return one argument as text without extra spaces, or "" if it is missing."""
+        return str(arguments.get(key, "")).strip()
+
+    def words(self, text):
+        """Return text in lower case as whole words, without ?.!,# around each word."""
+        cleaned = []
+        for word in text.lower().split():
+            cleaned.append(word.strip("?.!,#"))
+        return " " + " ".join(cleaned) + " "
+
+    def customer_said(self, history, text):
+        """Return True if the customer typed text as whole words."""
+        wanted = self.words(text)
+        for message in history:
+            if message["role"] == "user" and wanted in self.words(message["content"]):
+                return True
+        return False</pre></div><p>Then write <code>tests/test_tools.py</code> with at least five tests. Start from Bayside&rsquo;s helpers:</p><div class="code-block"><div class="cb-label">tests/test_tools.py — first block</div><pre>import database
+from tools import BaysideTools
+
+
+def make_tools(tmp_path):
+    """Build tools over a fresh database with the sample rows."""
+    db_file = tmp_path / "test.db"
+    database.create_tables(db_file)
+    return BaysideTools(db_file)
+
+
+def customer(text):
+    """Build a history that holds one customer message."""
+    return [{"role": "user", "content": text}]</pre></div><p>Test a lookup that finds the ID inside a sentence, a change that waits, an unknown tool refused, a missing value refused, and a value the customer never typed refused.</p><div class="code-block"><div class="cb-label">tests/test_tools.py — Bayside's made-up value test</div><pre>def test_made_up_order_id_is_refused(tmp_path):
+    tools = make_tools(tmp_path)
+    reply = tools.run("look_up_order", {"order_id": "A101"}, customer("Where is A100?"))
+    assert "has not given that order ID" in reply</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 6 &mdash; Agent and Models</div><div class="line"></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Copy the agent and the models from Week 12</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>cp ../module06_agents/chatbot.py agent.py
+cp ../module06_agents/fake_model.py ../module06_agents/keyword_model.py ../module06_agents/ollama_model.py .</pre></div><p>Change the first line of <code>agent.py</code> to <code># agent.py</code> and set <code>HANDOFF_WORDS</code> to the words in your proposal. If you did Week 12&rsquo;s Exercise 4, copy your fallback model too:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>cp ../module06_agents/fallback_model.py .</pre></div><p>If you skipped it, create <code>fallback_model.py</code> from this:</p><div class="code-block"><div class="cb-label">fallback_model.py</div><pre># fallback_model.py
+# Author: [Your Name]
+
+
+class FallbackModel:
+    """Ask the first model. If it has no answer, ask the second one."""
+
+    def __init__(self, first, second):
+        """Store the two models, in the order they are asked."""
+        self.first = first
+        self.second = second
+
+    def decide(self, instructions, history, tools):
+        """Return the first model's decision, or the second's if the first has none."""
+        decision = self.first.decide(instructions, history, tools)
+        if decision is None:
+            return self.second.decide(instructions, history, tools)
+        return decision</pre></div><p>In <code>ollama_model.py</code>, add <code>MAX_MESSAGES = 20</code> below the imports and change the loop in <code>decide</code> to send only the last 20 messages:</p><div class="code-block"><div class="cb-label">ollama_model.py — decide</div><pre>    def decide(self, instructions, history, tools):
+        """Send the conversation and the tools. Return a reply or a tool request."""
+        messages = [{"role": "system", "content": instructions}]
+        for message in history[-MAX_MESSAGES:]:
+            if message["role"] == "tool":
+                messages = messages + self.tool_messages(message)
+            else:
+                messages.append(message)
+        try:
+            response = chat(model=self.model_name, messages=messages, tools=tools)
+        except ConnectionError:
+            return None
+        except ResponseError:
+            return None
+        if response.message.tool_calls:
+            call = response.message.tool_calls[0]
+            return {"tool": call.function.name, "arguments": call.function.arguments}
+        return {"text": response.message.content}</pre></div><p>In <code>keyword_model.py</code>, change the keywords, the tool names and the argument names (Bayside&rsquo;s <code>order_id</code> and <code>item</code>) to yours, so the program can run without Ollama. If an argument name does not match the one your <code>run</code> reads, every request is refused as missing. This is Bayside&rsquo;s:</p><div class="code-block"><div class="cb-label">keyword_model.py</div><pre># keyword_model.py
+# Author: [Your Name]
+
+
+class KeywordModel:
+    """A stand-in model that decides with keyword rules. It needs no AI."""
+
+    def decide(self, instructions, history, tools):
+        """Return a reply or a tool request, based on the last message."""
+        last = history[-1]
+        if last["role"] == "tool":
+            return {"text": last["content"]}
+        text = last["content"].lower()
+        if "order" in text:
+            return {"tool": "look_up_order", "arguments": {"order_id": last["content"]}}
+        if "stock" in text:
+            return {"tool": "check_stock", "arguments": {"item": last["content"]}}
+        if "hello" in text:
+            return {"text": "Hello! How can I help you today?"}
+        return {
+            "text": "I'm not sure how to help with that. I can check an order or stock."
+        }</pre></div><p>Create <code>settings.py</code> from your proposal&rsquo;s instructions draft, in the shape of Bayside&rsquo;s:</p><div class="code-block"><div class="cb-label">settings.py</div><pre># settings.py
+# Author: [Your Name]
+
+DB_FILE = "bayside.db"
+MODEL_NAME = "granite4.1:3b"
+
+INSTRUCTIONS = """You are Sunny, a support assistant for Bayside Outfitters.
+Answer in one short sentence.
+Store hours are 10 am to 7 pm every day.
+Returns are accepted within 30 days with a receipt.
+Only state facts that appear in these instructions or in tool results.
+If you do not know, say you do not know and offer to pass the customer to a human agent."""</pre></div></div></div></div><div class="task"><div class="task-num">8</div><div class="task-content"><div class="task-title">Write at least 2 agent tests</div><div class="task-body"><p>Create <code>tests/test_agent.py</code> from Bayside&rsquo;s helpers, using your tools class:</p><div class="code-block"><div class="cb-label">tests/test_agent.py — first block</div><pre>import database
+from agent import SupportChatbot
+from fake_model import FakeModel
+from fallback_model import FallbackModel
+from keyword_model import KeywordModel
+from tools import BaysideTools
+
+
+class SilentModel:
+    """A model that never has an answer. It stands in for Ollama being switched off."""
+
+    def decide(self, instructions, history, tools):
+        return None
+
+
+def make_bot(tmp_path, model):
+    """Build a chatbot over a fresh database with the sample rows."""
+    db_file = tmp_path / "test.db"
+    database.create_tables(db_file)
+    return SupportChatbot("Sunny", "Be friendly.", BaysideTools(db_file), model)
+
+
+def ask_for_tool(name, arguments):
+    """Build the decision a model returns when it wants a tool."""
+    return {"tool": name, "arguments": arguments}</pre></div><p>Adapt at least two of Bayside&rsquo;s agent tests, such as these:</p><div class="code-block"><div class="cb-label">tests/test_agent.py</div><pre>def test_model_chosen_lookup_answers_from_the_database(tmp_path):
+    model = FakeModel(
+        [
+            ask_for_tool("look_up_order", {"order_id": "A101"}),
+            {"text": "Your package A101 is still processing."},
+        ]
+    )
+    bot = make_bot(tmp_path, model)
+    bot.respond("Has my package A101 shipped?")
+    assert bot.history[1]["content"] == "Order A101 is processing."</pre></div><div class="code-block"><div class="cb-label">tests/test_agent.py</div><pre>def test_made_up_address_never_reaches_the_database(tmp_path):
+    model = FakeModel(
+        [
+            ask_for_tool(
+                "request_address_change",
+                {"order_id": "A102", "new_address": "123 Main St"},
+            ),
+            {"text": "What is the new address?"},
+        ]
+    )
+    bot = make_bot(tmp_path, model)
+    bot.respond("Please change the address on order A102")
+    assert database.waiting_requests(bot.tools.db_file) == []</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>pytest -q</pre></div><div class="hint-box">You now have at least 12 tests across three files. None of them may import <code>ollama_model.py</code>: the autograder runs them without Ollama.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 7 &mdash; main.py</div><div class="line"></div></div><div class="task"><div class="task-num">9</div><div class="task-content"><div class="task-title">Chat with your own database</div><div class="task-body"><p>Create <code>main.py</code> in the shape of Bayside&rsquo;s, with your tools class, your list-of-records function, and your request&rsquo;s columns in the staff review:</p><div class="code-block"><div class="cb-label">main.py</div><pre># main.py
+# Author: [Your Name]
+
+from agent import SupportChatbot
+from database import (
+    all_orders,
+    approve_request,
+    create_tables,
+    reject_request,
+    waiting_requests,
+)
+from ollama_model import OllamaModel
+from settings import DB_FILE, INSTRUCTIONS, MODEL_NAME
+from tools import BaysideTools
+
+create_tables(DB_FILE)
+bot = SupportChatbot(
+    "Sunny", INSTRUCTIONS, BaysideTools(DB_FILE), OllamaModel(MODEL_NAME)
+)
+
+print("Type a message, or type quit to stop.")
+user_message = input("You: ")
+while user_message != "quit":
+    print(f"{bot.name}: {bot.respond(user_message)}")
+    user_message = input("You: ")
+
+print(f"Messages in this conversation: {len(bot.history)}")
+
+print("Staff review")
+for request in waiting_requests(DB_FILE):
+    number = request["number"]
+    print(f"Request {number}: {request['order_id']} to {request['new_address']}")
+    answer = input("Approve? yes or no: ")
+    if answer == "yes":
+        print(approve_request(DB_FILE, number))
+    elif answer == "no":
+        print(reject_request(DB_FILE, number))
+    else:
+        print(f"Request {number} is still waiting.")
+
+for order in all_orders(DB_FILE):
+    print(order["order_id"], order["address"])</pre></div><p>Start Ollama in a second terminal with <code>ollama serve</code>, then run <code>python3 main.py</code>. If your laptop cannot run the model, change <code>OllamaModel(MODEL_NAME)</code> to <code>KeywordModel()</code> and add <code>from keyword_model import KeywordModel</code>.</p><p>The keyword model handles lookups only: it cannot file a change or ask about one. To try the staff review on it, file one request from <code>python3</code> first, the way you checked a lookup in Part 3: import your <code>add_change_request</code> from <code>database</code> and call it with your database file, a real ID and a new value. Then run <code>main.py</code>, type <code>quit</code>, and approve the request. The record list at the end shows the change.</p><div class="hint-box">Run it twice. With Ollama, file a change, decide it at the staff review, then run it again and ask about it: the decision is still in your database. On the keyword model, the second run&rsquo;s record list still shows the change.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 8 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">10</div><div class="task-content"><div class="task-title">Run the full ritual with Ollama switched off</div><div class="task-body"><p>Quit Ollama first. If your tests pass now, they pass when your repository is graded on a computer that has never had Ollama.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 14: database tools' &amp;&amp; git push</pre></div><div class="hint-box">Run it from the project folder. If <code>ruff check</code> stops on a fixable error, run <code>ruff check --fix .</code>, then the first line again.</div></div></div></div><div class="submit-box"><div class="sb-header">Lab 14 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Database Tools</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>database.py</code>, <code>tools.py</code>, <code>agent.py</code>, <code>fake_model.py</code>, <code>fallback_model.py</code>, <code>keyword_model.py</code>, <code>ollama_model.py</code>, <code>settings.py</code>, <code>main.py</code>, and at least 12 tests across <code>tests/test_database.py</code>, <code>tests/test_tools.py</code> and <code>tests/test_agent.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 14</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week13_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 13</span>Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</span></a><span></span><a href="week15_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 15</span>Streamlit Interface</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 14 In-Class Lab &middot; Database Tools — sqlite3, Placeholders &amp; Tested Tools</div></div>
 <script src="../site.js"></script>
 </body></html>
