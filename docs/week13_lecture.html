@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <script>
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W13</title><style>html{min-height:100vh;}
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 13 — Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</title><style>html{min-height:100vh;}
 
     :root {
       --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
@@ -145,6 +145,15 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* video/infographic playlist */
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary)}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -158,100 +167,147 @@ body{min-height:100vh;width:100%;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 W13 — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap">
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4CB;</span>
-  <span><strong style="color:var(--text);">In-class page.</strong>
-  Read the <a href="week13_reading.html" style="color:var(--muted);">Week 13 reading</a>
-  first if you haven't. Follow along during the live session.</span>
-</div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 13 · Lecture</div>
-<h1 class="wk-title">Capstone Design &amp; SQL Foundations</h1>
-<p class="wk-deck">Students write a full project proposal with instructor sign-off, then learn SQL fundamentals and design their capstone database schema.</p>
-<div class="meta">
+<meta name="description" content="ISM3232 W11 — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><div class="wrap"><div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4CB;</span><span><strong style="color:var(--text);">In-class page.</strong> Read the <a href="week13_reading.html" style="color:var(--muted);">Week 13 reading</a> first if you haven't. Follow along during the live session.</span></div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 13 · Lecture</div><h1 class="wk-title">Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</h1><p class="wk-deck">Give the agent data that lasts: turn questions into tables, build them in the sqlite3 shell, and plan the whole capstone in one proposal.</p><div class="meta">
 <span class="chip accent">Module 13 · Lecture</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">~80 min</span>
-</div>
-<div class="weekjump">
+<span class="chip">~75 min</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week13_reading.html" class="weekjump-link">Reading</a>
 <a href="week13_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week13_lab.html" class="weekjump-link">Lab</a>
-</div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" data-embed-src="https://www.youtube.com/embed/PLACEHOLDER_V30" data-embed-title="SQL Foundations for Business Apps" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px dashed var(--border,rgba(255,255,255,.15));background:var(--bg2,rgba(255,255,255,.03));">
-    <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box;gap:6px;">
-      <span style="font-family:var(--mono,monospace);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim,#888);">Video coming soon</span>
-      <span style="font-size:13px;color:var(--dim,#888);max-width:85%;">SQL Foundations for Business Apps</span>
-    </div>
-  </div>
-</div>
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F9E0;</div><div><div class="callout-label">This week &mdash; the capstone starts</div><div class="callout-body">Week 12's agent forgot everything when it stopped. Today it gets a database, and you choose the business your capstone serves. Every sqlite3 output on this page is a real session of the sqlite3 that Ubuntu installs; a Mac may space columns a little differently.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Session plan &mdash; 75 minutes</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Minutes</th><th>Segment</th><th>What happens</th></tr></thead><tbody><tr><td>0&ndash;8</td><td>Where Week 12 left off</td><td>Approve a change, restart, and it is gone</td></tr><tr><td>8&ndash;20</td><td>Tables from questions</td><td>Customer questions become records, tables and keys</td></tr><tr><td>20&ndash;45</td><td>The sqlite3 shell</td><td><code>.read</code>, <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, <code>COUNT</code>, <code>GROUP BY</code>, live</td></tr><tr><td>45&ndash;55</td><td>Changing rows safely</td><td><code>INSERT</code>, <code>UPDATE</code> with and without <code>WHERE</code>, reading the schema twice</td></tr><tr><td>55&ndash;70</td><td>Your proposal</td><td>The checklist, the template, the six starters</td></tr><tr><td>70&ndash;75</td><td>Sign-off and next week</td><td>How sign-off works; queries become tools</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Where Week 12 Left Off</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">Live: the restart problem</div><p>Run Week 12's <code>main.py</code>. Ask to change an address, give the order and the new address, and approve the request at the staff review. Then quit and run it again.</p></div><div class="card"><div class="card-title">What students see</div><p>The request list is empty and the order has its old address back. The queue was a Python list and the orders a dictionary in <code>main.py</code>; both vanish when the program stops.</p></div></div><div class="card"><div class="card-title">The question to leave on the board</div><p>Where should a business keep data so it survives a restart, a crash, or a new version of the code? Today&rsquo;s answer: in a database file, built from a schema you can read.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Tables from Questions</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Customer asks</th><th>Record</th><th>Table</th><th>Found by</th></tr></thead><tbody><tr><td><em>Has A101 shipped yet?</em></td><td>an order</td><td><code>orders</code></td><td><code>order_id</code></td></tr><tr><td><em>Is the day pack in stock?</em></td><td>a product</td><td><code>products</code></td><td><code>name</code></td></tr><tr><td><em>What happened to my address change?</em></td><td>a change request</td><td><code>change_requests</code></td><td><code>number</code></td></tr></tbody></table><div class="code-block"><div class="cb-label">schema.sql &mdash; Bayside&rsquo;s three tables</div><pre>-- schema.sql
+-- Bayside Outfitters: orders, products, and changes waiting for staff.
 
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F3D7;</div><div><div class="callout-label">Unit 4 begins &mdash; Business Application Development Project</div><div class="callout-body">Students now apply everything from Units 1&ndash;3 to build a real business information system. Week 13 covers project design and the SQL foundations. The capstone is built incrementally over Weeks 13&ndash;17.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Project Proposal</div><div class="line"></div></div><div class="card"><div class="card-title">Write the proposal before touching any code</div><p>The project proposal forces students to think through the full design before a single line of capstone code is written. A student who cannot answer all ten fields does not yet know what they are building &mdash; and that uncertainty will hurt every subsequent week.</p><p>Proposals are submitted at the end of Week 13 and require instructor approval before the student begins building.</p></div><div class="cb"><div class="cb-label">Required project proposal &mdash; all 10 fields must be completed</div><pre><span class="cm"># ISM3232 &mdash; Capstone Project Proposal</span>
-
-Project Name:      [e.g., Employee Leave Request Tracker]
-Business Problem:  [What problem does this solve? Who has this problem?]
-Primary User:      [Who will use this system?]
-Records Stored:    [What data is stored? e.g., leave requests, employees]
-Business Rules:    [At least 2 rules. e.g., requests over 5 days need director approval]
-OOP Classes:       [List your classes and their key attributes + methods]
-SQL Tables:        [List your tables and their columns + types]
-Streamlit Features:[Add record, view records, filter, update status, one report]
-GenAI Feature:     [What will AI do? e.g., summarise a request in plain English]
-Out of Scope:      [What are you explicitly NOT building? Keeps scope realistic]</pre></div><div class="callout tip"><div class="callout-icon">&#x1F4A1;</div><div><div class="callout-label">Good capstone domains for ISM3232</div><div class="callout-body">Purchase request tracker &middot; Leave request system &middot; Inventory alert manager &middot; IT helpdesk ticket tracker &middot; Vendor bid comparison tool &middot; Employee onboarding checklist. Choose a domain with clear business rules, discrete records, and obvious status fields (Pending / Approved / Rejected).</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; SQL Foundations</div><div class="line"></div></div><div class="card"><div class="card-title">SQL is how business data is stored and retrieved at scale</div><p>SQLite is the database engine for this course &mdash; it stores the entire database in a single <code>.db</code> file with no server required. The SQL you learn here (CREATE TABLE, INSERT, SELECT, WHERE, UPDATE, GROUP BY) applies directly to PostgreSQL, MySQL, and every production database system.</p></div><div class="cb"><div class="cb-label">Required SQL operations &mdash; all used in the capstone</div><pre><span class="cm">-- Create a table (run once)</span>
-<span class="kw">CREATE TABLE</span> requests (
-    id        <span class="fn">INTEGER</span> <span class="kw">PRIMARY KEY</span>,
-    requester <span class="fn">TEXT</span>    <span class="kw">NOT NULL</span>,
-    category  <span class="fn">TEXT</span>    <span class="kw">NOT NULL</span>,
-    amount    <span class="fn">REAL</span>,
-    status    <span class="fn">TEXT</span>    <span class="kw">DEFAULT</span> <span class="st">'Pending'</span>,
-    notes     <span class="fn">TEXT</span>
+CREATE TABLE IF NOT EXISTS orders (
+    order_id TEXT PRIMARY KEY,
+    customer TEXT NOT NULL,
+    item     TEXT NOT NULL,
+    status   TEXT NOT NULL,
+    address  TEXT NOT NULL
 );
 
-<span class="cm">-- Insert records</span>
-<span class="kw">INSERT INTO</span> requests (requester, category, amount)
-<span class="kw">VALUES</span> (<span class="st">'Taylor'</span>, <span class="st">'Travel'</span>, <span class="nm">1200.00</span>);
+CREATE TABLE IF NOT EXISTS products (
+    name  TEXT PRIMARY KEY,
+    price REAL NOT NULL,
+    stock INTEGER NOT NULL
+);
 
-<span class="cm">-- Query all records</span>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> requests;
+CREATE TABLE IF NOT EXISTS change_requests (
+    number      INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id    TEXT NOT NULL,
+    new_address TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'waiting'
+);
 
-<span class="cm">-- Filter records</span>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> requests <span class="kw">WHERE</span> status = <span class="st">'Pending'</span>;
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> requests <span class="kw">WHERE</span> amount &gt; <span class="nm">1000</span>;
+INSERT OR IGNORE INTO orders (order_id, customer, item, status, address) VALUES
+    ('A100', 'Dana Cruz', 'rain jacket', 'shipped', '14 Bay Road'),
+    ('A101', 'Sam Okafor', 'day pack', 'processing', '3 Gull Lane'),
+    ('A102', 'Lee Park', 'trail hat', 'delivered', '88 Pier Street'),
+    ('A103', 'Ana Silva', 'fleece vest', 'processing', '21 Harbor Way'),
+    ('A104', 'Max Duarte', 'water bottle', 'shipped', '7 Dune Court'),
+    ('A105', 'Ivy Chen', 'hiking socks', 'delivered', '40 Tide Street');
 
-<span class="cm">-- Sort results</span>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> requests <span class="kw">ORDER BY</span> amount <span class="kw">DESC</span>;
-
-<span class="cm">-- Update a record</span>
-<span class="kw">UPDATE</span> requests <span class="kw">SET</span> status = <span class="st">'Approved'</span> <span class="kw">WHERE</span> id = <span class="nm">1</span>;
-
-<span class="cm">-- Aggregate reports</span>
-<span class="kw">SELECT</span> status, <span class="fn">COUNT</span>(*), <span class="fn">SUM</span>(amount), <span class="fn">AVG</span>(amount)
-<span class="kw">FROM</span> requests
-<span class="kw">GROUP BY</span> status;</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Running SQL in the Terminal with sqlite3</div><div class="line"></div></div><div class="cb"><div class="cb-label">Exploring a SQLite database from the terminal</div><pre><span class="cm"># Open or create a database file</span>
-sqlite3 requests.db
-
-<span class="cm">-- Inside the sqlite3 shell:</span>
-.tables                         <span class="cm">-- list all tables</span>
-.schema requests                <span class="cm">-- show CREATE TABLE statement</span>
-.mode column                    <span class="cm">-- formatted column output</span>
-.headers on                     <span class="cm">-- show column names</span>
-<span class="kw">SELECT</span> * <span class="kw">FROM</span> requests;         <span class="cm">-- query the table</span>
-.quit                           <span class="cm">-- exit the shell</span></pre></div><table class="concept-table"><thead><tr><th>SQL keyword</th><th>Purpose</th><th>Business example</th></tr></thead><tbody><tr><td>CREATE TABLE</td><td>Define a table and its columns</td><td>Set up the requests table once at startup</td></tr><tr><td>INSERT INTO</td><td>Add a new row to a table</td><td>Add a new purchase request</td></tr><tr><td>SELECT</td><td>Retrieve rows from a table</td><td>Show all pending requests</td></tr><tr><td>WHERE</td><td>Filter rows by a condition</td><td>Requests where amount > 1000</td></tr><tr><td>UPDATE ... SET</td><td>Change values in existing rows</td><td>Approve a request: set status = "Approved"</td></tr><tr><td>ORDER BY</td><td>Sort the result set</td><td>Show requests from largest to smallest amount</td></tr><tr><td>GROUP BY</td><td>Aggregate rows by a column value</td><td>Count requests by status</td></tr><tr><td>COUNT / SUM / AVG</td><td>Compute a single value across rows</td><td>Total amount of pending requests</td></tr></tbody></table><div class="assignment"><div class="a-header">Assignment 13 &middot; Due end of Week 13 &middot; Capstone begins</div><h3>Project Proposal + SQL Schema</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File:</strong> <code>PROPOSAL.md</code> &mdash; all 10 proposal fields completed. Requires instructor sign-off before Week 14 begins.</div></div><div class="deliverable"><div class="d-icon">&#x1F5C4;</div><div class="d-text"><strong>File:</strong> <code>schema.sql</code> &mdash; the CREATE TABLE statement(s) for your capstone, with appropriate columns and types.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL with proposal and schema committed.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/30_sql_foundations_infographic.png"
-       alt="SQL Foundations for Business Apps — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
-</div>
-
-<!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week12_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span></a><span></span><a href="week14_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 13 &middot; Module 7A &amp; 7B &mdash; Capstone Requirements, Project Design, and SQL Foundations</div></div>
+INSERT OR IGNORE INTO products (name, price, stock) VALUES
+    ('rain jacket', 89.00, 12),
+    ('day pack', 45.00, 0),
+    ('trail hat', 25.00, 5),
+    ('fleece vest', 60.00, 8),
+    ('water bottle', 18.00, 30),
+    ('hiking socks', 12.00, 0);</pre></div><div class="card"><div class="card-title">Say this</div><p>Read it top to bottom with the class: a type for every column, one primary key per table, <code>NOT NULL</code> where a value must exist, and a default status for new requests. Then ask the room for a business and list its questions on the board before anyone names a table.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; The sqlite3 Shell</div><div class="line"></div></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; a first look</div><pre>SQLite version 3.45.1 2024-01-30 16:01:20
+Enter ".help" for usage hints.
+sqlite&gt; .read schema.sql
+sqlite&gt; .tables
+change_requests  orders           products       
+sqlite&gt; .schema products
+CREATE TABLE products (
+    name  TEXT PRIMARY KEY,
+    price REAL NOT NULL,
+    stock INTEGER NOT NULL
+);
+sqlite&gt; SELECT * FROM products;
+rain jacket|89.0|12
+day pack|45.0|0
+trail hat|25.0|5
+fleece vest|60.0|8
+water bottle|18.0|30
+hiking socks|12.0|0</pre></div><div class="card"><div class="card-title">Say this</div><p>Dot-commands talk to the shell; everything else is SQL and ends with a semicolon. The default output separates values with <code>|</code>; two dot-commands make it readable.</p></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; readable output</div><pre>sqlite&gt; .read schema.sql
+sqlite&gt; .mode column
+sqlite&gt; .headers on</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; choose columns</div><pre>sqlite&gt; SELECT order_id, customer, status FROM orders;
+order_id  customer    status    
+--------  ----------  ----------
+A100      Dana Cruz   shipped   
+A101      Sam Okafor  processing
+A102      Lee Park    delivered 
+A103      Ana Silva   processing
+A104      Max Duarte  shipped   
+A105      Ivy Chen    delivered</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; WHERE keeps matching rows</div><pre>sqlite&gt; SELECT order_id, item FROM orders WHERE status = 'shipped';
+order_id  item        
+--------  ------------
+A100      rain jacket 
+A104      water bottle</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; ORDER BY sorts</div><pre>sqlite&gt; SELECT name, price FROM products ORDER BY price DESC;
+name          price
+------------  -----
+rain jacket   89.0 
+fleece vest   60.0 
+day pack      45.0 
+trail hat     25.0 
+water bottle  18.0 
+hiking socks  12.0</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; COUNT</div><pre>sqlite&gt; SELECT COUNT(*) FROM products WHERE stock = 0;
+COUNT(*)
+--------
+2</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; GROUP BY</div><pre>sqlite&gt; SELECT stock, COUNT(*) FROM products GROUP BY stock;
+stock  COUNT(*)
+-----  --------
+0      2       
+5      1       
+8      1       
+12     1       
+30     1</pre></div><div class="card"><div class="card-title">Say this</div><p><code>GROUP BY stock</code> puts the two products with no stock in one row. Ask: which question from Section 2 would a <code>GROUP BY</code> on <code>status</code> answer? (How many orders are in each status: you will write that one yourselves in the lab.)</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; Changing Rows Safely</div><div class="line"></div></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; UPDATE with WHERE</div><pre>sqlite&gt; UPDATE products SET stock = 20 WHERE name = 'day pack';
+sqlite&gt; SELECT name, stock FROM products;
+name          stock
+------------  -----
+rain jacket   12   
+day pack      20   
+trail hat     5    
+fleece vest   8    
+water bottle  30   
+hiking socks  0</pre></div><div class="code-block"><div class="cb-label">Terminal &mdash; on a throwaway copy</div><pre>cp bayside.db practice_copy.db
+sqlite3 practice_copy.db</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; UPDATE without WHERE (a new session: display on again)</div><pre>sqlite&gt; .mode column
+sqlite&gt; .headers on
+sqlite&gt; UPDATE products SET stock = 0;
+sqlite&gt; SELECT name, stock FROM products;
+name          stock
+------------  -----
+rain jacket   0    
+day pack      0    
+trail hat     0    
+fleece vest   0    
+water bottle  0    
+hiking socks  0</pre></div><div class="card"><div class="card-title">Say this</div><p>Every new sqlite3 session starts in list mode with headers off, so the copy needs <code>.mode column</code> and <code>.headers on</code> again. Then quit the copy and reopen the practice database.</p></div><div class="code-block"><div class="cb-label">Terminal &mdash; back to the practice database</div><pre>sqlite3 bayside.db</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; INSERT, and the primary key refusing a duplicate</div><pre>sqlite&gt; .mode column
+sqlite&gt; .headers on
+sqlite&gt; INSERT INTO products (name, price, stock) VALUES ('beach towel', 22.00, 15);
+sqlite&gt; SELECT * FROM products WHERE name = 'beach towel';
+name         price  stock
+-----------  -----  -----
+beach towel  22.0   15   
+sqlite&gt; INSERT INTO products (name, price, stock) VALUES ('beach towel', 22.00, 15);
+Runtime error: UNIQUE constraint failed: products.name (19)</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; reading the schema twice</div><pre>sqlite&gt; SELECT COUNT(*) FROM orders;
+COUNT(*)
+--------
+6       
+sqlite&gt; DELETE FROM orders WHERE order_id = 'A105';
+sqlite&gt; SELECT COUNT(*) FROM orders;
+COUNT(*)
+--------
+5       
+sqlite&gt; .read schema.sql
+sqlite&gt; SELECT COUNT(*) FROM orders;
+COUNT(*)
+--------
+6</pre></div><div class="card"><div class="card-title">Say this</div><p>Week 14&rsquo;s app runs <code>schema.sql</code> every time it starts. <code>IF NOT EXISTS</code> and <code>INSERT OR IGNORE</code> make that safe. The deleted sample order came back, and that is fine. But a table numbered by <code>AUTOINCREMENT</code> would gain duplicates on every start, so <code>change_requests</code> starts empty.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 5 &mdash; Your Proposal</div><div class="line"></div></div><ol><li>One business. The chat serves customers or staff; the Staff tab always serves staff.</li><li>At least two business tables plus a <code>change_requests</code> table.</li><li>At least two lookup tools. They only read, and they check their arguments.</li><li>At least one change tool. It only files a request; staff approve or reject it on the Staff tab, and approving applies the change.</li><li>At least one handoff rule in code that runs before the model, with the reason given in the README.</li><li>One kind of sensitive data the app never stores and never sends to the model.</li><li>Instructions that carry the business's facts and include "only state facts that appear in these instructions".</li><li>Five sample conversations, which become the Week 16 evaluation cases.</li></ol><table class="concept-table"><thead><tr><th>Template section</th><th>Becomes</th><th>Week</th></tr></thead><tbody><tr><td>Tables</td><td><code>schema.sql</code></td><td>13</td></tr><tr><td>Lookup tools and change tool</td><td><code>tools.py</code></td><td>14</td></tr><tr><td>Handoff rule</td><td><code>HANDOFF_WORDS</code> in <code>agent.py</code></td><td>14</td></tr><tr><td>Instructions draft</td><td><code>settings.py</code></td><td>14</td></tr><tr><td>Change tool</td><td>the Staff tab&rsquo;s Approve and Reject</td><td>15</td></tr><tr><td>Five sample conversations</td><td><code>evaluation.py</code> cases</td><td>16</td></tr></tbody></table><div class="card"><div class="card-title">Show the starters</div><p>Open the <a href="capstone_starters.html">capstone starters page</a>: six businesses with the same shape as Bayside, the template, and Bayside&rsquo;s own proposal. Point out the apartment starter&rsquo;s handoff words (gas, fire, flood, smoke): a missed handoff there could hurt someone, so false alarms are the cheap mistake.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 6 &mdash; Sign-off and Next Week</div><div class="line"></div></div><div class="card"><div class="card-title">Sign-off</div><p>In the lab, one or two minutes per student at their laptop, against the checklist. Canvas then says Approved, or Revise with a comment. A revised proposal is due before the Week 14 lab, and Week 14 code waits for approval.</p><p>Next week the queries from today become Python functions, and the functions become the agent&rsquo;s tools.</p></div><div class="section-divider"><div class="line"></div><div class="label">Discussion and misconceptions</div><div class="line"></div></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion 1: two tables</div><div class="p-text">Which of your business&rsquo;s questions needs information from two tables?</div><div class="p-hint">Look for: a starting point for JOINs later; this week, pick tables so each question needs one.</div></div><div class="prompt"><div class="p-num">Discussion 2: keys</div><div class="p-text">What breaks if <code>order_id</code> is not a primary key?</div><div class="p-hint">Look for: duplicate orders, and INSERT OR IGNORE adding the sample rows again on every start.</div></div><div class="prompt"><div class="p-num">Discussion 3: handoff words</div><div class="p-text">Which handoff word would you rather have fire by mistake than miss?</div><div class="p-hint">Look for: the cost of each kind of mistake, from Week 11 and 12.</div></div></div><div class="card"><div class="card-title">Misconceptions to listen for</div><p>&ldquo;A primary key is just the first column.&rdquo; It is the column the database keeps unique, wherever it sits.</p><p>&ldquo;UPDATE changes one row unless you say otherwise.&rdquo; It changes every row unless <code>WHERE</code> says otherwise.</p><p>&ldquo;INSERT OR IGNORE updates the existing row.&rdquo; It leaves the existing row exactly as it is.</p><p>&ldquo;The shell saves only when you quit.&rdquo; Each statement is saved as soon as it runs.</p></div><div class="assignment"><div class="a-header">Lab 13 &middot; Due end of Week 13 &middot; Proposal and Schema</div><h3>Your capstone&rsquo;s first commit</h3><div class="deliverable"><div class="d-icon">&#x1F4DD;</div><div class="d-text"><strong>File:</strong> <code>PROPOSAL.md</code>, every section filled in, the checklist ticked.</div></div><div class="deliverable"><div class="d-icon">&#x1F5C3;</div><div class="d-text"><strong>File:</strong> <code>schema.sql</code>, your business tables with at least five sample rows each and an empty <code>change_requests</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2714;</div><div class="d-text"><strong>Sign-off:</strong> Approved, or Revise before the Week 14 lab.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the submission. This week it is checked at sign-off, not by running tests: make sure the repository is <strong>Public</strong> and everything is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week12_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span></a><span></span><a href="week14_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 13 &middot; Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</div></div>
 <script src="../site.js"></script>
 </body></html>

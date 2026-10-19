@@ -119,7 +119,9 @@
         <div class="dd-section">Unit 4 · Capstone Build</div>
         <a href="${pg}unit_4_overview.html">Overview</a>
         <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
-        <a href="${pg}week13_reading.html">Module 13 · Capstone Design &amp; SQL</a>
+        <a href="${pg}capstone_starters.html">Capstone Starters</a>
+        <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
+        <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
         <a href="${pg}week14_reading.html">Module 14 · Python + SQL Integration</a>
         <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
         <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
@@ -202,7 +204,9 @@
       <div class="mob-section-label">Unit 4 · Capstone Build</div>
       <a href="${pg}unit_4_overview.html">Overview</a>
       <a href="${pg}unit_4_cheatsheet.html">Cheat Sheet</a>
-      <a href="${pg}week13_reading.html">Module 13 · Capstone Design &amp; SQL</a>
+      <a href="${pg}capstone_starters.html">Capstone Starters</a>
+      <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
+      <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
       <a href="${pg}week14_reading.html">Module 14 · Python + SQL Integration</a>
       <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
       <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>

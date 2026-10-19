@@ -192,111 +192,143 @@ body{min-height:100vh;width:100%;}
 body{min-height:100vh;width:100%;}
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 13 In-Class Lab — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 13 · Lab</div>
-<h1 class="wk-title">Capstone Design &amp; SQL Foundations</h1>
-<p class="wk-deck">Module 7A &amp; 7B &mdash; Project Proposal and SQL Foundations &mdash; write your capstone proposal, design a SQL schema, and run queries in the sqlite3 shell</p>
-<div class="meta">
+<meta name="description" content="ISM3232 Week 11 lab — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><style>.task-content{min-width:0;flex:1;}.expected{white-space:pre !important;overflow-x:auto;}</style><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 13 · Lab</div><h1 class="wk-title">Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</h1><p class="wk-deck">Module 7 &mdash; Capstone &mdash; practise SQL on Bayside, choose your business, write its proposal and schema, and get signed off</p><div class="meta">
 <span class="chip accent">Module 13 · Lab</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">Full class period</span>
-</div>
-<div class="weekjump">
+<span class="chip">About 3 hours</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week13_reading.html" class="weekjump-link">Reading</a>
 <a href="week13_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week13_lab.html" class="weekjump-link current">Lab</a>
 <a href="week13_lab_slides.html" class="weekjump-link">Slides</a>
-</div>
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
-<div class="time-bar"><span class="time-block">Part 1: Capstone proposal</span><span class="time-block">Part 2: SQL fundamentals</span><span class="time-block">Part 3: Schema design</span><span class="time-block">Part 4: sqlite3 shell</span><span class="time-block">Part 5: Ritual + push</span></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Proposal requires instructor sign-off before Week 14</div><div class="callout-body">Your proposal must be reviewed and approved before you begin building any capstone code. Complete all 10 fields honestly &mdash; vague proposals lead to undefined systems that are impossible to finish in four weeks.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Capstone Project Proposal</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Complete all 10 fields in PROPOSAL.md</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module07_final_project
-python3 -m venv .venv && source .venv/bin/activate
-pip install pytest ruff && pip freeze > requirements.txt
-echo '.venv/' > .gitignore && echo '__pycache__/' >> .gitignore
-echo '*.db' >> .gitignore
-touch PROPOSAL.md && code PROPOSAL.md</pre></div><div class="code-block"><div class="cb-label">PROPOSAL.md &mdash; complete every field</div><pre># ISM3232 Capstone Project Proposal
-# Author: [Your Name]
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 Python+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: Install sqlite3 (10 min)</span><span class="time-block">Part 2: Practise (20)</span><span class="time-block">Part 3: Four exercises (30)</span><span class="time-block">Part 4: Set up (15)</span><span class="time-block">Part 5: Proposal (45)</span><span class="time-block">Part 6: Schema (30)</span><span class="time-block">Part 7: Sign-off (10)</span><span class="time-block">Part 8: Push (5)</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; your capstone&rsquo;s first commit</div><div class="callout-body">Practise SQL on Bayside&rsquo;s database, then start your own capstone: choose a business, write <code>PROPOSAL.md</code> and <code>schema.sql</code>, check the schema in sqlite3, and get your proposal signed off.</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F4CD;</div><div><div class="callout-label">Where you start</div><div class="callout-body">Week 12 finished and pushed. No Ollama and no Python today: everything runs in the terminal and the <code>sqlite3</code> shell. Read the <a href="week13_reading.html">Week 13 reading</a> first; this lab uses the same commands.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Your proposal is your own</div><div class="callout-body">The course AI policy still applies (syllabus, section 7). AI may explain a SQL error message, but the proposal and the schema you submit must be your own work.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Install sqlite3</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Install the sqlite3 shell</div><div class="task-body"><p>On Windows, work in your Ubuntu (WSL) terminal:</p><div class="code-block"><div class="cb-label">Terminal &mdash; Ubuntu (WSL)</div><pre>sudo apt update
+sudo apt install sqlite3
+sqlite3 --version</pre></div><p>On a Mac, sqlite3 is already installed:</p><div class="code-block"><div class="cb-label">Terminal &mdash; macOS</div><pre>sqlite3 --version</pre></div><p>The last command prints a version line like this:</p><div class="expected" style="white-space:pre-wrap;">3.45.1 2024-01-30 16:01:20 e876e51a0ed5c5b3126f52e532044363a014bc594cfefa87ffb5b82257ccalt1 (64-bit)</div><div class="hint-box">Your version number and date may differ. On a Mac the columns of a table can be spaced a little differently. The rows are what matter.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Practise on Bayside</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Make a practice folder with Bayside&rsquo;s schema</div><div class="task-body"><p>Practise outside your capstone folder, so the practice database never reaches GitHub:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>mkdir -p ~/ism3232/sql_practice
+cd ~/ism3232/sql_practice
+code schema.sql</pre></div><p>Paste this into <code>schema.sql</code> and save it:</p><div class="code-block"><div class="cb-label">schema.sql</div><pre>-- schema.sql
+-- Bayside Outfitters: orders, products, and changes waiting for staff.
 
-## Project Name
-[Give your system a clear, descriptive name]
-
-## Business Problem
-[What problem does this solve? Who has this problem? 2-3 sentences.]
-
-## Primary User
-[Who will use this system? Be specific.]
-
-## Records Stored
-[What data is stored? Name every type of record.]
-
-## Business Rules
-[At least 2 explicit rules. e.g., 'Requests over $1000 require manager approval']
-1. 
-2. 
-
-## OOP Classes
-[List each class with key attributes and methods]
-- Class 1: [name] | attributes: [...] | methods: [...]
-- Class 2: [name] | attributes: [...] | methods: [...]
-
-## SQL Tables
-[List each table with columns and types]
-- Table 1: [name] | columns: [...]
-
-## Streamlit Features
-1. Add a record
-2. View all records
-3. Filter records
-4. Update status
-5. Display a report
-
-## GenAI Feature
-[What will AI do? e.g., 'Summarise a request description in one sentence']
-
-## Out of Scope
-[What are you explicitly NOT building?]</pre></div><p><strong>Raise your hand when the proposal is complete. The instructor must sign off before Week 14.</strong></p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; SQL Fundamentals</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Run the required SQL operations in the sqlite3 shell</div><div class="task-body"><div class="code-block"><div class="cb-label">Open the shell</div><pre>sqlite3 lab13.db</pre></div><div class="code-block"><div class="cb-label">Run each SQL statement in the shell</div><pre>-- Create a table
-CREATE TABLE requests (
-    id        INTEGER PRIMARY KEY AUTOINCREMENT,
-    requester TEXT    NOT NULL,
-    category  TEXT    NOT NULL,
-    amount    REAL,
-    status    TEXT    DEFAULT 'Pending'
+CREATE TABLE IF NOT EXISTS orders (
+    order_id TEXT PRIMARY KEY,
+    customer TEXT NOT NULL,
+    item     TEXT NOT NULL,
+    status   TEXT NOT NULL,
+    address  TEXT NOT NULL
 );
 
--- Insert three records
-INSERT INTO requests (requester, category, amount) VALUES ('Taylor', 'Travel', 1200);
-INSERT INTO requests (requester, category, amount) VALUES ('Jordan', 'Equipment', 450);
-INSERT INTO requests (requester, category, amount) VALUES ('Morgan', 'Software', 3500);
+CREATE TABLE IF NOT EXISTS products (
+    name  TEXT PRIMARY KEY,
+    price REAL NOT NULL,
+    stock INTEGER NOT NULL
+);
 
--- Query all records
+CREATE TABLE IF NOT EXISTS change_requests (
+    number      INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id    TEXT NOT NULL,
+    new_address TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'waiting'
+);
+
+INSERT OR IGNORE INTO orders (order_id, customer, item, status, address) VALUES
+    ('A100', 'Dana Cruz', 'rain jacket', 'shipped', '14 Bay Road'),
+    ('A101', 'Sam Okafor', 'day pack', 'processing', '3 Gull Lane'),
+    ('A102', 'Lee Park', 'trail hat', 'delivered', '88 Pier Street'),
+    ('A103', 'Ana Silva', 'fleece vest', 'processing', '21 Harbor Way'),
+    ('A104', 'Max Duarte', 'water bottle', 'shipped', '7 Dune Court'),
+    ('A105', 'Ivy Chen', 'hiking socks', 'delivered', '40 Tide Street');
+
+INSERT OR IGNORE INTO products (name, price, stock) VALUES
+    ('rain jacket', 89.00, 12),
+    ('day pack', 45.00, 0),
+    ('trail hat', 25.00, 5),
+    ('fleece vest', 60.00, 8),
+    ('water bottle', 18.00, 30),
+    ('hiking socks', 12.00, 0);</pre></div></div></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Open the database and look around</div><div class="task-body"><p>Open a new database file for the lab. If you followed along with the reading in this folder, its <code>bayside.db</code> has your changes in it; a new file means none of them change today&rsquo;s results.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>sqlite3 lab13.db</pre></div><p>At the <code>sqlite&gt;</code> prompt, type each line:</p><div class="code-block"><div class="cb-label">sqlite3</div><pre>.read schema.sql
+.tables
 .mode column
 .headers on
-SELECT * FROM requests;
-
--- Filter
-SELECT * FROM requests WHERE amount > 1000;
-
--- Update
-UPDATE requests SET status = 'Approved' WHERE id = 1;
-SELECT * FROM requests;
-
--- Aggregate report
-SELECT status, COUNT(*) as count, SUM(amount) as total FROM requests GROUP BY status;
-
-.quit</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Design Your Capstone Schema</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Write schema.sql for your capstone</div><div class="task-body"><div class="code-block"><div class="cb-label">touch schema.sql && code schema.sql</div><pre></pre></div><p>Write the <code>CREATE TABLE</code> statement(s) for your capstone. Use appropriate types (<code>TEXT</code>, <code>INTEGER</code>, <code>REAL</code>). Include <code>NOT NULL</code> where required. Add a <code>status</code> column with a default value.</p><p>Test it in the sqlite3 shell:</p><div class="code-block"><pre>sqlite3 capstone.db
+SELECT * FROM orders;</pre></div><p>You should see:</p><div class="expected" style="white-space:pre-wrap;">sqlite&gt; .read schema.sql
+sqlite&gt; .tables
+change_requests  orders           products       
+sqlite&gt; .mode column
+sqlite&gt; .headers on
+sqlite&gt; SELECT * FROM orders;
+order_id  customer    item          status      address       
+--------  ----------  ------------  ----------  --------------
+A100      Dana Cruz   rain jacket   shipped     14 Bay Road   
+A101      Sam Okafor  day pack      processing  3 Gull Lane   
+A102      Lee Park    trail hat     delivered   88 Pier Street
+A103      Ana Silva   fleece vest   processing  21 Harbor Way 
+A104      Max Duarte  water bottle  shipped     7 Dune Court  
+A105      Ivy Chen    hiking socks  delivered   40 Tide Street</div><div class="hint-box"><code>.quit</code> leaves sqlite3. Run <code>sqlite3 lab13.db</code> again later and everything is still there, but you would have to turn <code>.mode column</code> and <code>.headers on</code> on again: every new session starts with them off. Keep this window open for Part 3.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Four SQL Exercises</div><div class="line"></div></div><div class="callout blue"><div class="callout-icon">&#x1F9E9;</div><div><div class="callout-label">Same window, in order</div><div class="callout-body">Do the exercises in the sqlite3 window from Part 3, one after another. Exercise 3 adds an order and Exercise 4 files a request, so the later results depend on the earlier steps.</div></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Exercise 1 &mdash; Orders still processing</div><div class="task-body"><p>List the order ID and customer of every order whose status is <code>processing</code>, sorted by customer name.</p><div class="expected" style="white-space:pre-wrap;">order_id  customer  
+--------  ----------
+A103      Ana Silva 
+A101      Sam Okafor</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 1</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">sqlite3</div><pre>sqlite&gt; SELECT order_id, customer FROM orders WHERE status = 'processing' ORDER BY customer;
+order_id  customer  
+--------  ----------
+A103      Ana Silva 
+A101      Sam Okafor</pre></div><p><strong>Common mistake:</strong> forgetting the quotes around <code>'processing'</code>. Without them SQLite looks for a column with that name.</p></div></details></div></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Exercise 2 &mdash; Out of stock</div><div class="task-body"><p>List the name and price of every product with no stock.</p><div class="expected" style="white-space:pre-wrap;">name          price
+------------  -----
+day pack      45.0 
+hiking socks  12.0</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 2</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">sqlite3</div><pre>sqlite&gt; SELECT name, price FROM products WHERE stock = 0;
+name          price
+------------  -----
+day pack      45.0 
+hiking socks  12.0</pre></div><p><strong>Common mistake:</strong> writing <code>stock = '0'</code>. It works here only because the column is <code>INTEGER</code>, so SQLite turns <code>'0'</code> into a number first. Write <code>0</code>, a number with no quotes.</p></div></details></div></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Exercise 3 &mdash; Orders by status</div><div class="task-body"><p>First add one more order. An <code>INSERT</code> prints nothing:</p><div class="code-block"><div class="cb-label">sqlite3</div><pre>INSERT INTO orders (order_id, customer, item, status, address) VALUES ('A106', 'Kai Moreno', 'trail hat', 'processing', '5 Shell Road');</pre></div><p>Now count the orders in each status.</p><div class="expected" style="white-space:pre-wrap;">status      COUNT(*)
+----------  --------
+delivered   2       
+processing  3       
+shipped     2</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 3</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">sqlite3</div><pre>sqlite&gt; SELECT status, COUNT(*) FROM orders GROUP BY status;
+status      COUNT(*)
+----------  --------
+delivered   2       
+processing  3       
+shipped     2</pre></div><p>Processing is 3 because of the order you just added.</p></div></details></div></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Exercise 4 &mdash; Approve a change by hand</div><div class="task-body"><p>The agent filed this request for staff. Type it:</p><div class="code-block"><div class="cb-label">sqlite3</div><pre>INSERT INTO change_requests (order_id, new_address) VALUES ('A101', '9 Pine Street, Tampa');</pre></div><p>Now approve it yourself with two <code>UPDATE</code> statements: change order A101&rsquo;s address to <code>9 Pine Street, Tampa</code>, and mark request 1 as <code>approved</code>. Then check your work:</p><div class="code-block"><div class="cb-label">sqlite3</div><pre>SELECT order_id, address FROM orders WHERE order_id = 'A101';
+SELECT number, order_id, status FROM change_requests;</pre></div><div class="expected" style="white-space:pre-wrap;">sqlite&gt; SELECT order_id, address FROM orders WHERE order_id = 'A101';
+order_id  address             
+--------  --------------------
+A101      9 Pine Street, Tampa
+sqlite&gt; SELECT number, order_id, status FROM change_requests;
+number  order_id  status  
+------  --------  --------
+1       A101      approved</div><div class="hint-box">Typed the <code>INSERT</code> twice? Then there is a request 2 as well: <code>AUTOINCREMENT</code> gives every insert a new number. That is fine; approve request 1.</div><details style="margin:10px 0 4px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--bg-card);"><summary style="cursor:pointer;font-weight:700;color:var(--text-primary);font-size:13px;">Answer key &mdash; Exercise 4</summary><div style="margin-top:10px;"><div class="code-block"><div class="cb-label">sqlite3</div><pre>sqlite&gt; UPDATE orders SET address = '9 Pine Street, Tampa' WHERE order_id = 'A101';
+sqlite&gt; UPDATE change_requests SET status = 'approved' WHERE number = 1;</pre></div><p>In Week 14 these two statements become <code>approve_request</code>, the only code that changes an order&rsquo;s address. Each <code>UPDATE</code> has a <code>WHERE</code>, so exactly one row changes.</p></div></details></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Set Up Your Capstone Folder</div><div class="line"></div></div><div class="task"><div class="task-num">8</div><div class="task-content"><div class="task-title">Create module07_final_project</div><div class="task-body"><p>You made this folder in Week 1. <code>mkdir -p</code> is safe if it is already there. Quit sqlite3 first.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>mkdir -p ~/ism3232/module07_final_project
+cd ~/ism3232/module07_final_project
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest ruff streamlit ollama &amp;&amp; pip freeze &gt; requirements.txt
+echo '.venv/' &gt; .gitignore &amp;&amp; echo '__pycache__/' &gt;&gt; .gitignore &amp;&amp; echo '*.db' &gt;&gt; .gitignore
+git init</pre></div><div class="callout blue"><div class="callout-icon">&#x1F517;</div><div><div class="callout-label">One-time GitHub setup</div><div class="callout-body">Each module folder is its own repository, as in Week 4.</div></div></div><div class="code-block"><div class="cb-label">Terminal</div><pre># Create a new repository on github.com first:
+# Name: ism3232-module07  |  Public  |  No README
+git remote add origin https://github.com/YOURUSERNAME/ism3232-module07.git
+git branch -M main</pre></div><div class="hint-box"><code>*.db</code> is in <code>.gitignore</code> because the database is rebuilt from <code>schema.sql</code>, and real data never goes to GitHub.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Choose a Business and Write PROPOSAL.md</div><div class="line"></div></div><div class="task"><div class="task-num">9</div><div class="task-content"><div class="task-title">Choose your business and write the proposal</div><div class="task-body"><p>Open the <a href="capstone_starters.html">capstone starters page</a>. Pick one of the six businesses, or your own idea that meets the checklist. Then create the two files and open the folder:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>touch PROPOSAL.md schema.sql &amp;&amp; code .</pre></div><p>Copy the <a href="capstone_starters.html#template">template</a> into <code>PROPOSAL.md</code> and fill in every section. <a href="capstone_starters.html#bayside">Bayside&rsquo;s proposal</a> shows a finished one. Before sign-off, tick each item:</p><ol><li>One business. The chat serves customers or staff; the Staff tab always serves staff.</li><li>At least two business tables plus a <code>change_requests</code> table.</li><li>At least two lookup tools. They only read, and they check their arguments.</li><li>At least one change tool. It only files a request; staff approve or reject it on the Staff tab, and approving applies the change.</li><li>At least one handoff rule in code that runs before the model, with the reason given in the README.</li><li>One kind of sensitive data the app never stores and never sends to the model.</li><li>Instructions that carry the business's facts and include "only state facts that appear in these instructions".</li><li>Five sample conversations, which become the Week 16 evaluation cases.</li></ol></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 6 &mdash; Write schema.sql</div><div class="line"></div></div><div class="task"><div class="task-num">10</div><div class="task-content"><div class="task-title">Write and check your schema</div><div class="task-body"><p>In <code>schema.sql</code>, create your business tables with <code>CREATE TABLE IF NOT EXISTS</code> and add at least five sample rows to each with <code>INSERT OR IGNORE</code>. Add an empty <code>change_requests</code> table with the columns on the <a href="capstone_starters.html">starters page</a>. Then read it twice and compare the counts. Use your business&rsquo;s name for the database file and your own table names:</p><div class="code-block"><div class="cb-label">Terminal and sqlite3</div><pre>sqlite3 my_business.db
 .read schema.sql
-.schema
-INSERT INTO [yourtable] ([cols]) VALUES ([values]);
-SELECT * FROM [yourtable];
-.quit</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; sqlite3 Shell Reference</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Add a SQL cheatsheet to README.md</div><div class="task-body"><p>Create <code>README.md</code> and add a SQL reference section with one example of each required operation:</p><div class="code-block"><pre>CREATE TABLE  --  define a table
-INSERT INTO   --  add a record
-SELECT *      --  retrieve all records
-WHERE         --  filter records
-UPDATE ... SET --  change a value
-ORDER BY      --  sort results
-GROUP BY      --  aggregate by column
-COUNT / SUM / AVG  --  aggregate functions</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Run the ritual and push</div><div class="task-body"><div class="code-block"><pre>git add . && git commit -m 'lab 13: proposal and SQL schema' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 13 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Project Proposal and SQL Foundations</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> PROPOSAL.md &mdash; all 10 fields completed. Must have instructor sign-off.</div></div><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>File in repo:</strong> schema.sql &mdash; CREATE TABLE statement for your capstone.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 13</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week12_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span></a><span></span><a href="week14_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 13 In-Class Lab &middot; Module 7A &amp; 7B &mdash; Project Proposal and SQL Foundations</div></div>
+.tables
+SELECT COUNT(*) FROM &lt;table&gt;;
+.read schema.sql
+SELECT COUNT(*) FROM &lt;table&gt;;
+.quit</pre></div><p>Your schema passes when <strong>the second <code>.read</code> prints nothing</strong> and the counts after it match the first. This is what Bayside&rsquo;s check looks like:</p><div class="code-block"><div class="cb-label">sqlite3 &mdash; Bayside, first read</div><pre>sqlite&gt; .read schema.sql
+sqlite&gt; .mode column
+sqlite&gt; .headers on
+sqlite&gt; SELECT COUNT(*) FROM orders;
+COUNT(*)
+--------
+6</pre></div><div class="code-block"><div class="cb-label">sqlite3 &mdash; Bayside, read again</div><pre>sqlite&gt; .read schema.sql
+sqlite&gt; SELECT COUNT(*) FROM orders;
+COUNT(*)
+--------
+6</pre></div><p>Matching counts alone are not enough. Here Bayside&rsquo;s schema was saved as <code>plain_insert.sql</code> with every <code>OR IGNORE</code> removed. The counts still match, but the second <code>.read</code> prints errors:</p><div class="code-block"><div class="cb-label">sqlite3 &mdash; a schema with plain INSERT, read twice</div><pre>SQLite version 3.45.1 2024-01-30 16:01:20
+Enter ".help" for usage hints.
+sqlite&gt; .read plain_insert.sql
+sqlite&gt; SELECT COUNT(*) FROM orders;
+6
+sqlite&gt; .read plain_insert.sql
+Runtime error near line 25: UNIQUE constraint failed: orders.order_id (19)
+Runtime error near line 33: UNIQUE constraint failed: products.name (19)
+sqlite&gt; SELECT COUNT(*) FROM orders;
+6</pre></div><div class="hint-box">A <code>UNIQUE constraint failed</code> line means an <code>INSERT</code> is missing <code>OR IGNORE</code>. Next week the app runs <code>schema.sql</code> every time it starts, and that error would stop it on every start after the first. If a count grows instead, a table is missing its <code>PRIMARY KEY</code>, or <code>change_requests</code> has sample rows. Fix the file, delete the <code>.db</code> file, and check again.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 7 &mdash; Sign-off</div><div class="line"></div></div><div class="task"><div class="task-num">11</div><div class="task-content"><div class="task-title">Get your proposal signed off</div><div class="task-body"><p>Show your instructor <code>PROPOSAL.md</code> and the two <code>.read</code> runs, with nothing printed by the second one. They check the eight items, which takes one or two minutes. In Canvas, Lab 13 is then marked <strong>Approved</strong>, or <strong>Revise</strong> with a comment. Revise means fix it before the Week 14 lab; Week 14 code waits for approval.</p><p>Finishing after class? Push your work and paste the repository URL into Canvas by the due date. Your instructor checks it against the same eight items and marks it Approved or Revise in Canvas, and that counts as your sign-off.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 8 &mdash; Commit and Push</div><div class="line"></div></div><div class="task"><div class="task-num">12</div><div class="task-content"><div class="task-title">Your capstone&rsquo;s first commit</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>git add . &amp;&amp; git commit -m 'lab 13: proposal and schema' &amp;&amp; git push -u origin main</pre></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">Why there is no ruff or pytest this week</div><div class="callout-body">Your folder has no Python yet. <code>pytest</code> finds no tests, exits with code 5 (&ldquo;no tests ran&rdquo;), and the <code>&amp;&amp;</code> chain would stop before git. Week 14 adds the tests, and the full ritual comes back. After this first push, <code>git push</code> is enough.</div></div></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 13 Submission &middot; Git commit + Canvas URL &middot; Approved or Revise</div><h3>Agent Design and SQL</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>PROPOSAL.md</code>, <code>schema.sql</code>, <code>requirements.txt</code> and <code>.gitignore</code> in <code>module07_final_project</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 13</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2714;</div><div class="d-text"><strong>Sign-off:</strong> Approved, or Revise before the Week 14 lab.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the submission. This week it is checked at sign-off, not by running tests: make sure the repository is <strong>Public</strong> and everything is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week12_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span></a><span></span><a href="week14_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Python + SQL Integration</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 13 In-Class Lab &middot; Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</div></div>
 <script src="../site.js"></script>
 </body></html>
