@@ -123,7 +123,7 @@
         <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
         <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
         <a href="${pg}week14_reading.html">Module 14 · Database Tools — sqlite3, Placeholders &amp; Tested Tools</a>
-        <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
+        <a href="${pg}week15_reading.html">Module 15 · Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</a>
         <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
       </div>
     </div>
@@ -208,7 +208,7 @@
       <a href="${pg}capstone_rubric.html">Capstone Rubric</a>
       <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
       <a href="${pg}week14_reading.html">Module 14 · Database Tools — sqlite3, Placeholders &amp; Tested Tools</a>
-      <a href="${pg}week15_reading.html">Module 15 · Streamlit Interface</a>
+      <a href="${pg}week15_reading.html">Module 15 · Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</a>
       <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
     </div>
     <div class="mob-tools">

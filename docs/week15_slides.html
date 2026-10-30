@@ -6,7 +6,7 @@
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ISM3232 Week 15 — Streamlit Interface</title>
+<title>ISM3232 Week 15 — Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/moon.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -100,105 +100,99 @@
 }
 </style>
 </head><body><div class="reveal"><div class="slides">
-<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 15</p><h1>Streamlit Interface</h1><div class="t-bar"><span class="t-item"><strong>0–15 min</strong> Why Streamlit? Setup</span><span class="t-item"><strong>15–45 min</strong> Build Streamlit app together</span><span class="t-item"><strong>45–60 min</strong> All 5 required features</span><span class="t-item"><strong>60–75 min</strong> FastAPI concept lecture</span><span class="t-item"><strong>75–80 min</strong> Assignment</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 15: Week 15 — Module 7D — Streamlit Business Interface + FastAPI Concept Lecture
+<section class="s-title"><p style="font-family:monospace;font-size:.5em;letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:.3em;">ISM3232 &nbsp;·&nbsp; Week 15</p><h1>Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</h1><div class="t-bar"><span class="t-item"><strong>0–8 min</strong> Where Week 14 left off</span><span class="t-item"><strong>8–25 min</strong> Reruns</span><span class="t-item"><strong>25–45 min</strong> The chat</span><span class="t-item"><strong>45–60 min</strong> The Staff tab</span><span class="t-item"><strong>60–68 min</strong> Customer text is data</span><span class="t-item"><strong>68–75 min</strong> Your project</span></div><p style="font-size:.38em;color:var(--mu);margin-top:.7em;">← → navigate &nbsp;·&nbsp; F fullscreen &nbsp;·&nbsp; S notes</p><aside class="notes">Week 15 — Streamlit Chat &amp; Staff
 
-Today&#x27;s plan:
-  0–15 min — Why Streamlit? Setup
-  15–45 min — Build Streamlit app together
-  45–60 min — All 5 required features
-  60–75 min — FastAPI concept lecture
-  75–80 min — Assignment</aside></section>
-<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Why Streamlit?</h1><aside class="notes">Streamlit lets you build an interactive web interface for your Python application without writing HTML, CSS, or JavaScript. Every widget — text inputs, buttons, dropdowns, tables — is a Python function call. The interface re-runs the entire script top to bottom whenever the user interacts with it.</aside></section>
-<section class="s-point"><h2>Section 1 — Why Streamlit?</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Streamlit lets you build an interactive web interface for your Python application without writing HTML, CSS, o…</li><li>For a business application in this course, Streamlit is the front-end layer that connects to database.</li></ul><aside class="notes">Streamlit lets you build an interactive web interface for your Python application without writing HTML, CSS, or JavaScript. Every widget — text inputs, buttons, dropdowns, tables — is a Python function call. The interface re-runs the entire script top to bottom whenever the user interacts with it.
+Today's plan:
+  0–8 min — Where Week 14 left off
+  8–25 min — Reruns
+  25–45 min — The chat
+  45–60 min — The Staff tab
+  60–68 min — Customer text is data
+  68–75 min — Your project
 
-For a business application in this course, Streamlit is the front-end layer that connects to database.py and models.py . Users add records, view records, update statuses, and see reports — all through Streamlit widgets backed by SQLite.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Install and run Streamlit</h3><pre><code class="language-bash"># Activate venv first
-source .venv/bin/activate
-pip install streamlit
-pip freeze &gt; requirements.txt
+Frame it: the agent and the database work; today they get a web page. One idea explains the whole app: Streamlit runs the script again on every click.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 1</div><h1 style="font-size:1.4em;">Where Week 14 Left Off</h1><aside class="notes">Staff decide in a terminal.</aside></section>
+<section class="s-point"><h2>Who would use this?</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>The agent files change requests into <code>change_requests</code></li><li><code>main.py</code> asks yes or no about each one after the chat ends</li><li>Today: a Chat tab for customers and a Staff tab for staff</li></ul><aside class="notes">Ask the room who at a real shop would approve requests in a terminal.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Reruns</h1><aside class="notes">The counter that will not count.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ counter.py</h3><pre><code class="language-python" style="max-height:620px;font-size:.62em;line-height:1.3;"># counter.py
+import streamlit as st
 
-# Run your app
-streamlit run app.py
-# Opens in browser at http://localhost:8501
-# Ctrl+C to stop</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
+count = 0
+if st.button("Add one"):
+    count = count + 1
+st.write(f"Count: {count}")
 
-Code label: Install and run Streamlit</aside></section>
-<section class="s-sec"><div class="sec-n">Section 2</div><h1 style="font-size:1.4em;">Core Streamlit Components</h1></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Essential Streamlit widgets and layout — try each one</h3><pre><code class="language-bash">import streamlit as st
+# After 3 clicks the page shows:
+# Count: 1</code></pre><aside class="notes">Ask what they expect after three clicks before you show it. Every click reruns the script, so count = 0 runs again.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ counter_state.py</h3><pre><code class="language-python" style="max-height:620px;font-size:.62em;line-height:1.3;"># counter_state.py
+import streamlit as st
 
-# Page setup (call once, at the top)
-st.set_page_config(page_title=&quot;Request Tracker&quot;, layout=&quot;wide&quot;)
+if "count" not in st.session_state:
+    st.session_state.count = 0
+if st.button("Add one"):
+    st.session_state.count = st.session_state.count + 1
+st.write(f"Count: {st.session_state.count}")
 
-# Text display
-st.title(&quot;Business Request Tracker&quot;)
-st.header(&quot;Submit a New Request&quot;)
-st.write(&quot;Any text, markdown, or value — very flexible&quot;)
-
-# Input widgets — each returns a Python value
-requester = st.text_input(&quot;Your name&quot;)
-category  = st.selectbox(&quot;Category&quot;, [&quot;Travel&quot;, &quot;Equipment&quot;, &quot;Software&quot;])
-amount    = st.number_input(&quot;Amount ($)&quot;, min_value=0.0, step=10.0)
-notes     = st.text_area(&quot;Notes (optional)&quot;)
-
-# Button — returns True only on the click that triggered the rerun
-if st.button(&quot;Submit Request&quot;):
-    if requester and amount &gt; 0:
-        add_record(requester, category, amount, notes)
-        st.success(f&quot;Request submitted for {requester}&quot;)
-    else:
-   </code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: Essential Streamlit widgets and layout — try each one</aside></section>
-<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">Required Five Streamlit Features</h1></section>
-<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">Terminal  →  streamlit run app.py</div><div class="demo-sub">Putting it together — a minimal working app.py skeleton</div></div><aside class="notes">LIVE DEMO
-Open: Terminal  →  streamlit run app.py</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Putting it together — a minimal working app.py skeleton</h3><pre><code class="language-python">import streamlit as st
-
-from database import add_record, create_table, get_all_records, get_status_report, update_status
-
-create_table()   # idempotent — safe to call on every run
-
-st.set_page_config(page_title=&quot;Request Tracker&quot;, layout=&quot;wide&quot;)
-st.title(&quot;📋 Business Request Tracker&quot;)
-
-tab1, tab2, tab3 = st.tabs([&quot;Submit&quot;, &quot;View &amp; Filter&quot;, &quot;Report&quot;])
-
-with tab1:
-    st.header(&quot;Submit a New Request&quot;)
-    requester = st.text_input(&quot;Your name&quot;)
-    category  = st.selectbox(&quot;Category&quot;, [&quot;Travel&quot;, &quot;Equipment&quot;, &quot;Software&quot;])
-    amount    = st.number_input(&quot;Amount ($)&quot;, min_value=0.0, step=10.0)
-    if st.button(&quot;Submit&quot;):
-        add_record(requester, category, amount)
-        st.success(&quot;Submitted!&quot;)
-
-with tab2:
-    records = get_all_records()
-    st.dataframe(records)
-
-with tab3:
-    report = get</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: Putting it together — a minimal working app.py skeleton</aside></section>
-<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">FastAPI: Concept Lecture Only</h1><aside class="notes">This 60–90 minute lecture covers what an API is, how routes and requests work, and how FastAPI structures a Python web service. Students run one minimal demo route. There is no FastAPI assignment or capstone requirement.</aside></section>
-<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Minimal FastAPI demo — run with: uvicorn main:app --reload</h3><pre><code class="language-python">from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get(&quot;/&quot;)
-def home():
-    return {&quot;message&quot;: &quot;Business API is running&quot;}
-
-@app.get(&quot;/requests&quot;)
-def get_requests():
-    return {&quot;requests&quot;: []}
-
-# Visit http://127.0.0.1:8000/docs for auto-generated API documentation</code></pre><aside class="notes">Walk through each line. Students type along. Do not rush.
-
-Code label: Minimal FastAPI demo — run with: uvicorn main:app --reload</aside></section>
-<section class="s-warn"><div class="warn-card" style="max-width:800px;margin:0 auto;"><div class="warn-lbl">⚠ FastAPI is a concept introduction — no deliverable required</div><p style="font-size:.84em;line-height:1.8;">This 60–90 minute lecture covers what an API is, how routes and requests work, and how FastAPI structures a Python web service. Students run one minimal demo route. There is no FastAPI assignment or c</p></div><aside class="notes">EMPHASISE: FastAPI is a concept introduction — no deliverable required
-
-This 60–90 minute lecture covers what an API is, how routes and requests work, and how FastAPI structures a Python web service. Students run one minimal demo route. There is no FastAPI assignment or capstone requirement.</aside></section></div></div>
+# After 3 clicks the page shows:
+# Count: 3</code></pre><aside class="notes">st.session_state is the one thing Streamlit keeps between runs. A browser refresh starts a new session: Count: 0.</aside></section>
+<section class="s-point"><h2>You have seen this before</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>Week 11: the model remembers nothing, so we send the history every time</li><li>Streamlit remembers nothing either</li><li>So the chatbot lives in <code>st.session_state</code></li></ul><aside class="notes">Connect the two ideas; this is the week's one rule.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 3</div><h1 style="font-size:1.4em;">The Chat</h1><aside class="notes">One chatbot, kept between clicks.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The chatbot, created once</h3><pre><code class="language-python" style="max-height:620px;font-size:.74em;line-height:1.3;">if "bot" not in st.session_state:
+    tools = BaysideTools(DB_FILE)
+    st.session_state.bot = SupportChatbot("Sunny", INSTRUCTIONS, tools, KeywordModel())
+bot = st.session_state.bot
+bot.model = make_model(choice)</code></pre><aside class="notes">Created on the first run only. The last line runs every time, so switching models keeps the conversation.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The Chat tab</h3><pre><code class="language-python" style="max-height:620px;font-size:.62em;line-height:1.3;">with chat_tab:
+    for message in bot.history:
+        if message["role"] != "tool":
+            with st.chat_message(message["role"]):
+                show(message["content"])
+    user_message = st.chat_input(
+        "Ask Sunny about an order, stock, or an address change"
+    )
+    if user_message:
+        with st.spinner("Sunny is thinking..."):
+            bot.respond(user_message)
+        st.rerun()</code></pre><aside class="notes">Draw the history, skipping tool entries; chat_input returns text only on the run after Enter; respond inside a spinner; rerun to draw the reply.</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">streamlit run app.py</div><div class="demo-sub">Bayside on the course model: ask about A101, then change A102's address</div></div><aside class="notes">Run it live. If the demo fails, the next slide is the same session as a screenshot. Switch the sidebar to keyword rules mid-chat: the chat stays.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">The Chat tab</h3><img src="../assets/img/week15/chat.png" alt="The Bayside Outfitters app on its Chat tab. The sidebar offers the course model or keyword rules only. The customer asks whether order A101 has shipped and asks to change the address on order A102, and Sunny answers each message." style="max-height:78vh;width:auto;border-radius:8px;"><aside class="notes">A real session of the checkpoint app.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The chat in the session</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.6em;line-height:1.3;">You: Has A101 shipped yet?
+Sunny: Your order A101 is still processing.
+You: Please change the address on order A102 to 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and is awaiting staff approval.</code></pre><aside class="notes">The text of the screenshot, from the same session.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 4</div><h1 style="font-size:1.4em;">The Staff Tab</h1><aside class="notes">A person decides.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The waiting requests</h3><pre><code class="language-python" style="max-height:620px;font-size:.6em;line-height:1.3;">    st.subheader("Waiting for approval")
+    waiting = waiting_requests(DB_FILE)
+    if waiting == []:
+        st.write("Nothing is waiting.")
+    for request in waiting:
+        number = request["number"]
+        text_col, approve_col, reject_col = st.columns([4, 1, 1])
+        text_col.text(
+            f"Request {number}: {request['order_id']} to {request['new_address']}"
+        )
+        if approve_col.button("Approve", key=f"approve{number}"):
+            st.session_state.notice = approve_request(DB_FILE, number)
+            st.rerun()
+        if reject_col.button("Reject", key=f"reject{number}"):
+            st.session_state.notice = reject_request(DB_FILE, number)
+            st.rerun()</code></pre><aside class="notes">st.columns makes three columns; key= names each button; the notice goes in session_state because Approve's run ends in st.rerun().</aside></section>
+<section class="s-demo"><div class="demo-card"><div class="demo-lbl">⚡ Live Demo</div><div style="font-size:2em;margin:.2em 0;">🖥</div><div class="demo-app">The Staff tab</div><div class="demo-sub">Approve the request the chat filed</div></div><aside class="notes">Approve it live; then show the report and restock one product.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">Waiting for approval</h3><img src="../assets/img/week15/staff_waiting.png" alt="The Staff tab with one request waiting: Request 1, A102 to 9 Pine Street, Tampa, with Approve and Reject buttons, above the orders table and the orders-by-status report." style="max-height:78vh;width:auto;border-radius:8px;"><aside class="notes">The request the agent filed, waiting for a person.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">After Approve</h3><img src="../assets/img/week15/staff_approved.png" alt="The Staff tab after Approve: a green notice reads Request 1 approved, nothing is waiting, and the orders table shows A102 at 9 Pine Street, Tampa." style="max-height:78vh;width:auto;border-radius:8px;"><aside class="notes">The notice shows once; A102 has its new address.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ Then the customer asks</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.6em;line-height:1.3;">You: What happened to request 1?
+Sunny: Request 1 for order A102 has been approved.</code></pre><aside class="notes">The agent does not remember the approval; check_request reads the database.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 5</div><h1 style="font-size:1.4em;">Customer Text Is Data</h1><aside class="notes">Type something nasty.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ A typed address</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.56em;line-height:1.3;">python3
+&gt;&gt;&gt; from database import add_change_request, create_tables
+&gt;&gt;&gt; create_tables("bayside.db")
+&gt;&gt;&gt; add_change_request("bayside.db", "A102", "[click me](https://example.com) $5 and $6")
+1
+&gt;&gt;&gt; exit()</code></pre><aside class="notes">File a request whose address holds a Markdown link and two dollar signs.</aside></section>
+<section class="s-code"><h3 style="color:var(--S);text-align:left;font-size:.52em;margin-bottom:.25em;">⌨ The Staff tab draws</h3><pre><code class="language-plaintext" style="max-height:620px;font-size:.6em;line-height:1.3;">Request 1: A102 to [click me](https://example.com) $5 and $6</code></pre><aside class="notes">st.text shows it exactly as typed. Then name the open limit: no sign-in, so anyone can approve.</aside></section>
+<section class="s-sec"><div class="sec-n">Section 6</div><h1 style="font-size:1.4em;">Your Project</h1><aside class="notes">Bayside to yours.</aside></section>
+<section class="s-point"><h2>Bayside to yours</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li><code>status_report</code> &rarr; a <code>GROUP BY</code> report over your main table</li><li><code>restock</code> &rarr; the one change your edit form makes</li><li>Three new tests: the report counts, the edit changes its row, the edit leaves the others alone</li><li>15 or more tests; none for <code>app.py</code></li></ul><aside class="notes">Point to the lab's mapping tables.</aside></section>
+<section class="s-point"><h2>Next week</h2><ul style="text-align:left;max-width:820px;margin:0 auto;"><li>The app runs.</li><li>Week 16: how often is it right?</li></ul><aside class="notes">End on the question the next week answers.</aside></section></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>

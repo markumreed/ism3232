@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <script>
 (function(){var t=localStorage.getItem('ism3232-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)})();
-</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 W15</title><style>html{min-height:100vh;}
+</script><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ISM3232 Week 15 — Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</title><style>html{min-height:100vh;}
 
     :root {
       --bg-page:#f5f4f0;--bg-card:#ffffff;--bg-card-alt:#f7f7f5;--bg-code:#1e1e2e;
@@ -145,6 +145,15 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+/* video/infographic playlist */
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:rgba(251,191,36,.08)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:rgba(251,191,36,.1);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{background:rgba(251,191,36,.18)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary)}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -158,124 +167,82 @@ body{min-height:100vh;width:100%;}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 W15 — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap">
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4CB;</span>
-  <span><strong style="color:var(--text);">In-class page.</strong>
-  Read the <a href="week15_reading.html" style="color:var(--muted);">Week 15 reading</a>
-  first if you haven't. Follow along during the live session.</span>
-</div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 15 · Lecture</div>
-<h1 class="wk-title">Streamlit Business Interface</h1>
-<p class="wk-deck">Students build a five-feature Streamlit interface wired to their SQLite database, then attend a concept lecture on FastAPI and REST APIs.</p>
-<div class="meta">
+<meta name="description" content="ISM3232 W11 — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><style>.shot{margin:18px 0}.shot img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px}.shot figcaption{font-size:13px;color:var(--muted);margin-top:6px}</style><div class="wrap"><div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4CB;</span><span><strong style="color:var(--text);">In-class page.</strong> Read the <a href="week15_reading.html" style="color:var(--muted);">Week 15 reading</a> first if you haven't. Follow along during the live session.</span></div><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 15 · Lecture</div><h1 class="wk-title">Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</h1><p class="wk-deck">Give the agent a web page: a Chat tab for customers, a Staff tab for the people who approve, and the one rule that explains them both.</p><div class="meta">
 <span class="chip accent">Module 15 · Lecture</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">~80 min</span>
-</div>
-<div class="weekjump">
+<span class="chip">~75 min</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week15_reading.html" class="weekjump-link">Reading</a>
 <a href="week15_lecture.html" class="weekjump-link current">Lecture</a>
 <a href="week15_lab.html" class="weekjump-link">Lab</a>
-</div>
-<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lecture Video</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
-<div class="video-embed" data-embed-src="https://www.youtube.com/embed/PLACEHOLDER_V32" data-embed-title="Streamlit Business App — Build 5 Required Features" style="margin:28px 0 32px;">
-  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px dashed var(--border,rgba(255,255,255,.15));background:var(--bg2,rgba(255,255,255,.03));">
-    <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box;gap:6px;">
-      <span style="font-family:var(--mono,monospace);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim,#888);">Video coming soon</span>
-      <span style="font-size:13px;color:var(--dim,#888);max-width:85%;">Streamlit Business App — Build 5 Required Features</span>
-    </div>
-  </div>
-</div>
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="callout blue"><div class="callout-icon">&#x1F9E0;</div><div><div class="callout-label">This week &mdash; the agent gets a web page</div><div class="callout-body">Week 14 put the agent on a database, but staff still decide in a terminal. Today Bayside&rsquo;s <code>app.py</code> gives customers a chat and staff a page of their own. Every result on this page is a real run of the code it shows, and the chat and the screenshot come from one real session on the course model.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Session plan &mdash; 75 minutes</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Minutes</th><th>Segment</th><th>What happens</th></tr></thead><tbody><tr><td>0&ndash;8</td><td>Where Week 14 left off</td><td><code>main.py</code>&rsquo;s staff review in a terminal: who would use that?</td></tr><tr><td>8&ndash;25</td><td>Reruns, live</td><td>The counter stuck at 1; <code>session_state</code>; the Week 11 callback</td></tr><tr><td>25&ndash;45</td><td>The chat, live</td><td>Bayside&rsquo;s Chat tab on the course model; switching models keeps the chat</td></tr><tr><td>45&ndash;60</td><td>The Staff tab, live</td><td>Approve the request filed in the chat; the notice; the report; restock</td></tr><tr><td>60&ndash;68</td><td>Customer text is data</td><td>Markdown and a <code>$</code> in an address; why <code>st.text</code> matters</td></tr><tr><td>68&ndash;75</td><td>Your project</td><td>The Bayside&rarr;yours map, three new database tests, next week</td></tr></tbody></table><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Where Week 14 Left Off</div><div class="line"></div></div><div class="two-col"><div class="card"><div class="card-title">The agent files requests</div><p>Every student&rsquo;s agent can file a change into <code>change_requests</code>, and the tools refuse values the customer never typed.</p></div><div class="card"><div class="card-title">Staff decide in a terminal</div><p><code>main.py</code> asks yes or no about each request after the chat ends. Ask the room: who at a real shop would work like that?</p></div></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Reruns, Live</div><div class="line"></div></div><div class="code-block"><div class="cb-label">counter.py</div><pre><span class="comment"># counter.py</span>
+<span class="kw">import</span> streamlit <span class="kw">as</span> st
 
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="section-divider"><div class="line"></div><div class="label">Section 1 &mdash; Why Streamlit?</div><div class="line"></div></div><div class="card"><div class="card-title">Streamlit turns Python scripts into browser-based business tools</div><p>Streamlit lets you build an interactive web interface for your Python application without writing HTML, CSS, or JavaScript. Every widget &mdash; text inputs, buttons, dropdowns, tables &mdash; is a Python function call. The interface re-runs the entire script top to bottom whenever the user interacts with it.</p><p>For a business application in this course, Streamlit is the front-end layer that connects to <code>database.py</code> and <code>models.py</code>. Users add records, view records, update statuses, and see reports &mdash; all through Streamlit widgets backed by SQLite.</p></div><div class="cb"><div class="cb-label">Install and run Streamlit</div><pre><span class="cm"># Activate venv first</span>
-source .venv/bin/activate
-pip install streamlit
-pip freeze &gt; requirements.txt
+count = <span class="num">0</span>
+<span class="kw">if</span> st.button(<span class="str">"Add one"</span>):
+    count = count + <span class="num">1</span>
+st.write(<span class="str">f"Count: {count}"</span>)</pre></div><div class="code-block"><div class="cb-label">After 3 clicks the page shows</div><pre>Count: 1</pre></div><div class="card"><div class="card-title">Say this</div><p>Streamlit runs the whole script again on every click, so <code>count = 0</code> runs again before the <code>if</code> adds one. Ask what they expect before you click.</p></div><div class="code-block"><div class="cb-label">counter_state.py</div><pre><span class="comment"># counter_state.py</span>
+<span class="kw">import</span> streamlit <span class="kw">as</span> st
 
-<span class="cm"># Run your app</span>
-streamlit run app.py
-<span class="cm"># Opens in browser at http://localhost:8501</span>
-<span class="cm"># Ctrl+C to stop</span></pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 2 &mdash; Core Streamlit Components</div><div class="line"></div></div><div class="cb"><div class="cb-label">Essential Streamlit widgets and layout &mdash; try each one</div><pre><span class="kw">import</span> streamlit <span class="kw">as</span> st
+<span class="kw">if</span> <span class="str">"count"</span> <span class="kw">not</span> <span class="kw">in</span> st.session_state:
+    st.session_state.count = <span class="num">0</span>
+<span class="kw">if</span> st.button(<span class="str">"Add one"</span>):
+    st.session_state.count = st.session_state.count + <span class="num">1</span>
+st.write(<span class="str">f"Count: {st.session_state.count}"</span>)</pre></div><div class="code-block"><div class="cb-label">After 3 clicks the page shows</div><pre>Count: 3</pre></div><div class="code-block"><div class="cb-label">After a browser refresh</div><pre>Count: 0</pre></div><div class="card"><div class="card-title">The Week 11 callback</div><p>The model remembers nothing, so the chatbot sends it the history every time. Streamlit remembers nothing either; <code>st.session_state</code> is the one thing it keeps between runs.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; The Chat, Live</div><div class="line"></div></div><div class="code-block"><div class="cb-label">app.py — the chatbot, created once</div><pre><span class="kw">if</span> <span class="str">"bot"</span> <span class="kw">not</span> <span class="kw">in</span> st.session_state:
+    tools = BaysideTools(DB_FILE)
+    st.session_state.bot = SupportChatbot(<span class="str">"Sunny"</span>, INSTRUCTIONS, tools, KeywordModel())
+bot = st.session_state.bot
+bot.model = make_model(choice)</pre></div><div class="code-block"><div class="cb-label">app.py — the Chat tab</div><pre><span class="kw">with</span> chat_tab:
+    <span class="kw">for</span> message <span class="kw">in</span> bot.history:
+        <span class="kw">if</span> message[<span class="str">"role"</span>] != <span class="str">"tool"</span>:
+            <span class="kw">with</span> st.chat_message(message[<span class="str">"role"</span>]):
+                show(message[<span class="str">"content"</span>])
+    user_message = st.chat_input(
+        <span class="str">"Ask Sunny about an order, stock, or an address change"</span>
+    )
+    <span class="kw">if</span> user_message:
+        <span class="kw">with</span> st.spinner(<span class="str">"Sunny is thinking..."</span>):
+            bot.respond(user_message)
+        st.rerun()</pre></div><div class="code-block"><div class="cb-label">The chat in the session</div><pre>You: Has A101 shipped yet?
+Sunny: Your order A101 is still processing.
+You: Please change the address on order A102 to 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and is awaiting staff approval.</pre></div><figure class="shot"><img src="../assets/img/week15/chat.png" alt="The Bayside Outfitters app on its Chat tab. The sidebar offers the course model or keyword rules only. The customer asks whether order A101 has shipped and asks to change the address on order A102, and Sunny answers each message." width="1200" height="1000" loading="lazy"><figcaption>The same session&rsquo;s Chat tab, as a fallback if the demo fails.</figcaption></figure><div class="card"><div class="card-title">Do this</div><p>Mid-chat, switch the sidebar to keyword rules only and ask about an order. The conversation stays, because the chatbot is the same object; only <code>bot.model</code> changed.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; The Staff Tab, Live</div><div class="line"></div></div><div class="code-block"><div class="cb-label">app.py — the waiting requests</div><pre>    st.subheader(<span class="str">"Waiting for approval"</span>)
+    waiting = waiting_requests(DB_FILE)
+    <span class="kw">if</span> waiting == []:
+        st.write(<span class="str">"Nothing is waiting."</span>)
+    <span class="kw">for</span> request <span class="kw">in</span> waiting:
+        number = request[<span class="str">"number"</span>]
+        text_col, approve_col, reject_col = st.columns([<span class="num">4</span>, <span class="num">1</span>, <span class="num">1</span>])
+        text_col.text(
+            <span class="str">f"Request {number}: {request['order_id']} to {request['new_address']}"</span>
+        )
+        <span class="kw">if</span> approve_col.button(<span class="str">"Approve"</span>, key=<span class="str">f"approve{number}"</span>):
+            st.session_state.notice = approve_request(DB_FILE, number)
+            st.rerun()
+        <span class="kw">if</span> reject_col.button(<span class="str">"Reject"</span>, key=<span class="str">f"reject{number}"</span>):
+            st.session_state.notice = reject_request(DB_FILE, number)
+            st.rerun()</pre></div><div class="code-block"><div class="cb-label">The waiting request in the session</div><pre>Request 1: A102 to 9 Pine Street, Tampa</pre></div><div class="code-block"><div class="cb-label">After Approve</div><pre>Request 1 approved.</pre></div><figure class="shot"><img src="../assets/img/week15/staff_approved.png" alt="The Staff tab after Approve: a green notice reads Request 1 approved, nothing is waiting, and the orders table shows A102 at 9 Pine Street, Tampa." width="1200" height="1000" loading="lazy"><figcaption>After Approve in the same session: the notice, and A102 at its new address.</figcaption></figure><div class="card"><div class="card-title">Say this</div><p>The notice goes in <code>st.session_state</code> because Approve&rsquo;s run ends in <code>st.rerun()</code>. Then show the report (Week 13&rsquo;s <code>GROUP BY</code>) and restock one product with the form.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 5 &mdash; Customer Text Is Data</div><div class="line"></div></div><div class="code-block"><div class="cb-label">Python shell</div><pre>python3
+&gt;&gt;&gt; from database import add_change_request, create_tables
+&gt;&gt;&gt; create_tables("bayside.db")
+&gt;&gt;&gt; add_change_request("bayside.db", "A102", "[click me](https://example.com) $5 and $6")
+1
+&gt;&gt;&gt; exit()</pre></div><div class="code-block"><div class="cb-label">The Staff tab draws</div><pre>Request 1: A102 to [click me](https://example.com) $5 and $6</pre></div><div class="code-block"><div class="cb-label">app.py — the model switch and show()</div><pre>COURSE_MODEL = <span class="str">"Course model, keyword rules if it is down"</span>
+KEYWORDS_ONLY = <span class="str">"Keyword rules only (no AI)"</span>
 
-<span class="cm"># Page setup (call once, at the top)</span>
-st.<span class="fn">set_page_config</span>(page_title=<span class="st">&quot;Request Tracker&quot;</span>, layout=<span class="st">&quot;wide&quot;</span>)
 
-<span class="cm"># Text display</span>
-st.<span class="fn">title</span>(<span class="st">&quot;Business Request Tracker&quot;</span>)
-st.<span class="fn">header</span>(<span class="st">&quot;Submit a New Request&quot;</span>)
-st.<span class="fn">write</span>(<span class="st">&quot;Any text, markdown, or value &mdash; very flexible&quot;</span>)
+<span class="kw">def</span> <span class="fn">make_model</span>(choice):
+    <span class="str">"""Return the model the sidebar asks for."""</span>
+    <span class="kw">if</span> choice == KEYWORDS_ONLY:
+        <span class="kw">return</span> KeywordModel()
+    <span class="kw">return</span> FallbackModel(OllamaModel(MODEL_NAME), KeywordModel())
 
-<span class="cm"># Input widgets &mdash; each returns a Python value</span>
-requester = st.<span class="fn">text_input</span>(<span class="st">&quot;Your name&quot;</span>)
-category  = st.<span class="fn">selectbox</span>(<span class="st">&quot;Category&quot;</span>, [<span class="st">&quot;Travel&quot;</span>, <span class="st">&quot;Equipment&quot;</span>, <span class="st">&quot;Software&quot;</span>])
-amount    = st.<span class="fn">number_input</span>(<span class="st">&quot;Amount ($)&quot;</span>, min_value=<span class="nm">0.0</span>, step=<span class="nm">10.0</span>)
-notes     = st.<span class="fn">text_area</span>(<span class="st">&quot;Notes (optional)&quot;</span>)
 
-<span class="cm"># Button &mdash; returns True only on the click that triggered the rerun</span>
-<span class="kw">if</span> st.<span class="fn">button</span>(<span class="st">&quot;Submit Request&quot;</span>):
-    <span class="kw">if</span> requester <span class="kw">and</span> amount &gt; <span class="nm">0</span>:
-        add_record(requester, category, amount, notes)
-        st.<span class="fn">success</span>(<span class="st">f&quot;Request submitted for {requester}&quot;</span>)
-    <span class="kw">else</span>:
-        st.<span class="fn">error</span>(<span class="st">&quot;Name and amount are required.&quot;</span>)
-
-<span class="cm"># Display a table from a list of dicts</span>
-records = get_all_records()
-<span class="kw">if</span> records:
-    st.<span class="fn">dataframe</span>(records, use_container_width=<span class="nm">True</span>)
-<span class="kw">else</span>:
-    st.<span class="fn">info</span>(<span class="st">&quot;No records yet.&quot;</span>)</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 3 &mdash; Required Five Streamlit Features</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Feature</th><th>Streamlit widgets used</th><th>database.py function called</th></tr></thead><tbody><tr><td>Add a record</td><td>text_input, number_input, selectbox, button, success/error</td><td>add_record()</td></tr><tr><td>View all records</td><td>dataframe or table, optional filter with selectbox</td><td>get_all_records()</td></tr><tr><td>Filter or search records</td><td>selectbox or text_input to filter, conditional display</td><td>get_all_records() + Python filter</td></tr><tr><td>Update status</td><td>selectbox for record ID, selectbox for new status, button</td><td>update_status()</td></tr><tr><td>Display an operational report</td><td>st.metric or bar_chart or dataframe</td><td>get_status_report()</td></tr></tbody></table><div class="cb"><div class="cb-label">Putting it together &mdash; a minimal working app.py skeleton</div><pre><span class="kw">import</span> streamlit <span class="kw">as</span> st
-<span class="kw">from</span> database <span class="kw">import</span> create_table, add_record, get_all_records, update_status, get_status_report
-
-create_table()   <span class="cm"># idempotent &mdash; safe to call on every run</span>
-
-st.<span class="fn">set_page_config</span>(page_title=<span class="st">&quot;Request Tracker&quot;</span>, layout=<span class="st">&quot;wide&quot;</span>)
-st.<span class="fn">title</span>(<span class="st">&quot;&#x1F4CB; Business Request Tracker&quot;</span>)
-
-tab1, tab2, tab3 = st.<span class="fn">tabs</span>([<span class="st">&quot;Submit&quot;</span>, <span class="st">&quot;View &amp; Filter&quot;</span>, <span class="st">&quot;Report&quot;</span>])
-
-<span class="kw">with</span> tab1:
-    st.<span class="fn">header</span>(<span class="st">&quot;Submit a New Request&quot;</span>)
-    requester = st.<span class="fn">text_input</span>(<span class="st">&quot;Your name&quot;</span>)
-    category  = st.<span class="fn">selectbox</span>(<span class="st">&quot;Category&quot;</span>, [<span class="st">&quot;Travel&quot;</span>, <span class="st">&quot;Equipment&quot;</span>, <span class="st">&quot;Software&quot;</span>])
-    amount    = st.<span class="fn">number_input</span>(<span class="st">&quot;Amount ($)&quot;</span>, min_value=<span class="nm">0.0</span>, step=<span class="nm">10.0</span>)
-    <span class="kw">if</span> st.<span class="fn">button</span>(<span class="st">&quot;Submit&quot;</span>):
-        add_record(requester, category, amount)
-        st.<span class="fn">success</span>(<span class="st">&quot;Submitted!&quot;</span>)
-
-<span class="kw">with</span> tab2:
-    records = get_all_records()
-    st.<span class="fn">dataframe</span>(records)
-
-<span class="kw">with</span> tab3:
-    report = get_status_report()
-    st.<span class="fn">dataframe</span>(report)</pre></div><div class="section-divider"><div class="line"></div><div class="label">Section 4 &mdash; FastAPI: Concept Lecture Only</div><div class="line"></div></div><div class="callout blue"><div class="callout-icon">&#x1F310;</div><div><div class="callout-label">FastAPI is a concept introduction &mdash; no deliverable required</div><div class="callout-body">This 60&ndash;90 minute lecture covers what an API is, how routes and requests work, and how FastAPI structures a Python web service. Students run one minimal demo route. <strong>There is no FastAPI assignment or capstone requirement.</strong></div></div></div><div class="cb"><div class="cb-label">Minimal FastAPI demo &mdash; run with: uvicorn main:app --reload</div><pre><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
-
-app = <span class="fn">FastAPI</span>()
-
-<span class="kw">@app</span>.get(<span class="st">&quot;/&quot;</span>)
-<span class="kw">def</span> <span class="fn">home</span>():
-    <span class="kw">return</span> {<span class="st">&quot;message&quot;</span>: <span class="st">&quot;Business API is running&quot;</span>}
-
-<span class="kw">@app</span>.get(<span class="st">&quot;/requests&quot;</span>)
-<span class="kw">def</span> <span class="fn">get_requests</span>():
-    <span class="kw">return</span> {<span class="st">&quot;requests&quot;</span>: []}
-
-<span class="cm"># Visit http://127.0.0.1:8000/docs for auto-generated API documentation</span></pre></div><table class="concept-table"><thead><tr><th>API concept</th><th>What it means</th><th>FastAPI example</th></tr></thead><tbody><tr><td>Route / endpoint</td><td>A URL the API responds to</td><td>GET /requests, POST /requests</td></tr><tr><td>HTTP method</td><td>What action is being performed</td><td>GET = read, POST = create, PUT = update, DELETE = delete</td></tr><tr><td>Request body</td><td>Data sent by the caller to the API</td><td>JSON payload with requester, category, amount</td></tr><tr><td>Response</td><td>Data the API sends back</td><td>JSON object or list</td></tr><tr><td>Status code</td><td>Numeric result indicator</td><td>200 OK, 201 Created, 404 Not Found, 422 Validation Error</td></tr></tbody></table><div class="assignment"><div class="a-header">Assignment 15 &middot; Due end of Week 15 &middot; Capstone milestone</div><h3>Streamlit Business Interface</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>File:</strong> <code>app.py</code> &mdash; a working Streamlit application with all 5 required features: add, view, filter, update status, report.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL with app.py committed.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div>
-<div class="section-divider"><div class="line"></div><div class="label">Module Infographic</div><div class="line"></div></div>
-<div style="border-radius:10px;border:1px solid var(--border);overflow:hidden;background:var(--bg-card);margin-bottom:24px;">
-  <img src="../assets/img/infographics/32_streamlit_infographic.png"
-       alt="Streamlit Business Interface — Module Infographic"
-       loading="lazy"
-       style="width:100%;height:auto;display:block;min-height:200px;">
-</div>
-
-<!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 15 &middot; Module 7D &mdash; Streamlit Business Interface + FastAPI Concept Lecture</div></div>
+<span class="kw">def</span> <span class="fn">show</span>(text):
+    <span class="str">"""Write text in the page. A $ is escaped so Streamlit does not read it as math."""</span>
+    st.markdown(text.replace(<span class="str">"$"</span>, <span class="str">"\\$"</span>))</pre></div><div class="card"><div class="card-title">Say this</div><p>The row shows the link and the dollar signs exactly as typed, because it uses <code>st.text</code>. With <code>st.markdown</code> the customer would have planted a working link on the staff page. Then name the open limit: there is no sign-in, so anyone who opens the app can approve.</p></div><div class="section-divider"><div class="line"></div><div class="label">Section 6 &mdash; Your Project</div><div class="line"></div></div><table class="concept-table"><thead><tr><th>Bayside</th><th>Yours</th></tr></thead><tbody><tr><td><code>status_report(db_file)</code></td><td>a <code>GROUP BY</code> report over your main table</td></tr><tr><td><code>restock(db_file, name, stock)</code></td><td>the one change your edit form makes</td></tr><tr><td><code>product_names(db_file)</code></td><td>the dropdown&rsquo;s choices</td></tr></tbody></table><div class="card"><div class="card-title">Three new tests</div><p>The report counts correctly; the edit changes the chosen row; the edit leaves the other rows alone. That makes 15 or more. <code>app.py</code> gets no tests: the autograder runs without Streamlit.</p></div><div class="prompt-list"><div class="prompt"><div class="p-num">Discussion 1: what staff may change</div><div class="p-text">Which of your records should staff change on the Staff tab, and which should change only through a request?</div><div class="p-hint">Look for: a reason tied to who is affected and who is accountable.</div></div><div class="prompt"><div class="p-num">Discussion 2: session state</div><div class="p-text">What would go wrong if the chatbot were created outside session_state?</div><div class="p-hint">Look for: a new chatbot, with an empty history, on every click.</div></div><div class="prompt"><div class="p-num">Discussion 3: the open limit</div><div class="p-text">Who should be able to open your Staff tab, and how would a real business make sure?</div><div class="p-hint">Look for: a sign-in, and staff accounts kept apart from customers.</div></div></div><div class="card"><div class="card-title">Misconceptions to listen for</div><p>&ldquo;Streamlit keeps my variables between clicks.&rdquo; Only <code>st.session_state</code> does.</p><p>&ldquo;The chat history is in the database.&rdquo; It is in <code>st.session_state</code>; a refresh clears it.</p><p>&ldquo;I should test <code>app.py</code>.&rdquo; The autograder cannot; keep <code>app.py</code> thin.</p><p>&ldquo;Reject deletes the request.&rdquo; It marks the request rejected.</p></div><div class="assignment"><div class="a-header">Lab 15 &middot; Due end of Week 15 &middot; Streamlit Chat &amp; Staff</div><h3>Your agent in a web app</h3><div class="deliverable"><div class="d-icon">&#x1F40D;</div><div class="d-text"><strong>Files:</strong> <code>app.py</code> with a Chat tab and a Staff tab, and the new functions in <code>database.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F9EA;</div><div class="d-text"><strong>Tests:</strong> at least 15 across <code>tests/test_database.py</code>, <code>tests/test_tools.py</code> and <code>tests/test_agent.py</code>, passing with Ollama switched off. No test imports <code>app.py</code> or <code>ollama_model.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Link:</strong> GitHub repository URL.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_lecture.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 15 &middot; Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</div></div>
 <script src="../site.js"></script>
 </body></html>

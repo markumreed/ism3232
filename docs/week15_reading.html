@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<title>ISM3232 Week 15 — Streamlit Business Interface</title><style>
+<title>ISM3232 Week 15 — Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</title><style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;
@@ -143,15 +143,18 @@ li::marker{color:var(--dim);}
 }
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 15 — Streamlit Business Interface — ISM3232 Business Application Development course material.">
-</head><body>
+<meta name="description" content="ISM3232 Week 11 — Talking to a Local Model — Ollama, Instructions &amp; History — ISM3232 Business Application Development course material.">
+<style>html[data-theme="light"] pre code{color:#1f2937;}</style>
+</head>
+<body>
+<style>.shot{margin:18px 0}.shot img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px}.shot figcaption{font-size:13px;color:var(--muted);margin-top:6px}</style>
 <div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 15 · Reading</div>
-<h1 class="wk-title">Streamlit Business Interface</h1>
-<p class="wk-deck">Build all five required Streamlit features wired to your SQLite database, and understand the execution model.</p>
+<h1 class="wk-title">Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</h1>
+<p class="wk-deck">Put a web page in front of your agent: a Chat tab for customers and a Staff tab where people approve what the agent asked for.</p>
 <div class="meta">
 <span class="chip accent">Module 15</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">Reading · Streamlit interface &amp; database wiring</span>
+<span class="chip">Reading · Streamlit, session state &amp; approvals</span>
 </div>
 <div class="weekjump">
 <span class="weekjump-label">This module:</span>
@@ -159,221 +162,314 @@ li::marker{color:var(--dim);}
 <a href="week15_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week15_lab.html" class="weekjump-link">Lab</a>
 </div>
-<div style="background:var(--blue-dim);border:1px solid var(--border);
-  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
-  padding:14px 18px;margin-bottom:28px;">
-  <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div>
-  <p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will understand Streamlit's rerun execution model — the single concept that explains 90% of Streamlit bugs — and have all five required features wired to your database.</p>
-</div>
-<div style="font-family:var(--mono);font-size:11px;color:var(--muted);
-  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-  padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;">
-  <span style="opacity:.6;">&#x1F4D6;</span>
-  <span><strong style="color:var(--text);">Pre-class reading.</strong>
-  Read this before the session.
-  The <a href="week15_lecture.html" style="color:var(--muted);">Lecture page</a>
-  covers the same material with annotated in-class code and timing.</span>
-</div><h2>The Streamlit execution model — the single most important concept</h2><div class="concept"><div class="concept-label">Every interaction reruns the entire script</div><p>When a user clicks a button, Streamlit runs your entire app.py from line 1 to the last line. Not just the button handler. The whole file. Every line. Every time. This explains why create_table() goes at the top outside any tab — it must run on every rerun before any widget reads the database.</p></div><div class="code-label">Correct app.py structure</div><pre><code>import streamlit as st
+<div style="background:var(--blue-dim);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:28px;"><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">&#x1F3AF; Learning objective</div><p style="margin:0;font-size:15px;line-height:1.7;color:var(--text);">By the end of this reading you will be able to run a Streamlit app, explain why it runs your whole script again on every click, keep the agent alive between clicks with <code>st.session_state</code>, and build the two tabs of your capstone: a chat for customers and a staff page that approves or rejects what the agent filed.</p></div>
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:28px;"><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">&#x1F517; Coming from Week 14</div><p style="margin:0;font-size:14px;line-height:1.75;color:var(--text);">Staff still can&rsquo;t approve anything without running Python. Your agent files change requests into the database, and <code>main.py</code> asks about each one in a terminal after the chat ends. Nobody at a real business works like that. This week the same agent and the same database get a web page.</p></div>
+<div style="font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-bottom:24px;display:flex;align-items:center;gap:10px;"><span style="opacity:.6;">&#x1F4D6;</span><span><strong style="color:var(--text);">Pre-class reading.</strong> Read this before the session. The <a href="week15_lecture.html" style="color:var(--muted);">Lecture page</a> runs the same app live in class.</span></div>
+<h2>Module at a glance</h2>
+<div class="term"><span class="term-word">Time</span><span class="term-def">One week. Reading about 60 minutes, lecture 75 minutes, lab about 3 hours, then finishing your own app at home.</span></div>
+<div class="term"><span class="term-word">Prerequisites</span><span class="term-def">Week 14 done: your capstone project passes its tests (12 or more).</span></div>
+<div class="term"><span class="term-word">Materials</span><span class="term-def">Your capstone venv, which has had Streamlit since Week 13. Ollama is optional: the app has a keyword-only mode, and every test runs without it.</span></div>
+<h3>Learning outcomes</h3>
+<ol><li>Run and stop a Streamlit app.</li><li>Explain the rerun model.</li><li>Keep objects between reruns with <code>st.session_state</code>.</li><li>Build a chat with <code>st.chat_message</code> and <code>st.chat_input</code>.</li><li>Lay out a page with a sidebar, tabs and columns.</li><li>Show records and a <code>GROUP BY</code> report with <code>st.dataframe</code>.</li><li>Use buttons and a form that change the database, then rerun.</li><li>Show customer text safely.</li></ol>
+<h2>What you build this week</h2>
+<p>This is Bayside&rsquo;s app, running on the course model. A customer asked two things in the Chat tab. The second one, an address change, did not change anything yet: the agent filed a request, and it waits on the Staff tab for a person. By the end of the lab your own business has the same two tabs.</p>
+<figure class="shot"><img src="../assets/img/week15/chat.png" alt="The Bayside Outfitters app on its Chat tab. The sidebar offers the course model or keyword rules only. The customer asks whether order A101 has shipped and asks to change the address on order A102, and Sunny answers each message." width="1200" height="1000" loading="lazy"><figcaption>The Chat tab, captured from a real session of Bayside&rsquo;s app.</figcaption></figure>
+<h2>Streamlit runs everything again</h2>
+<p>A Streamlit app is an ordinary Python script. You start it with <code>streamlit run</code>, and it draws the page in your browser. Here is the whole trick, and the one idea of this week: <strong>every time someone clicks a button or types a message, Streamlit runs your whole script again, from the top.</strong> Watch what that does to a counter.</p>
+<div class="code-label">counter.py</div><pre><code># counter.py
+import streamlit as st
 
-from database import add_record, create_table, get_all_records, \
-                     get_status_report, update_status
+count = 0
+if st.button("Add one"):
+    count = count + 1
+st.write(f"Count: {count}")</code></pre>
+<div class="code-label">Terminal</div><pre><code>streamlit run counter.py</code></pre>
+<div class="code-label">After 3 clicks the page shows</div><pre><code>Count: 1</code></pre>
+<p>The count is stuck at 1. Each click reruns the script, so <code>count = 0</code> runs again before the <code>if</code> adds one. Nothing you set in a normal variable survives a click.</p>
+<p>Streamlit keeps exactly one thing between runs: <code>st.session_state</code>. It works like an object whose attributes stay put while the same browser tab is open.</p>
+<div class="code-label">counter_state.py</div><pre><code># counter_state.py
+import streamlit as st
 
-# MUST be at the top — runs before any widget, every rerun
-create_table()
+if "count" not in st.session_state:
+    st.session_state.count = 0
+if st.button("Add one"):
+    st.session_state.count = st.session_state.count + 1
+st.write(f"Count: {st.session_state.count}")</code></pre>
+<div class="code-label">After 3 clicks the page shows</div><pre><code>Count: 3</code></pre>
+<div class="code-label">After a browser refresh</div><pre><code>Count: 0</code></pre>
+<ul><li><code>"count" not in st.session_state</code> uses <code>in</code>, as with a dictionary: it is True only on the very first run.</li><li><code>st.session_state.count = 0</code> sets an attribute, the way <code>self.history = []</code> did in Week 10.</li><li>A browser refresh starts a new session, so the count goes back to 0.</li></ul>
+<div class="concept"><div class="concept-label">You have seen this before</div><p>In Week 11 you learned that the model remembers nothing, so the chatbot sends it the whole history every time. Streamlit remembers nothing either. Anything that must last between clicks, such as the chatbot and its history, goes in <code>st.session_state</code>.</p></div>
+<h2>The chat</h2>
+<p>Bayside&rsquo;s <code>app.py</code> is about 100 lines, and you will copy most of it. It starts with imports from the files you already have, then two small helpers.</p>
+<div class="code-label">app.py — imports</div><pre><code># app.py
+# Author: [Your Name]
 
-st.set_page_config(page_title=&#x27;Purchase Requests&#x27;, layout=&#x27;wide&#x27;)
-st.title(&#x27;Purchase Request Tracker&#x27;)
+import streamlit as st
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    [&#x27;Submit&#x27;, &#x27;View All&#x27;, &#x27;Filter&#x27;, &#x27;Update Status&#x27;, &#x27;Report&#x27;])</code></pre><div class="code-label">Run the app</div><pre><code>streamlit run app.py</code></pre><h2>The five required features</h2><div class="code-label">Tab 1 — Submit with validation</div><pre><code>with tab1:
-    st.subheader(&#x27;New Purchase Request&#x27;)
-    requester = st.text_input(&#x27;Your name&#x27;)
-    category  = st.selectbox(&#x27;Category&#x27;, [&#x27;Equipment&#x27;,&#x27;Travel&#x27;,&#x27;Software&#x27;,&#x27;Other&#x27;])
-    amount    = st.number_input(&#x27;Amount ($)&#x27;, min_value=0.01, format=&#x27;%.2f&#x27;)
-    if st.button(&#x27;Submit Request&#x27;):
-        if requester and amount &gt; 0:
-            add_record(requester, category, amount)
-            st.success(f&#x27;Request submitted: ${amount:,.2f}&#x27;)
-        else:
-            st.error(&#x27;Name and amount are required.&#x27;)</code></pre><div class="code-label">Tab 3 — Filter (applied in Python, not SQL)</div><pre><code>with tab3:
-    status_filter = st.selectbox(&#x27;Filter by status&#x27;,
-                                 [&#x27;All&#x27;,&#x27;Pending&#x27;,&#x27;Approved&#x27;,&#x27;Rejected&#x27;])
-    records = get_all_records()
-    if status_filter != &#x27;All&#x27;:
-        records = [r for r in records if r[&#x27;status&#x27;] == status_filter]
-    if records:
-        st.dataframe(records, use_container_width=True)
-    else:
-        st.info(f&#x27;No {status_filter} requests.&#x27;)
-    st.caption(f&#x27;{len(records)} record(s) shown&#x27;)</code></pre><div class="code-label">Tab 4 — Update Status (selectbox from live database)</div><pre><code>with tab4:
-    records = get_all_records()   # live — not hardcoded IDs
-    if records:
-        options = {
-            f&quot;ID {r[&#x27;id&#x27;]}: {r[&#x27;requester&#x27;]} — ${r[&#x27;amount&#x27;]:,.2f}&quot;: r[&#x27;id&#x27;]
-            for r in records
-        }
-        sel = st.selectbox(&#x27;Select request&#x27;, list(options.keys()))
-        new_status = st.radio(&#x27;New status&#x27;,
-                              [&#x27;Pending&#x27;,&#x27;Approved&#x27;,&#x27;Rejected&#x27;], horizontal=True)
-        if st.button(&#x27;Update&#x27;):
-            update_status(options[sel], new_status)
-            st.success(f&#x27;Updated to {new_status}&#x27;)
-            st.rerun()</code></pre><div class="warn"><div class="concept-label">⚠ Build the selectbox from get_all_records()</div><p>Never hardcode IDs in the Update Status tab. If a record is deleted, hardcoded IDs point to the wrong rows. Always build the options dict from live database data.</p></div><h2>What Streamlit actually does — the execution model in detail</h2>
-<p>Streamlit's execution model is unlike any framework most students have used before. 
-Understanding it prevents the majority of Streamlit bugs.</p>
-<p>When a user clicks a button, Streamlit does not just run the button's handler. 
-It runs your <em>entire app.py file, from the first line to the last</em>. 
-Every widget is re-evaluated. Every function call executes again. 
-Every variable is set from scratch.</p>
-<div class="code-label">Why create_table() must be at the top</div>
-<pre><code># Correct — create_table runs on every rerun, before any widget
-create_table()                          # idempotent: IF NOT EXISTS
-st.set_page_config(page_title='App')
-tab1, tab2 = st.tabs(['Submit', 'View'])
+from agent import SupportChatbot
+from database import (
+    all_orders,
+    approve_request,
+    create_tables,
+    product_names,
+    reject_request,
+    restock,
+    status_report,
+    waiting_requests,
+)
+from fallback_model import FallbackModel
+from keyword_model import KeywordModel
+from ollama_model import OllamaModel
+from settings import DB_FILE, INSTRUCTIONS, MODEL_NAME
+from tools import BaysideTools</code></pre>
+<div class="code-label">app.py — the model switch and show()</div><pre><code>COURSE_MODEL = "Course model, keyword rules if it is down"
+KEYWORDS_ONLY = "Keyword rules only (no AI)"
 
-with tab1:
-    # ... submission form ...
 
-with tab2:
-    # ... get_all_records() is called HERE, every rerun
-    records = get_all_records()         # always fresh from DB
-    st.dataframe(records)</code></pre>
-<p>If <code>create_table()</code> were inside <code>tab2</code>, it would only run when 
-the user clicks tab 2. If they submit a form on tab 1 first, the INSERT would fail 
-because the table does not exist yet. This is the bug that <code>create_table()</code> 
-at the top prevents.</p>
+def make_model(choice):
+    """Return the model the sidebar asks for."""
+    if choice == KEYWORDS_ONLY:
+        return KeywordModel()
+    return FallbackModel(OllamaModel(MODEL_NAME), KeywordModel())
 
-<h2>Widget return values and state</h2>
-<p>Every widget returns a value on every rerun. 
-<code>st.text_input('Name')</code> returns whatever the user last typed — or an empty string on first load. 
-<code>st.selectbox('Status', options)</code> returns the currently selected option. 
-You do not need event handlers. You just read the return value and act on it.</p>
-<div class="code-label">Reading widget values — no event handlers needed</div>
-<pre><code>requester = st.text_input('Your name')   # returns current text
-category  = st.selectbox('Category',
-                         ['Equipment', 'Travel', 'Software'])
-amount    = st.number_input('Amount', min_value=0.01, format='%.2f')
 
-if st.button('Submit'):
-    # This block only runs when the button is clicked
-    if requester and amount > 0:
-        add_record(requester, category, amount)
-        st.success(f'Request submitted: ${amount:,.2f}')
-    else:
-        st.error('Name and amount are required.')</code></pre>
+def show(text):
+    """Write text in the page. A $ is escaped so Streamlit does not read it as math."""
+    st.markdown(text.replace("$", "\\$"))</code></pre>
+<p><code>make_model</code> turns the sidebar choice into a model: the course model with the keyword rules behind it, or the keyword rules alone. <code>show</code> writes text into the page. Streamlit reads a pair of <code>$</code> signs as math, so a reply with two prices, like $5 and $6, would come out garbled; <code>"\\$"</code> is a backslash and a dollar sign (a backslash in a string is written twice), and a backslash before <code>$</code> tells Streamlit to show a plain dollar sign.</p>
+<div class="code-label">app.py — the sidebar</div><pre><code>create_tables(DB_FILE)
+st.title("Bayside Outfitters")
+choice = st.sidebar.radio("Model", [COURSE_MODEL, KEYWORDS_ONLY])
+st.sidebar.caption(
+    "If Ollama is not running, the keyword rules answer instead. "
+    "They can look things up but cannot file an address change."
+)</code></pre>
+<p><code>create_tables</code> runs on every rerun. That is safe, because your <code>schema.sql</code> uses <code>IF NOT EXISTS</code> and <code>INSERT OR IGNORE</code>. <code>st.sidebar.radio</code> draws the model choice in the sidebar and returns the one that is selected.</p>
+<div class="code-label">app.py — the chatbot, created once</div><pre><code>if "bot" not in st.session_state:
+    tools = BaysideTools(DB_FILE)
+    st.session_state.bot = SupportChatbot("Sunny", INSTRUCTIONS, tools, KeywordModel())
+bot = st.session_state.bot
+bot.model = make_model(choice)</code></pre>
+<p>This is the counter&rsquo;s pattern with a chatbot instead of a number. The chatbot is created only on the first run and kept in <code>st.session_state.bot</code>, so its history survives every click. The last line runs every time: it gives the same chatbot whichever model the sidebar now asks for, which is why switching models keeps the conversation.</p>
+<div class="code-label">app.py — the tabs</div><pre><code>chat_tab, staff_tab = st.tabs(["Chat", "Staff"])</code></pre>
+<p><code>st.tabs</code> returns one tab for each name, and <code>chat_tab, staff_tab = ...</code> unpacks them into two names in one line, first to first and second to second.</p>
+<div class="code-label">app.py — the Chat tab</div><pre><code>with chat_tab:
+    for message in bot.history:
+        if message["role"] != "tool":
+            with st.chat_message(message["role"]):
+                show(message["content"])
+    user_message = st.chat_input(
+        "Ask Sunny about an order, stock, or an address change"
+    )
+    if user_message:
+        with st.spinner("Sunny is thinking..."):
+            bot.respond(user_message)
+        st.rerun()</code></pre>
+<ul><li><code>with chat_tab:</code> means &ldquo;put what this block draws inside the Chat tab&rdquo;. You know <code>with</code> from <code>with open(...)</code>; here it is used for page layout.</li><li>The loop draws the history, skipping the tool entries a customer should not see. <code>st.chat_message</code> draws one speech bubble.</li><li><code>st.chat_input</code> is the box at the bottom. It returns what the customer typed on the run right after they press Enter, and <code>None</code> on every other run.</li><li><code>bot.respond</code> is the same method as in Week 12, inside <code>st.spinner</code> so the page says it is working. <code>st.rerun()</code> then starts a fresh run, which draws the history again with the new reply in it.</li></ul>
+<p>This is the text of the chat in the screenshot above, from the same session:</p>
+<div class="code-label">The chat in the session</div><pre><code>You: Has A101 shipped yet?
+Sunny: Your order A101 is still processing.
+You: Please change the address on order A102 to 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and is awaiting staff approval.</code></pre>
+<h2>The Staff tab</h2>
+<p>The Staff tab is where a person decides. It starts with a notice and the requests that are waiting.</p>
+<div class="code-label">app.py — the notice</div><pre><code>with staff_tab:
+    if "notice" in st.session_state:
+        st.success(st.session_state.notice)
+        del st.session_state.notice</code></pre>
+<div class="code-label">app.py — the waiting requests</div><pre><code>    st.subheader("Waiting for approval")
+    waiting = waiting_requests(DB_FILE)
+    if waiting == []:
+        st.write("Nothing is waiting.")
+    for request in waiting:
+        number = request["number"]
+        text_col, approve_col, reject_col = st.columns([4, 1, 1])
+        text_col.text(
+            f"Request {number}: {request['order_id']} to {request['new_address']}"
+        )
+        if approve_col.button("Approve", key=f"approve{number}"):
+            st.session_state.notice = approve_request(DB_FILE, number)
+            st.rerun()
+        if reject_col.button("Reject", key=f"reject{number}"):
+            st.session_state.notice = reject_request(DB_FILE, number)
+            st.rerun()</code></pre>
+<ul><li>Clicking Approve reruns the script, and <code>st.rerun()</code> reruns it again, so a message written with <code>st.success</code> on the click&rsquo;s run would vanish at once. Instead the result goes into <code>st.session_state.notice</code>; the next run shows it, then <code>del st.session_state.notice</code> removes it so it shows only once.</li><li><code>st.columns([4, 1, 1])</code> makes three columns side by side, the first four times as wide, and <code>text_col, approve_col, reject_col = ...</code> unpacks them.</li><li><code>key=f"approve{number}"</code> is a keyword argument: it names each button, because two buttons both labelled Approve need different keys.</li><li>The row is written with <code>st.text</code>, not <code>show</code>. More on why below.</li></ul>
+<figure class="shot"><img src="../assets/img/week15/staff_waiting.png" alt="The Staff tab with one request waiting: Request 1, A102 to 9 Pine Street, Tampa, with Approve and Reject buttons, above the orders table and the orders-by-status report." width="1200" height="1000" loading="lazy"><figcaption>The Staff tab in the same session, with the agent&rsquo;s request waiting.</figcaption></figure>
+<div class="code-label">app.py — the orders and the report</div><pre><code>    st.subheader("Orders")
+    st.dataframe(all_orders(DB_FILE))
 
-<h2>Building the Update Status tab correctly</h2>
-<p>The most common mistake in Tab 4 is hardcoding record IDs. 
-A hardcoded ID breaks the moment any record is deleted or the database is reset.
-Always build the selectbox options from a live call to <code>get_all_records()</code>.</p>
-<div class="code-label">Update tab — live selectbox from database</div>
-<pre><code>with tab4:
-    records = get_all_records()   # live — reflects current DB state
-    if records:
-        # Build a human-readable label → ID mapping
-        options = {
-            f"ID {r['id']} · {r['requester']} · ${r['amount']:,.2f}": r['id']
-            for r in records
-        }
-        selected = st.selectbox('Select request', list(options.keys()))
-        new_status = st.radio('New status',
-                              ['Pending', 'Approved', 'Rejected'],
-                              horizontal=True)
-        if st.button('Update'):
-            update_status(options[selected], new_status)
-            st.success(f'Updated to {new_status}')
-            st.rerun()   # refresh the page to show updated data
-    else:
-        st.info('No requests to update.')</code></pre>
-<h2>Before you leave this week</h2><ul class="checklist"><li>create_table() called at the top of app.py — outside all tabs</li><li>All five features implemented and working</li><li>Filter applied in Python before st.dataframe() — not hardcoded</li><li>Update Status selectbox built from get_all_records()</li><li>st.rerun() called after status update so the view refreshes</li><li>Assignment 15 submitted via GitHub URL</li></ul>
+    st.subheader("Orders by status")
+    st.dataframe(status_report(DB_FILE))</code></pre>
+<div class="code-label">database.py</div><pre><code>def status_report(db_file):
+    """Return how many orders have each status."""
+    sql = (
+        "SELECT status, COUNT(*) AS orders FROM orders GROUP BY status ORDER BY status"
+    )
+    return query_all(db_file, sql)</code></pre>
+<p><code>st.dataframe</code> draws a list of dictionaries as a table. <code>status_report</code> is Week 13&rsquo;s <code>GROUP BY</code>, now inside a function: one row per status, with how many orders have it.</p>
+<div class="code-label">app.py — the restock form</div><pre><code>    st.subheader("Restock a product")
+    with st.form("restock"):
+        name = st.selectbox("Product", product_names(DB_FILE))
+        stock = st.number_input("New stock", min_value=0, step=1)
+        if st.form_submit_button("Save"):
+            restock(DB_FILE, name, int(stock))
+            st.session_state.notice = f"The {name} now has {int(stock)} in stock."
+            st.rerun()</code></pre>
+<div class="code-label">database.py</div><pre><code>def restock(db_file, name, stock):
+    """Set how many of one product are in stock."""
+    change(db_file, "UPDATE products SET stock = ? WHERE name = ?", (stock, name))</code></pre>
+<div class="code-label">database.py</div><pre><code>def product_names(db_file):
+    """Return the name of every product."""
+    rows = query_all(db_file, "SELECT name FROM products ORDER BY name")
+    return [row["name"] for row in rows]</code></pre>
+<p>Changing a dropdown would normally rerun the script at once. Inside <code>st.form</code>, nothing reruns until the form&rsquo;s own button is pressed, so staff can pick a product and type a number, then send both together. Both <code>min_value=0</code> and <code>step=1</code> are keyword arguments: <code>min_value=0</code> keeps the number from going below zero, and <code>step=1</code> makes it count in whole numbers.</p>
+<h2>One round trip</h2>
+<p>Here is the whole journey of one request, all from the same real session on the course model. First the customer asks, and the agent files a request:</p>
+<div class="code-label">Chat tab</div><pre><code>You: Has A101 shipped yet?
+Sunny: Your order A101 is still processing.
+You: Please change the address on order A102 to 9 Pine Street, Tampa
+Sunny: Your address change request for order A102 has been submitted and is awaiting staff approval.</code></pre>
+<p>A member of staff opens the Staff tab and clicks Approve. The notice appears, nothing is waiting any more, and the order has its new address:</p>
+<div class="code-label">Staff tab: the notice</div><pre><code>Request 1 approved.</code></pre>
+<div class="code-label">The orders table, read from bayside.db</div><pre><code>A100 shipped 14 Bay Road
+A101 processing 3 Gull Lane
+A102 delivered 9 Pine Street, Tampa
+A103 processing 21 Harbor Way
+A104 shipped 7 Dune Court
+A105 delivered 40 Tide Street</code></pre>
+<figure class="shot"><img src="../assets/img/week15/staff_approved.png" alt="The Staff tab after Approve: a green notice reads Request 1 approved, nothing is waiting, and the orders table shows A102 at 9 Pine Street, Tampa." width="1200" height="1000" loading="lazy"><figcaption>After Approve: the notice, and A102 at its new address.</figcaption></figure>
+<p>Back in the Chat tab, the customer asks what happened. The agent does not remember the approval; it looks the request up with <code>check_request</code>, so the answer comes from the database:</p>
+<div class="code-label">Chat tab</div><pre><code>You: What happened to request 1?
+Sunny: Request 1 for order A102 has been approved.</code></pre>
+<p>Finally, a browser refresh. A refresh starts a new session, so <code>st.session_state</code> is empty and the chat is gone. The address change is still in <code>bayside.db</code>.</p>
+<div class="code-label">After a browser refresh</div><pre><code>chat messages: 0</code></pre>
+<h2>Customer text is data</h2>
+<p>The address on a request is whatever the customer typed. If the Staff tab drew it with <code>st.markdown</code>, a customer could type <code>[click me](https://example.com)</code> and plant a link on the staff page, or type <code>$5 and $6</code> and garble it. <code>st.text</code> shows text exactly as typed, so the request row can never format the page. The chat uses <code>show</code>, which escapes <code>$</code> but still allows ordinary formatting, because there both sides are talking to each other.</p>
+<div class="warn"><div class="concept-label">The open limit</div><p>Anyone who opens this app can click Approve: there is no sign-in, so the Staff tab is open to customers too. A real business would put staff behind a login. This course leaves that out (see below), but you should be able to say it is the app&rsquo;s biggest gap.</p></div>
+<h2>Running it</h2>
+<div class="code-label">Terminal</div><pre><code>streamlit run app.py</code></pre>
+<ul><li>The very first time you run Streamlit, it stops at &ldquo;Welcome to Streamlit!&rdquo; and asks for an email address. Press Enter to skip it.</li><li>Open <code>http://localhost:8501</code>. In WSL, open that address in your Windows browser.</li><li>Ctrl+C in the terminal stops the server.</li><li>A browser refresh clears the chat. The database keeps every request and decision.</li><li>With Ollama off, the default sidebar choice falls back to the keyword rules, or you can pick keyword rules only. They can look up orders and stock, but they cannot file a change request. To try the Staff tab without Ollama, file a request from <code>python3</code> with <code>add_change_request</code>, as in Week 14.</li></ul>
+<h2>Why app.py has no tests</h2>
+<p>The autograder runs your tests without Streamlit or Ollama installed. So <code>app.py</code> stays thin: it draws things and calls functions, and every decision lives in <code>database.py</code>, <code>tools.py</code> and <code>agent.py</code>, which your tests already cover. The new database functions the Staff tab needs get tests of their own. Bayside&rsquo;s two are the models for yours:</p>
+<div class="code-label">tests/test_database.py</div><pre><code>def test_status_report_counts_orders(tmp_path):
+    db_file = make_db(tmp_path)
+    report = database.status_report(db_file)
+    assert report == [
+        {"status": "delivered", "orders": 2},
+        {"status": "processing", "orders": 2},
+        {"status": "shipped", "orders": 2},
+    ]</code></pre>
+<div class="code-label">tests/test_database.py</div><pre><code>def test_restock(tmp_path):
+    db_file = make_db(tmp_path)
+    database.restock(db_file, "day pack", 15)
+    assert database.find_product(db_file, "day pack")["stock"] == 15</code></pre>
+<h2>What this module leaves out, and why</h2>
+<ul><li><strong>Staff sign-in.</strong> Accounts and passwords are a course of their own; the pages name the gap instead.</li><li><strong>Streaming replies.</strong> The reply arrives whole after the spinner; streaming adds a new kind of function for little gain here.</li><li><strong>Deploying online.</strong> The model runs on your laptop, so the app does too.</li><li><strong>Caching.</strong> The Staff tab must always show fresh data, and the database is small.</li><li><strong>FastAPI.</strong> The capstone has no second program that needs to talk to it.</li></ul>
+<h2>Key terms</h2>
+<div class="term"><span class="term-word">Rerun</span><span class="term-def">Streamlit running the whole script again after a click or a message.</span></div>
+<div class="term"><span class="term-word">Session state</span><span class="term-def">st.session_state: the one place values survive reruns.</span></div>
+<div class="term"><span class="term-word">Widget</span><span class="term-def">Something a person uses on the page: a button, a box, a dropdown.</span></div>
+<div class="term"><span class="term-word">Chat message</span><span class="term-def">One speech bubble, drawn with st.chat_message.</span></div>
+<div class="term"><span class="term-word">Tab</span><span class="term-def">One of the page&rsquo;s sections, made with st.tabs.</span></div>
+<div class="term"><span class="term-word">Column</span><span class="term-def">A side-by-side slice of the page, made with st.columns.</span></div>
+<div class="term"><span class="term-word">Form</span><span class="term-def">A group of widgets that reruns only when its button is pressed.</span></div>
+<div class="term"><span class="term-word">Dataframe</span><span class="term-def">The table st.dataframe draws from a list of dictionaries.</span></div>
+<div class="term"><span class="term-word">Widget key</span><span class="term-def">The key= name that tells two look-alike widgets apart.</span></div>
+<h2>Before you leave this week</h2>
+<ul class="checklist"><li>Can explain why the plain counter stays at 1</li><li>Can explain why the chatbot lives in <code>st.session_state</code></li><li>Your app has a Chat tab and a Staff tab on your own database</li><li>Approve and Reject work, and the notice shows once</li><li>Customer text on the Staff tab uses <code>st.text</code></li><li>At least 15 tests pass with Ollama switched off</li><li>Lab 15 submitted via GitHub URL</li></ul>
 <h2 id="quiz">Module Quiz</h2>
-<p class="lede" style="font-size:14.5px;">Test your understanding before moving on. Click each answer to reveal it.</p>
-
 <div class="quiz-item">
 <div class="quiz-q">Q1 · Multiple Choice</div>
-<div class="quiz-question">What happens every time a user interacts with a Streamlit widget?</div>
+<div class="quiz-question">A counter shows Count: 1 after three clicks. Why?</div>
 <ul class="quiz-options">
-<li>a) Only the widget&#x27;s callback runs</li>
-<li>b) The entire app.py script re-runs from top to bottom</li>
-<li>c) Only the changed section re-renders</li>
-<li>d) The database connection is reset</li>
+<li>a) The button works only once</li>
+<li>b) st.write keeps the first value it showed</li>
+<li>c) Streamlit runs the whole script again on every click, so count = 0 runs again</li>
+<li>d) The browser ignores repeated clicks</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The entire app.py script re-runs from top to bottom <span style="color:var(--muted);">— This is the Streamlit execution model. Every widget interaction triggers a full rerun. Understanding this prevents bugs like re-initialising data on every click.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Streamlit runs the whole script again on every click, so count = 0 runs again <span style="color:var(--muted);">— Every click reruns the script from the top. Only st.session_state keeps a value between runs.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q2 · Multiple Choice</div>
-<div class="quiz-question">What must st.set_page_config() always be?</div>
-<ul class="quiz-options">
-<li>a) The last line of app.py</li>
-<li>b) Called inside a function</li>
-<li>c) The first Streamlit call in the script, before any other st.* calls</li>
-<li>d) Inside the main tab block</li>
-</ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The first Streamlit call in the script, before any other st.* calls <span style="color:var(--muted);">— If anything else runs first, Streamlit raises StreamlitAPIException. It must be called before any output.</span></div></details>
+<div class="quiz-q">Q2 · True / False</div>
+<div class="quiz-question">Refreshing the browser clears the chat but keeps an approved change.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— The chat lives in st.session_state, which starts empty in a new session. The decision is in the database.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q3 · Multiple Choice</div>
-<div class="quiz-question">Which Streamlit function creates a multi-tab layout?</div>
-<ul class="quiz-options">
-<li>a) st.sidebar()</li>
-<li>b) st.columns()</li>
-<li>c) st.tabs()</li>
-<li>d) st.container()</li>
-</ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">st.tabs() <span style="color:var(--muted);">— tab1, tab2 = st.tabs([&#x27;New Request&#x27;, &#x27;All Requests&#x27;]) creates two tabs. Content inside with tab1: appears on the first tab.</span></div></details>
+<div class="quiz-q">Q3 · Code Trace</div>
+<div class="quiz-question">What does the page show after two clicks?</div>
+<pre><code># counter_state.py
+import streamlit as st
+
+if "count" not in st.session_state:
+    st.session_state.count = 0
+if st.button("Add one"):
+    st.session_state.count = st.session_state.count + 1
+st.write(f"Count: {st.session_state.count}")</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Count: 2 <span style="color:var(--muted);">— st.session_state.count survives each rerun, so each click adds one to the kept value.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q4 · Multiple Choice</div>
-<div class="quiz-question">What does st.session_state allow you to do?</div>
+<div class="quiz-question">Why does app.py create the chatbot inside <code>if "bot" not in st.session_state:</code>?</div>
 <ul class="quiz-options">
-<li>a) Store values that persist across reruns within the same user session</li>
-<li>b) Connect to a database</li>
-<li>c) Cache expensive computations permanently</li>
-<li>d) Share data between different users</li>
+<li>a) So the chatbot answers faster</li>
+<li>b) So the same chatbot, with its history, is used on every rerun</li>
+<li>c) Because a SupportChatbot can only be created once</li>
+<li>d) So the database is created only once</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Store values that persist across reruns within the same user session <span style="color:var(--muted);">— Normal Python variables reset on every rerun. session_state survives reruns, making it essential for counters and form state.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">So the same chatbot, with its history, is used on every rerun <span style="color:var(--muted);">— Without it, every rerun would build a new chatbot with an empty history.</span></div></details>
 </div>
 <div class="quiz-item">
 <div class="quiz-q">Q5 · Multiple Choice</div>
-<div class="quiz-question">What does st.success(&#x27;Done!&#x27;) display?</div>
+<div class="quiz-question">Why does the Staff tab show each request with <code>st.text</code>?</div>
 <ul class="quiz-options">
-<li>a) A red error banner</li>
-<li>b) A yellow warning</li>
-<li>c) A green success banner</li>
-<li>d) A modal dialog</li>
+<li>a) st.text is faster than st.markdown</li>
+<li>b) st.markdown cannot show numbers</li>
+<li>c) st.text saves the request</li>
+<li>d) So text a customer typed cannot format the page or add a link</li>
 </ul>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A green success banner <span style="color:var(--muted);">— Streamlit has st.success() (green), st.error() (red), st.warning() (yellow), and st.info() (blue) for user feedback.</span></div></details>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">So text a customer typed cannot format the page or add a link <span style="color:var(--muted);">— Customer text is data. st.text shows it exactly as typed.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q6 · Code Trace</div>
-<div class="quiz-question">What does this code display when the text box is empty and the button is clicked?</div>
-<pre><code>name = st.text_input(&#x27;Your name&#x27;)
-if st.button(&#x27;Submit&#x27;):
-    if name:
-        st.success(f&#x27;Hello, {name}!&#x27;)
-    else:
-        st.warning(&#x27;Please enter your name.&#x27;)</code></pre>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A yellow warning: &#x27;Please enter your name.&#x27; <span style="color:var(--muted);">— When name is empty (falsy), the else branch runs and st.warning() displays a yellow banner.</span></div></details>
+<div class="quiz-q">Q6 · True / False</div>
+<div class="quiz-question">Clicking Reject deletes the change request.</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">False <span style="color:var(--muted);">— It marks the request rejected. The order does not change, and the request cannot be approved later.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q7 · True / False</div>
-<div class="quiz-question">Streamlit reruns the entire script even when only one widget changes.</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— Streamlit reruns everything on every interaction. This makes state management simple; the trade-off is that expensive operations run on every click unless cached with @st.cache_data.</span></div></details>
+<div class="quiz-q">Q7 · Multiple Choice</div>
+<div class="quiz-question">Why does app.py have no tests?</div>
+<ul class="quiz-options">
+<li>a) The autograder runs without Streamlit, so the logic lives in tested files and app.py stays thin</li>
+<li>b) Streamlit apps cannot be tested at all</li>
+<li>c) app.py never changes</li>
+<li>d) pytest cannot import a file named app.py</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">The autograder runs without Streamlit, so the logic lives in tested files and app.py stays thin <span style="color:var(--muted);">— Every decision is in database.py, tools.py and agent.py, which the tests cover.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q8 · True / False</div>
-<div class="quiz-question">st.dataframe() can display a list of dicts directly.</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">True <span style="color:var(--muted);">— st.dataframe() accepts a list of dicts, a pandas DataFrame, or any sequence that can be converted to a table. It renders an interactive, sortable table automatically.</span></div></details>
+<div class="quiz-q">Q8 · Multiple Choice</div>
+<div class="quiz-question">What does <code>st.form</code> change about the restock inputs?</div>
+<ul class="quiz-options">
+<li>a) The inputs are saved to the database by themselves</li>
+<li>b) The form clears the table first</li>
+<li>c) Nothing reruns until the form&rsquo;s submit button is pressed</li>
+<li>d) The form keeps its values after a refresh</li>
+</ul>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Nothing reruns until the form&rsquo;s submit button is pressed <span style="color:var(--muted);">— Changing the dropdown or the number waits; Save sends both at once.</span></div></details>
 </div>
 <div class="quiz-item">
-<div class="quiz-q">Q9 · Short Answer</div>
-<div class="quiz-question">What are the five required features every ISM3232 Streamlit capstone app must include?</div>
-<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">(1) New request form with inputs and a submit button; (2) All requests view displaying a dataframe of all database records; (3) Update status tab to change a record&#x27;s status by id; (4) Status report showing counts or totals per status; (5) st.set_page_config() at the top with a descriptive title and wide layout.</div></details>
+<div class="quiz-q">Q9 · Code Trace</div>
+<div class="quiz-question">What does Bayside&rsquo;s <code>show()</code> pass to st.markdown for this text?</div>
+<pre><code>show("Total: $5 and $6")</code></pre>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">Total: \$5 and \$6 <span style="color:var(--muted);">— Each $ gets a backslash, so Streamlit shows a dollar sign instead of reading $5 and $6 as math.</span></div></details>
 </div>
-
+<div class="quiz-item">
+<div class="quiz-q">Q10 · Short Answer</div>
+<div class="quiz-question">Anyone who opens the Bayside app can approve a request. What would a real business add, and why does Week 15 leave it out?</div>
+<details class="quiz-answer"><summary>Answer</summary><div style="margin-top:8px;">A staff sign-in, so only staff can open the Staff tab and approve. It is left out to keep the course on the agent and its data, and the pages name it as the app&rsquo;s open limit.</div></details>
+</div>
+<p>The app runs. Next week: how often is it right?</p>
 <!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Streamlit Business Interface</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_reading.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div>
+<div class="page-footer">ISM3232 &nbsp;·&nbsp; Week 15 &nbsp;·&nbsp; Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</div>
 <script src="../site.js"></script>
 </body></html>

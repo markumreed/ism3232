@@ -192,101 +192,157 @@ body{min-height:100vh;width:100%;}
 body{min-height:100vh;width:100%;}
 </style>
 <link rel="stylesheet" href="../site.css">
-<meta name="description" content="ISM3232 Week 15 In-Class Lab — ISM3232 Business Application Development course material.">
-</head><body><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 15 · Lab</div>
-<h1 class="wk-title">Streamlit Business Interface</h1>
-<p class="wk-deck">Module 7D &mdash; Streamlit Business Interface &mdash; build all five required Streamlit features wired to your SQLite database</p>
-<div class="meta">
+<meta name="description" content="ISM3232 Week 11 lab — Talking to a Local Model — ISM3232 Business Application Development.">
+</head>
+<body><style>.task-content{min-width:0;flex:1;}.expected{white-space:pre !important;overflow-x:auto;}</style><style>.starter-table{border-collapse:collapse;margin:8px 0 6px;font-size:14px;}.starter-table th,.starter-table td{border:1px solid var(--border);padding:6px 10px;text-align:left;vertical-align:top;}.starter-table th{background:var(--bg2);font-weight:600;}</style><div class="wrap"><div class="page-eyebrow" style="color:#fbbf24;">Unit 4 · Capstone Build · Module 15 · Lab</div><h1 class="wk-title">Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</h1><p class="wk-deck">Module 7 &mdash; Capstone &mdash; a short warm-up on reruns, then a web app for your own business: a Chat tab for customers and a Staff tab that approves what your agent files</p><div class="meta">
 <span class="chip accent">Module 15 · Lab</span>
 <span class="chip">Unit 4 · Capstone Build</span>
-<span class="chip">Full class period</span>
-</div>
-<div class="weekjump">
+<span class="chip">About 3 hours + finishing at home</span>
+</div><div class="weekjump">
 <span class="weekjump-label">This module:</span>
 <a href="week15_reading.html" class="weekjump-link">Reading</a>
 <a href="week15_lecture.html" class="weekjump-link">Lecture</a>
 <a href="week15_lab.html" class="weekjump-link current">Lab</a>
 <a href="week15_lab_slides.html" class="weekjump-link">Slides</a>
-</div>
-<div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
-<div class="time-bar"><span class="time-block">Part 1: Setup + first run</span><span class="time-block">Part 2: Submit tab</span><span class="time-block">Part 3: View + Filter tabs</span><span class="time-block">Part 4: Update + Report tabs</span><span class="time-block">Part 5: Test + ritual</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period</div><div class="callout-body">Build a working Streamlit application with all five required features: add a record, view records, filter records, update status, and display an operational report. Every feature must be wired to your <code>database.py</code> functions from Week 14.</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F310;</div><div><div class="callout-label">FastAPI note</div><div class="callout-body">The last 60&ndash;90 minutes of this week&rsquo;s class includes a concept lecture on FastAPI and REST APIs. There is no FastAPI deliverable for the lab or the capstone &mdash; the lecture is for awareness only.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Install Streamlit and First Run</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Install Streamlit and confirm it runs</div><div class="task-body"><div class="code-block"><pre>cd ~/ism3232/module07_final_project
+</div><div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div><div class="time-bar"><span class="time-block">Part 1: Start</span><span class="time-block">Part 2: Rerun warm-up (30 min)</span><span class="time-block">Parts 3–4: database + tests</span><span class="time-block">Part 5: sidebar + Chat</span><span class="time-block">Part 6: Staff tab</span><span class="time-block">Part 7: round trip</span><span class="time-block">Part 8: ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; your agent in a web app</div><div class="callout-body">See for yourself why Streamlit needs <code>st.session_state</code>, then build Bayside&rsquo;s two tabs for your business: a chat over your agent, and a staff page that approves or rejects change requests, shows your records and a report, and edits one thing. At least 15 tests pass at the end.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">If your laptop cannot run the model</div><div class="callout-body">Parts 1 to 6 and every test need no Ollama. The sidebar&rsquo;s keyword-only mode runs the whole app, and Part 7 shows how to try the Staff tab without the model.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Start</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Open your capstone folder and check last week</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/module07_final_project
 source .venv/bin/activate
-pip install streamlit
-pip freeze > requirements.txt
-touch app.py
-code app.py</pre></div><p>Add a minimal test to confirm Streamlit works:</p><div class="code-block"><div class="cb-label">app.py &mdash; hello world first</div><pre>import streamlit as st
-st.title('Hello from Streamlit!')
-st.write('Database connected.')</pre></div><div class="code-block"><pre>streamlit run app.py</pre></div><p>A browser tab opens at <code>http://localhost:8501</code>. Confirm you see the title.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Build the Complete app.py</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Replace the hello world with the full five-tab application</div><div class="task-body"><p>Replace the contents of <code>app.py</code> with the complete application. Adapt category names and field labels to your own capstone domain:</p><div class="code-block"><div class="cb-label">app.py &mdash; complete five-tab application</div><pre>import streamlit as st
+pytest -q
+streamlit version</pre></div><div class="hint-box"><code>pytest -q</code> should pass your Week 14 tests (12 or more). <code>streamlit version</code> prints a version number; you installed Streamlit in Week 13.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 2 &mdash; Rerun Warm-up</div><div class="line"></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">A counter that will not count</div><div class="task-body"><p>Work in the practice folder, outside your capstone repository. Your venv stays active.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/sql_practice</pre></div><p>Create <code>counter.py</code>:</p><div class="code-block"><div class="cb-label">counter.py</div><pre># counter.py
+import streamlit as st
 
-from database import add_record, create_table, get_all_records, get_status_report, update_status
+count = 0
+if st.button("Add one"):
+    count = count + 1
+st.write(f"Count: {count}")</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>streamlit run counter.py</pre></div><p>Open <code>http://localhost:8501</code> and click <strong>Add one</strong> three times. The page shows:</p><div class="expected" style="white-space:pre-wrap;">Count: 1</div><p>Stop the server with Ctrl+C. Every click ran the whole script again, so <code>count = 0</code> ran again each time.</p><div class="hint-box">The very first <code>streamlit run</code> stops at &ldquo;Welcome to Streamlit!&rdquo; and asks for an email address: press Enter to skip it. In WSL, open <code>http://localhost:8501</code> in your Windows browser.</div></div></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Keep the count in session state</div><div class="task-body"><p>Create <code>counter_state.py</code>:</p><div class="code-block"><div class="cb-label">counter_state.py</div><pre># counter_state.py
+import streamlit as st
 
-create_table()
+if "count" not in st.session_state:
+    st.session_state.count = 0
+if st.button("Add one"):
+    st.session_state.count = st.session_state.count + 1
+st.write(f"Count: {st.session_state.count}")</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>streamlit run counter_state.py</pre></div><p>Click <strong>Add one</strong> three times:</p><div class="expected" style="white-space:pre-wrap;">Count: 3</div><p>Now refresh the browser. A refresh starts a new session:</p><div class="expected" style="white-space:pre-wrap;">Count: 0</div><p>Stop the server with Ctrl+C.</p></div></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">A chat that echoes</div><div class="task-body"><p>Create <code>echo.py</code>:</p><div class="code-block"><div class="cb-label">echo.py</div><pre># echo.py
+import streamlit as st
 
-st.set_page_config(page_title='Request Tracker', layout='wide')
-st.title('Business Request Tracker')
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Submit', 'View', 'Filter', 'Update', 'Report'])
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
 
-# --- Tab 1: Add a record ---
-with tab1:
-    st.header('Submit a New Request')
-    requester = st.text_input('Your name')
-    category  = st.selectbox('Category', ['Travel', 'Equipment', 'Software', 'Other'])
-    amount    = st.number_input('Amount ($)', min_value=0.0, step=10.0)
-    notes     = st.text_area('Notes (optional)')
-    if st.button('Submit Request'):
-        if requester and amount > 0:
-            add_record(requester, category, amount, notes)
-            st.success(f'Request submitted for {requester}')
-        else:
-            st.error('Name and amount are required.')
+text = st.chat_input("Say something")
+if text:
+    reply = f"You said: {text}"
+    st.session_state.messages.append({"role": "user", "content": text})
+    st.session_state.messages.append({"role": "assistant", "content": reply})
+    st.rerun()</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>streamlit run echo.py</pre></div><p>Type <code>hello</code>, press Enter, then type <code>Where is order A100?</code>. You should see four chat bubbles:</p><div class="expected" style="white-space:pre-wrap;">user: hello
+assistant: You said: hello
+user: Where is order A100?
+assistant: You said: Where is order A100?</div><div class="hint-box">This is the Chat tab&rsquo;s pattern without the agent: the history lives in <code>st.session_state</code>, the loop draws it, and <code>st.rerun()</code> draws the new messages.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Database Additions</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Add what the Staff tab needs to database.py</div><div class="task-body"><p>Back in your capstone folder (<code>cd ~/ism3232/module07_final_project</code>). The Staff tab needs a report and one edit. Write yours from this table:</p><div style="overflow-x:auto;"><table class="starter-table"><thead><tr><th>Bayside</th><th>Yours</th><th>Spokewell example</th></tr></thead><tbody><tr><td><code>status_report(db_file)</code></td><td>a <code>GROUP BY</code> report over your main table</td><td><code>repairs_by_status(db_file)</code></td></tr><tr><td><code>restock(db_file, name, stock)</code></td><td>the one change your edit form makes</td><td><code>set_part_stock(db_file, name, stock)</code></td></tr><tr><td><code>product_names(db_file)</code></td><td>the dropdown&rsquo;s choices, if you do not already have such a function</td><td><code>part_names(db_file)</code> (already written in Week 14)</td></tr></tbody></table></div><p>Bayside&rsquo;s two, as the shape:</p><div class="code-block"><div class="cb-label">database.py</div><pre>def status_report(db_file):
+    """Return how many orders have each status."""
+    sql = (
+        "SELECT status, COUNT(*) AS orders FROM orders GROUP BY status ORDER BY status"
+    )
+    return query_all(db_file, sql)</pre></div><div class="code-block"><div class="cb-label">database.py</div><pre>def restock(db_file, name, stock):
+    """Set how many of one product are in stock."""
+    change(db_file, "UPDATE products SET stock = ? WHERE name = ?", (stock, name))</pre></div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Three Tests</div><div class="line"></div></div><div class="task"><div class="task-num">6</div><div class="task-content"><div class="task-title">Test the report and the edit</div><div class="task-body"><p>Add three tests to <code>tests/test_database.py</code>, each with <code>make_db(tmp_path)</code>:</p><ol><li>the report counts correctly, modelled on <code>test_status_report_counts_orders</code>;</li><li>the edit changes the chosen row, modelled on <code>test_restock</code>;</li><li>the edit leaves the other rows alone: copy your edit test, and assert that another row is still what <code>schema.sql</code> says.</li></ol><div class="code-block"><div class="cb-label">tests/test_database.py</div><pre>def test_status_report_counts_orders(tmp_path):
+    db_file = make_db(tmp_path)
+    report = database.status_report(db_file)
+    assert report == [
+        {"status": "delivered", "orders": 2},
+        {"status": "processing", "orders": 2},
+        {"status": "shipped", "orders": 2},
+    ]</pre></div><div class="code-block"><div class="cb-label">tests/test_database.py</div><pre>def test_restock(tmp_path):
+    db_file = make_db(tmp_path)
+    database.restock(db_file, "day pack", 15)
+    assert database.find_product(db_file, "day pack")["stock"] == 15</pre></div><div class="code-block"><div class="cb-label">Terminal</div><pre>pytest -q</pre></div><div class="hint-box">You should now have 15 or more tests. <code>app.py</code> gets none: the autograder runs without Streamlit, so every decision stays in the files your tests cover.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; app.py: Sidebar and Chat Tab</div><div class="line"></div></div><div class="task"><div class="task-num">7</div><div class="task-content"><div class="task-title">Start app.py from Bayside&rsquo;s</div><div class="task-body"><p>Create <code>app.py</code> from these blocks, in order, changing what this table says:</p><div style="overflow-x:auto;"><table class="starter-table"><thead><tr><th>Bayside</th><th>Yours</th><th>Spokewell example</th></tr></thead><tbody><tr><td><code>st.title("Bayside Outfitters")</code></td><td>your business name</td><td>Spokewell Bike Repair</td></tr><tr><td><code>BaysideTools(DB_FILE)</code></td><td>your tools class</td><td><code>SpokewellTools(DB_FILE)</code></td></tr><tr><td><code>"Sunny"</code></td><td>your assistant&rsquo;s name</td><td><code>"Spoke"</code></td></tr><tr><td>the caption&rsquo;s &ldquo;address change&rdquo;</td><td>your change</td><td>&ldquo;pickup change&rdquo;</td></tr><tr><td>the chat box&rsquo;s hint and the spinner&rsquo;s &ldquo;Sunny is thinking&rdquo;</td><td>what your customers ask about, and your assistant&rsquo;s name</td><td>&ldquo;Ask Spoke about a repair, a part, or a pickup change&rdquo;</td></tr><tr><td><code>all_orders</code></td><td>your list function</td><td><code>all_repairs</code></td></tr><tr><td><code>request['order_id']</code>, <code>request['new_address']</code></td><td>your request columns</td><td><code>request['ticket_id']</code>, <code>request['new_value']</code></td></tr><tr><td><code>status_report</code> / <code>restock</code> / <code>product_names</code></td><td>Part 3</td><td><code>repairs_by_status</code> / <code>set_part_stock</code> / <code>part_names</code></td></tr></tbody></table></div><div class="code-block"><div class="cb-label">app.py — imports</div><pre># app.py
+# Author: [Your Name]
 
-# --- Tab 2: View all records ---
-with tab2:
-    st.header('All Requests')
-    records = get_all_records()
-    if records:
-        st.dataframe(records, use_container_width=True)
-    else:
-        st.info('No records yet.')
+import streamlit as st
 
-# --- Tab 3: Filter records ---
-with tab3:
-    st.header('Filter Requests')
-    status_filter = st.selectbox('Filter by status', ['All', 'Pending', 'Approved', 'Rejected'])
-    records = get_all_records()
-    if status_filter != 'All':
-        records = [r for r in records if r['status'] == status_filter]
-    st.dataframe(records, use_container_width=True)
-    st.caption(f'{len(records)} record(s) shown')
+from agent import SupportChatbot
+from database import (
+    all_orders,
+    approve_request,
+    create_tables,
+    product_names,
+    reject_request,
+    restock,
+    status_report,
+    waiting_requests,
+)
+from fallback_model import FallbackModel
+from keyword_model import KeywordModel
+from ollama_model import OllamaModel
+from settings import DB_FILE, INSTRUCTIONS, MODEL_NAME
+from tools import BaysideTools</pre></div><div class="code-block"><div class="cb-label">app.py — the model switch and show()</div><pre>COURSE_MODEL = "Course model, keyword rules if it is down"
+KEYWORDS_ONLY = "Keyword rules only (no AI)"
 
-# --- Tab 4: Update status ---
-with tab4:
-    st.header('Update Request Status')
-    records = get_all_records()
-    if records:
-        options = {f"ID {r['id']}: {r['requester']} - ${r['amount']:,.2f}": r['id'] for r in records}
-        selected = st.selectbox('Select request', list(options.keys()))
-        new_status = st.selectbox('New status', ['Pending', 'Approved', 'Rejected'])
-        if st.button('Update Status'):
-            update_status(options[selected], new_status)
-            st.success(f'Updated to {new_status}')
-    else:
-        st.info('No records yet.')
 
-# --- Tab 5: Status report ---
-with tab5:
-    st.header('Status Report')
-    report = get_status_report()
-    if report:
-        for row in report:
-            col1, col2 = st.columns(2)
-            col1.metric(row[0], row[1], 'requests')
-            col2.metric('Total', f'${row[2]:,.2f}')
-    else:
-        st.info('No data yet.')</pre></div><p>Run: <code>streamlit run app.py</code></p><p>Test each tab in order:</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 3 &mdash; Test Every Feature</div><div class="line"></div></div><div class="task"><div class="task-num">3</div><div class="task-content"><div class="task-title">Submit three test records and verify each tab</div><div class="task-body"><p><strong>Tab 1 &mdash; Submit:</strong> Add three records with different amounts (one under $500, one between $500 and $2000, one over $2000). Confirm the success message appears.</p><p><strong>Tab 2 &mdash; View:</strong> Confirm all three records appear in the table.</p><p><strong>Tab 3 &mdash; Filter:</strong> Filter by &lsquo;Pending&rsquo; and confirm the count matches. Filter by &lsquo;All&rsquo; to restore.</p><p><strong>Tab 4 &mdash; Update:</strong> Select the first record and change its status to &lsquo;Approved&rsquo;. Switch to Tab 3 and filter by &lsquo;Approved&rsquo; to confirm it worked.</p><p><strong>Tab 5 &mdash; Report:</strong> Confirm the metrics show the correct counts and totals for each status.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 4 &mdash; Adapt to Your Capstone Domain</div><div class="line"></div></div><div class="task"><div class="task-num">4</div><div class="task-content"><div class="task-title">Customise app.py for your capstone business domain</div><div class="task-body"><p>Update the following to match your capstone proposal:</p><p>&bull; <code>st.title()</code> &mdash; change to your system name</p><p>&bull; Category selectbox options &mdash; change to your domain categories</p><p>&bull; Column names in the dataframe &mdash; ensure they match your database schema</p><p>&bull; Status options &mdash; change if your system uses different statuses</p><p>Run again and confirm the customised version works end-to-end.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 5 &mdash; Run the Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">5</div><div class="task-content"><div class="task-title">Commit and push</div><div class="task-body"><div class="code-block"><div class="cb-label">Stop streamlit first (Ctrl+C), then:</div><pre>ruff format . && ruff check .
-git add . && git commit -m 'lab 15: Streamlit five-feature interface' && git push</pre></div></div></div></div><div class="submit-box"><div class="sb-header">Lab 15 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Streamlit Business Interface</h3><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 15</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;text-align:right;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div>
-<div class="page-footer">ISM3232 &middot; Week 15 In-Class Lab &middot; Module 7D &mdash; Streamlit Business Interface</div></div>
+def make_model(choice):
+    """Return the model the sidebar asks for."""
+    if choice == KEYWORDS_ONLY:
+        return KeywordModel()
+    return FallbackModel(OllamaModel(MODEL_NAME), KeywordModel())
+
+
+def show(text):
+    """Write text in the page. A $ is escaped so Streamlit does not read it as math."""
+    st.markdown(text.replace("$", "\\$"))</pre></div><div class="code-block"><div class="cb-label">app.py — the sidebar</div><pre>create_tables(DB_FILE)
+st.title("Bayside Outfitters")
+choice = st.sidebar.radio("Model", [COURSE_MODEL, KEYWORDS_ONLY])
+st.sidebar.caption(
+    "If Ollama is not running, the keyword rules answer instead. "
+    "They can look things up but cannot file an address change."
+)</pre></div><div class="code-block"><div class="cb-label">app.py — the chatbot, created once</div><pre>if "bot" not in st.session_state:
+    tools = BaysideTools(DB_FILE)
+    st.session_state.bot = SupportChatbot("Sunny", INSTRUCTIONS, tools, KeywordModel())
+bot = st.session_state.bot
+bot.model = make_model(choice)</pre></div><div class="code-block"><div class="cb-label">app.py — the tabs</div><pre>chat_tab, staff_tab = st.tabs(["Chat", "Staff"])</pre></div><div class="code-block"><div class="cb-label">app.py — the Chat tab</div><pre>with chat_tab:
+    for message in bot.history:
+        if message["role"] != "tool":
+            with st.chat_message(message["role"]):
+                show(message["content"])
+    user_message = st.chat_input(
+        "Ask Sunny about an order, stock, or an address change"
+    )
+    if user_message:
+        with st.spinner("Sunny is thinking..."):
+            bot.respond(user_message)
+        st.rerun()</pre></div></div></div></div><div class="task"><div class="task-num">8</div><div class="task-content"><div class="task-title">Run it and try a lookup</div><div class="task-body"><div class="code-block"><div class="cb-label">Terminal</div><pre>streamlit run app.py</pre></div><p>Pick <strong>Keyword rules only</strong> in the sidebar and ask about one of your records by its ID. The keyword rules answer lookups without the model. Ctrl+C stops the server when you are done.</p><div class="hint-box">Nothing shows on the Staff tab yet: that is Part 6. If the page shows an error, read its last line, as with any traceback.</div></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 6 &mdash; The Staff Tab</div><div class="line"></div></div><div class="task"><div class="task-num">9</div><div class="task-content"><div class="task-title">Approvals, records, report and edit form</div><div class="task-body"><p>Add these blocks at the end of <code>app.py</code>, adapted with the table in Part 5:</p><div class="code-block"><div class="cb-label">app.py — the notice</div><pre>with staff_tab:
+    if "notice" in st.session_state:
+        st.success(st.session_state.notice)
+        del st.session_state.notice</pre></div><div class="code-block"><div class="cb-label">app.py — the waiting requests</div><pre>    st.subheader("Waiting for approval")
+    waiting = waiting_requests(DB_FILE)
+    if waiting == []:
+        st.write("Nothing is waiting.")
+    for request in waiting:
+        number = request["number"]
+        text_col, approve_col, reject_col = st.columns([4, 1, 1])
+        text_col.text(
+            f"Request {number}: {request['order_id']} to {request['new_address']}"
+        )
+        if approve_col.button("Approve", key=f"approve{number}"):
+            st.session_state.notice = approve_request(DB_FILE, number)
+            st.rerun()
+        if reject_col.button("Reject", key=f"reject{number}"):
+            st.session_state.notice = reject_request(DB_FILE, number)
+            st.rerun()</pre></div><div class="code-block"><div class="cb-label">app.py — the orders and the report</div><pre>    st.subheader("Orders")
+    st.dataframe(all_orders(DB_FILE))
+
+    st.subheader("Orders by status")
+    st.dataframe(status_report(DB_FILE))</pre></div><div class="code-block"><div class="cb-label">app.py — the restock form</div><pre>    st.subheader("Restock a product")
+    with st.form("restock"):
+        name = st.selectbox("Product", product_names(DB_FILE))
+        stock = st.number_input("New stock", min_value=0, step=1)
+        if st.form_submit_button("Save"):
+            restock(DB_FILE, name, int(stock))
+            st.session_state.notice = f"The {name} now has {int(stock)} in stock."
+            st.rerun()</pre></div><div class="hint-box">Keep <code>st.text</code> for the waiting rows: the request holds text a customer typed, and <code>st.text</code> shows it exactly as typed. Your edit form changes your Part 3 function, with your own labels.</div><p>Fit the form to the value you edit:</p><ul><li>A whole number, like Bayside&rsquo;s stock: keep <code>st.number_input</code> and <code>int()</code>.</li><li>Text, such as a tenant&rsquo;s name: use <code>st.text_input("New tenant")</code> instead of <code>st.number_input</code>, and pass the value without <code>int()</code>.</li><li>A price: keep <code>st.number_input</code> with <code>min_value=0.0, step=0.01</code>, and pass the value without <code>int()</code>, which would cut off the cents.</li><li>One of a fixed set, such as a priority: use <code>st.selectbox</code> with a list of the choices.</li></ul><p>If your change request has no new value (a cancellation), leave &ldquo;to &hellip;&rdquo; out of the waiting row.</p><p>Now run it and open the Staff tab:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>streamlit run app.py</pre></div><p>If no request is waiting you see <em>Nothing is waiting.</em>, then your records, your report and your form. Save one edit: the notice appears once and the records table shows the change. Leave the app running for Part 7.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 7 &mdash; One Round Trip</div><div class="line"></div></div><div class="task"><div class="task-num">10</div><div class="task-content"><div class="task-title">File, approve, ask</div><div class="task-body"><p><strong>With Ollama</strong> (<code>ollama serve</code> in a second terminal): ask for a change in the Chat tab, approve it on the Staff tab, then go back to the Chat tab and ask what happened to it.</p><p><strong>Keyword rules only:</strong> the keyword rules cannot file a change, so file one yourself, as in Week 14. With the app still running, open a second terminal and start <code>python3</code> in your project folder:</p><div class="code-block"><div class="cb-label">Terminal</div><pre>cd ~/ism3232/module07_final_project
+source .venv/bin/activate
+python3</pre></div><p>Then type each line (leave out the new value if your request has none):</p><div class="code-block"><div class="cb-label">Python shell — type each line</div><pre>from database import add_change_request
+add_change_request("&lt;yours&gt;.db", "&lt;an ID&gt;", "&lt;new value&gt;")</pre></div><p>The page only shows the new request after it reruns, so refresh the browser: the request is already in your database. Approve it on the Staff tab and watch your records table change.</p><p><strong>Everyone:</strong> refresh the browser once at the end. The chat clears, because it lived in <code>st.session_state</code>; the decision stays, because it is in your database.</p></div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 8 &mdash; Ritual and Push</div><div class="line"></div></div><div class="task"><div class="task-num">11</div><div class="task-content"><div class="task-title">Run the full ritual with Ollama switched off</div><div class="task-body"><p>Stop the app (Ctrl+C) and quit Ollama first.</p><div class="code-block"><div class="cb-label">Terminal</div><pre>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
+git add . &amp;&amp; git commit -m 'lab 15: streamlit app' &amp;&amp; git push</pre></div><div class="hint-box">Run it from the project folder. If <code>ruff check</code> stops on a fixable error, run <code>ruff check --fix .</code>, then the first line again.</div></div></div></div><div class="submit-box"><div class="sb-header">Lab 15 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Streamlit Chat &amp; Staff</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>app.py</code> with a Chat tab and a Staff tab, the new functions in <code>database.py</code>, and at least 15 tests across <code>tests/test_database.py</code>, <code>tests/test_tools.py</code> and <code>tests/test_agent.py</code>. No test imports <code>app.py</code> or <code>ollama_model.py</code>.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 15</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week14_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 14</span>Database Tools — sqlite3, Placeholders &amp; Tested Tools</span></a><span></span><a href="week16_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 16</span>GenAI Feature &amp; Final Demo</span><span style="font-size:16px;">→</span></a></div><div class="page-footer">ISM3232 &middot; Week 15 In-Class Lab &middot; Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</div></div>
 <script src="../site.js"></script>
 </body></html>
