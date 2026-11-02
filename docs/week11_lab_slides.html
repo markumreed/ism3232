@@ -176,6 +176,7 @@ A small, harmless first example of the model not doing what it was asked. Do not
 </div>
 <aside class="notes">
 Walk the room during the installs. This is the only part of the unit that depends on each student's hardware.
+On Windows, check the installer's last lines. <code>Enabling and starting ollama service...</code> means Ollama now starts on its own: <code>ollama serve</code> then fails with &ldquo;address already in use&rdquo; (nothing is wrong), and <code>sudo systemctl stop ollama</code> is how to switch it off in Step 11. <code>WARNING: systemd is not running</code> means the student starts it with <code>ollama serve</code> each time.
 </aside>
 </section>
 
@@ -859,7 +860,7 @@ You: quit
 Messages in this conversation: 4</pre>
 <p class="expect">The greeting needed the model and got an apology. The order question did not.</p>
 <aside class="notes">
-Have students quit Ollama and see it for themselves, then turn it back on.
+Have students switch Ollama off and see it for themselves, then turn it back on. Mac: quit the app. Windows: <code>Ctrl+C</code> in the <code>ollama serve</code> terminal, or, if Ollama started on its own, <code>sudo systemctl stop ollama</code> and later <code>sudo systemctl start ollama</code>.
 </aside>
 </section>
 
@@ -888,7 +889,7 @@ This is the practical argument for rules first.
 <p>Expecting the model's wording to match the slides. The meaning should match. The words will not.</p>
 </div>
 <aside class="notes">
-A student with no model changes one line in <code>main.py</code>: <code>model = MockModel()</code>.
+A student with no model changes two lines in <code>main.py</code>: <code>from ollama_model import OllamaModel</code> becomes <code>from mock_model import MockModel</code>, and the model line becomes <code>model = MockModel()</code>. Replacing the import matters: an unused <code>OllamaModel</code> import stops <code>ruff check</code> with F401.
 </aside>
 </section>
 
@@ -953,7 +954,7 @@ The lab page has the checklist, a real sample run, a 10-point rubric and a refer
 <h3>The full pre-submission ritual — with Ollama switched off</h3>
 <div class="run" data-lang="shell" data-readonly>ruff format . &amp;&amp; ruff check . &amp;&amp; pytest -v
 git add . &amp;&amp; git commit -m 'lab 11: local model with Ollama' &amp;&amp; git push</div>
-<p class="expect">Quit Ollama first. If the tests pass now, they pass when the repository is graded. The commit message must include <strong>&ldquo;lab 11&rdquo;</strong>.</p>
+<p class="expect">Switch Ollama off first. If the tests pass now, they pass when the repository is graded. The commit message must include <strong>&ldquo;lab 11&rdquo;</strong>.</p>
 <aside class="notes">
 <code>&amp;&amp;</code> stops the chain at the first failure. If <code>ruff check</code> stops on a fixable error, run <code>ruff check --fix .</code> and run the first line again.
 </aside>
