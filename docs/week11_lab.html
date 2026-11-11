@@ -145,6 +145,17 @@
     .page-footer{border-top:1px solid var(--border);padding-top:14px;margin-top:56px;text-align:center;font-family:'Courier New',Courier,monospace;font-size:9px;color:var(--text-faint);letter-spacing:.08em;}
   
 body{min-height:100vh;width:100%;}
+
+/* video playlist */
+.vpl-stage{margin-bottom:12px}
+.vpl-tiles{display:flex;flex-wrap:wrap;gap:8px}
+.vpl-tile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;transition:border-color .15s,background .15s}
+.vpl-tile:hover{border-color:var(--accent);background:var(--bg-card-alt)}
+.vpl-tile.vpl-active{border-color:var(--accent);background:var(--accent-bg)}
+.vpl-num{font-family:'Courier New',Courier,monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent-bdr);border-radius:4px;padding:2px 7px;flex-shrink:0}
+.vpl-tile.vpl-active .vpl-num{border-color:var(--accent)}
+.vpl-title{font-size:13px;color:var(--text-muted);line-height:1.35}
+.vpl-tile.vpl-active .vpl-title{color:var(--text-primary);font-weight:500}
 /* ism-mobile */
 @media(max-width:600px){
   body{padding:16px 14px 48px!important}
@@ -209,6 +220,31 @@ body{min-height:100vh;width:100%;}
 <a href="week11_lab_slides.html" class="weekjump-link">Slides</a>
 </div>
 <div class="course-map"><span class="map-item">W1 Setup</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W2 zsh Nav</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W3 venv/.zshrc</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W4 Search+Git</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W5 Variables</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W6 Loops+Dicts</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W7 Functions</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W8 Debug+Review</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W9 Midterm</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W10 OOP for Agents</span> <span class="map-arrow">&rarr;</span> <span class="map-item current">W11 Local Model</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W12 Tools+Guardrails</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W13 Design+SQL</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W14 DB Tools</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W15 Streamlit</span> <span class="map-arrow">&rarr;</span> <span class="map-item">W16 GenAI+Demo</span></div>
+<div style="display:flex;align-items:center;gap:12px;margin:0 0 10px;"><div style="height:1px;flex:1;background:var(--border);"></div><span style="font-family:'Courier New',Courier,monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);">Lab Walkthrough &middot; 2</span><div style="height:1px;flex:1;background:var(--border);"></div></div>
+<div class="vid-playlist" style="margin:28px 0 32px;">
+  <div class="vpl-stage">
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.08));">
+      <iframe
+        style="position:absolute;top:0;left:0;width:100%;height:100%;"
+        src="https://www.youtube.com/embed/hCIfNII2R84"
+        title="Talking to a Local Model — Ollama, Instructions &amp; History"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+  <div class="vpl-tiles">
+    <div class="vpl-tile vpl-active" onclick="vplSwitch(this,'https://www.youtube.com/embed/hCIfNII2R84','Talking to a Local Model — Ollama, Instructions & History')">
+      <span class="vpl-num">01</span>
+      <span class="vpl-title">Full Code-Along — Ollama, Memory, MockModel &amp; Safe Fallbacks</span>
+    </div>
+    <div class="vpl-tile" onclick="vplSwitch(this,'https://www.youtube.com/embed/H52d0ZU1tGQ','Quick Overview — Rules First, the Model for the Rest')">
+      <span class="vpl-num">02</span>
+      <span class="vpl-title">Quick Overview — Rules First, the Model for the Rest</span>
+    </div>
+  </div>
+</div>
 <div class="time-bar"><span class="time-block">Part 1: Install Ollama</span><span class="time-block">Part 2: First call</span><span class="time-block">Part 3: Memory</span><span class="time-block">Part 4: A mock model</span><span class="time-block">Part 5: The real model</span><span class="time-block">Part 6: Four exercises</span><span class="time-block">Part 7: Mini-project</span><span class="time-block">Part 8: Ritual + push</span></div><div class="callout blue"><div class="callout-icon">&#x1F4CB;</div><div><div class="callout-label">Lab goal &mdash; full class period, then finish on your own</div><div class="callout-body">Run an AI model on your own laptop, call it from Python, and hand it to the chatbot you built in Week 10. The rules you wrote keep handling orders, stock and handoffs. The model handles everything else. Then test where its answers can be trusted.</div></div></div><div class="callout blue"><div class="callout-icon">&#x1F4CD;</div><div><div class="callout-label">Where you start</div><div class="callout-body">Your <code>module06_agents</code> folder from Week 10, with <code>SupportChatbot</code> taking four values (name, instructions, order tool, stock tool) and all tests passing. If your chatbot does not take a stock tool yet, finish Exercise 3 on the <a href="week10_lab.html">Week 10 lab</a> first.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">If your laptop cannot run the model</div><div class="callout-body">The course model needs about 2.5 GB of free memory. If yours cannot run it, you are not behind. Parts 4 and 8, the tests, and Exercises 1 and 2 need nothing but Python, and they are what is graded. For Parts 1, 2, 3 and 5 and Exercises 3 and 4, work beside a classmate whose laptop runs the model, and write one line in your <code>README.md</code> saying who you worked with.</div></div></div><div class="callout warn"><div class="callout-icon">&#x26A0;</div><div><div class="callout-label">No AI-generated classes</div><div class="callout-body">You must be able to explain every line of your classes. If you use AI to generate any part of a class definition, you must paste the AI output and add a comment explaining what each line does and why.</div></div></div><div class="section-divider"><div class="line"></div><div class="label">Part 1 &mdash; Install Ollama and Meet the Model</div><div class="line"></div></div><div class="task"><div class="task-num">1</div><div class="task-content"><div class="task-title">Install Ollama</div><div class="task-body"><p><strong>Mac:</strong> download the installer from <code>ollama.com/download</code>, open it, and leave the Ollama app running. There is no command to type.</p><p><strong>Windows:</strong> open your Ubuntu (WSL) terminal, the same one you use for this course, and run:</p><div class="code-block"><pre>curl -fsSL https://ollama.com/install.sh | sh</pre></div><div class="hint-box"><strong>Type this command exactly as shown.</strong> It downloads an install script from Ollama and runs it. Only run commands like this from a source you trust.</div></div></div></div><div class="task"><div class="task-num">2</div><div class="task-content"><div class="task-title">Download the course model and talk to it</div><div class="task-body"><div class="code-block"><pre>ollama --version
 ollama pull granite4.1:3b
 ollama list</pre></div><p>The download is about 2.1 GB, so start it on campus wifi. When it finishes, <code>ollama list</code> shows the model:</p><div class="expected" style="white-space:pre-wrap;">NAME                    ID              SIZE      MODIFIED     
@@ -640,5 +676,14 @@ def make_helper():
 git add . &amp;&amp; git commit -m 'lab 11: local model with Ollama' &amp;&amp; git push</pre></div><div class="hint-box"><strong>If <code>ruff check</code> stops on a fixable error,</strong> the <code>&amp;&amp;</code> chain ends there and <code>pytest</code> never runs. Run <code>ruff check --fix .</code>, then run the full first line again.</div></div></div></div><div class="submit-box"><div class="sb-header">Lab 11 Submission &middot; Git commit + Canvas URL &middot; Completion credit</div><h3>Talking to a Local Model</h3><div class="deliverable"><div class="d-icon">&#x1F4C4;</div><div class="d-text"><strong>Files in repo:</strong> <code>mock_model.py</code>, <code>ollama_model.py</code>, <code>echo_model.py</code>, <code>week11_answers.md</code>, and your updated mini-project with its README section.</div></div><div class="deliverable"><div class="d-icon">&#x1F517;</div><div class="d-text"><strong>Canvas submission:</strong> Paste your GitHub repository URL. Commit message must include <code>lab 11</code>.</div></div><div class="deliverable"><div class="d-icon">&#x2705;</div><div class="d-text"><strong>No screenshots.</strong> Your GitHub repository is the entire submission &mdash; it is graded by cloning it and running your code and <code>pytest</code>. Make sure the repo is <strong>Public</strong> and every change is pushed before the deadline.</div></div></div><!-- prev-next -->
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:1px solid var(--border);"><a href="week10_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span style="font-size:16px;">←</span><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 10</span>OOP for Agents — Classes, Objects &amp; Composition</span></a><span></span><a href="week12_lab.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .15s;text-align:right;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--muted)'"><span><span style="font-family:var(--mono);font-size:10px;display:block;margin-bottom:2px;">Week 12</span>Tools and Guardrails — Model-Chosen Tools, Checks &amp; Approval</span><span style="font-size:16px;">→</span></a></div>
 <div class="page-footer">ISM3232 &middot; Week 11 In-Class Lab &middot; Module 6 &mdash; Talking to a Local Model: Ollama, Instructions, and History</div></div>
+<script>
+function vplSwitch(tile,src,title){
+  var p=tile.closest(".vid-playlist");
+  p.querySelectorAll(".vpl-tile").forEach(function(t){t.classList.remove("vpl-active")});
+  tile.classList.add("vpl-active");
+  var f=p.querySelector(".vpl-stage iframe");
+  f.src=src;f.title=title;
+}
+</script>
 <script src="../site.js"></script>
 </body></html>
