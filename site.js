@@ -124,7 +124,7 @@
         <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
         <a href="${pg}week14_reading.html">Module 14 · Database Tools — sqlite3, Placeholders &amp; Tested Tools</a>
         <a href="${pg}week15_reading.html">Module 15 · Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</a>
-        <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
+        <a href="${pg}week16_reading.html">Module 16 · Evaluation, Safety &amp; Demo — Test Cases, Safety Checks &amp; a Demo Video</a>
       </div>
     </div>
 
@@ -209,7 +209,7 @@
       <a href="${pg}week13_reading.html">Module 13 · Agent Design &amp; SQL — Proposal, Schema &amp; sqlite3</a>
       <a href="${pg}week14_reading.html">Module 14 · Database Tools — sqlite3, Placeholders &amp; Tested Tools</a>
       <a href="${pg}week15_reading.html">Module 15 · Streamlit Chat &amp; Staff — Reruns, Session State &amp; Approvals</a>
-      <a href="${pg}week16_reading.html">Module 16 · GenAI Feature &amp; Final Demo</a>
+      <a href="${pg}week16_reading.html">Module 16 · Evaluation, Safety &amp; Demo — Test Cases, Safety Checks &amp; a Demo Video</a>
     </div>
     <div class="mob-tools">
       <button id="ism-mob-font-down" class="tool-btn" aria-label="Decrease font size" title="Smaller text">A−</button>
